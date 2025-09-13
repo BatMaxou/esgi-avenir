@@ -1,0 +1,4 @@
+services:
+  express:
+    ports:
+      - "8000:3000"

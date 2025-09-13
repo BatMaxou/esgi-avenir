@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "name": "@avenir/application",
+  "description": "Application of Avenir",
+  "version": "1.0.0"
+}

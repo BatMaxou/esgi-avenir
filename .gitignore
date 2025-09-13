@@ -1,0 +1,5 @@
+# DOCKER
+compose.override.*
+
+# NODE
+node_modules/

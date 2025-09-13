@@ -1,0 +1,7 @@
+services:
+  express:
+    build:
+      dockerfile: ./infrastructure/express/Dockerfile
+    volumes:
+      - ./infrastructure/express:/app
+      - /app/node_modules
