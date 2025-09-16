@@ -3,3 +3,9 @@ compose.override.*
 
 # NODE
 node_modules/
+
+# NEXT
+infrastructure/frontend/.next/
+infrastructure/frontend/out/
+infrastructure/frontend/build/
+

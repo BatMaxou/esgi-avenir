@@ -5,3 +5,10 @@ services:
     volumes:
       - ./infrastructure/express:/app
       - /app/node_modules
+
+  frontend:
+    build:
+      dockerfile: ./infrastructure/frontend/Dockerfile
+    volumes:
+      - ./infrastructure/frontend:/app
+      - /app/node_modules
