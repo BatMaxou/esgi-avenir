@@ -14,3 +14,11 @@ services:
       - ./infrastructure/frontend:/app/infrastructure/frontend
       - /app/node_modules
       - /app/infrastructure/frontend/node_modules
+
+  mariadb:
+    image: mariadb:12.0.2
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:

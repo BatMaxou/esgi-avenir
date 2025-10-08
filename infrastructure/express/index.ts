@@ -1,4 +1,8 @@
 import express from "express";
+import dotenv from "dotenv";
+
+dotenv.config();
+dotenv.config({ path: '.env.local', override: true })
 
 const startServer = async () => {
   const app = express();
