@@ -3,12 +3,14 @@ services:
     build:
       dockerfile: ./infrastructure/express/Dockerfile
     volumes:
-      - ./infrastructure/express:/app
+      - ./infrastructure/express:/app/infrastructure/express
       - /app/node_modules
+      - /app/infrastructure/express/node_modules
 
   frontend:
     build:
       dockerfile: ./infrastructure/frontend/Dockerfile
     volumes:
-      - ./infrastructure/frontend:/app
+      - ./infrastructure/frontend:/app/infrastructure/frontend
       - /app/node_modules
+      - /app/infrastructure/frontend/node_modules

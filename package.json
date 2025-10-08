@@ -1,11 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "application",
     "infrastructure/express",
     "infrastructure/frontend"
-  ],
-  "scripts": {
-    "dev": "print \"tets\""
-  }
+  ]
 }

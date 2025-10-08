@@ -1,5 +1,5 @@
 # DOCKER
-compose.override.*
+compose.override.yaml
 
 # NODE
 node_modules/

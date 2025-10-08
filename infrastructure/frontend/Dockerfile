@@ -2,12 +2,13 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-COPY ./infrastructure/frontend/package*.json ./
+COPY ./package*.json .
+COPY ./infrastructure/frontend/package*.json ./infrastructure/frontend/
 
-RUN npm install
+RUN npm -w infrastructure/frontend install
 
-COPY ./infrastructure/frontend .
+COPY ./infrastructure/frontend ./infrastructure/frontend
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "-w", "infrastructure/frontend", "run", "dev"]
