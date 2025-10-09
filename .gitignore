@@ -9,6 +9,9 @@ infrastructure/frontend/.next/
 infrastructure/frontend/out/
 infrastructure/frontend/build/
 
+# EXPRESS
+infrastructure/express/build/
+
 # ENV
 infrastructure/frontend/.env.local
 infrastructure/express/.env.local
