@@ -5,7 +5,6 @@ services:
     volumes:
       - ./infrastructure/express:/app/infrastructure/express
       - /app/node_modules
-      - /app/infrastructure/express/node_modules
 
   frontend:
     build:
@@ -13,7 +12,6 @@ services:
     volumes:
       - ./infrastructure/frontend:/app/infrastructure/frontend
       - /app/node_modules
-      - /app/infrastructure/frontend/node_modules
 
   mariadb:
     image: mariadb:12.0.2
