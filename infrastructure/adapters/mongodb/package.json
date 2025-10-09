@@ -1,0 +1,8 @@
+{
+  "name": "@avenir/mongodb",
+  "version": "1.0.0",
+  "description": "MongoDB infrastructure for ESGI Avenir project",
+  "dependencies": {
+    "mongoose": "^8.19.1"
+  }
+}
