@@ -2,6 +2,7 @@
   "private": true,
   "workspaces": [
     "infrastructure/adapters/mariadb",
+    "infrastructure/adapters/mongodb",
     "infrastructure/express",
     "infrastructure/frontend"
   ]
