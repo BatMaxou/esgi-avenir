@@ -4,8 +4,9 @@
   "description": "Express infrastructure for ESGI Avenir project",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsx watch index.ts --host 0.0.0.0"
+    "start": "node build/infrastructure/express/index.js",
+    "dev": "tsx watch index.ts --host 0.0.0.0",
+    "sync": "node build/infrastructure/express/scripts/sync.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

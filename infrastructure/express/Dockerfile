@@ -13,8 +13,7 @@ RUN npm -w infrastructure/express install
 
 COPY ./domain ./domain
 COPY ./application ./application
-COPY ./infrastructure/adapters/mariadb ./infrastructure/adapters/mariadb
-COPY ./infrastructure/adapters/mongodb ./infrastructure/adapters/mongodb
+COPY ./infrastructure/adapters ./infrastructure/adapters
 COPY ./infrastructure/express ./infrastructure/express
 
 EXPOSE 3000

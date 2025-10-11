@@ -6,3 +6,14 @@ services:
   frontend:
     ports:
       - "3000:3000"
+
+  mariadb:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: avenir
+
+  mongo:
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: avenir
