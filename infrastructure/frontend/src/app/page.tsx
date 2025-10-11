@@ -1,95 +1,73 @@
+"use client";
+
+// React
+import { useState } from "react";
+
+// Local components
+import { LoginForm } from "../components/forms/form-login";
+import { RegisterForm } from "../components/forms/form-register";
 import Image from "next/image";
-import styles from "./page.module.css";
+
+// Images
+import bgImage from "../../public/assets/home-card.jpg";
+import logo from "../../public/assets/logo/logo-avenir.png";
 
 export default function Home() {
+  const [formType, setFormType] = useState<"login" | "register">("login");
+
+  function showRegisterForm() {
+    setFormType("register");
+  }
+
+  function showLoginForm() {
+    setFormType("login");
+  }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
+    <div className="min-h-screen max-h-screen flex">
+      <div className="hidden lg:flex lg:w-1/2 relative">
         <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
+          src={bgImage}
+          alt="Background"
+          fill
+          className="object-cover"
           priority
         />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      </div>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+      <div className="flex-1 lg:w-1/2 flex items-center justify-center bg-white px-8 py-12">
+        <div className="max-w-lg w-full space-y-4">
+          <div className="text-center">
             <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src={logo}
+              alt="Avenir Logo"
+              sizes="100vw"
+              className="w-full h-[150px] object-cover mb-8"
             />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+          </div>
+
+          {formType === "login" ? (
+            <>
+              <h1 className="text-3xl font-bold mb-8">Connexion</h1>
+              <LoginForm />
+              <p
+                style={{ cursor: "pointer" }}
+                onClick={() => showRegisterForm()}
+              >
+                Je veux ouvrir un compte !
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-3xl font-bold mb-8">Ouvrir un compte</h1>
+              <RegisterForm setFormType={setFormType} />
+              <p style={{ cursor: "pointer" }} onClick={() => showLoginForm()}>
+                J'ai déjà un compte !
+              </p>
+            </>
+          )}
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
