@@ -1,26 +1,39 @@
 import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
 
 import { RepositoryResolver } from "../adapters/services/RepositoryResolver";
-import { databaseSource } from "./utils/tools";
+import { databaseDsn, databaseSource } from "./utils/tools";
 import { UserFixtures } from "./fixtures/UserFixtures";
 import { RepositoryResolverInterface } from "../../application/services/RepositoryResolverInterface";
+import { MeController } from "./controllers/MeController";
+import { paths } from "../../application/services/api/paths";
+import { AuthController } from "./controllers/AuthController";
+import { authMiddleware } from "./middlewares/authMiddleware";
 
 const startServer = async () => {
   const app = express();
+  app.use(bodyParser.json());
+  app.use(cors());
+
   const repositoryResolver = new RepositoryResolver(databaseSource);
 
-  await bootstrap(repositoryResolver);
+  const meController = new MeController(repositoryResolver.getUserRepository());
+  const authContoller = new AuthController(repositoryResolver.getUserRepository());
 
-  app.get("/", (req, res) => {
+  app.get('/', (req, res) => {
     res.send("Hello World!");
   });
 
-  app.listen(3000, () => console.log(`Listening on port 3000`));
-};
+  app.get(paths.me, authMiddleware(repositoryResolver.getUserRepository()), async (req, res) => {
+    await meController.me(req, res);
+  });
 
-const bootstrap = async (repositoryResolver: RepositoryResolverInterface) => {
-  const userFixtures = new UserFixtures(repositoryResolver.getUserRepository());
-  userFixtures.load();
+  app.post(paths.login,  async (req, res) => {
+    await authContoller.login(req, res);
+  });
+
+  app.listen(3000, () => console.log(`Listening on port 3000`));
 };
 
 startServer().catch(console.error);

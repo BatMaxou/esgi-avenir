@@ -1,4 +1,4 @@
-import { InvalidEmailError } from "../errors/InvalidEmailError";
+import { InvalidEmailError } from "../errors/values/email/InvalidEmailError";
 
 export class EmailValue {
   public static from(value: string): EmailValue | InvalidEmailError {

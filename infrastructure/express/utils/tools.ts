@@ -19,4 +19,4 @@ export const databaseName: string = process.env.DB_NAME || '';
 export const databasePort: string = process.env.DB_PORT || '';
 export const databaseSource: string = process.env.DB_SOURCE || 'mysql';
 export const databaseDsn: string = `${databaseSource}://${databaseUser}:${databasePassword}@${databaseHost}:${databasePort}/${databaseName}?${generateDatabaseDsnOptions()}`;
-
+export const jwtSecret: string = process.env.JWT_SECRET || '';

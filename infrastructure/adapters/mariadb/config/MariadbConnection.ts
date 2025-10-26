@@ -10,8 +10,4 @@ export class MariadbConnection {
   public getConnection(): Sequelize {
     return this.connection;
   }
-
-  public async sync(): Promise<void> {
-    await this.connection.sync();
-  }
 }
