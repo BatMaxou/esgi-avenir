@@ -1,8 +1,14 @@
 services:
   express:
+    depends_on:
+      - mariadb
+      - mongo
     build:
       dockerfile: ./infrastructure/express/Dockerfile
     volumes:
+      - ./domain:/app/domain
+      - ./application:/app/application
+      - ./infrastructure/adapters:/app/infrastructure/adapters
       - ./infrastructure/express:/app/infrastructure/express
       - /app/node_modules
 
@@ -10,6 +16,10 @@ services:
     build:
       dockerfile: ./infrastructure/frontend/Dockerfile
     volumes:
+      - ./domain:/app/domain
+      - ./application:/app/application
+      - ./infrastructure/adapters:/app/infrastructure/adapters
+      - ./infrastructure/utils/frontend:/app/infrastructure/utils/frontend
       - ./infrastructure/frontend:/app/infrastructure/frontend
       - /app/node_modules
 
