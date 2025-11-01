@@ -9,6 +9,7 @@ type MockUser = {
   email: string,
   password: string,
   roles: RoleEnum[],
+  enabled: boolean,
 }
 
 export class UserFixtures {
@@ -22,6 +23,7 @@ export class UserFixtures {
         email: 'user@avenir.com',
         password: 'azertyuiAZ123#',
         roles: [RoleEnum.USER],
+        enabled: true,
       },
       {
         firstName: 'Avenir',
@@ -29,6 +31,7 @@ export class UserFixtures {
         email: 'admin@avenir.com',
         password: 'azertyuiAZ123#',
         roles: [RoleEnum.USER, RoleEnum.DIRECTOR],
+        enabled: true,
       },
     ];
 
