@@ -1,7 +1,5 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, ModelCtor, Sequelize } from "sequelize";
-import { User } from "../../../../domain/entities/User";
 import { RoleEnum } from "../../../../domain/enums/RoleEnum";
-import { MariadbConnection } from "../config/MariadbConnection";
 
 interface UserModelInterface extends Model<InferAttributes<UserModelInterface>, InferCreationAttributes<UserModelInterface>> {
   firstName: string;
@@ -9,6 +7,7 @@ interface UserModelInterface extends Model<InferAttributes<UserModelInterface>, 
   email: string;
   password: string;
   roles: RoleEnum[];
+  enabled?: CreationOptional<boolean>;
 }
 
 export class UserModel {
@@ -36,6 +35,11 @@ export class UserModel {
       roles: {
         type: DataTypes.JSON,
         allowNull: false,
+      },
+      enabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     })
   }

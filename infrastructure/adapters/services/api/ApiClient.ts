@@ -1,7 +1,7 @@
-import { ApiClientInterface, LoginResponseInterface } from "../../../../application/services/api/ApiClientInterface";
+import { ApiClientInterface, LoginResponseInterface, RegisterResponseInterface } from "../../../../application/services/api/ApiClientInterface";
 import { paths } from "../../../../application/services/api/paths";
 import { MeResourceInterface } from "../../../../application/services/api/resources/MeResourceInterface";
-import { eraseCookie, setCookie } from "../../../utils/frontend/cookies";
+import { eraseCookie, getCookie, setCookie } from "../../../utils/frontend/cookies";
 import { MeResource } from "./resources/MeResource";
 
 export class ApiClient implements ApiClientInterface {
@@ -11,6 +11,8 @@ export class ApiClient implements ApiClientInterface {
 
   constructor(private baseUrl: string) {
     this.me = new MeResource(this);
+
+    this.token = getCookie("token");
   }
 
   public async get<T>(url: string, additionnalHeaders: HeadersInit = {}): Promise<T> {
@@ -62,8 +64,6 @@ export class ApiClient implements ApiClientInterface {
       .then((response) => {
         if (response.token) {
           const decodedTokenExp: number = JSON.parse(atob(response.token.split(".")[1]))?.exp ?? 0;
-          console.log('here', atob(response.token.split(".")[1]));
-          
           setCookie("token", response.token, new Date(decodedTokenExp));
           this.token = response.token;
         }
@@ -80,6 +80,20 @@ export class ApiClient implements ApiClientInterface {
 
         return response;
       });
+  }
+
+  public async register(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+  ): Promise<RegisterResponseInterface> {
+    return this.post<RegisterResponseInterface>(paths.register, {
+      email,
+      password,
+      firstName,
+      lastName,
+    });
   }
 
   public logout(): void {

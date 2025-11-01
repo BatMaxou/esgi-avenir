@@ -33,6 +33,10 @@ const startServer = async () => {
     await authContoller.login(req, res);
   });
 
+  app.post(paths.register,  async (req, res) => {
+    await authContoller.register(req, res);
+  });
+
   app.listen(3000, () => console.log(`Listening on port 3000`));
 };
 

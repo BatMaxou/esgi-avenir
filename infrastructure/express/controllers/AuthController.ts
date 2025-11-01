@@ -4,11 +4,13 @@ import jwt from "jsonwebtoken";
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
 import { EmailValue } from "../../../domain/values/EmailValue";
 import { InvalidEmailError } from "../../../domain/errors/values/email/InvalidEmailError";
-import { MeUsecase } from "../../../application/usecases/me/MeUsecase";
 import { UserNotFoundError } from "../../../domain/errors/entities/user/UserNotFoundError";
 import { LoginCommand } from "../../../domain/commands/auth/LoginCommand";
+import { RegisterCommand } from "../../../domain/commands/auth/RegisterCommand";
 import { InvalidLoginCommandError } from "../../../domain/errors/commands/auth/InvalidLoginCommandError";
 import { LoginUsecase } from "../../../application/usecases/auth/LoginUsecase";
+import { RegisterUsecase } from "../../../application/usecases/auth/RegisterUsecase";
+import { InvalidRegisterCommandError } from "../../../domain/errors/commands/auth/InvalidRegisterCommandError";
 import { jwtSecret } from "../utils/tools";
 
 export class AuthController {
@@ -48,6 +50,40 @@ export class AuthController {
 
     response.status(200).json({
       token,
+    });
+  }
+
+  public async register(request: Request, response: Response) {
+    const maybeCommand = RegisterCommand.from(request.body);
+    if (maybeCommand instanceof InvalidRegisterCommandError) {
+      return response.status(400).json({
+        error: maybeCommand.message,
+      });
+    }
+
+    const maybeEmail = EmailValue.from(maybeCommand.email);
+    if (maybeEmail instanceof InvalidEmailError) {
+      return response.status(400).json({
+        error: maybeEmail.message,
+      });
+    }
+
+    const registerUsecase = new RegisterUsecase(this.userRepository);
+    const maybeUser = await registerUsecase.execute(
+      maybeEmail.value,
+      maybeCommand.password,
+      maybeCommand.firstName,
+      maybeCommand.lastName,
+    );
+
+    if (maybeUser instanceof Error) {
+      return response.status(400).json({
+        error: maybeUser.message,
+      });
+    }
+
+    response.status(201).json({
+      success: true,
     });
   }
 }

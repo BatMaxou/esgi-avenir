@@ -1,7 +1,6 @@
 import { UserRepositoryInterface } from "../../../../application/repositories/UserRepositoryInterface";
 import { User } from "../../../../domain/entities/User";
 import { EmailExistsError } from "../../../../domain/errors/values/email/EmailExistsError";
-import { EmailValue } from "../../../../domain/values/EmailValue";
 import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../../mariadb/config/MariadbConnection";
 import { UserModel } from "../../mariadb/models/UserModel";
@@ -22,6 +21,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
         password: user.password,
         email: user.email.value,
         roles: user.roles,
+        enabled: user.enabled,
       });
 
       const maybeUser = User.from(createdUser);
