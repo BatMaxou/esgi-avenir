@@ -2,12 +2,14 @@ import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, 
 import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 
 interface UserModelInterface extends Model<InferAttributes<UserModelInterface>, InferCreationAttributes<UserModelInterface>> {
+  id: CreationOptional<number>;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   roles: RoleEnum[];
   enabled?: CreationOptional<boolean>;
+  confirmationToken?: CreationOptional<string | null>;
 }
 
 export class UserModel {
@@ -15,6 +17,11 @@ export class UserModel {
 
   public constructor(connection: Sequelize) {
     this.model = connection.define<UserModelInterface>('user', {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       firstName: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -40,6 +47,10 @@ export class UserModel {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
+      },
+      confirmationToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     })
   }

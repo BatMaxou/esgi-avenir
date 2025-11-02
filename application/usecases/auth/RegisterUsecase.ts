@@ -3,9 +3,17 @@ import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotF
 import { EmailExistsError } from '../../../domain/errors/values/email/EmailExistsError';
 import { InvalidEmailError } from '../../../domain/errors/values/email/InvalidEmailError';
 import { UserRepositoryInterface } from '../../repositories/UserRepositoryInterface';
+import { MailerInterface } from '../../services/email/MailerInterface';
+import { InvalidPasswordError } from '../../../domain/errors/values/password/InvalidPasswordError';
+import { PasswordHasherInterface } from '../../services/password/PasswordHasherInterface';
+import { UniqueIdGeneratorInterface } from '../../services/uid/UniqueIdGeneratorInterface';
 
 export class RegisterUsecase {
-  public constructor(private readonly userRepository: UserRepositoryInterface) {}
+  public constructor(
+    private readonly userRepository: UserRepositoryInterface,
+    private readonly passwordHasher: PasswordHasherInterface,
+    private readonly uniqueIdGenerator: UniqueIdGeneratorInterface,
+  ) {}
 
   public async execute(
     email: string,
@@ -17,10 +25,14 @@ export class RegisterUsecase {
       firstName,
       lastName,
       email,
-      password,
+      password: this.passwordHasher.createHash(password),
+      confirmationToken: this.uniqueIdGenerator.generate(),
     });
 
-    if (maybeNewUser instanceof InvalidEmailError) {
+    if (
+      maybeNewUser instanceof InvalidEmailError
+      || maybeNewUser instanceof InvalidPasswordError
+    ) {
       return maybeNewUser;
     }
 

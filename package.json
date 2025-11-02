@@ -3,6 +3,10 @@
   "workspaces": [
     "infrastructure/adapters/mariadb",
     "infrastructure/adapters/mongodb",
+    "infrastructure/adapters/nodemailer",
+    "infrastructure/adapters/bcrypt",
+    "infrastructure/adapters/uuid",
+    "infrastructure/adapters/jwt",
     "infrastructure/express",
     "infrastructure/frontend"
   ]

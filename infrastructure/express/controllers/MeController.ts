@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
-import { EmailValue } from "../../../domain/values/EmailValue";
-import { InvalidEmailError } from "../../../domain/errors/values/email/InvalidEmailError";
 import { MeUsecase } from "../../../application/usecases/me/MeUsecase";
 import { UserNotFoundError } from "../../../domain/errors/entities/user/UserNotFoundError";
-import { LoginCommand } from "../../../domain/commands/auth/LoginCommand";
 
 export class MeController {
   public constructor(

@@ -1,7 +1,7 @@
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
+import { PasswordHasherInterface } from "../../../application/services/password/PasswordHasherInterface";
 import { User } from "../../../domain/entities/User";
 import { RoleEnum } from "../../../domain/enums/RoleEnum";
-import { EmailValue } from "../../../domain/values/EmailValue";
 
 type MockUser = {
   firstName: string,
@@ -13,7 +13,10 @@ type MockUser = {
 }
 
 export class UserFixtures {
-  public constructor(private repository: UserRepositoryInterface) {}
+  public constructor(
+    private repository: UserRepositoryInterface,
+    private passwordHasher: PasswordHasherInterface,
+  ) {}
 
   public async load(): Promise<boolean | Error> {
     const users: MockUser[] = [
@@ -21,7 +24,7 @@ export class UserFixtures {
         firstName: 'Avenir',
         lastName: 'User',
         email: 'user@avenir.com',
-        password: 'azertyuiAZ123#',
+        password: this.passwordHasher.createHash('azertyuiAZ123#'),
         roles: [RoleEnum.USER],
         enabled: true,
       },
@@ -29,7 +32,7 @@ export class UserFixtures {
         firstName: 'Avenir',
         lastName: 'Admin',
         email: 'admin@avenir.com',
-        password: 'azertyuiAZ123#',
+        password: this.passwordHasher.createHash('azertyuiAZ123#'),
         roles: [RoleEnum.USER, RoleEnum.DIRECTOR],
         enabled: true,
       },

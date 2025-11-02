@@ -1,7 +1,4 @@
-import { Sequelize } from "sequelize";
-
 import { MariadbConnection } from '../../adapters/mariadb/config/MariadbConnection';
-import { UserModel } from '../../adapters/mariadb/models/UserModel';
 import { databaseDsn } from '../utils/tools';
 import { initModels } from "../utils/initModel";
 
