@@ -13,20 +13,22 @@ export class User {
     email,
     password,
     roles,
+    enabled = false,
   }: {
     id?: number,
     firstName: string,
     lastName: string,
     email: string,
     password: string,
-    roles: RoleEnum[],
-  }): User | Error {
+    roles?: RoleEnum[],
+    enabled?: boolean,
+  }): User | InvalidEmailError {
     const emailValue = EmailValue.from(email);
     if (emailValue instanceof InvalidEmailError) {
       return emailValue;
     }
 
-    const user = new this(firstName, lastName, emailValue, password, roles);
+    const user = new this(firstName, lastName, emailValue, password, enabled, roles || []);
     if (id) {
       user.id = id;
     }
@@ -39,6 +41,7 @@ export class User {
     public lastName: string,
     public email: EmailValue,
     public password: string,
+    public enabled: boolean = false,
     roles: RoleEnum[] = [],
   ) {
     this.roles = roles;
