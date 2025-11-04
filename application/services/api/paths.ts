@@ -1,5 +1,6 @@
 export const paths = {
-  register: '/register',
-  login: '/login',
-  me: '/me',
+  register: '/api/register',
+  confirm: '/api/confirm',
+  login: '/api/login',
+  me: '/api/me',
 };

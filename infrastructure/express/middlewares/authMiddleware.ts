@@ -1,17 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from 'jsonwebtoken';
 
 import { User } from "../../../domain/entities/User";
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
-import { jwtSecret } from "../utils/tools";
+import { TokenManagerInterface } from "../../../application/services/token/TokenManagerInterface";
 
 declare module 'express' {
-    interface Request {
-        user?: User;
-    }
+  interface Request {
+    user?: User;
+  }
 }
 
-export const authMiddleware = (userRepository: UserRepositoryInterface) => {
+export const authMiddleware = (
+  userRepository: UserRepositoryInterface,
+  tokenManager: TokenManagerInterface,
+) => {
   return async (request: Request, response: Response, next: NextFunction) => {
     const authHeader = request.headers.authorization;
 
@@ -29,13 +31,12 @@ export const authMiddleware = (userRepository: UserRepositoryInterface) => {
       return response.status(401).json({ message: 'Unauthorized' });
     }
 
-    const decoded = jwt.verify(token, jwtSecret);
-    if (typeof decoded === 'string' || !decoded.data || !decoded.data.id) {
+    const decoded = tokenManager.verify(token);
+    if (!decoded || !decoded.id) {
       return response.status(401).json({ message: 'Unauthorized' });
     }
 
-    const userId = decoded.data.id;
-    const maybeUser = await userRepository.findById(userId);
+    const maybeUser = await userRepository.findById(decoded.id);
     if (maybeUser instanceof Error) {
       return response.status(401).json({ message: 'Unauthorized' });
     }

@@ -1,0 +1,11 @@
+{
+  "name": "@avenir/jwt",
+  "version": "1.0.0",
+  "description": "JWT infrastructure for ESGI Avenir project",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10"
+  }
+}

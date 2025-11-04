@@ -1,8 +1,8 @@
-import { ApiClientInterface, LoginResponseInterface, RegisterResponseInterface } from "../../../../application/services/api/ApiClientInterface";
-import { paths } from "../../../../application/services/api/paths";
+import { ApiClientInterface, LoginResponseInterface, RegisterResponseInterface } from "../../../application/services/api/ApiClientInterface";
 import { MeResourceInterface } from "../../../../application/services/api/resources/MeResourceInterface";
+import { MeResource } from "../resources/MeResource";
 import { eraseCookie, getCookie, setCookie } from "../../../utils/frontend/cookies";
-import { MeResource } from "./resources/MeResource";
+import { paths } from "../../../../application/services/api/paths";
 
 export class ApiClient implements ApiClientInterface {
   private token: string | null = null;

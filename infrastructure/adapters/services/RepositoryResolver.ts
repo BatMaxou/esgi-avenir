@@ -1,7 +1,7 @@
 import { RepositoryInterface } from "../../../application/repositories/RepositoryInterface";
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
 import { RepositoryResolverInterface } from "../../../application/services/RepositoryResolverInterface";
-import { MariadbUserRepository } from "../repositories/mariadb/MariadbUserRepository";
+import { MariadbUserRepository } from "../../adapters/mariadb/repositories/MariadbUserRepository";
 
 type RepositoryFactory<T extends RepositoryInterface> = () => T;
 

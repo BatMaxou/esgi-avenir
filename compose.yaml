@@ -33,6 +33,9 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  mailbox:
+    image: mailhog/mailhog
+
 volumes:
   mariadb_data:
   mongodb_data:

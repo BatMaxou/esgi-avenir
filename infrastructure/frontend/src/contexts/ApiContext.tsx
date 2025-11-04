@@ -3,7 +3,7 @@
 import { createContext, ReactNode, useContext } from "react"
 
 import { ApiClientInterface } from "../../../../application/services/api/ApiClientInterface";
-import { ApiClient } from "../../../adapters/services/api/ApiClient";
+import { ApiClient } from "../../../adapters/api/services/ApiClient";
 import { apiUrl } from "../../utils/tools";
 
 type Props = {
