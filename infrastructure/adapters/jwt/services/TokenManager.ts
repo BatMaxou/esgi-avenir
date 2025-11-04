@@ -9,11 +9,12 @@ export class TokenManager {
 
   public generate(payloadValue: TokenPayloadValue): string {
     return jwt.sign({
-      exp: Date.now() + 60 * 60,
       data: {
         id: payloadValue.value.id,
-      }
-    }, this.jwtSecret);
+      },
+    }, this.jwtSecret, {
+      expiresIn: '2h',
+    });
   }
 
   public verify(token: string): TokenPayload | null {

@@ -64,7 +64,7 @@ export class ApiClient implements ApiClientInterface {
       .then((response) => {
         if (response.token) {
           const decodedTokenExp: number = JSON.parse(atob(response.token.split(".")[1]))?.exp ?? 0;
-          setCookie("token", response.token, new Date(decodedTokenExp));
+          setCookie("token", response.token, new Date(decodedTokenExp * 1000));
           this.token = response.token;
         }
 
