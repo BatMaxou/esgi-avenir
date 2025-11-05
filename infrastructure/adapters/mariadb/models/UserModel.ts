@@ -7,7 +7,7 @@ interface UserModelInterface extends Model<InferAttributes<UserModelInterface>, 
   lastName: string;
   email: string;
   password: string;
-  roles: RoleEnum[];
+  roles: string | RoleEnum[];
   enabled?: CreationOptional<boolean>;
   confirmationToken?: CreationOptional<string | null>;
 }

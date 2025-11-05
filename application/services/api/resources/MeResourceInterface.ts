@@ -1,6 +1,8 @@
-import type { User } from "../../../../domain/entities/User";
+import type { User } from '../../../../domain/entities/User';
+
+export interface GetMeResponseInterface extends Pick<User, 'id' | 'firstName' | 'lastName' | 'email'> {}
 
 export interface MeResourceInterface {
-  get(): Promise<User>;
+  get(): Promise<GetMeResponseInterface>;
 }
 

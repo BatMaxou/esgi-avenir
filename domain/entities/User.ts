@@ -4,6 +4,7 @@ import { InvalidPasswordError } from "../errors/values/password/InvalidPasswordE
 import { EmailValue } from "../values/EmailValue";
 import { PasswordValue } from "../values/PasswordValue";
 import { HashedPasswordValue } from "../values/HashedPasswordValue";
+import { InvalidRolesError } from "../errors/entities/user/InvalidRolesError";
 
 export class User {
   public id?: number;
@@ -24,10 +25,10 @@ export class User {
     lastName: string,
     email: string,
     password: string | HashedPasswordValue,
-    roles?: RoleEnum[],
+    roles?: RoleEnum[] | string,
     enabled?: boolean,
     confirmationToken?: string | null,
-  }): User | InvalidEmailError | InvalidPasswordError {
+  }): User | InvalidEmailError | InvalidPasswordError | InvalidRolesError {
     const maybeEmail = EmailValue.from(email);
     if (maybeEmail instanceof InvalidEmailError) {
       return maybeEmail;
@@ -40,13 +41,20 @@ export class User {
       return maybePassword;
     };
 
+    const maybeRoles = typeof roles === 'string'
+      ? JSON.parse(roles)
+      : roles || [];
+    if (!Array.isArray(maybeRoles)) {
+      return new InvalidRolesError('Roles must be an array.');
+    }
+
     const user = new this(
       firstName,
       lastName,
       maybeEmail,
       maybePassword,
       enabled,
-      roles || [],
+      maybeRoles,
       confirmationToken,
     );
 

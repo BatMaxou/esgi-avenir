@@ -8,7 +8,6 @@ import { LoginCommand } from "../../../domain/commands/auth/LoginCommand";
 import { RegisterCommand } from "../../../domain/commands/auth/RegisterCommand";
 import { InvalidLoginCommandError } from "../../../domain/errors/commands/auth/InvalidLoginCommandError";
 import { LoginUsecase } from "../../../application/usecases/auth/LoginUsecase";
-import { RegisterUsecase } from "../../../application/usecases/auth/RegisterUsecase";
 import { SendConfirmationEmailUsecase } from "../../../application/usecases/email/SendConfirmationEmailUsecase";
 import { InvalidRegisterCommandError } from "../../../domain/errors/commands/auth/InvalidRegisterCommandError";
 import { frontUrl } from "../utils/tools";
@@ -23,6 +22,7 @@ import { PasswordHasherInterface } from "../../../application/services/password/
 import { UniqueIdGeneratorInterface } from "../../../application/services/uid/UniqueIdGeneratorInterface";
 import { TokenManagerInterface } from "../../../application/services/token/TokenManagerInterface";
 import { TokenPayloadValue } from "../../../domain/values/TokenPayloadValue";
+import { CreateUserUsecase } from "../../../application/usecases/user/CreateUserUsecase";
 
 export class AuthController {
   public constructor(
@@ -90,7 +90,7 @@ export class AuthController {
       });
     }
 
-    const registerUsecase = new RegisterUsecase(this.userRepository, this.passwordHasher, this.uniqueIdGenerator);
+    const registerUsecase = new CreateUserUsecase(this.userRepository, this.passwordHasher, this.uniqueIdGenerator);
     const maybeUser = await registerUsecase.execute(
       maybeEmail.value,
       maybePassword.value,
@@ -138,7 +138,7 @@ export class AuthController {
     );
 
     response.status(200).json({
-      maybeUser,
+      success: true,
     });
   }
 }

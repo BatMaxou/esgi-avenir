@@ -30,8 +30,8 @@ export class UserFixtures {
       },
       {
         firstName: 'Avenir',
-        lastName: 'Admin',
-        email: 'admin@avenir.com',
+        lastName: 'Director',
+        email: 'director@avenir.com',
         password: this.passwordHasher.createHash('azertyuiAZ123#'),
         roles: [RoleEnum.USER, RoleEnum.DIRECTOR],
         enabled: true,
