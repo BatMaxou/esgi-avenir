@@ -1,7 +1,7 @@
 import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotFoundError';
 import { UserRepositoryInterface } from '../../repositories/UserRepositoryInterface';
 
-export class CreateUserUsecase {
+export class DeleteUserUsecase {
   public constructor(
     private readonly userRepository: UserRepositoryInterface,
   ) {}

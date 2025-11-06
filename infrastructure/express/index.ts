@@ -98,6 +98,24 @@ const startServer = async () => {
     }
   );
 
+  app.post(
+    paths.user.ban(),
+    authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+    roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+    async (req, res) => {
+      await userController.ban(req, res);
+    }
+  );
+
+  app.post(
+    paths.user.unban(),
+    authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+    roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+    async (req, res) => {
+      await userController.unban(req, res);
+    }
+  );
+
   app.listen(3000, () => console.log(`Listening on port 3000`));
 };
 
