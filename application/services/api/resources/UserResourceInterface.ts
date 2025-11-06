@@ -14,8 +14,13 @@ export interface CreateUserPayloadInterface {
   roles?: RoleEnum[];
 }
 
-export interface UpdateUserPayloadInterface extends CreateUserPayloadInterface {
+export interface UpdateUserPayloadInterface {
   id: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  roles?: RoleEnum[];
 }
 
 export interface UserResourceInterface {
@@ -24,5 +29,7 @@ export interface UserResourceInterface {
   create(data: CreateUserPayloadInterface): Promise<GetUserResponseInterface | ApiClientError>;
   update(data: UpdateUserPayloadInterface): Promise<GetUserResponseInterface | ApiClientError>;
   delete(id: number): Promise<DeleteResponseInterface | ApiClientError>;
+  ban(id: number): Promise<GetUserResponseInterface | ApiClientError>;
+  unban(id: number): Promise<GetUserResponseInterface | ApiClientError>;
 }
 

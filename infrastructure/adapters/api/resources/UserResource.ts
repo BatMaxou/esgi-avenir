@@ -2,6 +2,7 @@ import { ApiClientError } from "../../../../application/services/api/ApiClientEr
 import { ApiClientInterface, DeleteResponseInterface } from "../../../../application/services/api/ApiClientInterface";
 import { paths } from "../../../../application/services/api/paths";
 import { CreateUserPayloadInterface, GetAllUsersResponseInterface, GetUserResponseInterface, UpdateUserPayloadInterface, UserResourceInterface } from "../../../../application/services/api/resources/UserResourceInterface";
+import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 
 export class UserResource implements UserResourceInterface {
   constructor(private apiClient: ApiClientInterface) {}
@@ -10,7 +11,7 @@ export class UserResource implements UserResourceInterface {
     return this.apiClient.get<GetUserResponseInterface>(`${paths.user.detail(id)}`);
   }
 
-  public async getAll(): Promise<Array<GetUserResponseInterface | ApiClientError>> {
+  public async getAll(): Promise<GetAllUsersResponseInterface | ApiClientError> {
     return this.apiClient.get<GetAllUsersResponseInterface>(`${paths.user.list}`);
   }
 
@@ -24,5 +25,13 @@ export class UserResource implements UserResourceInterface {
 
   public async delete(id: number): Promise<DeleteResponseInterface | ApiClientError> {
     return this.apiClient.delete(`${paths.user.delete(id)}`);
+  }
+
+  public async ban(id: number): Promise<GetUserResponseInterface | ApiClientError> {
+    return this.update({ id, roles: [RoleEnum.BANNED] });
+  }
+
+  public async unban(id: number): Promise<GetUserResponseInterface | ApiClientError> {
+    return this.apiClient.post<GetUserResponseInterface>(`${paths.user.unban(id)}`, {});
   }
 }

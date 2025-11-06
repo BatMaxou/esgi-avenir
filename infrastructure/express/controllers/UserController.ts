@@ -22,6 +22,14 @@ import { DeleteUserParams } from "../../../domain/params/user/DeleteUserParams";
 import { InvalidDeleteUserParamsError } from "../../../domain/errors/params/user/InvalidDeleteUserParamsError";
 import { GetUserParams } from "../../../domain/params/user/GetUserParams";
 import { InvalidGetUserParamsError } from "../../../domain/errors/params/user/InvalidGetUserParamsError";
+import { UnbanUserParams } from "../../../domain/params/user/UnbanUserParams";
+import { InvalidUnbanUserParamsError } from "../../../domain/errors/params/user/InvalidUnbanUserParamsError";
+import { UnbanUserUsecase } from "../../../application/usecases/user/UnbanUserUsecase";
+import { DeleteUserUsecase } from "../../../application/usecases/user/DeleteUserUsecase";
+import { BanUserParams } from "../../../domain/params/user/BanUserParams";
+import { InvalidBanUserParamsError } from "../../../domain/errors/params/user/InvalidBanUserParamsError";
+import { BanUserUsecase } from "../../../application/usecases/user/BanUserUsecase";
+import { UserNotFoundError } from "../../../domain/errors/entities/user/UserNotFoundError";
 
 export class UserController {
   public constructor(
@@ -106,7 +114,7 @@ export class UserController {
     }
 
     const maybeUser = await this.userRepository.findById(maybeParams.id);
-    if (maybeUser instanceof Error) {
+    if (maybeUser instanceof UserNotFoundError) {
       return response.status(404).json({
         error: maybeUser.message,
       });
@@ -162,6 +170,12 @@ export class UserController {
       }
     );
 
+    if (maybeUser instanceof UserNotFoundError) {
+      return response.status(404).json({
+        error: maybeUser.message,
+      });
+    }
+
     if (maybeUser instanceof Error) {
       return response.status(400).json({
         error: maybeUser.message,
@@ -185,9 +199,11 @@ export class UserController {
       });
     }
 
-    const maybeSuccess = await this.userRepository.delete(maybeParams.id);
-    if (maybeSuccess instanceof Error) {
-      return response.status(400).json({
+    const deleteUserUsecase = new DeleteUserUsecase(this.userRepository);
+    const maybeSuccess = await deleteUserUsecase.execute(maybeParams.id);
+
+    if (maybeSuccess instanceof UserNotFoundError) {
+      return response.status(404).json({
         error: maybeSuccess.message,
       });
     }
@@ -195,6 +211,58 @@ export class UserController {
     response.status(200).json({
       success: maybeSuccess,
     });
+  }
+
+  public async ban(request: Request, response: Response) {
+    const maybeParams = BanUserParams.from(request.params);
+    if (maybeParams instanceof InvalidBanUserParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
+
+    const banUserUsecase = new BanUserUsecase(this.userRepository);
+    const maybeUser = await banUserUsecase.execute(maybeParams.id);
+
+    if (maybeUser instanceof UserNotFoundError) {
+      return response.status(404).json({
+        error: maybeUser.message,
+      });
+    }
+
+    response.status(200).json({
+      id: maybeUser.id,
+      email: maybeUser.email.value,
+      firstName: maybeUser.firstName,
+      lastName: maybeUser.lastName,
+      roles: maybeUser.roles,
+    }); 
+  }
+
+  public async unban(request: Request, response: Response) {
+    const maybeParams = UnbanUserParams.from(request.params);
+    if (maybeParams instanceof InvalidUnbanUserParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
+
+    const unbanUserUsecase = new UnbanUserUsecase(this.userRepository);
+    const maybeUser = await unbanUserUsecase.execute(maybeParams.id);
+
+    if (maybeUser instanceof UserNotFoundError) {
+      return response.status(404).json({
+        error: maybeUser.message,
+      });
+    }
+
+    response.status(200).json({
+      id: maybeUser.id,
+      email: maybeUser.email.value,
+      firstName: maybeUser.firstName,
+      lastName: maybeUser.lastName,
+      roles: maybeUser.roles,
+    }); 
   }
 }
 
