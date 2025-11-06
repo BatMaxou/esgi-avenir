@@ -5,6 +5,8 @@ import { paths } from "../../../../application/services/api/paths";
 import { ApiClientInterface, ConfirmResponseInterface, DeleteResponseInterface, LoginResponseInterface, RegisterResponseInterface } from "../../../../application/services/api/ApiClientInterface";
 import { UserResourceInterface } from "../../../../application/services/api/resources/UserResourceInterface";
 import { UserResource } from "../resources/UserResource";
+import { ApiClientError } from "../../../../application/services/api/ApiClientError";
+import { handleApiError } from "../utils/handleApiError";
 
 export class ApiClient implements ApiClientInterface {
   private token: string | null = null;
@@ -19,17 +21,20 @@ export class ApiClient implements ApiClientInterface {
     this.token = getCookie("token");
   }
 
-  public async get<T>(url: string, additionnalHeaders: HeadersInit = {}): Promise<T> {
+  public async get<T>(url: string, additionnalHeaders: HeadersInit = {}): Promise<T | ApiClientError> {
     return fetch(`${this.baseUrl}${url}`, {
       headers: {
         Accept: "application/json",
         ...additionnalHeaders,
         ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       },
-    }).then((response) => response.json());
+    })
+      .then(handleApiError)
+      .then((response) => response.json())
+      .catch((error: ApiClientError) => error);
   }
 
-  public async post<T>(url: string, body: object = {}, additionnalHeaders: HeadersInit = {}): Promise<T> {
+  public async post<T>(url: string, body: object = {}, additionnalHeaders: HeadersInit = {}): Promise<T | ApiClientError> {
     const isFormData = body instanceof FormData;
 
     const headers: HeadersInit = isFormData
@@ -50,10 +55,13 @@ export class ApiClient implements ApiClientInterface {
         ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       },
       body: isFormData ? body : JSON.stringify(body),
-    }).then((response) => response.json());
+    })
+      .then(handleApiError)
+      .then((response) => response.json())
+      .catch((error: ApiClientError) => error);
   }
 
-  public async put<T>(url: string, body: object = {}, additionnalHeaders: HeadersInit = {}): Promise<T> {
+  public async put<T>(url: string, body: object = {}, additionnalHeaders: HeadersInit = {}): Promise<T | ApiClientError> {
     const isFormData = body instanceof FormData;
 
     const headers: HeadersInit = isFormData
@@ -74,21 +82,31 @@ export class ApiClient implements ApiClientInterface {
         ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       },
       body: isFormData ? body : JSON.stringify(body),
-    }).then((response) => response.json());
+    })
+      .then(handleApiError)
+      .then((response) => response.json())
+      .catch((error: ApiClientError) => error);
   }
 
-  public async delete(url: string): Promise<DeleteResponseInterface> {
+  public async delete(url: string): Promise<DeleteResponseInterface | ApiClientError> {
     return fetch(`${this.baseUrl}${url}`, {
       method: "DELETE",
       headers: {
         ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
       },
-    }).then((response) => ({ success: response.status === 204 }));
+    })
+      .then(handleApiError)
+      .then((response) => ({ success: response.status === 204 }))
+      .catch((error: ApiClientError) => error);
   }
 
-  public async login(email: string, password: string): Promise<LoginResponseInterface> {
+  public async login(email: string, password: string): Promise<LoginResponseInterface | ApiClientError> {
     return this.post<LoginResponseInterface>(paths.login, { email, password })
       .then((response) => {
+        if (response instanceof ApiClientError) {
+          throw response;
+        }
+
         if (response.token) {
           const decodedTokenExp: number = JSON.parse(atob(response.token.split(".")[1]))?.exp ?? 0;
           setCookie("token", response.token, new Date(decodedTokenExp * 1000));
@@ -106,7 +124,8 @@ export class ApiClient implements ApiClientInterface {
         }
 
         return response;
-      });
+      })
+      .catch((error: ApiClientError) => error);
   }
 
   public async register(
@@ -114,7 +133,7 @@ export class ApiClient implements ApiClientInterface {
     password: string,
     firstName: string,
     lastName: string,
-  ): Promise<RegisterResponseInterface> {
+  ): Promise<RegisterResponseInterface | ApiClientError> {
     return this.post<RegisterResponseInterface>(paths.register, {
       email,
       password,
@@ -123,7 +142,7 @@ export class ApiClient implements ApiClientInterface {
     });
   }
 
-  public async confirm(token: string): Promise<ConfirmResponseInterface> {
+  public async confirm(token: string): Promise<ConfirmResponseInterface | ApiClientError> {
     return this.post<ConfirmResponseInterface>(paths.confirm, { token });
   }
 
