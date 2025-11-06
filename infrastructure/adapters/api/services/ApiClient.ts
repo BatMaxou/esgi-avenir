@@ -1,16 +1,20 @@
-import { ApiClientInterface, LoginResponseInterface, RegisterResponseInterface } from "../../../application/services/api/ApiClientInterface";
 import { MeResourceInterface } from "../../../../application/services/api/resources/MeResourceInterface";
 import { MeResource } from "../resources/MeResource";
 import { eraseCookie, getCookie, setCookie } from "../../../utils/frontend/cookies";
 import { paths } from "../../../../application/services/api/paths";
+import { ApiClientInterface, ConfirmResponseInterface, DeleteResponseInterface, LoginResponseInterface, RegisterResponseInterface } from "../../../../application/services/api/ApiClientInterface";
+import { UserResourceInterface } from "../../../../application/services/api/resources/UserResourceInterface";
+import { UserResource } from "../resources/UserResource";
 
 export class ApiClient implements ApiClientInterface {
   private token: string | null = null;
 
   public me: MeResourceInterface;
+  public user: UserResourceInterface;
 
   constructor(private baseUrl: string) {
     this.me = new MeResource(this);
+    this.user = new UserResource(this);
 
     this.token = getCookie("token");
   }
@@ -49,15 +53,38 @@ export class ApiClient implements ApiClientInterface {
     }).then((response) => response.json());
   }
 
-  // TODO
-  // public async delete(url: string): Promise<DeleteResponse> {
-  //   return fetch(`${this.baseUrl}${url}`, {
-  //     method: "DELETE",
-  //     headers: {
-  //       ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
-  //     },
-  //   }).then((response) => ({ success: response.status === 204 }));
-  // }
+  public async put<T>(url: string, body: object = {}, additionnalHeaders: HeadersInit = {}): Promise<T> {
+    const isFormData = body instanceof FormData;
+
+    const headers: HeadersInit = isFormData
+      ? {
+          Accept: "application/json",
+          ...additionnalHeaders,
+        }
+      : {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          ...additionnalHeaders,
+        };
+
+    return fetch(`${this.baseUrl}${url}`, {
+      method: "PUT",
+      headers: {
+        ...headers,
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
+      },
+      body: isFormData ? body : JSON.stringify(body),
+    }).then((response) => response.json());
+  }
+
+  public async delete(url: string): Promise<DeleteResponseInterface> {
+    return fetch(`${this.baseUrl}${url}`, {
+      method: "DELETE",
+      headers: {
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
+      },
+    }).then((response) => ({ success: response.status === 204 }));
+  }
 
   public async login(email: string, password: string): Promise<LoginResponseInterface> {
     return this.post<LoginResponseInterface>(paths.login, { email, password })
@@ -94,6 +121,10 @@ export class ApiClient implements ApiClientInterface {
       firstName,
       lastName,
     });
+  }
+
+  public async confirm(token: string): Promise<ConfirmResponseInterface> {
+    return this.post<ConfirmResponseInterface>(paths.confirm, { token });
   }
 
   public logout(): void {

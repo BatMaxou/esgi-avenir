@@ -5,6 +5,7 @@ import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../../mariadb/config/MariadbConnection";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
 import { UserModel } from "../../mariadb/models/UserModel";
+import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 
 export class MariadbUserRepository implements UserRepositoryInterface {
   private userModel: UserModel;
@@ -40,34 +41,27 @@ export class MariadbUserRepository implements UserRepositoryInterface {
     }
   }
 
-  public async update(user: Partial<User> & { id: number }): Promise<User> {
+  public async update(user: Partial<User> & { id: number }): Promise<User | UserNotFoundError | EmailExistsError> {
     try {
-      const { id, email, password, ...toUpdate } = user;
+      const { id, email, password, roles, ...toUpdate } = user;
+
+      if (roles && !roles.includes(RoleEnum.USER)) {
+        roles.push(RoleEnum.USER);
+      }
 
       await this.userModel.model.update({
         ...toUpdate,
         ...(email ? { email: email.value } : {}),
         ...(password ? { password: password.value } : {}),
+        ...(roles ? { roles } : {}),
       }, {
         where: { id },
       });
 
-      const maybeUpdatedUserRecord = await this.userModel.model.findByPk(id);
-      if (!maybeUpdatedUserRecord) {
-        throw new UserNotFoundError('User not found.');
-      }
-
-      const maybeUser = User.from(maybeUpdatedUserRecord);
-      if (maybeUser instanceof Error) {
-        throw maybeUser;
-      }
-
-      return maybeUser;
+      return await this.findById(id);
     } catch (error) {
-      console.error(error);
-
       if (error instanceof Error && error.name === 'SequelizeUniqueConstraintError') {
-        throw new EmailExistsError(`The email ${user.email?.value} already exists.`);
+        return new EmailExistsError(`The email ${user.email?.value} already exists.`);
       }
 
       throw new UserNotFoundError('User not found.');
@@ -90,6 +84,22 @@ export class MariadbUserRepository implements UserRepositoryInterface {
     } catch (error) {
       throw new UserNotFoundError(`User with email ${email} not found.`);
     }
+  }
+
+  public async findAll(): Promise<User[]> {
+    const foundUsers = await this.userModel.model.findAll();
+    const users: User[] = [];
+
+    foundUsers.forEach((foundUser) => {
+      const maybeUser = User.from(foundUser);
+      if (maybeUser instanceof Error) {
+        throw maybeUser;
+      }
+
+      users.push(maybeUser);
+    });
+
+    return users;
   }
 
   public async findByEmail(email: string): Promise<User | UserNotFoundError> {
@@ -143,6 +153,19 @@ export class MariadbUserRepository implements UserRepositoryInterface {
       return maybeUser;
     } catch (error) {
       throw new UserNotFoundError('Invalid token.');
+    }
+  }
+
+  public async delete(id: number): Promise<boolean | UserNotFoundError> {
+    try {
+      const deletedCount = await this.userModel.model.destroy({ where: { id } });
+      if (deletedCount === 0) {
+        return new UserNotFoundError('User not found.');
+      }
+
+      return true;
+    } catch (error) {
+      throw new UserNotFoundError('User not found.');
     }
   }
 }

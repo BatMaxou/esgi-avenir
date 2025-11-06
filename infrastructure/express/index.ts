@@ -14,6 +14,9 @@ import { Mailer } from "../adapters/nodemailer/services/Mailer";
 import { PasswordHasher } from "../adapters/bcrypt/services/PasswordHasher";
 import { UniqueIdGenerator } from "../adapters/uuid/services/UniqueIdGenerator";
 import { TokenManager } from "../adapters/jwt/services/TokenManager";
+import { UserController } from "./controllers/UserController";
+import { roleMiddleware } from "./middlewares/roleMiddleware";
+import { RoleEnum } from "../../domain/enums/RoleEnum";
 
 const startServer = async () => {
   const app = express();
@@ -28,6 +31,7 @@ const startServer = async () => {
 
   const meController = new MeController(repositoryResolver.getUserRepository());
   const authContoller = new AuthController(repositoryResolver.getUserRepository(), mailer, passwordHasher, uniqueIdGenerator, tokenManager);
+  const userController = new UserController(repositoryResolver.getUserRepository(), passwordHasher, uniqueIdGenerator, mailer);
 
   app.get('/', (_, res) => {
     res.send("Hello World!");
@@ -48,6 +52,51 @@ const startServer = async () => {
   app.post(paths.confirm,  async (req, res) => {
     await authContoller.confirm(req, res);
   });
+
+  app.get(
+    paths.user.detail(),
+    authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+    roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+    async (req, res) => {
+      await userController.get(req, res);
+    }
+  )
+
+  app.get(
+    paths.user.list,
+    authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+    roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+    async (req, res) => {
+      await userController.list(req, res);
+    }
+  );
+
+  app.post(
+    paths.user.create,
+    authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+    roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+    async (req, res) => {
+      await userController.create(req, res);
+    }
+  );
+
+  app.put(
+    paths.user.update(),
+    authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+    roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+    async (req, res) => {
+      await userController.update(req, res);
+    }
+  );
+
+  app.delete(
+    paths.user.delete(),
+    authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+    roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+    async (req, res) => {
+      await userController.delete(req, res);
+    }
+  );
 
   app.listen(3000, () => console.log(`Listening on port 3000`));
 };

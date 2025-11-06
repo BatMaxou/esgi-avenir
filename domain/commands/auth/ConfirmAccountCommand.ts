@@ -1,10 +1,12 @@
 import { InvalidConfirmAccountCommandError } from '../../errors/commands/auth/InvalidConfirmAccountCommandError';
 import { InvalidRegisterCommandError } from '../../errors/commands/auth/InvalidRegisterCommandError';
 
+interface Body {
+  token?: string
+}
+
 export class ConfirmAccountCommand {
-  public static from(body: {
-    token?: string
-  }): ConfirmAccountCommand | InvalidConfirmAccountCommandError {
+  public static from(body: Body): ConfirmAccountCommand | InvalidConfirmAccountCommandError {
     if (!body.token) {
       return new InvalidConfirmAccountCommandError('Payload is not valid.');
     }

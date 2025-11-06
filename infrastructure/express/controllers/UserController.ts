@@ -1,0 +1,200 @@
+import { Request, Response } from "express";
+
+import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
+import { EmailValue } from "../../../domain/values/EmailValue";
+import { InvalidEmailError } from "../../../domain/errors/values/email/InvalidEmailError";
+import { PasswordValue } from "../../../domain/values/PasswordValue";
+import { InvalidPasswordError } from "../../../domain/errors/values/password/InvalidPasswordError";
+import { PasswordHasherInterface } from "../../../application/services/password/PasswordHasherInterface";
+import { UniqueIdGeneratorInterface } from "../../../application/services/uid/UniqueIdGeneratorInterface";
+import { CreateUserUsecase } from "../../../application/usecases/user/CreateUserUsecase";
+import { CreateUserCommand } from "../../../domain/commands/user/CreateUserCommand";
+import { InvalidCreateUserCommandError } from "../../../domain/errors/commands/user/InvalidCreateUserCommandError";
+import { UpdateUserCommand } from "../../../domain/commands/user/UpdateUserCommand";
+import { InvalidUpdateUserCommandError } from "../../../domain/errors/commands/user/InvalidUpdateUserCommandError";
+import { UpdateUserUsecase } from "../../../application/usecases/user/UpdateUserUsecase";
+import { UpdateUserParams } from "../../../domain/params/user/UpdateUserParams";
+import { SendConfirmationEmailUsecase } from "../../../application/usecases/email/SendConfirmationEmailUsecase";
+import { frontUrl } from "../utils/tools";
+import { MailerInterface } from "../../../application/services/email/MailerInterface";
+import { InvalidUpdateUserParamsError } from "../../../domain/errors/params/user/InvalidUpdateUserParamsError";
+import { DeleteUserParams } from "../../../domain/params/user/DeleteUserParams";
+import { InvalidDeleteUserParamsError } from "../../../domain/errors/params/user/InvalidDeleteUserParamsError";
+import { GetUserParams } from "../../../domain/params/user/GetUserParams";
+import { InvalidGetUserParamsError } from "../../../domain/errors/params/user/InvalidGetUserParamsError";
+
+export class UserController {
+  public constructor(
+    private readonly userRepository: UserRepositoryInterface,
+    private readonly passwordHasher: PasswordHasherInterface,
+    private readonly uniqueIdGenerator: UniqueIdGeneratorInterface,
+    private readonly mailer: MailerInterface,
+  ) {}
+
+  public async create(request: Request, response: Response) {
+    const maybeCommand = CreateUserCommand.from(request.body);
+    if (maybeCommand instanceof InvalidCreateUserCommandError) {
+      return response.status(400).json({
+        error: maybeCommand.message,
+      });
+    }
+
+    const maybeEmail = EmailValue.from(maybeCommand.email);
+    if (maybeEmail instanceof InvalidEmailError) {
+      return response.status(400).json({
+        error: maybeEmail.message,
+      });
+    }
+
+    const maybePassword = PasswordValue.from(maybeCommand.password);
+    if (maybePassword instanceof InvalidPasswordError) {
+      return response.status(400).json({
+        error: maybePassword.message,
+      });
+    }
+
+    const createUsecase = new CreateUserUsecase(this.userRepository, this.passwordHasher, this.uniqueIdGenerator);
+    const maybeUser = await createUsecase.execute(
+      maybeEmail.value,
+      maybePassword.value,
+      maybeCommand.firstName,
+      maybeCommand.lastName,
+      maybeCommand.roles,
+    );
+
+    if (maybeUser instanceof Error) {
+      return response.status(400).json({
+        error: maybeUser.message,
+      });
+    }
+
+    const sendEmailUsecase = new SendConfirmationEmailUsecase(this.mailer);
+    await sendEmailUsecase.execute(
+      maybeEmail,
+      `${frontUrl}/confirm?token=${maybeUser.confirmationToken}`,
+    );
+
+    response.status(201).json({
+      id: maybeUser.id,
+      email: maybeUser.email.value,
+      firstName: maybeUser.firstName,
+      lastName: maybeUser.lastName,
+      roles: maybeUser.roles,
+    });
+  }
+
+  public async list(_: Request, response: Response) {
+    const users = await this.userRepository.findAll();
+
+    const usersResponse = users.map((user) => ({
+      id: user.id,
+      email: user.email.value,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      roles: user.roles,
+    }));
+
+    response.status(200).json(usersResponse);
+  }
+
+  public async get(request: Request, response: Response) {
+    const maybeParams = GetUserParams.from(request.params);
+    if (maybeParams instanceof InvalidGetUserParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
+
+    const maybeUser = await this.userRepository.findById(maybeParams.id);
+    if (maybeUser instanceof Error) {
+      return response.status(404).json({
+        error: maybeUser.message,
+      });
+    }
+
+    response.status(200).json({
+      id: maybeUser.id,
+      email: maybeUser.email.value,
+      firstName: maybeUser.firstName,
+      lastName: maybeUser.lastName,
+      roles: maybeUser.roles,
+    });
+  }
+
+  public async update(request: Request, response: Response) {
+    const maybeParams = UpdateUserParams.from(request.params);
+    if (maybeParams instanceof InvalidUpdateUserParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
+
+    const maybeCommand = UpdateUserCommand.from(request.body);
+    if (maybeCommand instanceof InvalidUpdateUserCommandError) {
+      return response.status(400).json({
+        error: maybeCommand.message,
+      });
+    }
+
+    const maybeEmail = maybeCommand.email ? EmailValue.from(maybeCommand.email) : undefined;
+    if (maybeEmail instanceof InvalidEmailError) {
+      return response.status(400).json({
+        error: maybeEmail.message,
+      });
+    }
+
+    const maybePassword = maybeCommand.password ? PasswordValue.from(maybeCommand.password) : undefined;
+    if (maybePassword instanceof InvalidPasswordError) {
+      return response.status(400).json({
+        error: maybePassword.message,
+      });
+    }
+
+    const updateUserUsecase = new UpdateUserUsecase(this.userRepository, this.passwordHasher);
+    const maybeUser = await updateUserUsecase.execute(
+      maybeParams.id,
+      {
+        email: maybeEmail,
+        password: maybePassword,
+        firstName: maybeCommand.firstName,
+        lastName: maybeCommand.lastName,
+        roles: maybeCommand.roles,
+      }
+    );
+
+    if (maybeUser instanceof Error) {
+      return response.status(400).json({
+        error: maybeUser.message,
+      });
+    }
+
+    response.status(200).json({
+      id: maybeUser.id,
+      email: maybeUser.email.value,
+      firstName: maybeUser.firstName,
+      lastName: maybeUser.lastName,
+      roles: maybeUser.roles,
+    }); 
+  }
+
+  public async delete(request: Request, response: Response) {
+    const maybeParams = DeleteUserParams.from(request.params);
+    if (maybeParams instanceof InvalidDeleteUserParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
+
+    const maybeSuccess = await this.userRepository.delete(maybeParams.id);
+    if (maybeSuccess instanceof Error) {
+      return response.status(400).json({
+        error: maybeSuccess.message,
+      });
+    }
+
+    response.status(200).json({
+      success: maybeSuccess,
+    });
+  }
+}
+

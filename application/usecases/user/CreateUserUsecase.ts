@@ -1,14 +1,14 @@
 import { User } from '../../../domain/entities/User';
-import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotFoundError';
 import { EmailExistsError } from '../../../domain/errors/values/email/EmailExistsError';
 import { InvalidEmailError } from '../../../domain/errors/values/email/InvalidEmailError';
 import { UserRepositoryInterface } from '../../repositories/UserRepositoryInterface';
-import { MailerInterface } from '../../services/email/MailerInterface';
 import { InvalidPasswordError } from '../../../domain/errors/values/password/InvalidPasswordError';
 import { PasswordHasherInterface } from '../../services/password/PasswordHasherInterface';
 import { UniqueIdGeneratorInterface } from '../../services/uid/UniqueIdGeneratorInterface';
+import { RoleEnum } from '../../../domain/enums/RoleEnum';
+import { InvalidRolesError } from '../../../domain/errors/entities/user/InvalidRolesError';    
 
-export class RegisterUsecase {
+export class CreateUserUsecase {
   public constructor(
     private readonly userRepository: UserRepositoryInterface,
     private readonly passwordHasher: PasswordHasherInterface,
@@ -20,18 +20,21 @@ export class RegisterUsecase {
     password: string,
     firstName: string,
     lastName: string,
-  ): Promise<User | EmailExistsError | InvalidEmailError> {
+    roles?: RoleEnum[],
+  ): Promise<User | EmailExistsError | InvalidEmailError | InvalidRolesError> {
     const maybeNewUser = User.from({
       firstName,
       lastName,
       email,
       password: this.passwordHasher.createHash(password),
       confirmationToken: this.uniqueIdGenerator.generate(),
+      ...(roles ? { roles } : {})
     });
 
     if (
       maybeNewUser instanceof InvalidEmailError
       || maybeNewUser instanceof InvalidPasswordError
+      || maybeNewUser instanceof InvalidRolesError
     ) {
       return maybeNewUser;
     }

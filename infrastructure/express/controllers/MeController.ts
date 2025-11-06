@@ -24,6 +24,11 @@ export class MeController {
       });
     }
 
-    response.status(200).json(maybeUser);
+    response.status(200).json({
+      id: maybeUser.id,
+      email: maybeUser.email.value,
+      firstName: maybeUser.firstName,
+      lastName: maybeUser.lastName,
+    });
   }
 }
