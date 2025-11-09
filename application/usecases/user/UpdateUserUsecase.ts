@@ -1,6 +1,6 @@
 import { User } from '../../../domain/entities/User';
 import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotFoundError';
-import { EmailExistsError } from '../../../domain/errors/values/email/EmailExistsError';
+import { EmailExistsError } from '../../../domain/errors/entities/user/EmailExistsError';
 import { HashedPasswordValue } from '../../../domain/values/HashedPasswordValue';
 import { UserRepositoryInterface } from '../../repositories/UserRepositoryInterface';
 import { PasswordHasherInterface } from '../../services/password/PasswordHasherInterface';

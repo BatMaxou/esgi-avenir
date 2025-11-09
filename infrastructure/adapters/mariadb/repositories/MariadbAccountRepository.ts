@@ -1,10 +1,12 @@
 import { AccountRepositoryInterface } from "../../../../application/repositories/AccountRepositoryInterface";
 import { Account } from "../../../../domain/entities/Account";
+import { AccountNotFoundError } from "../../../../domain/errors/entities/account/AccountNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
 import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { AccountModel } from "../models/AccountModel";
 import { UserModel } from "../models/UserModel";
+import { IbanExistsError } from "../../../../domain/errors/entities/account/IbanExistsError";
 
 export class MariadbAccountRepository implements AccountRepositoryInterface {
   private accountModel: AccountModel;
@@ -29,8 +31,80 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
       return maybeAccount;
     } catch (error) {
+      if (error instanceof Error && error.name === 'SequelizeUniqueConstraintError') {
+        return new IbanExistsError(`The IBAN ${account.iban} already exists.`);
+      }
+
       // TODO sequelize foreign key error handling ??
-      throw error;
+      throw new AccountNotFoundError('Account not found.');
+    }
+  }
+
+  public async update(account: Omit<Partial<Account>, 'iban'> & { id: number }): Promise<Account | AccountNotFoundError> {
+    try {
+      const { id, ...toUpdate } = account;
+
+      await this.accountModel.model.update({
+        ...toUpdate,
+      }, {
+        where: { id },
+      });
+
+      return await this.findById(id);
+    } catch (error) {
+      throw new AccountNotFoundError('Account not found.');
+    }
+  }
+
+  public async findAllByOwner(ownerId: number): Promise<Account[]> {
+    const foundAccounts = await this.accountModel.model.findAll({
+      where: {
+        ownerId: ownerId,
+      },
+    });
+
+    const accounts: Account[] = [];
+
+    foundAccounts.forEach((foundAccount) => {
+      const maybeAccount = Account.from(foundAccount);
+      if (maybeAccount instanceof Error) {
+        throw maybeAccount;
+      }
+
+      accounts.push(maybeAccount);
+    });
+
+    return accounts;
+  }
+
+  public async findById(id: number): Promise<Account | AccountNotFoundError> {
+    try {
+      const foundAccount = await this.accountModel.model.findByPk(id);
+      if (!foundAccount) {
+        return new AccountNotFoundError(`Account with id ${id} not found.`);
+      }
+
+      const maybeAccount = Account.from(foundAccount);
+      if (maybeAccount instanceof Error) {
+        throw maybeAccount;
+      }
+
+      return maybeAccount;
+    } catch (error) {
+      throw new AccountNotFoundError(`Account with id ${id} not found.`);
+    }
+  }
+
+  public async delete(id: number): Promise<boolean | AccountNotFoundError> {
+    try {
+      const deletedCount = await this.accountModel.model.destroy({ where: { id } });
+      if (deletedCount === 0) {
+        return new AccountNotFoundError('Account not found.');
+      }
+
+      return true;
+    } catch (error) {
+      throw new AccountNotFoundError('Account not found.');
     }
   }
 }
