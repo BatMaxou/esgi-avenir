@@ -1,9 +1,5 @@
 import { AccountRepositoryInterface } from "../../../application/repositories/AccountRepositoryInterface";
-import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
-import { PasswordHasherInterface } from "../../../application/services/password/PasswordHasherInterface";
-import { User } from "../../../domain/entities/User";
 import { Account } from "../../../domain/entities/Account";
-import { RoleEnum } from "../../../domain/enums/RoleEnum";
 
 type MockAccount = {
   iban: string,
@@ -21,6 +17,11 @@ export class AccountFixtures {
       {
         iban: 'FR7612345678901234567890123',
         name: 'User Account',
+        ownerId: 1,
+      },
+      {
+        iban: 'FR7612345678901234567890124',
+        name: 'Second User Account',
         ownerId: 1,
       },
     ];

@@ -17,7 +17,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
   public async create(account: Account): Promise<Account | UserNotFoundError> {
     try {
       const createdAccount = await this.accountModel.model.create({
-        iban: account.iban,
+        iban: account.iban.value,
         name: account.name,
         ownerId: account.ownerId,
       });

@@ -1,11 +1,7 @@
-import { RoleEnum } from "../enums/RoleEnum";
-import { InvalidEmailError } from "../errors/values/email/InvalidEmailError";
-import { InvalidPasswordError } from "../errors/values/password/InvalidPasswordError";
-import { EmailValue } from "../values/EmailValue";
-import { PasswordValue } from "../values/PasswordValue";
-import { HashedPasswordValue } from "../values/HashedPasswordValue";
-import { InvalidRolesError } from "../errors/entities/user/InvalidRolesError";
 import { User } from "./User";
+import { InvalidOwnerError } from "../errors/entities/account/InvalidOwnerError";
+import { InvalidIbanError } from "../errors/values/iban/InvalidIbanError";
+import { IbanValue } from "../values/IbanValue";
 
 export class Account {
   public id?: number;
@@ -22,15 +18,19 @@ export class Account {
     name: string,
     ownerId?: number,
     owner?: User,
-  }): Account {
+  }): Account | InvalidOwnerError | InvalidIbanError {
     const maybeOwnerId = ownerId ?? owner?.id;
     if (!maybeOwnerId) {
-      // TODO create et retrun custom error
-      throw new Error('Owner ID is required to create an Account.');
+      return new InvalidOwnerError('Account must have a valid ownerId or owner.');
+    }
+
+    const maybeIban = IbanValue.from(iban);
+    if (maybeIban instanceof InvalidIbanError) {
+      return maybeIban;
     }
 
     const account = new this(
-      iban,
+      maybeIban,
       name,
       maybeOwnerId,
       owner ?? undefined,
@@ -44,7 +44,7 @@ export class Account {
   }
 
   private constructor(
-    public iban: string,
+    public iban: IbanValue,
     public name: string,
     public ownerId: number,
     public owner?: User,
