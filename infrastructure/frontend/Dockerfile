@@ -3,9 +3,11 @@ FROM node:22-alpine
 WORKDIR /app
 
 COPY ./package*.json .
+COPY ./domain/package*.json ./domain/
 COPY ./infrastructure/frontend/package*.json ./infrastructure/frontend/
 
 RUN npm -w infrastructure/frontend install
+RUN npm -w domain install
 
 COPY ./domain ./domain
 COPY ./application ./application

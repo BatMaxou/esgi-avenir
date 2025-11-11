@@ -34,7 +34,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
       return maybeUser;
     } catch (error) {
       if (error instanceof Error && error.name === 'SequelizeUniqueConstraintError') {
-        return new EmailExistsError(`The email ${user.email.value} already exists.`);
+        return new EmailExistsError('Given email already exists.');
       }
 
       throw error;
@@ -61,7 +61,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
       return await this.findById(id);
     } catch (error) {
       if (error instanceof Error && error.name === 'SequelizeUniqueConstraintError') {
-        return new EmailExistsError(`The email ${user.email?.value} already exists.`);
+        return new EmailExistsError('Given email already exists.');
       }
 
       throw new UserNotFoundError('User not found.');
@@ -72,7 +72,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
     try {
       const foundUser = await this.userModel.model.findOne({ where: { email, password } });
       if (!foundUser) {
-        return new UserNotFoundError(`User with email ${email} not found.`);
+        return new UserNotFoundError('User not found.');
       }
 
       const maybeUser = User.from(foundUser);
@@ -82,7 +82,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
 
       return maybeUser;
     } catch (error) {
-      throw new UserNotFoundError(`User with email ${email} not found.`);
+      throw new UserNotFoundError('User not found.');
     }
   }
 
@@ -106,7 +106,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
     try {
       const foundUser = await this.userModel.model.findOne({ where: { email } });
       if (!foundUser) {
-        return new UserNotFoundError(`User with email ${email} not found.`);
+        return new UserNotFoundError('User not found.');
       }
 
       const maybeUser = User.from(foundUser);
@@ -116,7 +116,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
 
       return maybeUser;
     } catch (error) {
-      throw new UserNotFoundError(`User with email ${email} not found.`);
+      throw new UserNotFoundError('User not found.');
     }
   }
 
@@ -124,7 +124,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
     try {
       const foundUser = await this.userModel.model.findByPk(id);
       if (!foundUser) {
-        return new UserNotFoundError(`User with id ${id} not found.`);
+        return new UserNotFoundError('User not found.');
       }
 
       const maybeUser = User.from(foundUser);
@@ -134,7 +134,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
 
       return maybeUser;
     } catch (error) {
-      throw new UserNotFoundError(`User with id ${id} not found.`);
+      throw new UserNotFoundError('User not found.');
     }
   }
 

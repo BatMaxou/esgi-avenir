@@ -83,7 +83,7 @@ export class IbanValue {
   }
 
   public static from(value: string): IbanValue | InvalidIbanError {
-    if (isValidIBAN(value)) {
+    if (!isValidIBAN(value)) {
       return new InvalidIbanError("Iban is not valid"); 
     }
 
@@ -105,7 +105,7 @@ export class IbanValue {
     if (!isValidIBAN(iban)) {
       return new InvalidIbanError("Iban is not valid");
     }
-    
+
     return new IbanValue(iban);
   }
 

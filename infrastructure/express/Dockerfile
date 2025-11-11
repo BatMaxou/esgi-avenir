@@ -3,6 +3,7 @@ FROM node:22-alpine
 WORKDIR /app
 
 COPY ./package*.json .
+COPY ./domain/package*.json ./domain/
 COPY ./infrastructure/adapters/mariadb/package*.json ./infrastructure/adapters/mariadb/
 COPY ./infrastructure/adapters/mongodb/package*.json ./infrastructure/adapters/mongodb/
 COPY ./infrastructure/adapters/nodemailer/package*.json ./infrastructure/adapters/nodemailer/
@@ -11,6 +12,7 @@ COPY ./infrastructure/adapters/uuid/package*.json ./infrastructure/adapters/uuid
 COPY ./infrastructure/adapters/jwt/package*.json ./infrastructure/adapters/jwt/
 COPY ./infrastructure/express/package*.json ./infrastructure/express/
 
+RUN npm -w domain install
 RUN npm -w infrastructure/adapters/mariadb install
 RUN npm -w infrastructure/adapters/mongodb install
 RUN npm -w infrastructure/adapters/nodemailer install

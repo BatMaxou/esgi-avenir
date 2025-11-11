@@ -24,3 +24,5 @@ export const mailerHost: string = process.env.MAILER_HOST || '';
 export const mailerPort: number = parseInt(process.env.MAILER_PORT || '587', 10);
 export const mailerFrom: string = process.env.MAILER_FROM || '';
 export const frontUrl: string = process.env.FRONT_URL || 'http://localhost:3000';
+export const bankCode: string = process.env.BANK_CODE || '';
+export const branchCode: string = process.env.BRANCH_CODE || '';

@@ -81,7 +81,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
     try {
       const foundAccount = await this.accountModel.model.findByPk(id);
       if (!foundAccount) {
-        return new AccountNotFoundError(`Account with id ${id} not found.`);
+        return new AccountNotFoundError('Account not found.');
       }
 
       const maybeAccount = Account.from(foundAccount);
@@ -91,8 +91,20 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
       return maybeAccount;
     } catch (error) {
-      throw new AccountNotFoundError(`Account with id ${id} not found.`);
+      throw new AccountNotFoundError('Account not found');
     }
+  }
+
+  public async findNextId(): Promise<number> {
+    const foundAccount = await this.accountModel.model.findOne({
+      order: [['id', 'DESC']],
+    });
+
+    if (!foundAccount) {
+      return 1;
+    }
+
+    return foundAccount.id +1;
   }
 
   public async delete(id: number): Promise<boolean | AccountNotFoundError> {

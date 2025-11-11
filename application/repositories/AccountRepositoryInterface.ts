@@ -8,4 +8,5 @@ export interface AccountRepositoryInterface extends RepositoryInterface {
   delete: (id: number) => Promise<boolean | AccountNotFoundError>
   findById: (id: number) => Promise<Account | AccountNotFoundError>
   findAllByOwner: (ownerId: number) => Promise<Account[]>
+  findNextId: () => Promise<number>
 }
