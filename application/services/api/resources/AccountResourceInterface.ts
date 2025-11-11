@@ -1,9 +1,10 @@
 import { ApiClientError } from '../ApiClientError';
 import { DeleteResponseInterface } from '../ApiClientInterface';
-import type { Account } from '../../../../domain/entities/Account';
+import type { Account, HydratedAccount } from '../../../../domain/entities/Account';
 
 export interface GetAccountResponseInterface extends Account {}
-export interface GetAccountListResponseInterface extends Array<GetAccountResponseInterface> {}
+export interface GetHydratedAccountResponseInterface extends HydratedAccount {}
+export interface GetAccountListResponseInterface extends Array<GetHydratedAccountResponseInterface> {}
 
 export interface CreateAccountPayloadInterface {
   name: string;
@@ -15,6 +16,7 @@ export interface UpdateAccountPayloadInterface {
 }
 
 export interface AccountResourceInterface {
+  get(id: number): Promise<GetHydratedAccountResponseInterface | ApiClientError>;
   getAll(): Promise<GetAccountListResponseInterface | ApiClientError>;
   create(data: CreateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError>;
   update(data: UpdateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError>;

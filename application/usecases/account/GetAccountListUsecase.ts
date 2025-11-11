@@ -1,4 +1,4 @@
-import { Account } from '../../../domain/entities/Account';
+import { Account, HydratedAccount } from '../../../domain/entities/Account';
 import { User } from '../../../domain/entities/User';
 import { AccountNotFoundError } from '../../../domain/errors/entities/account/AccountNotFoundError';
 import { AccountAmountValue } from '../../../domain/values/AccountAmountValue';
@@ -13,7 +13,7 @@ export class GetAccountListUsecase {
 
   public async execute(
     owner: User,
-  ): Promise<(Account & { amount: number })[]> {
+  ): Promise<HydratedAccount[]> {
     if (!owner.id) {
       return [];
     }

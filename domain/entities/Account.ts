@@ -3,6 +3,10 @@ import { InvalidOwnerError } from "../errors/entities/account/InvalidOwnerError"
 import { InvalidIbanError } from "../errors/values/iban/InvalidIbanError";
 import { IbanValue } from "../values/IbanValue";
 
+export interface HydratedAccount extends Account {
+  amount: number;
+}
+
 export class Account {
   public id?: number;
 

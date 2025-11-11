@@ -19,6 +19,9 @@ import { DeleteAccountUsecase } from "../../../application/usecases/account/Dele
 import { SendAccountDeletionEmailUsecase } from "../../../application/usecases/email/SendAccountDeletionEmailUsecase";
 import { GetAccountListUsecase } from "../../../application/usecases/account/GetAccountListUsecase";
 import { OperationRepositoryInterface } from "../../../application/repositories/OperationRepositoryInterface";
+import { GetAccountParams } from "../../../domain/params/account/GetAccountParams";
+import { InvalidGetAccountParamsError } from "../../../domain/errors/params/account/InvalidGetAccountParamsError";
+import { GetAccountUsecase } from "../../../application/usecases/account/GetAccountUsecase";
 
 export class AccountController {
   public constructor(
@@ -83,31 +86,31 @@ export class AccountController {
     response.status(200).json(accountsResponse);
   }
 
-  // TODO: implement get when operation is ready
-  //
-  // public async get(request: Request, response: Response) {
-  //   const maybeParams = GetUserParams.from(request.params);
-  //   if (maybeParams instanceof InvalidGetUserParamsError) {
-  //     return response.status(400).json({
-  //       error: maybeParams.message,
-  //     });
-  //   }
-  //
-  //   const maybeUser = await this.userRepository.findById(maybeParams.id);
-  //   if (maybeUser instanceof UserNotFoundError) {
-  //     return response.status(404).json({
-  //       error: maybeUser.message,
-  //     });
-  //   }
-  //
-  //   response.status(200).json({
-  //     id: maybeUser.id,
-  //     email: maybeUser.email.value,
-  //     firstName: maybeUser.firstName,
-  //     lastName: maybeUser.lastName,
-  //     roles: maybeUser.roles,
-  //   });
-  // }
+  public async get(request: Request, response: Response) {
+    const maybeParams = GetAccountParams.from(request.params);
+    if (maybeParams instanceof InvalidGetAccountParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
+
+    const owner = request.user;
+    if (!owner) {
+      return response.status(401).json({
+        error: 'Unauthorized',
+      });
+    }
+
+    const getAccountUsecase = new GetAccountUsecase(this.accountRepository, this.operationRepository);
+    const maybeAccount = await getAccountUsecase.execute(maybeParams.id, owner);
+    if (maybeAccount instanceof AccountNotFoundError) {
+      return response.status(404).json({
+        error: maybeAccount.message,
+      });
+    }
+
+    response.status(200).json(maybeAccount);
+  }
 
   public async update(request: Request, response: Response) {
     const maybeParams = UpdateAccountParams.from(request.params);
@@ -191,57 +194,4 @@ export class AccountController {
       success: maybeSuccess,
     });
   }
-
-  // public async ban(request: Request, response: Response) {
-  //   const maybeParams = BanUserParams.from(request.params);
-  //   if (maybeParams instanceof InvalidBanUserParamsError) {
-  //     return response.status(400).json({
-  //       error: maybeParams.message,
-  //     });
-  //   }
-  //
-  //   const banUserUsecase = new BanUserUsecase(this.userRepository);
-  //   const maybeUser = await banUserUsecase.execute(maybeParams.id);
-  //
-  //   if (maybeUser instanceof UserNotFoundError) {
-  //     return response.status(404).json({
-  //       error: maybeUser.message,
-  //     });
-  //   }
-  //
-  //   response.status(200).json({
-  //     id: maybeUser.id,
-  //     email: maybeUser.email.value,
-  //     firstName: maybeUser.firstName,
-  //     lastName: maybeUser.lastName,
-  //     roles: maybeUser.roles,
-  //   }); 
-  // }
-  //
-  // public async unban(request: Request, response: Response) {
-  //   const maybeParams = UnbanUserParams.from(request.params);
-  //   if (maybeParams instanceof InvalidUnbanUserParamsError) {
-  //     return response.status(400).json({
-  //       error: maybeParams.message,
-  //     });
-  //   }
-  //
-  //   const unbanUserUsecase = new UnbanUserUsecase(this.userRepository);
-  //   const maybeUser = await unbanUserUsecase.execute(maybeParams.id);
-  //
-  //   if (maybeUser instanceof UserNotFoundError) {
-  //     return response.status(404).json({
-  //       error: maybeUser.message,
-  //     });
-  //   }
-  //
-  //   response.status(200).json({
-  //     id: maybeUser.id,
-  //     email: maybeUser.email.value,
-  //     firstName: maybeUser.firstName,
-  //     lastName: maybeUser.lastName,
-  //     roles: maybeUser.roles,
-  //   }); 
-  // }
 }
-
