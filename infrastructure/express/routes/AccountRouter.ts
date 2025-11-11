@@ -16,7 +16,11 @@ export class AccountRouter {
     mailer: MailerInterface,
     tokenManager: TokenManagerInterface,
   ) {
-    const accountController = new AccountController(repositoryResolver.getAccountRepository(), mailer);
+    const accountController = new AccountController(
+      repositoryResolver.getAccountRepository(),
+      repositoryResolver.getOperationRepository(),
+      mailer
+    );
 
     app.post(
       paths.account.create,

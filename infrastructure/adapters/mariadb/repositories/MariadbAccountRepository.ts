@@ -7,6 +7,7 @@ import { MariadbConnection } from "../config/MariadbConnection";
 import { AccountModel } from "../models/AccountModel";
 import { UserModel } from "../models/UserModel";
 import { IbanExistsError } from "../../../../domain/errors/entities/account/IbanExistsError";
+import { IbanValue } from "../../../../domain/values/IbanValue";
 
 export class MariadbAccountRepository implements AccountRepositoryInterface {
   private accountModel: AccountModel;
@@ -16,7 +17,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
     this.accountModel = new AccountModel(new MariadbConnection(databaseDsn).getConnection(), userModel);
   }
 
-  public async create(account: Account): Promise<Account | UserNotFoundError> {
+  public async create(account: Account): Promise<Account | IbanExistsError | UserNotFoundError> {
     try {
       const createdAccount = await this.accountModel.model.create({
         iban: account.iban.value,
@@ -35,8 +36,11 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
         return new IbanExistsError(`The IBAN ${account.iban} already exists.`);
       }
 
-      // TODO sequelize foreign key error handling ??
-      throw new AccountNotFoundError('Account not found.');
+      if (error instanceof Error && error.name === 'SequelizeForeignKeyConstraintError') {
+        return new UserNotFoundError('User not found.');
+      }
+
+      throw new UserNotFoundError('User not found.');
     }
   }
 
@@ -80,6 +84,24 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
   public async findById(id: number): Promise<Account | AccountNotFoundError> {
     try {
       const foundAccount = await this.accountModel.model.findByPk(id);
+      if (!foundAccount) {
+        return new AccountNotFoundError('Account not found.');
+      }
+
+      const maybeAccount = Account.from(foundAccount);
+      if (maybeAccount instanceof Error) {
+        throw maybeAccount;
+      }
+
+      return maybeAccount;
+    } catch (error) {
+      throw new AccountNotFoundError('Account not found');
+    }
+  }
+
+  public async findByIban(iban: IbanValue): Promise<Account | AccountNotFoundError> {
+    try {
+      const foundAccount = await this.accountModel.model.findOne({ where: { iban: iban.value } });
       if (!foundAccount) {
         return new AccountNotFoundError('Account not found.');
       }

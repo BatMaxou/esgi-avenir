@@ -1,6 +1,6 @@
 import { MariadbConnection } from '../../adapters/mariadb/config/MariadbConnection';
 import { databaseDsn } from '../utils/tools';
-import { initModels } from "../utils/initModel";
+import { initModels } from '../../adapters/mariadb/initModels';
 
 const sync = async () => {
   try {

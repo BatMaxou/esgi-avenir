@@ -18,10 +18,12 @@ import { InvalidDeleteAccountParamsError } from "../../../domain/errors/params/a
 import { DeleteAccountUsecase } from "../../../application/usecases/account/DeleteAccountUsecase";
 import { SendAccountDeletionEmailUsecase } from "../../../application/usecases/email/SendAccountDeletionEmailUsecase";
 import { GetAccountListUsecase } from "../../../application/usecases/account/GetAccountListUsecase";
+import { OperationRepositoryInterface } from "../../../application/repositories/OperationRepositoryInterface";
 
 export class AccountController {
   public constructor(
     private readonly accountRepository: AccountRepositoryInterface,
+    private readonly operationRepository: OperationRepositoryInterface,
     private readonly mailer: MailerInterface,
   ) {}
 
@@ -68,13 +70,14 @@ export class AccountController {
       });
     }
     
-    const getAccountListUsecase = new GetAccountListUsecase(this.accountRepository);
+    const getAccountListUsecase = new GetAccountListUsecase(this.accountRepository, this.operationRepository);
     const accounts = await getAccountListUsecase.execute(owner);
 
     const accountsResponse = accounts.map((account) => ({
       id: account.id,
       name: account.name,
       iban: account.iban,
+      amount: account.amount,
     }));
 
     response.status(200).json(accountsResponse);

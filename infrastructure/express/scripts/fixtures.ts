@@ -1,10 +1,11 @@
 import { PasswordHasher } from "../../adapters/bcrypt/services/PasswordHasher";
 import { MariadbConnection } from "../../adapters/mariadb/config/MariadbConnection";
 import { RepositoryResolver } from "../../adapters/services/RepositoryResolver";
-import { AccountFixtures } from "../fixtures/AccountFixtures";
-import { UserFixtures } from "../fixtures/UserFixtures";
-import { initModels } from "../utils/initModel";
-import { databaseDsn, databaseSource } from "../utils/tools";
+import { bankCode, branchCode, databaseDsn, databaseSource } from "../utils/tools";
+import { UserFixtures } from "../../../application/fixtures/UserFixtures";
+import { AccountFixtures } from "../../../application/fixtures/AccountFixtures";
+import { OperationFixtures } from "../../../application/fixtures/OperationFixtures";
+import { initModels } from "../../adapters/mariadb/initModels";
 
 const fixtures = async () => {
   try {
@@ -18,22 +19,14 @@ const fixtures = async () => {
     const repositoryResolver = new RepositoryResolver(databaseSource);
     const passwordHasher = new PasswordHasher();
 
-    const fixtures = [
-      new UserFixtures(repositoryResolver.getUserRepository(), passwordHasher),
-      new AccountFixtures(repositoryResolver.getAccountRepository()),
-    ];
+    await new UserFixtures(repositoryResolver.getUserRepository(), passwordHasher).load();
+    await new AccountFixtures(repositoryResolver.getAccountRepository(), bankCode, branchCode).load();
+    await new OperationFixtures(repositoryResolver.getOperationRepository()).load();
 
-    await Promise.all(fixtures.map((fixture) => fixture.load()))
-      .then(() => {
-        console.log("✅ Fixtures loaded successfully.");
-        process.exit(0);
-      })
-      .catch((error) => {
-        console.error("❌ Error loading fixtures:", error);
-        process.exit(1);
-      });
+    console.log("✅ Fixtures loaded successfully.");
+    process.exit(0);
   } catch (error) {
-    console.error("❌ Error dropping database:", error);
+    console.error("❌ Error loading fixtures:", error);
     process.exit(1);
   }
 };
