@@ -7,12 +7,14 @@ import { UserResourceInterface } from "../../../../application/services/api/reso
 import { UserResource } from "../resources/UserResource";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { handleApiError } from "../utils/handleApiError";
+import { AccountResource } from "../resources/AccountResource";
 
 export class ApiClient implements ApiClientInterface {
   private token: string | null = null;
 
   public me: MeResourceInterface;
   public user: UserResourceInterface;
+  public account: AccountResource;
 
   constructor(private baseUrl: string) {
     this.me = new MeResource(this);

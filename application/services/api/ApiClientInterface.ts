@@ -1,4 +1,5 @@
 import { ApiClientError } from './ApiClientError';
+import { AccountResourceInterface } from './resources/AccountResourceInterface';
 import { MeResourceInterface } from './resources/MeResourceInterface';
 import { UserResourceInterface } from './resources/UserResourceInterface';
 
@@ -21,6 +22,7 @@ export interface DeleteResponseInterface {
 export interface ApiClientInterface {
   me: MeResourceInterface;
   user: UserResourceInterface;
+  account: AccountResourceInterface;
 
   get<T>(url: string, additionnalHeaders?: HeadersInit): Promise<T | ApiClientError>;
   post<T>(url: string, body: object, additionnalHeaders?: HeadersInit,): Promise<T | ApiClientError>;
