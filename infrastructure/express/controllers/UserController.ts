@@ -30,6 +30,8 @@ import { BanUserParams } from "../../../domain/params/user/BanUserParams";
 import { InvalidBanUserParamsError } from "../../../domain/errors/params/user/InvalidBanUserParamsError";
 import { BanUserUsecase } from "../../../application/usecases/user/BanUserUsecase";
 import { UserNotFoundError } from "../../../domain/errors/entities/user/UserNotFoundError";
+import { GetUserListUsecase } from "../../../application/usecases/user/GetUserListUsecase";
+import { GetUserUsecase } from "../../../application/usecases/user/GetUserUsecase";
 
 export class UserController {
   public constructor(
@@ -92,7 +94,8 @@ export class UserController {
   }
 
   public async list(_: Request, response: Response) {
-    const users = await this.userRepository.findAll();
+    const getListUsecase = new GetUserListUsecase(this.userRepository);
+    const users = await getListUsecase.execute();
 
     const usersResponse = users.map((user) => ({
       id: user.id,
@@ -113,7 +116,8 @@ export class UserController {
       });
     }
 
-    const maybeUser = await this.userRepository.findById(maybeParams.id);
+    const getUserUsecase = new GetUserUsecase(this.userRepository);
+    const maybeUser = await getUserUsecase.execute(maybeParams.id);
     if (maybeUser instanceof UserNotFoundError) {
       return response.status(404).json({
         error: maybeUser.message,

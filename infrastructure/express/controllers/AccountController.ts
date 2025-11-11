@@ -17,6 +17,7 @@ import { DeleteAccountParams } from "../../../domain/params/account/DeleteAccoun
 import { InvalidDeleteAccountParamsError } from "../../../domain/errors/params/account/InvalidDeleteAccountParamsError";
 import { DeleteAccountUsecase } from "../../../application/usecases/account/DeleteAccountUsecase";
 import { SendAccountDeletionEmailUsecase } from "../../../application/usecases/email/SendAccountDeletionEmailUsecase";
+import { GetAccountListUsecase } from "../../../application/usecases/account/GetAccountListUsecase";
 
 export class AccountController {
   public constructor(
@@ -59,19 +60,27 @@ export class AccountController {
     response.status(201).json(maybeAccount);
   }
 
-  // public async list(_: Request, response: Response) {
-  //   const users = await this.userRepository.findAll();
-  //
-  //   const usersResponse = users.map((user) => ({
-  //     id: user.id,
-  //     email: user.email.value,
-  //     firstName: user.firstName,
-  //     lastName: user.lastName,
-  //     roles: user.roles,
-  //   }));
-  //
-  //   response.status(200).json(usersResponse);
-  // }
+  public async list(request: Request, response: Response) {
+    const owner = request.user;
+    if (!owner) {
+      return response.status(401).json({
+        error: 'Unauthorized',
+      });
+    }
+    
+    const getAccountListUsecase = new GetAccountListUsecase(this.accountRepository);
+    const accounts = await getAccountListUsecase.execute(owner);
+
+    const accountsResponse = accounts.map((account) => ({
+      id: account.id,
+      name: account.name,
+      iban: account.iban,
+    }));
+
+    response.status(200).json(accountsResponse);
+  }
+
+  // TODO: implement get when operation is ready
   //
   // public async get(request: Request, response: Response) {
   //   const maybeParams = GetUserParams.from(request.params);
@@ -232,5 +241,4 @@ export class AccountController {
   //   }); 
   // }
 }
-
 
