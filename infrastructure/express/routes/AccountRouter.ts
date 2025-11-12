@@ -66,6 +66,15 @@ export class AccountRouter {
         await accountController.delete(req, res);
       }
     );
+
+    app.get(
+      paths.account.operations(),
+      authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+      roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
+      async (req, res) => {
+        await accountController.listOperations(req, res);
+      }
+    );
   }
 }
 

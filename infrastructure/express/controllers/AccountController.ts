@@ -22,6 +22,9 @@ import { OperationRepositoryInterface } from "../../../application/repositories/
 import { GetAccountParams } from "../../../domain/params/account/GetAccountParams";
 import { InvalidGetAccountParamsError } from "../../../domain/errors/params/account/InvalidGetAccountParamsError";
 import { GetAccountUsecase } from "../../../application/usecases/account/GetAccountUsecase";
+import { GetAccountOperationsParams } from "../../../domain/params/account/GetAccountOperationsParams";
+import { InvalidGetAccountOperationsParamsError } from "../../../domain/errors/params/account/InvalidGetAccountOperationsParamsError";
+import { GetOperationListUsecase } from "../../../application/usecases/operation/GetOperationListUsecase";
 
 export class AccountController {
   public constructor(
@@ -194,4 +197,32 @@ export class AccountController {
       success: maybeSuccess,
     });
   }
+
+  public async listOperations(request: Request, response: Response) {
+    const maybeParams = GetAccountOperationsParams.from(request.params);
+    if (maybeParams instanceof InvalidGetAccountOperationsParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
+
+    const owner = request.user;
+    if (!owner) {
+      return response.status(401).json({
+        error: 'Unauthorized',
+      });
+    }
+
+    const getListUsecase = new GetOperationListUsecase(this.accountRepository, this.operationRepository);
+    const operations = await getListUsecase.execute(maybeParams.id, owner);
+
+    if (operations instanceof AccountNotFoundError) {
+      return response.status(404).json({
+        error: operations.message,
+      });
+    }
+
+    response.status(200).json(operations);
+  }
+
 }

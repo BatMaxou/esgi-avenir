@@ -3,6 +3,11 @@ import { InvalidAccountError } from '../errors/entities/operation/InvalidAccount
 import { Account } from './Account';
 import { InvalidOperationTypeError } from '../errors/entities/operation/InvalidOperationTypeError';
 
+export interface HydratedOperation extends Operation {
+  from: string | null;
+  to: string | null;
+}
+
 export class Operation {
   public id?: number;
 
