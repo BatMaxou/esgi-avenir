@@ -1,16 +1,20 @@
+import { AccountRepositoryInterface } from "../../../application/repositories/AccountRepositoryInterface";
 import { RepositoryInterface } from "../../../application/repositories/RepositoryInterface";
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
 import { RepositoryResolverInterface } from "../../../application/services/RepositoryResolverInterface";
 import { MariadbUserRepository } from "../../adapters/mariadb/repositories/MariadbUserRepository";
+import { MariadbAccountRepository } from "../mariadb/repositories/MariadbAccountRepository";
 
 type RepositoryFactory<T extends RepositoryInterface> = () => T;
 
 const repositoryFactories: Record<string, Record<string, RepositoryFactory<RepositoryInterface>>> = {
   mysql: {
     UserRepository: () => new MariadbUserRepository(),
+    AccountRepository: () => new MariadbAccountRepository(),
   },
   // mongodb: {
   //   UserRepository: () => new MongodbUserRepository(),
+  //   AccountRepository: () => new MongodbAccountRepository(),
   // },
 };
 
@@ -25,6 +29,10 @@ export class RepositoryResolver implements RepositoryResolverInterface {
 
   public getUserRepository(): UserRepositoryInterface {
     return this.getRepository<UserRepositoryInterface>('UserRepository');
+  }
+
+  public getAccountRepository(): AccountRepositoryInterface {
+    return this.getRepository<AccountRepositoryInterface>('AccountRepository');
   }
 
   private getRepository<T extends RepositoryInterface>(name: string): T {

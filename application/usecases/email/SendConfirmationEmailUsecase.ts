@@ -10,7 +10,14 @@ export class SendConfirmationEmailUsecase {
     to: EmailValue,
     link: string,
   ): Promise<void> {
-    await this.mailer.sendConfirmationEmail(to.value, link);
+    const subject = 'Please confirm your email address';
+    const body = `
+      <h1>Email Confirmation</h1>
+      <p>Thank you for registering. Please confirm your email address by clicking the link below:</p>
+      <a href="${link}">Confirm Email</a>
+    `;
+
+    await this.mailer.sendMail(to.value, subject, body);
   }
 }
 

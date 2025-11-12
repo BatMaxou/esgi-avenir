@@ -11,5 +11,12 @@ export const paths = {
     delete: (id?: number | string | null) => `/api/users/${id || ':id'}`,
     ban: (id?: number | string | null) => `/api/users/${id || ':id'}/ban`,
     unban: (id?: number | string | null) => `/api/users/${id || ':id'}/unban`,
-  }
+  },
+  account: {
+    list: '/api/accounts',
+    create: '/api/accounts',
+    detail: (id?: number | string | null) => `/api/accounts/${id || ':id'}`,
+    update: (id?: number | string | null) => `/api/accounts/${id || ':id'}`,
+    delete: (id?: number | string | null) => `/api/accounts/${id || ':id'}`,
+  },
 };

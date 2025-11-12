@@ -11,6 +11,7 @@ import { AuthRouter } from "./routes/AuthRouter";
 import { MeRouter } from "./routes/MeRouter";
 import { UserRouter } from "./routes/UserRouter";
 import { databaseSource, mailerHost, mailerPort, mailerFrom, jwtSecret } from "./utils/tools";
+import { AccountRouter } from "./routes/AccountRouter";
 
 const startServer = async () => {
   const app = express();
@@ -27,8 +28,7 @@ const startServer = async () => {
     res.send("Hello World!");
   });
 
-  const authRouter = new AuthRouter();
-  const registerAuthRoutes = authRouter.register(
+  (new AuthRouter()).register(
     app,
     repositoryResolver,
     passwordHasher,
@@ -37,20 +37,25 @@ const startServer = async () => {
     tokenManager,
   );
 
-  const meRouter = new MeRouter();
-  const registerMeRoutes = meRouter.register(
+  (new MeRouter()).register(
     app,
     repositoryResolver,
     tokenManager,
   );
 
-  const userRouter = new UserRouter();
-  const registerUserRoutes = userRouter.register(
+  (new UserRouter()).register(
     app,
     repositoryResolver,
     mailer,
     passwordHasher,
     uniqueIdGenerator,
+    tokenManager,
+  );
+
+  (new AccountRouter()).register(
+    app,
+    repositoryResolver,
+    mailer,
     tokenManager,
   );
 

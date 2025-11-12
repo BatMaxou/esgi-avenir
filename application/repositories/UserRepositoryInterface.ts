@@ -1,6 +1,6 @@
 import { RepositoryInterface } from "./RepositoryInterface"
 import { User } from "../../domain/entities/User"
-import { EmailExistsError } from "../../domain/errors/values/email/EmailExistsError"
+import { EmailExistsError } from "../../domain/errors/entities/user/EmailExistsError"
 import { EmailValue } from "../../domain/values/EmailValue"
 import { UserNotFoundError } from "../../domain/errors/entities/user/UserNotFoundError"
 

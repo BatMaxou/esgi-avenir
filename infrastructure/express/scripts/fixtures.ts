@@ -1,6 +1,7 @@
 import { PasswordHasher } from "../../adapters/bcrypt/services/PasswordHasher";
 import { MariadbConnection } from "../../adapters/mariadb/config/MariadbConnection";
 import { RepositoryResolver } from "../../adapters/services/RepositoryResolver";
+import { AccountFixtures } from "../fixtures/AccountFixtures";
 import { UserFixtures } from "../fixtures/UserFixtures";
 import { initModels } from "../utils/initModel";
 import { databaseDsn, databaseSource } from "../utils/tools";
@@ -19,6 +20,7 @@ const fixtures = async () => {
 
     const fixtures = [
       new UserFixtures(repositoryResolver.getUserRepository(), passwordHasher),
+      new AccountFixtures(repositoryResolver.getAccountRepository()),
     ];
 
     await Promise.all(fixtures.map((fixture) => fixture.load()))

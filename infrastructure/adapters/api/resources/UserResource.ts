@@ -1,7 +1,7 @@
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { ApiClientInterface, DeleteResponseInterface } from "../../../../application/services/api/ApiClientInterface";
 import { paths } from "../../../../application/services/api/paths";
-import { CreateUserPayloadInterface, GetAllUsersResponseInterface, GetUserResponseInterface, UpdateUserPayloadInterface, UserResourceInterface } from "../../../../application/services/api/resources/UserResourceInterface";
+import { CreateUserPayloadInterface, GetUserListResponseInterface, GetUserResponseInterface, UpdateUserPayloadInterface, UserResourceInterface } from "../../../../application/services/api/resources/UserResourceInterface";
 import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 
 export class UserResource implements UserResourceInterface {
@@ -11,8 +11,8 @@ export class UserResource implements UserResourceInterface {
     return this.apiClient.get<GetUserResponseInterface>(`${paths.user.detail(id)}`);
   }
 
-  public async getAll(): Promise<GetAllUsersResponseInterface | ApiClientError> {
-    return this.apiClient.get<GetAllUsersResponseInterface>(`${paths.user.list}`);
+  public async getAll(): Promise<GetUserListResponseInterface | ApiClientError> {
+    return this.apiClient.get<GetUserListResponseInterface>(`${paths.user.list}`);
   }
 
   public async create(data: CreateUserPayloadInterface): Promise<GetUserResponseInterface | ApiClientError> {
