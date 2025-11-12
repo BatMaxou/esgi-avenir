@@ -12,6 +12,7 @@ import { MeRouter } from "./routes/MeRouter";
 import { UserRouter } from "./routes/UserRouter";
 import { databaseSource, mailerHost, mailerPort, mailerFrom, jwtSecret } from "./utils/tools";
 import { AccountRouter } from "./routes/AccountRouter";
+import { OperationRouter } from "./routes/OperationRouter";
 
 const startServer = async () => {
   const app = express();
@@ -56,6 +57,12 @@ const startServer = async () => {
     app,
     repositoryResolver,
     mailer,
+    tokenManager,
+  );
+
+  (new OperationRouter()).register(
+    app,
+    repositoryResolver,
     tokenManager,
   );
 

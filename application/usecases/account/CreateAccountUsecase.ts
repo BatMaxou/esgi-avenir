@@ -4,6 +4,8 @@ import { InvalidIbanError } from '../../../domain/errors/values/iban/InvalidIban
 import { IbanValue } from '../../../domain/values/IbanValue';
 import { User } from '../../../domain/entities/User';
 import { InvalidOwnerError } from '../../../domain/errors/entities/account/InvalidOwnerError';
+import { IbanExistsError } from '../../../domain/errors/entities/account/IbanExistsError';
+import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotFoundError';
 
 export class CreateAccountUsecase {
   public constructor(
@@ -15,7 +17,7 @@ export class CreateAccountUsecase {
   public async execute(
     name: string,
     user: User,
-  ): Promise<Account | InvalidIbanError> {
+  ): Promise<Account | InvalidIbanError | UserNotFoundError | IbanExistsError> {
     const nextAccountId = await this.accountRepository.findNextId();
 
     const maybeIban = IbanValue.create(

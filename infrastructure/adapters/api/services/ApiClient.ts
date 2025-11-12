@@ -8,6 +8,7 @@ import { UserResource } from "../resources/UserResource";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { handleApiError } from "../utils/handleApiError";
 import { AccountResource } from "../resources/AccountResource";
+import { OperationResource } from "../resources/OperationResource";
 
 export class ApiClient implements ApiClientInterface {
   private token: string | null = null;
@@ -15,10 +16,13 @@ export class ApiClient implements ApiClientInterface {
   public me: MeResourceInterface;
   public user: UserResourceInterface;
   public account: AccountResource;
+  public operation: OperationResource;
 
   constructor(private baseUrl: string) {
     this.me = new MeResource(this);
     this.user = new UserResource(this);
+    this.account = new AccountResource(this);
+    this.operation = new OperationResource(this);
 
     this.token = getCookie("token");
   }

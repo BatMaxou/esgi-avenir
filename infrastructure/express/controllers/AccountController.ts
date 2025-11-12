@@ -18,10 +18,18 @@ import { InvalidDeleteAccountParamsError } from "../../../domain/errors/params/a
 import { DeleteAccountUsecase } from "../../../application/usecases/account/DeleteAccountUsecase";
 import { SendAccountDeletionEmailUsecase } from "../../../application/usecases/email/SendAccountDeletionEmailUsecase";
 import { GetAccountListUsecase } from "../../../application/usecases/account/GetAccountListUsecase";
+import { OperationRepositoryInterface } from "../../../application/repositories/OperationRepositoryInterface";
+import { GetAccountParams } from "../../../domain/params/account/GetAccountParams";
+import { InvalidGetAccountParamsError } from "../../../domain/errors/params/account/InvalidGetAccountParamsError";
+import { GetAccountUsecase } from "../../../application/usecases/account/GetAccountUsecase";
+import { GetAccountOperationsParams } from "../../../domain/params/account/GetAccountOperationsParams";
+import { InvalidGetAccountOperationsParamsError } from "../../../domain/errors/params/account/InvalidGetAccountOperationsParamsError";
+import { GetOperationListUsecase } from "../../../application/usecases/operation/GetOperationListUsecase";
 
 export class AccountController {
   public constructor(
     private readonly accountRepository: AccountRepositoryInterface,
+    private readonly operationRepository: OperationRepositoryInterface,
     private readonly mailer: MailerInterface,
   ) {}
 
@@ -68,43 +76,44 @@ export class AccountController {
       });
     }
     
-    const getAccountListUsecase = new GetAccountListUsecase(this.accountRepository);
+    const getAccountListUsecase = new GetAccountListUsecase(this.accountRepository, this.operationRepository);
     const accounts = await getAccountListUsecase.execute(owner);
 
     const accountsResponse = accounts.map((account) => ({
       id: account.id,
       name: account.name,
       iban: account.iban,
+      amount: account.amount,
     }));
 
     response.status(200).json(accountsResponse);
   }
 
-  // TODO: implement get when operation is ready
-  //
-  // public async get(request: Request, response: Response) {
-  //   const maybeParams = GetUserParams.from(request.params);
-  //   if (maybeParams instanceof InvalidGetUserParamsError) {
-  //     return response.status(400).json({
-  //       error: maybeParams.message,
-  //     });
-  //   }
-  //
-  //   const maybeUser = await this.userRepository.findById(maybeParams.id);
-  //   if (maybeUser instanceof UserNotFoundError) {
-  //     return response.status(404).json({
-  //       error: maybeUser.message,
-  //     });
-  //   }
-  //
-  //   response.status(200).json({
-  //     id: maybeUser.id,
-  //     email: maybeUser.email.value,
-  //     firstName: maybeUser.firstName,
-  //     lastName: maybeUser.lastName,
-  //     roles: maybeUser.roles,
-  //   });
-  // }
+  public async get(request: Request, response: Response) {
+    const maybeParams = GetAccountParams.from(request.params);
+    if (maybeParams instanceof InvalidGetAccountParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
+
+    const owner = request.user;
+    if (!owner) {
+      return response.status(401).json({
+        error: 'Unauthorized',
+      });
+    }
+
+    const getAccountUsecase = new GetAccountUsecase(this.accountRepository, this.operationRepository);
+    const maybeAccount = await getAccountUsecase.execute(maybeParams.id, owner);
+    if (maybeAccount instanceof AccountNotFoundError) {
+      return response.status(404).json({
+        error: maybeAccount.message,
+      });
+    }
+
+    response.status(200).json(maybeAccount);
+  }
 
   public async update(request: Request, response: Response) {
     const maybeParams = UpdateAccountParams.from(request.params);
@@ -189,56 +198,31 @@ export class AccountController {
     });
   }
 
-  // public async ban(request: Request, response: Response) {
-  //   const maybeParams = BanUserParams.from(request.params);
-  //   if (maybeParams instanceof InvalidBanUserParamsError) {
-  //     return response.status(400).json({
-  //       error: maybeParams.message,
-  //     });
-  //   }
-  //
-  //   const banUserUsecase = new BanUserUsecase(this.userRepository);
-  //   const maybeUser = await banUserUsecase.execute(maybeParams.id);
-  //
-  //   if (maybeUser instanceof UserNotFoundError) {
-  //     return response.status(404).json({
-  //       error: maybeUser.message,
-  //     });
-  //   }
-  //
-  //   response.status(200).json({
-  //     id: maybeUser.id,
-  //     email: maybeUser.email.value,
-  //     firstName: maybeUser.firstName,
-  //     lastName: maybeUser.lastName,
-  //     roles: maybeUser.roles,
-  //   }); 
-  // }
-  //
-  // public async unban(request: Request, response: Response) {
-  //   const maybeParams = UnbanUserParams.from(request.params);
-  //   if (maybeParams instanceof InvalidUnbanUserParamsError) {
-  //     return response.status(400).json({
-  //       error: maybeParams.message,
-  //     });
-  //   }
-  //
-  //   const unbanUserUsecase = new UnbanUserUsecase(this.userRepository);
-  //   const maybeUser = await unbanUserUsecase.execute(maybeParams.id);
-  //
-  //   if (maybeUser instanceof UserNotFoundError) {
-  //     return response.status(404).json({
-  //       error: maybeUser.message,
-  //     });
-  //   }
-  //
-  //   response.status(200).json({
-  //     id: maybeUser.id,
-  //     email: maybeUser.email.value,
-  //     firstName: maybeUser.firstName,
-  //     lastName: maybeUser.lastName,
-  //     roles: maybeUser.roles,
-  //   }); 
-  // }
-}
+  public async listOperations(request: Request, response: Response) {
+    const maybeParams = GetAccountOperationsParams.from(request.params);
+    if (maybeParams instanceof InvalidGetAccountOperationsParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
 
+    const owner = request.user;
+    if (!owner) {
+      return response.status(401).json({
+        error: 'Unauthorized',
+      });
+    }
+
+    const getListUsecase = new GetOperationListUsecase(this.accountRepository, this.operationRepository);
+    const operations = await getListUsecase.execute(maybeParams.id, owner);
+
+    if (operations instanceof AccountNotFoundError) {
+      return response.status(404).json({
+        error: operations.message,
+      });
+    }
+
+    response.status(200).json(operations);
+  }
+
+}

@@ -1,7 +1,7 @@
-import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
-import { PasswordHasherInterface } from "../../../application/services/password/PasswordHasherInterface";
-import { User } from "../../../domain/entities/User";
-import { RoleEnum } from "../../../domain/enums/RoleEnum";
+import { User } from '../../domain/entities/User';
+import { RoleEnum } from '../../domain/enums/RoleEnum';
+import { UserRepositoryInterface } from '../repositories/UserRepositoryInterface';
+import { PasswordHasherInterface } from '../services/password/PasswordHasherInterface';
 
 type MockUser = {
   firstName: string,
@@ -14,8 +14,8 @@ type MockUser = {
 
 export class UserFixtures {
   public constructor(
-    private repository: UserRepositoryInterface,
-    private passwordHasher: PasswordHasherInterface,
+    private readonly repository: UserRepositoryInterface,
+    private readonly passwordHasher: PasswordHasherInterface,
   ) {}
 
   public async load(): Promise<boolean | Error> {

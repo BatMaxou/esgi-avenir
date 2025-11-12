@@ -1,7 +1,6 @@
-import { AccountRepositoryInterface } from "../../../application/repositories/AccountRepositoryInterface";
-import { Account } from "../../../domain/entities/Account";
-import { IbanValue } from "../../../domain/values/IbanValue";
-import { bankCode, branchCode } from "../utils/tools";
+import { AccountRepositoryInterface } from '../repositories/AccountRepositoryInterface';
+import { Account } from '../../domain/entities/Account';
+import { IbanValue } from '../../domain/values/IbanValue';
 
 type MockAccount = {
   iban: string,
@@ -11,7 +10,9 @@ type MockAccount = {
 
 export class AccountFixtures {
   public constructor(
-    private repository: AccountRepositoryInterface,
+    private readonly repository: AccountRepositoryInterface,
+    private readonly bankCode: string,
+    private readonly branchCode: string,
   ) {}
 
   public async load(): Promise<boolean | Error> {
@@ -55,7 +56,7 @@ export class AccountFixtures {
   private createIban(
     id: string,
   ): string {
-    const maybeIban = IbanValue.create(bankCode, branchCode, id);
+    const maybeIban = IbanValue.create(this.bankCode, this.branchCode, id);
     if (maybeIban instanceof Error) {
       throw maybeIban;
     }

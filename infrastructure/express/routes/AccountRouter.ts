@@ -16,7 +16,11 @@ export class AccountRouter {
     mailer: MailerInterface,
     tokenManager: TokenManagerInterface,
   ) {
-    const accountController = new AccountController(repositoryResolver.getAccountRepository(), mailer);
+    const accountController = new AccountController(
+      repositoryResolver.getAccountRepository(),
+      repositoryResolver.getOperationRepository(),
+      mailer
+    );
 
     app.post(
       paths.account.create,
@@ -45,12 +49,30 @@ export class AccountRouter {
       }
     );
 
+    app.get(
+      paths.account.detail(),
+      authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+      roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
+      async (req, res) => {
+        await accountController.get(req, res);
+      }
+    );
+
     app.delete(
       paths.account.delete(),
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
       roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
       async (req, res) => {
         await accountController.delete(req, res);
+      }
+    );
+
+    app.get(
+      paths.account.operations(),
+      authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+      roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
+      async (req, res) => {
+        await accountController.listOperations(req, res);
       }
     );
   }
