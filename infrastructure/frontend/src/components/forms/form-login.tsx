@@ -1,12 +1,16 @@
 "use client";
 
+import { useState } from "react";
+
 // Dependencies
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // Local imports
-import { Button } from "@/components/ui/button";
+import { FilledButton } from "@/components/buttons/FilledButton";
+import { showErrorToast } from "@/lib/toast";
 import {
   Form,
   FormControl,
@@ -16,17 +20,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useApiClient } from "@/contexts/ApiContext";
 
 const formSchema = z.object({
   email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
-    message: "Email must be a valid email address.",
+    message: "L'email doit être une adresse valide.",
   }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
+  password: z.string().min(1, {
+    message: "Le mot de passe ne peut pas être vide.",
   }),
 });
 
 export function LoginForm() {
+  const apiClient = useApiClient();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,8 +44,35 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     console.log(values);
+    try {
+      const response = await apiClient.apiClient.login(
+        values.email,
+        values.password
+      );
+      let errorMessage;
+      console.log(response);
+      if ("token" in response && response.token) {
+        router.push("/home");
+        setLoading(false);
+      } else {
+        if ("message" in response) {
+          errorMessage =
+            String(response.message) === "Unauthorized"
+              ? "Email ou mot de passe incorrect."
+              : "Erreur de connexion";
+          showErrorToast(errorMessage);
+          setLoading(false);
+        } else {
+          showErrorToast("Erreur de connexion");
+        }
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      setLoading(false);
+    }
   }
   return (
     <>
@@ -71,7 +107,7 @@ export function LoginForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">Se connecter</Button>
+          <FilledButton type="submit" loading={loading} label="Se connecter" />
         </form>
       </Form>
     </>
