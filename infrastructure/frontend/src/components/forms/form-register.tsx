@@ -105,6 +105,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
         setLoading(false);
       } else {
         showErrorToast("Erreur durant l'inscription");
+        setLoading(false);
       }
     } catch (error) {
       showErrorToast("Erreur durant l'inscription");
