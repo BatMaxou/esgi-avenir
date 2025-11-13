@@ -26,6 +26,9 @@ import { Input } from "@/components/ui/input";
 import { FieldSeparator } from "@/components/ui/field";
 import { useState } from "react";
 import CheckMailDialog from "../dialogs/check-mail-dialog";
+import { useApiClient } from "@/contexts/ApiContext";
+import { showErrorToast } from "@/lib/toast";
+import { FilledButton } from "../buttons/FilledButton";
 
 const formSchema = z
   .object({
@@ -38,8 +41,8 @@ const formSchema = z
     email: z.email({
       message: "L'email doit être une adresse email valide.",
     }),
-    password: z.string().min(6, {
-      message: "Le mot de passe doit comporter au moins 6 caractères.",
+    password: z.string().min(12, {
+      message: "Le mot de passe doit comporter au moins 12 caractères.",
     }),
     passwordConfirm: z.string(),
     streetNumber: z.string().min(1, {
@@ -69,6 +72,8 @@ interface RegisterFormProps {
 
 export function RegisterForm({ setFormType }: RegisterFormProps) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const apiClient = useApiClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -86,9 +91,26 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    setOpen(true);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    try {
+      const response = await apiClient.apiClient.register(
+        values.email,
+        values.password,
+        values.firstName,
+        values.lastName
+      );
+      if ("success" in response && response.success) {
+        setOpen(true);
+        setLoading(false);
+      } else {
+        showErrorToast("Erreur durant l'inscription");
+      }
+    } catch (error) {
+      showErrorToast("Erreur durant l'inscription");
+      console.error("Register failed:", error);
+      setLoading(false);
+    }
   }
   return (
     <>
@@ -165,9 +187,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
               />
             </div>
           </div>
-
           <FieldSeparator />
-
           <FormField
             control={form.control}
             name="email"
@@ -216,7 +236,6 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
             />
           </div>
           <FieldSeparator />
-
           {/* Section Adresse */}
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-3">
@@ -251,7 +270,6 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
               />
             </div>
           </div>
-
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-4">
               <FormField
@@ -301,10 +319,11 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
               />
             </div>
           </div>
-
-          <Button type="submit" className="cursor-pointer">
-            Ouvrir un compte
-          </Button>
+          <FilledButton
+            type="submit"
+            loading={loading}
+            label="Ouvrir un compte"
+          />
         </form>
       </Form>
     </>
