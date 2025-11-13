@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 
 import "./globals.css";
 import { ApiClientProvider } from "@/contexts/ApiContext";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -10,9 +11,7 @@ export const metadata: Metadata = {
 };
 
 const Providers = ({ children }: { children: ReactNode }) => {
-  return <ApiClientProvider>
-    {children}
-  </ApiClientProvider>;
+  return <ApiClientProvider>{children}</ApiClientProvider>;
 };
 
 export default function RootLayout({
@@ -22,10 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body>
-        <Providers>
-          {children}
-        </Providers>
+      <body suppressHydrationWarning={true}>
+        <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );

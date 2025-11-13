@@ -12,7 +12,7 @@ import Image from "next/image";
 import bgImage from "../../public/assets/home-card.jpg";
 import logo from "../../public/assets/logo/logo-avenir.png";
 
-export default function Home() {
+export default function Landing() {
   const [formType, setFormType] = useState<"login" | "register">("login");
 
   function showRegisterForm() {
