@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import cron from "node-cron";
 
 import { RepositoryResolver } from "../adapters/services/RepositoryResolver";
 import { Mailer } from "../adapters/nodemailer/services/Mailer";
@@ -13,6 +14,8 @@ import { UserRouter } from "./routes/UserRouter";
 import { databaseSource, mailerHost, mailerPort, mailerFrom, jwtSecret } from "./utils/tools";
 import { AccountRouter } from "./routes/AccountRouter";
 import { OperationRouter } from "./routes/OperationRouter";
+import { Scheduler } from "../adapters/nodecron/services/Scheduler";
+import { Calendar } from "./calendar/Calendar";
 
 const startServer = async () => {
   const app = express();
@@ -24,6 +27,7 @@ const startServer = async () => {
   const passwordHasher = new PasswordHasher();
   const uniqueIdGenerator = new UniqueIdGenerator();
   const tokenManager = new TokenManager(jwtSecret);
+  const scheduler = new Scheduler();
 
   app.get('/', (_, res) => {
     res.send("Hello World!");
@@ -65,6 +69,8 @@ const startServer = async () => {
     repositoryResolver,
     tokenManager,
   );
+
+  new Calendar(scheduler);
 
   app.listen(3000, () => console.log(`Listening on port 3000`));
 };
