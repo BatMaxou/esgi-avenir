@@ -20,6 +20,7 @@ export interface AccountResourceInterface {
   get(id: number): Promise<GetHydratedAccountResponseInterface | ApiClientError>;
   getAll(): Promise<GetAccountListResponseInterface | ApiClientError>;
   create(data: CreateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError>;
+  createSavings(data: CreateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError>;
   update(data: UpdateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError>;
   delete(id: number): Promise<DeleteResponseInterface | ApiClientError>;
   getOperations(id: number): Promise<GetOperationListResponseInterface | ApiClientError>;

@@ -6,6 +6,7 @@ interface AccountModelInterface extends Model<InferAttributes<AccountModelInterf
   iban: string;
   name: string;
   ownerId?: number;
+  isSavings?: boolean;
 }
 
 export class AccountModel {
@@ -26,6 +27,11 @@ export class AccountModel {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      isSavings: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     });
 

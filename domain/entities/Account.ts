@@ -16,12 +16,14 @@ export class Account {
     name,
     ownerId,
     owner,
+    isSavings = false,
   }: {
     id?: number,
     iban: string,
     name: string,
     ownerId?: number,
     owner?: User,
+    isSavings?: boolean,
   }): Account | InvalidOwnerError | InvalidIbanError {
     const maybeOwnerId = ownerId ?? owner?.id;
     if (!maybeOwnerId) {
@@ -38,6 +40,7 @@ export class Account {
       name,
       maybeOwnerId,
       owner ?? undefined,
+      isSavings,
     );
 
     if (id) {
@@ -52,6 +55,7 @@ export class Account {
     public name: string,
     public ownerId: number,
     public owner?: User,
+    public isSavings: boolean = false,
   ) {
   }
 }

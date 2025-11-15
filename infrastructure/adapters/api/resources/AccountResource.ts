@@ -19,6 +19,10 @@ export class AccountResource implements AccountResourceInterface {
     return this.apiClient.post<GetAccountResponseInterface>(`${paths.account.create}`, data);
   }
 
+  public async createSavings(data: CreateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError> {
+    return this.apiClient.post<GetAccountResponseInterface>(`${paths.account.createSavings}`, data);
+  }
+
   public async update(data: UpdateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError> {
     return this.apiClient.put<GetAccountResponseInterface>(`${paths.account.update(data.id)}`, data);
   }

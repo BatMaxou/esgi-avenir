@@ -168,4 +168,20 @@ export class MariadbUserRepository implements UserRepositoryInterface {
       throw new UserNotFoundError('User not found.');
     }
   }
+
+  public async findByIds(ids: number[]): Promise<User[]> {
+    const foundUsers = await this.userModel.model.findAll({ where: { id: ids } });
+    const users: User[] = [];
+
+    foundUsers.forEach((foundUser) => {
+      const maybeUser = User.from(foundUser);
+      if (maybeUser instanceof Error) {
+        throw maybeUser;
+      }
+
+      users.push(maybeUser);
+    });
+
+    return users;
+  }
 }

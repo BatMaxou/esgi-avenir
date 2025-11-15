@@ -65,7 +65,55 @@ export class AccountController {
       owner.email,
     );
 
-    response.status(201).json(maybeAccount);
+    response.status(201).json({
+      id: maybeAccount.id,
+      name: maybeAccount.name,
+      iban: maybeAccount.iban,
+      isSavings: maybeAccount.isSavings,
+      amount: 0,
+    });
+  }
+
+  public async createSavings(request: Request, response: Response) {
+    const maybeCommand = CreateAccountCommand.from(request.body);
+    if (maybeCommand instanceof InvalidCreateAccountCommandError) {
+      return response.status(400).json({
+        error: maybeCommand.message,
+      });
+    }
+
+    const owner = request.user;
+    if (!owner) {
+      return response.status(401).json({
+        error: 'Unauthorized',
+      });
+    }
+
+    const createUsecase = new CreateAccountUsecase(this.accountRepository, bankCode, branchCode);
+    const maybeAccount = await createUsecase.execute(
+      maybeCommand.name,
+      owner,
+      true,
+    );
+
+    if (maybeAccount instanceof Error) {
+      return response.status(400).json({
+        error: maybeAccount.message,
+      });
+    }
+
+    const sendEmailUsecase = new SendAccountCreationEmailUsecase(this.mailer);
+    await sendEmailUsecase.execute(
+      owner.email,
+    );
+
+    response.status(201).json({
+      id: maybeAccount.id,
+      name: maybeAccount.name,
+      iban: maybeAccount.iban,
+      isSavings: maybeAccount.isSavings,
+      amount: 0,
+    });
   }
 
   public async list(request: Request, response: Response) {
@@ -83,6 +131,7 @@ export class AccountController {
       id: account.id,
       name: account.name,
       iban: account.iban,
+      isSavings: account.isSavings,
       amount: account.amount,
     }));
 
@@ -112,7 +161,13 @@ export class AccountController {
       });
     }
 
-    response.status(200).json(maybeAccount);
+    response.status(200).json({
+      id: maybeAccount.id,
+      name: maybeAccount.name,
+      iban: maybeAccount.iban,
+      isSavings: maybeAccount.isSavings,
+      amount: maybeAccount.amount,
+    });
   }
 
   public async update(request: Request, response: Response) {
@@ -158,7 +213,12 @@ export class AccountController {
       });
     }
 
-    response.status(200).json(maybeAccount); 
+    response.status(200).json({
+      id: maybeAccount.id,
+      name: maybeAccount.name,
+      iban: maybeAccount.iban,
+      isSavings: maybeAccount.isSavings,
+    }); 
   }
 
   public async delete(request: Request, response: Response) {
@@ -224,5 +284,4 @@ export class AccountController {
 
     response.status(200).json(operations);
   }
-
 }

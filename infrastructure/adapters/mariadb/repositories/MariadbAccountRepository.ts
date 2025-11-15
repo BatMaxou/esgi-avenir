@@ -8,6 +8,8 @@ import { AccountModel } from "../models/AccountModel";
 import { UserModel } from "../models/UserModel";
 import { IbanExistsError } from "../../../../domain/errors/entities/account/IbanExistsError";
 import { IbanValue } from "../../../../domain/values/IbanValue";
+import { UserAlreadyHaveSavingsAccountError } from "../../../../domain/errors/entities/account/UserAlreadyHaveSavingsAccountError";
+import { Sequelize } from "sequelize";
 
 export class MariadbAccountRepository implements AccountRepositoryInterface {
   private accountModel: AccountModel;
@@ -17,12 +19,20 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
     this.accountModel = new AccountModel(new MariadbConnection(databaseDsn).getConnection(), userModel);
   }
 
-  public async create(account: Account): Promise<Account | IbanExistsError | UserNotFoundError> {
+  public async create(account: Account): Promise<Account | IbanExistsError | UserNotFoundError | UserAlreadyHaveSavingsAccountError> {
     try {
+      if (account.isSavings) {
+        const maybeAccount = await this.findSavingsAccountByOwner(account.ownerId);
+        if (maybeAccount instanceof Account) {
+          return new UserAlreadyHaveSavingsAccountError('User already has a savings account.');
+        }
+      }
+
       const createdAccount = await this.accountModel.model.create({
         iban: account.iban.value,
         name: account.name,
         ownerId: account.ownerId,
+        isSavings: account.isSavings,
       });
 
       const maybeAccount = Account.from(createdAccount);
@@ -44,7 +54,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
     }
   }
 
-  public async update(account: Omit<Partial<Account>, 'iban'> & { id: number }): Promise<Account | AccountNotFoundError> {
+  public async update(account: Omit<Partial<Account>, 'iban' | 'isSavings'> & { id: number }): Promise<Account | AccountNotFoundError> {
     try {
       const { id, ...toUpdate } = account;
 
@@ -57,6 +67,30 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
       return await this.findById(id);
     } catch (error) {
       throw new AccountNotFoundError('Account not found.');
+    }
+  }
+
+  public async findSavingsAccountByOwner(ownerId: number): Promise<Account | AccountNotFoundError> {
+    try {
+      const foundAccount = await this.accountModel.model.findOne({
+        where: {
+          ownerId: ownerId,
+          isSavings: true,
+        },
+      });
+
+      if (!foundAccount) {
+        return new AccountNotFoundError('Savings account not found.');
+      }
+
+      const maybeAccount = Account.from(foundAccount);
+      if (maybeAccount instanceof Error) {
+        throw maybeAccount;
+      }
+
+      return maybeAccount;
+    } catch (error) {
+      throw new AccountNotFoundError('Savings account not found.');
     }
   }
 
@@ -140,5 +174,18 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
     } catch (error) {
       throw new AccountNotFoundError('Account not found.');
     }
+  }
+
+  public async findSavingsAccountOwnerIds(): Promise<number[]> {
+    const ownerIds = await this.accountModel.model.findAll({
+      attributes: [
+        [Sequelize.fn('DISTINCT', Sequelize.col('ownerId')), 'ownerId'],
+      ],
+      where: {
+        isSavings: true,
+      },
+    });
+
+    return ownerIds.map((record) => record.ownerId || null).filter((id) => id !== null);
   }
 }

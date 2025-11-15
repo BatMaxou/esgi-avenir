@@ -17,6 +17,7 @@ export class CreateAccountUsecase {
   public async execute(
     name: string,
     user: User,
+    isSavings: boolean = false,
   ): Promise<Account | InvalidIbanError | UserNotFoundError | IbanExistsError> {
     const nextAccountId = await this.accountRepository.findNextId();
 
@@ -34,6 +35,7 @@ export class CreateAccountUsecase {
       name,
       iban: maybeIban.value,
       owner: user,
+      isSavings,
     });
     if (
       maybeNewAccount instanceof InvalidIbanError

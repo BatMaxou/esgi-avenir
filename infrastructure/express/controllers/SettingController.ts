@@ -8,10 +8,14 @@ import { GetSettingListUsecase } from "../../../application/usecases/setting/Get
 import { SendUpdateSavingsRateEmailUsecase } from "../../../application/usecases/email/SendUpdateSavingsRateEmailUsecase";
 import { User } from "../../../domain/entities/User";
 import { MailerInterface } from "../../../application/services/email/MailerInterface";
+import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
+import { AccountRepositoryInterface } from "../../../application/repositories/AccountRepositoryInterface";
 
 export class SettingController {
   public constructor(
     private readonly settingRepository: SettingRepositoryInterface,
+    private readonly userRepository: UserRepositoryInterface,
+    private readonly accountRepository: AccountRepositoryInterface,
     private readonly mailer: MailerInterface,
   ) {}
 
@@ -36,7 +40,9 @@ export class SettingController {
     }
 
     if (maybeCommand.code === SettingEnum.SAVINGS_RATE) {
-      const users: User[] = []; // await this.userRepository.findAllAccountOwners();
+      const userIds = await this.accountRepository.findSavingsAccountOwnerIds();
+      const users = await this.userRepository.findByIds(userIds);
+      
       const rate = maybeCommand.value;
       if (typeof rate === 'number' || typeof rate === 'string') {
         const sendEmailUsecase = new SendUpdateSavingsRateEmailUsecase(this.mailer);
