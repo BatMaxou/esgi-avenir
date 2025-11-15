@@ -5,6 +5,7 @@ import { bankCode, branchCode, databaseDsn, databaseSource } from "../utils/tool
 import { UserFixtures } from "../../../application/fixtures/UserFixtures";
 import { AccountFixtures } from "../../../application/fixtures/AccountFixtures";
 import { OperationFixtures } from "../../../application/fixtures/OperationFixtures";
+import { SettingFixtures } from "../../../application/fixtures/SettingFixtures";
 import { initModels } from "../../adapters/mariadb/initModels";
 
 const fixtures = async () => {
@@ -22,6 +23,7 @@ const fixtures = async () => {
     await new UserFixtures(repositoryResolver.getUserRepository(), passwordHasher).load();
     await new AccountFixtures(repositoryResolver.getAccountRepository(), bankCode, branchCode).load();
     await new OperationFixtures(repositoryResolver.getOperationRepository()).load();
+    await new SettingFixtures(repositoryResolver.getSettingRepository()).load();
 
     console.log("✅ Fixtures loaded successfully.");
     process.exit(0);

@@ -2,6 +2,7 @@ import { ApiClientError } from './ApiClientError';
 import { AccountResourceInterface } from './resources/AccountResourceInterface';
 import { MeResourceInterface } from './resources/MeResourceInterface';
 import { OperationResourceInterface } from './resources/OperationResourceInterface';
+import { SettingResourceInterface } from './resources/SettingResourceInterface';
 import { UserResourceInterface } from './resources/UserResourceInterface';
 
 export interface LoginResponseInterface {
@@ -25,6 +26,7 @@ export interface ApiClientInterface {
   user: UserResourceInterface;
   account: AccountResourceInterface;
   operation: OperationResourceInterface;
+  setting: SettingResourceInterface;
 
   get<T>(url: string, additionnalHeaders?: HeadersInit): Promise<T | ApiClientError>;
   post<T>(url: string, body: object, additionnalHeaders?: HeadersInit,): Promise<T | ApiClientError>;

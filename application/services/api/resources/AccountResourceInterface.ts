@@ -1,7 +1,7 @@
 import { ApiClientError } from '../ApiClientError';
 import { DeleteResponseInterface } from '../ApiClientInterface';
 import type { Account, HydratedAccount } from '../../../../domain/entities/Account';
-import { GetHydratedOperationResponseInterface, GetOperationListResponseInterface } from './OperationResourceInterface';
+import { GetOperationListResponseInterface } from './OperationResourceInterface';
 
 export interface GetAccountResponseInterface extends Account {}
 export interface GetHydratedAccountResponseInterface extends HydratedAccount {}
