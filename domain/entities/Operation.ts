@@ -42,6 +42,16 @@ export class Operation {
         };
 
         break;
+      case OperationEnum.INTEREST:
+        if (!maybeToId) {
+          return new InvalidAccountError('Invalid destination account for interest operation.');
+        }
+
+        if (maybeFromId !== undefined) {
+          return new InvalidAccountError('Source should be empty for interest operation.');
+        }
+      
+        break;
       case OperationEnum.WITHDRAWAL:
         if (!maybeFromId || maybeToId !== undefined) {
           return new InvalidAccountError('Invalid source account for withdrawal operation.');
@@ -63,7 +73,7 @@ export class Operation {
     }
 
     const operation = new this(
-      amount,
+      Math.round(amount * 100) / 100,
       type,
       maybeFromId,
       maybeToId,

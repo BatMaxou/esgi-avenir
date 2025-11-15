@@ -33,6 +33,11 @@ export class OperationFixtures {
         type: OperationEnum.WITHDRAWAL,
         fromId: 2,
       },
+      {
+        amount: 100,
+        type: OperationEnum.DEPOSIT,
+        toId: 3,
+      },
     ];
 
     await Promise.all(operations.map((operation) => this.createOperation(operation)));

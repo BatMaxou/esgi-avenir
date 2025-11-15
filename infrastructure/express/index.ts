@@ -78,7 +78,7 @@ const startServer = async () => {
     tokenManager,
   );
 
-  new Calendar(scheduler);
+  new Calendar(repositoryResolver, scheduler);
 
   app.listen(3000, () => console.log(`Listening on port 3000`));
 };

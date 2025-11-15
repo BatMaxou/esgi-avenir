@@ -188,4 +188,25 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
     return ownerIds.map((record) => record.ownerId || null).filter((id) => id !== null);
   }
+
+  public async findAllSavingsAccounts(): Promise<Account[]> {
+    const foundAccounts = await this.accountModel.model.findAll({
+      where: {
+        isSavings: true,
+      },
+    });
+
+    const accounts: Account[] = [];
+
+    foundAccounts.forEach((foundAccount) => {
+      const maybeAccount = Account.from(foundAccount);
+      if (maybeAccount instanceof Error) {
+        throw maybeAccount;
+      }
+
+      accounts.push(maybeAccount);
+    });
+
+    return accounts;
+  }
 }
