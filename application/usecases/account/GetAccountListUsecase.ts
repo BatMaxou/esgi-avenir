@@ -1,4 +1,4 @@
-import { Account, HydratedAccount } from '../../../domain/entities/Account';
+import { HydratedAccount } from '../../../domain/entities/Account';
 import { User } from '../../../domain/entities/User';
 import { AccountNotFoundError } from '../../../domain/errors/entities/account/AccountNotFoundError';
 import { AccountAmountValue } from '../../../domain/values/AccountAmountValue';

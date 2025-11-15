@@ -9,20 +9,26 @@ import { ApiClientError } from "../../../../application/services/api/ApiClientEr
 import { handleApiError } from "../utils/handleApiError";
 import { AccountResource } from "../resources/AccountResource";
 import { OperationResource } from "../resources/OperationResource";
+import { SettingResourceInterface } from "../../../../application/services/api/resources/SettingResourceInterface";
+import { OperationResourceInterface } from "../../../../application/services/api/resources/OperationResourceInterface";
+import { AccountResourceInterface } from "../../../../application/services/api/resources/AccountResourceInterface";
+import { SettingResource } from "../resources/SettingResource";
 
 export class ApiClient implements ApiClientInterface {
   private token: string | null = null;
 
   public me: MeResourceInterface;
   public user: UserResourceInterface;
-  public account: AccountResource;
-  public operation: OperationResource;
+  public account: AccountResourceInterface;
+  public operation: OperationResourceInterface;
+  public setting: SettingResourceInterface
 
   constructor(private baseUrl: string) {
     this.me = new MeResource(this);
     this.user = new UserResource(this);
     this.account = new AccountResource(this);
     this.operation = new OperationResource(this);
+    this.setting = new SettingResource(this);
 
     this.token = getCookie("token");
   }

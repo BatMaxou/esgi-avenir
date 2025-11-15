@@ -16,6 +16,7 @@ import { AccountRouter } from "./routes/AccountRouter";
 import { OperationRouter } from "./routes/OperationRouter";
 import { Scheduler } from "../adapters/nodecron/services/Scheduler";
 import { Calendar } from "./calendar/Calendar";
+import { SettingRouter } from "./routes/SettingRouter";
 
 const startServer = async () => {
   const app = express();
@@ -67,6 +68,13 @@ const startServer = async () => {
   (new OperationRouter()).register(
     app,
     repositoryResolver,
+    tokenManager,
+  );
+
+  (new SettingRouter()).register(
+    app,
+    repositoryResolver,
+    mailer,
     tokenManager,
   );
 
