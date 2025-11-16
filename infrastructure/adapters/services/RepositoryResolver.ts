@@ -6,6 +6,7 @@ import { MariadbUserRepository } from "../../adapters/mariadb/repositories/Maria
 import { MariadbAccountRepository } from "../mariadb/repositories/MariadbAccountRepository";
 import { OperationRepositoryInterface } from "../../../application/repositories/OperationRepositoryInterface";
 import { MariadbOperationRepository } from "../../adapters/mariadb/repositories/MariadbOperationRepository";
+import { MariadbSettingRepository } from "../../adapters/mariadb/repositories/MariadbSettingRepository";
 
 type RepositoryFactory<T extends RepositoryInterface> = () => T;
 
@@ -14,11 +15,13 @@ const repositoryFactories: Record<string, Record<string, RepositoryFactory<Repos
     UserRepository: () => new MariadbUserRepository(),
     AccountRepository: () => new MariadbAccountRepository(),
     OperationRepository: () => new MariadbOperationRepository(),
+    SettingRepository: () => new MariadbSettingRepository(),
   },
   // mongodb: {
   //   UserRepository: () => new MongodbUserRepository(),
   //   AccountRepository: () => new MongodbAccountRepository(),
   //   OperationRepository: () => new MongodbOperationRepository(),
+  //   SettingRepository: () => new MongodbSettingRepository(),
   // },
 };
 
@@ -41,6 +44,10 @@ export class RepositoryResolver implements RepositoryResolverInterface {
 
   public getOperationRepository(): OperationRepositoryInterface {
     return this.getRepository<OperationRepositoryInterface>('OperationRepository');
+  }
+
+  public getSettingRepository(): MariadbSettingRepository {
+    return this.getRepository<MariadbSettingRepository>('SettingRepository');
   }
 
   private getRepository<T extends RepositoryInterface>(name: string): T {

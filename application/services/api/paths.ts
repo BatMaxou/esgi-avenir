@@ -23,4 +23,8 @@ export const paths = {
   operation: {
     create: '/api/operations',
   },
+  setting: {
+    list: '/api/settings',
+    upsert: '/api/settings',
+  },
 };
