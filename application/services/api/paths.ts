@@ -15,6 +15,7 @@ export const paths = {
   account: {
     list: '/api/accounts',
     create: '/api/accounts',
+    createSavings: '/api/accounts/savings',
     detail: (id?: number | string | null) => `/api/accounts/${id || ':id'}`,
     update: (id?: number | string | null) => `/api/accounts/${id || ':id'}`,
     delete: (id?: number | string | null) => `/api/accounts/${id || ':id'}`,

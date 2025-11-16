@@ -6,6 +6,7 @@ type MockAccount = {
   iban: string,
   name: string,
   ownerId: number,
+  isSavings?: boolean,
 }
 
 export class AccountFixtures {
@@ -19,6 +20,7 @@ export class AccountFixtures {
     const ibans: Record<number, string> = {
       1: this.createIban('0000001'),
       2: this.createIban('0000002'),
+      3: this.createIban('0000003'),
     };
 
     const accounts: MockAccount[] = [
@@ -31,6 +33,12 @@ export class AccountFixtures {
         iban: ibans[2],
         name: 'Second User Account',
         ownerId: 1,
+      },
+      {
+        iban: ibans[3],
+        name: 'User Savings Account',
+        ownerId: 1,
+        isSavings: true,
       },
     ];
 

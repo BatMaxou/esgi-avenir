@@ -13,4 +13,5 @@ export interface UserRepositoryInterface extends RepositoryInterface {
   findByEmail: (email: string) => Promise<User | UserNotFoundError>
   findById: (id: number) => Promise<User | UserNotFoundError>
   findByConfirmationToken: (token: string) => Promise<User | UserNotFoundError>
+  findByIds: (ids: number[]) => Promise<User[]>
 }

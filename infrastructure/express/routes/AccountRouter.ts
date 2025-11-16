@@ -31,6 +31,15 @@ export class AccountRouter {
       }
     );
 
+    app.post(
+      paths.account.createSavings,
+      authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+      roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
+      async (req, res) => {
+        await accountController.createSavings(req, res);
+      }
+    );
+
     app.put(
       paths.account.update(),
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),

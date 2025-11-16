@@ -9,6 +9,8 @@ export class AccountAmountValue {
           return acc + operation.amount;
         case OperationEnum.WITHDRAWAL:
           return acc - operation.amount;
+        case OperationEnum.INTEREST:
+          return acc + operation.amount;
         case OperationEnum.TRANSFER:
           if (operation.toId === accountId) {
             return acc + operation.amount;

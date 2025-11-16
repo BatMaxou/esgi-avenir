@@ -18,6 +18,8 @@ export class SettingRouter {
   ) {
     const settingController = new SettingController(
       repositoryResolver.getSettingRepository(),
+      repositoryResolver.getUserRepository(),
+      repositoryResolver.getAccountRepository(),
       mailer,
     );
 
