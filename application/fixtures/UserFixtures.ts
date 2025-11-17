@@ -22,6 +22,14 @@ export class UserFixtures {
     const users: MockUser[] = [
       {
         firstName: 'Avenir',
+        lastName: 'Director',
+        email: 'director@avenir.com',
+        password: this.passwordHasher.createHash('azertyuiAZ123#'),
+        roles: [RoleEnum.USER, RoleEnum.DIRECTOR],
+        enabled: true,
+      },
+      {
+        firstName: 'Avenir',
         lastName: 'User',
         email: 'user@avenir.com',
         password: this.passwordHasher.createHash('azertyuiAZ123#'),
@@ -30,15 +38,25 @@ export class UserFixtures {
       },
       {
         firstName: 'Avenir',
-        lastName: 'Director',
-        email: 'director@avenir.com',
+        lastName: 'Second User',
+        email: 'second.user@avenir.com',
         password: this.passwordHasher.createHash('azertyuiAZ123#'),
-        roles: [RoleEnum.USER, RoleEnum.DIRECTOR],
+        roles: [RoleEnum.USER],
+        enabled: true,
+      },
+      {
+        firstName: 'Avenir',
+        lastName: 'Third User',
+        email: 'third.user@avenir.com',
+        password: this.passwordHasher.createHash('azertyuiAZ123#'),
+        roles: [RoleEnum.USER],
         enabled: true,
       },
     ];
 
-    await Promise.all(users.map((user) => this.createUser(user)));
+    for (const user of users) {
+      await this.createUser(user);
+    }
 
     return true;
   }

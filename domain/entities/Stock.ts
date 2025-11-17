@@ -1,0 +1,49 @@
+import { InvalidBasePriceError } from "../errors/entities/stock/InvalidBasePriceError";
+import { InvalidBaseQuantityError } from "../errors/entities/stock/InvalidBaseQuantityError";
+
+export interface HydratedStock extends Stock {
+  amount: number;
+}
+
+export class Stock {
+  public id?: number;
+
+  public static from({
+    id,
+    name,
+    baseQuantity,
+    basePrice,
+  }: {
+    id?: number,
+    name: string,
+    baseQuantity: number,
+    basePrice: number,
+  }): Stock | InvalidBasePriceError | InvalidBaseQuantityError {
+    if (basePrice < 0) {
+      return new InvalidBasePriceError('Base price cannot be negative.');
+    }
+
+    if (baseQuantity < 0) {
+      return new InvalidBaseQuantityError('Base quantity cannot be negative.');
+    }
+
+    const stock = new this(
+      name,
+      baseQuantity,
+      basePrice,
+    );
+
+    if (id) {
+      stock.id = id;
+    }
+
+    return stock;
+  }
+
+  private constructor(
+    public name: string,
+    public baseQuantity: number,
+    public basePrice: number,
+  ) {
+  }
+}

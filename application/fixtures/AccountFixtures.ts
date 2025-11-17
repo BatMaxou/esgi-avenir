@@ -21,28 +21,62 @@ export class AccountFixtures {
       1: this.createIban('0000001'),
       2: this.createIban('0000002'),
       3: this.createIban('0000003'),
+      4: this.createIban('0000004'),
+      5: this.createIban('0000005'),
+      6: this.createIban('0000006'),
+      7: this.createIban('0000007'),
+      8: this.createIban('0000008'),
     };
 
     const accounts: MockAccount[] = [
       {
         iban: ibans[1],
         name: 'User Account',
-        ownerId: 1,
+        ownerId: 2,
       },
       {
         iban: ibans[2],
         name: 'Second User Account',
-        ownerId: 1,
+        ownerId: 2,
       },
       {
         iban: ibans[3],
         name: 'User Savings Account',
-        ownerId: 1,
+        ownerId: 2,
+        isSavings: true,
+      },
+      {
+        iban: ibans[4],
+        name: 'Another User Account',
+        ownerId: 3,
+      },
+      {
+        iban: ibans[5],
+        name: 'Another User Savings Account',
+        ownerId: 3,
+        isSavings: true,
+      },
+      {
+        iban: ibans[6],
+        name: 'Third User Account',
+        ownerId: 4,
+      },
+      {
+        iban: ibans[7],
+        name: 'Third User Second Account',
+        ownerId: 4,
+      },
+      {
+        iban: ibans[8],
+        name: 'Third User Savings Account',
+        ownerId: 4,
         isSavings: true,
       },
     ];
 
-    await Promise.all(accounts.map((account) => this.createAccount(account)));
+    for (const account of accounts) {
+      await this.createAccount(account);
+    }
 
     return true;
   }

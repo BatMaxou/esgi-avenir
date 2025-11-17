@@ -6,17 +6,17 @@ export class AccountAmountValue {
     const total = operations.reduce((acc, operation) => {
       switch (operation.type) {
         case OperationEnum.DEPOSIT:
-          return acc + operation.amount;
+          return acc + operation.amount * 100;
         case OperationEnum.WITHDRAWAL:
-          return acc - operation.amount;
+          return acc - operation.amount * 100;
         case OperationEnum.INTEREST:
-          return acc + operation.amount;
+          return acc + operation.amount * 100;
         case OperationEnum.TRANSFER:
           if (operation.toId === accountId) {
-            return acc + operation.amount;
+            return acc + operation.amount * 100;
           }
           if (operation.fromId === accountId) {
-            return acc - operation.amount;
+            return acc - operation.amount * 100;
           }
 
           return acc;
@@ -25,7 +25,7 @@ export class AccountAmountValue {
       }
     }, 0);
 
-    return new AccountAmountValue(total);
+    return new AccountAmountValue(total / 100);
   }
 
   private constructor(public value: number) {}

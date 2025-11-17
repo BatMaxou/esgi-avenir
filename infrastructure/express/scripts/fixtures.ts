@@ -6,6 +6,9 @@ import { UserFixtures } from "../../../application/fixtures/UserFixtures";
 import { AccountFixtures } from "../../../application/fixtures/AccountFixtures";
 import { OperationFixtures } from "../../../application/fixtures/OperationFixtures";
 import { SettingFixtures } from "../../../application/fixtures/SettingFixtures";
+import { StockFixtures } from "../../../application/fixtures/StockFixtures";
+import { StockOrderFixtures } from "../../../application/fixtures/StockOrderFixtures";
+import { FinancialSecurityFixtures } from "../../../application/fixtures/FinancialSecurityFixtures";
 import { initModels } from "../../adapters/mariadb/initModels";
 
 const fixtures = async () => {
@@ -20,10 +23,21 @@ const fixtures = async () => {
     const repositoryResolver = new RepositoryResolver(databaseSource);
     const passwordHasher = new PasswordHasher();
 
-    await new UserFixtures(repositoryResolver.getUserRepository(), passwordHasher).load();
-    await new AccountFixtures(repositoryResolver.getAccountRepository(), bankCode, branchCode).load();
-    await new OperationFixtures(repositoryResolver.getOperationRepository()).load();
-    await new SettingFixtures(repositoryResolver.getSettingRepository()).load();
+    await Promise.all([
+      await new UserFixtures(repositoryResolver.getUserRepository(), passwordHasher).load(),
+      await new SettingFixtures(repositoryResolver.getSettingRepository()).load(),
+      await new StockFixtures(repositoryResolver.getStockRepository()).load(),
+    ]);
+
+    await Promise.all([
+      await new AccountFixtures(repositoryResolver.getAccountRepository(), bankCode, branchCode).load(),
+      await new StockOrderFixtures(repositoryResolver.getStockOrderRepository()).load(),
+      await new FinancialSecurityFixtures(repositoryResolver.getFinancialSecurityRepository()).load(),
+    ]);
+
+    await Promise.all([
+      await new OperationFixtures(repositoryResolver.getOperationRepository()).load(),
+    ]);
 
     console.log("✅ Fixtures loaded successfully.");
     process.exit(0);

@@ -12,9 +12,10 @@ export class MariadbOperationRepository implements OperationRepositoryInterface 
   private operationModel: OperationModel;
 
   public constructor() {
-    const userModel = new UserModel(new MariadbConnection(databaseDsn).getConnection());
-    const accountModel = new AccountModel(new MariadbConnection(databaseDsn).getConnection(), userModel);
-    this.operationModel = new OperationModel(new MariadbConnection(databaseDsn).getConnection(), accountModel);
+    const connection = new MariadbConnection(databaseDsn).getConnection();
+    const userModel = new UserModel(connection);
+    const accountModel = new AccountModel(connection, userModel);
+    this.operationModel = new OperationModel(connection, accountModel);
   }
 
   public async create(operation: Operation): Promise<Operation | AccountNotFoundError> {
