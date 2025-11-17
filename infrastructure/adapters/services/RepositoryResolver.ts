@@ -7,6 +7,9 @@ import { MariadbAccountRepository } from "../mariadb/repositories/MariadbAccount
 import { OperationRepositoryInterface } from "../../../application/repositories/OperationRepositoryInterface";
 import { MariadbOperationRepository } from "../../adapters/mariadb/repositories/MariadbOperationRepository";
 import { MariadbSettingRepository } from "../../adapters/mariadb/repositories/MariadbSettingRepository";
+import { MariadbStockRepository } from "../mariadb/repositories/MariadbStockRepository";
+import { MariadbStockOrderRepository } from "../mariadb/repositories/MariadbStockOrderRepository";
+import { MariadbFinancialSecurityRepository } from "../mariadb/repositories/MariadbFinancialSecurityRepository";
 
 type RepositoryFactory<T extends RepositoryInterface> = () => T;
 
@@ -16,12 +19,18 @@ const repositoryFactories: Record<string, Record<string, RepositoryFactory<Repos
     AccountRepository: () => new MariadbAccountRepository(),
     OperationRepository: () => new MariadbOperationRepository(),
     SettingRepository: () => new MariadbSettingRepository(),
+    StockRepository: () => new MariadbStockRepository(),
+    StockOrderRepository: () => new MariadbStockOrderRepository(),
+    FinancialSecurityRepository: () => new MariadbFinancialSecurityRepository(),
   },
   // mongodb: {
   //   UserRepository: () => new MongodbUserRepository(),
   //   AccountRepository: () => new MongodbAccountRepository(),
   //   OperationRepository: () => new MongodbOperationRepository(),
   //   SettingRepository: () => new MongodbSettingRepository(),
+  //   StockRepository: () => new MongodbStockRepository(),
+  //   StockOrderRepository: () => new MongodbStockOrderRepository(),
+  //   FinancialSecurityRepository: () => new MongodbFinancialSecurityRepository(),
   // },
 };
 
@@ -48,6 +57,18 @@ export class RepositoryResolver implements RepositoryResolverInterface {
 
   public getSettingRepository(): MariadbSettingRepository {
     return this.getRepository<MariadbSettingRepository>('SettingRepository');
+  }
+
+  public getStockRepository(): MariadbStockRepository {
+    return this.getRepository<MariadbStockRepository>('StockRepository');
+  }
+
+  public getStockOrderRepository(): MariadbStockOrderRepository {
+    return this.getRepository<MariadbStockOrderRepository>('StockOrderRepository');
+  }
+
+  public getFinancialSecurityRepository(): MariadbFinancialSecurityRepository {
+    return this.getRepository<MariadbFinancialSecurityRepository>('FinancialSecurityRepository');
   }
 
   private getRepository<T extends RepositoryInterface>(name: string): T {

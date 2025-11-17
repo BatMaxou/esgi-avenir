@@ -15,8 +15,9 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
   private accountModel: AccountModel;
 
   public constructor() {
-    const userModel = new UserModel(new MariadbConnection(databaseDsn).getConnection());
-    this.accountModel = new AccountModel(new MariadbConnection(databaseDsn).getConnection(), userModel);
+    const connection = new MariadbConnection(databaseDsn).getConnection();
+    const userModel = new UserModel(connection);
+    this.accountModel = new AccountModel(connection, userModel);
   }
 
   public async create(account: Account): Promise<Account | IbanExistsError | UserNotFoundError | UserAlreadyHaveSavingsAccountError> {

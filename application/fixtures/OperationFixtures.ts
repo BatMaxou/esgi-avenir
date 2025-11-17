@@ -40,7 +40,9 @@ export class OperationFixtures {
       },
     ];
 
-    await Promise.all(operations.map((operation) => this.createOperation(operation)));
+    for (const operation of operations) {
+      await this.createOperation(operation);
+    }
 
     return true;
   }
