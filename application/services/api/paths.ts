@@ -28,4 +28,8 @@ export const paths = {
     list: '/api/settings',
     upsert: '/api/settings',
   },
+  stock: {
+    create: '/api/stocks',
+    update: (id?: number | string | null) => `/api/stocks/${id || ':id'}`,
+  },
 };
