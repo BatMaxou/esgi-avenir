@@ -20,5 +20,6 @@ export interface UpdateStockPayloadInterface {
 export interface StockResourceInterface {
   create(data: CreateStockPayloadInterface): Promise<GetStockResponseInterface | ApiClientError>;
   update(data: UpdateStockPayloadInterface): Promise<GetStockResponseInterface | ApiClientError>;
+  getAll(term?: string | number | boolean): Promise<GetStockListResponseInterface | ApiClientError>;
 }
 

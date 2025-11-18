@@ -6,4 +6,5 @@ export interface StockRepositoryInterface extends RepositoryInterface {
   create: (stock: Stock) => Promise<Stock>
   update: (stock: Omit<Partial<Stock>, 'basePrice'> & { id: number }) => Promise<Stock | StockNotFoundError>
   findById: (id: number) => Promise<Stock | StockNotFoundError>
+  findAllLike: (term: string) => Promise<Stock[]>
 }

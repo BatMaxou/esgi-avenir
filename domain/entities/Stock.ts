@@ -2,7 +2,7 @@ import { InvalidBasePriceError } from "../errors/entities/stock/InvalidBasePrice
 import { InvalidBaseQuantityError } from "../errors/entities/stock/InvalidBaseQuantityError";
 
 export interface HydratedStock extends Stock {
-  amount: number;
+  balance: number;
 }
 
 export class Stock {
