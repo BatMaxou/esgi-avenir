@@ -10,6 +10,9 @@ import { UpdateStockParams } from "../../../domain/params/stock/UpdateStockParam
 import { InvalidUpdateStockParamsError } from "../../../domain/errors/params/stock/InvalidUpdateStockParamsError";
 import { CreateStockUsecase } from "../../../application/usecases/stock/CreateStockUsecase"
 import { UpdateStockUsecase } from "../../../application/usecases/stock/UpdateStockUsecase";
+import { GetStockListQuery } from "../../../domain/queries/stock/GetStockListQuery";
+import { InvalidGetListStockQueryError } from "../../../domain/errors/queries/stock/InvalidGetListStockQueryError";
+import { GetStockListUsecase } from "../../../application/usecases/stock/GetStockListUsecase";
 
 export class StockController {
   public constructor(
@@ -94,5 +97,25 @@ export class StockController {
       baseQuantity: maybeStock.baseQuantity,
       basePrice: maybeStock.basePrice,
     }); 
+  }
+
+  public async list(request: Request, response: Response) {
+    const maybeQuery = GetStockListQuery.from(request.query);
+    if (maybeQuery instanceof InvalidGetListStockQueryError) {
+      return response.status(400).json({
+        error: maybeQuery.message,
+      });
+    }
+
+    const getListUsecase = new GetStockListUsecase(this.stockRepository);
+    const stocks = await getListUsecase.execute(maybeQuery.term || '');
+
+    response.status(200).json(stocks.map((stock) => ({
+      id: stock.id,
+      name: stock.name,
+      baseQuantity: stock.baseQuantity,
+      basePrice: stock.basePrice,
+      balance: 0,
+    })));
   }
 }

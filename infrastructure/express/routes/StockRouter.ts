@@ -35,6 +35,16 @@ export class StockRouter {
         await stockController.update(req, res);
       }
     );
+
+    app.get(
+      paths.stock.list(),
+      authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+      roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
+      async (req, res) => {
+        await stockController.list(req, res);
+      }
+    );
+
   }
 }
 

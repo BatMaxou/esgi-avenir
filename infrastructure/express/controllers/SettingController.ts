@@ -72,5 +72,4 @@ export class SettingController {
 
     response.status(200).json(settings);
   }
-
 }

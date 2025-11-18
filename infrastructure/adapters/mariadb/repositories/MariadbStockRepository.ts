@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { StockRepositoryInterface } from "../../../../application/repositories/StockRepositoryInterface";
 import { Stock } from "../../../../domain/entities/Stock";
 import { StockNotFoundError } from "../../../../domain/errors/entities/stock/StockNotFoundError";
@@ -47,6 +48,29 @@ export class MariadbStockRepository implements StockRepositoryInterface {
     } catch (error) {
       throw new StockNotFoundError('Stock not found');
     }
+  }
+
+  public async findAllLike(term: string): Promise<Stock[]> {
+    const foundStocks = await this.stockModel.model.findAll({
+      where: {
+        name: {
+          [Op.like]: `%${term}%`
+        }
+      },
+    });
+
+    const stocks: Stock[] = [];
+
+    foundStocks.forEach((foundStock) => {
+      const maybeStock = Stock.from(foundStock);
+      if (maybeStock instanceof Error) {
+        throw maybeStock;
+      }
+
+      stocks.push(maybeStock);
+    });
+
+    return stocks;
   }
 
   public async update(stock: Omit<Partial<Stock>, 'basePrice'> & { id: number }): Promise<Stock | StockNotFoundError> {

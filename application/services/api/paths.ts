@@ -1,3 +1,16 @@
+type QueryParams = Record<string, string | number | boolean>;
+
+const buildQueryString = (params: QueryParams | undefined): string => {
+  if (!params) {
+    return '';
+  }
+
+  const queryString = Object.entries(params)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(`${value}`)}`)
+    .join('&');
+  return queryString ? `?${queryString}` : '';
+};
+
 export const paths = {
   register: '/api/register',
   confirm: '/api/confirm',
@@ -29,7 +42,9 @@ export const paths = {
     upsert: '/api/settings',
   },
   stock: {
+    list: (params: QueryParams | undefined = undefined) => `/api/stocks${buildQueryString(params)}`,
     create: '/api/stocks',
     update: (id?: number | string | null) => `/api/stocks/${id || ':id'}`,
   },
 };
+
