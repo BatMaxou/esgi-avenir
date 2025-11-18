@@ -29,8 +29,8 @@ export class Stock {
 
     const stock = new this(
       name,
-      baseQuantity,
-      basePrice,
+      Math.round(baseQuantity),
+      Math.round(basePrice * 100) / 100,
     );
 
     if (id) {

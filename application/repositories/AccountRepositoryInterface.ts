@@ -8,7 +8,7 @@ import { UserAlreadyHaveSavingsAccountError } from "../../domain/errors/entities
 
 export interface AccountRepositoryInterface extends RepositoryInterface {
   create: (account: Account) => Promise<Account | IbanExistsError | UserNotFoundError | UserAlreadyHaveSavingsAccountError>
-  update: (account: Partial<Account> & { id: number }) => Promise<Account | AccountNotFoundError>
+  update: (account: Omit<Partial<Account>, 'iban' | 'isSavings'> & { id: number }) => Promise<Account | AccountNotFoundError>
   delete: (id: number) => Promise<boolean | AccountNotFoundError>
   findById: (id: number) => Promise<Account | AccountNotFoundError>
   findByIban: (iban: IbanValue) => Promise<Account | AccountNotFoundError>

@@ -11,7 +11,7 @@ export class UpdateAccountUsecase {
   public async execute(
     id: number,
     owner: User,
-    toUpdate: Partial<Omit<Account, 'id' | 'iban'>>,
+    toUpdate: Omit<Partial<Account>, 'iban' | 'isSavings'>,
   ): Promise<Account | AccountNotFoundError> {
     const maybeAccount = await this.accountRepository.findById(id);
     if (maybeAccount instanceof AccountNotFoundError) {
