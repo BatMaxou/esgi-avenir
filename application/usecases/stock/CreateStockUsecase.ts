@@ -17,6 +17,7 @@ export class CreateStockUsecase {
       name,
       baseQuantity,
       basePrice,
+      disabled: false,
     });
     if (
       maybeNewStock instanceof InvalidBaseQuantityError

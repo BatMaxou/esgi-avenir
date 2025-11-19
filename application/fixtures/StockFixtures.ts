@@ -5,6 +5,7 @@ type MockStock = {
   name: string,
   basePrice: number,
   baseQuantity: number,
+  disabled: boolean,
 }
 
 export class StockFixtures {
@@ -18,16 +19,19 @@ export class StockFixtures {
         name: "Apple Inc.",
         basePrice: 200,
         baseQuantity: 5,
+        disabled: false,
       },
       {
         name: "Microsoft Corporation",
         basePrice: 250,
         baseQuantity: 2, 
+        disabled: false,
       },
       {
         name: "Amazon.com, Inc.",
         basePrice: 100,
         baseQuantity: 10,
+        disabled: false,
       },
     ];
 

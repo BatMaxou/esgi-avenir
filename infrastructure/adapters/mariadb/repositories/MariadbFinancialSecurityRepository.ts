@@ -7,15 +7,17 @@ import { FinancialSecurityModel } from "../models/FinancialSecurityModel";
 import { UserModel } from "../models/UserModel";
 import { StockModel } from "../models/StockModel";
 import { StockNotFoundError } from "../../../../domain/errors/entities/stock/StockNotFoundError";
+import { FinancialSecurityNotFoundError } from "../../../../domain/errors/entities/financial-security/FinancialSecurityNotFoundError";
 
 export class MariadbFinancialSecurityRepository implements FinancialSecurityRepositoryInterface {
+  private stockModel: StockModel;
   private financialSecurityModel: FinancialSecurityModel;
 
   public constructor() {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     const userModel = new UserModel(connection);
-    const stockModel = new StockModel(connection);
-    this.financialSecurityModel = new FinancialSecurityModel(connection, userModel, stockModel);
+    this.stockModel = new StockModel(connection);
+    this.financialSecurityModel = new FinancialSecurityModel(connection, userModel, this.stockModel);
   }
 
   public async create(financialSecurity: FinancialSecurity): Promise<FinancialSecurity | StockNotFoundError | UserNotFoundError> {
@@ -26,7 +28,12 @@ export class MariadbFinancialSecurityRepository implements FinancialSecurityRepo
         stockId: financialSecurity.stockId,
       });
 
-      const maybeFinancialSecurity = FinancialSecurity.from(createdFinancialSecurity);
+      const foundFinancialSecurity = await this.findById(createdFinancialSecurity.id);
+      if (foundFinancialSecurity instanceof FinancialSecurityNotFoundError) {
+        throw foundFinancialSecurity;
+      }
+
+      const maybeFinancialSecurity = FinancialSecurity.from(foundFinancialSecurity);
       if (maybeFinancialSecurity instanceof Error) {
         throw maybeFinancialSecurity;
       }
@@ -42,6 +49,110 @@ export class MariadbFinancialSecurityRepository implements FinancialSecurityRepo
       }
 
       throw error;
+    }
+  }
+
+  public async findById(id: number): Promise<FinancialSecurity | FinancialSecurityNotFoundError> {
+    try {
+      const foundFinancialSecurity = await this.financialSecurityModel.model.findByPk(
+        id,
+        {
+          include: [
+            { model: this.stockModel.model }
+          ],
+        }
+      );
+      if (!foundFinancialSecurity) {
+        return new FinancialSecurityNotFoundError('Financial security not found.');
+      }
+
+      const maybeFinancialSecurity = FinancialSecurity.from(foundFinancialSecurity);
+      if (maybeFinancialSecurity instanceof Error) {
+        throw maybeFinancialSecurity;
+      }
+
+      return maybeFinancialSecurity;
+    } catch (error) {
+      throw new FinancialSecurityNotFoundError('Financial security not found.');
+    }
+  }
+
+  public async findAllByOwner(ownerId: number): Promise<FinancialSecurity[]> {
+    const foundFinancialSecurities = await this.financialSecurityModel.model.findAll({
+      include: [
+        {model: this.stockModel.model }
+      ],
+      where: {
+        ownerId: ownerId,
+      },
+    });
+
+    const financialSecurities: FinancialSecurity[] = [];
+
+    foundFinancialSecurities.forEach((foundFinancialSecurity) => {
+      const maybeFinancialSecurity = FinancialSecurity.from(foundFinancialSecurity);
+      if (maybeFinancialSecurity instanceof Error) {
+        throw maybeFinancialSecurity;
+      }
+
+      financialSecurities.push(maybeFinancialSecurity);
+    });
+
+    return financialSecurities;
+  }
+
+  public async findAllByStock(stockId: number): Promise<FinancialSecurity[]> {
+    const foundFinancialSecurities = await this.financialSecurityModel.model.findAll({
+      where: {
+        stockId,
+      },
+    });
+
+    const financialSecurities: FinancialSecurity[] = [];
+
+    foundFinancialSecurities.forEach((foundFinancialSecurity) => {
+      const maybeFinancialSecurity = FinancialSecurity.from(foundFinancialSecurity);
+      if (maybeFinancialSecurity instanceof Error) {
+        throw maybeFinancialSecurity;
+      }
+
+      financialSecurities.push(maybeFinancialSecurity);
+    });
+
+    return financialSecurities;
+  }
+
+  public async findOneByStockAndOwner(stockId: number, ownerId: number): Promise<FinancialSecurity | FinancialSecurityNotFoundError> {
+    const foundFinancialSecurity = await this.financialSecurityModel.model.findOne({
+      where: {
+        stockId,
+        ownerId,
+      },
+      order: [['purchasePrice', 'ASC']],
+    });
+
+    if (!foundFinancialSecurity) {
+      return new FinancialSecurityNotFoundError('Financial security not found.');
+    }
+
+    const maybeFinancialSecurity = FinancialSecurity.from(foundFinancialSecurity);
+    if (maybeFinancialSecurity instanceof Error) {
+      throw maybeFinancialSecurity;
+    }
+
+    return maybeFinancialSecurity;
+  }
+
+  public async delete(id: number): Promise<boolean | FinancialSecurityNotFoundError> {
+    try {
+      const deletedCount = await this.financialSecurityModel.model.destroy({ where: { id } });
+      if (deletedCount === 0) {
+        return new FinancialSecurityNotFoundError('Financial security not found.');
+      }
+
+      return true;
+    } catch (error) {
+      throw new FinancialSecurityNotFoundError('Financial security not found.');
     }
   }
 }

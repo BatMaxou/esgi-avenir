@@ -1,5 +1,6 @@
 import { ApiClientError } from './ApiClientError';
 import { AccountResourceInterface } from './resources/AccountResourceInterface';
+import { FinancialSecurityResourceInterface } from './resources/FinancialSecurityResourceInterface';
 import { MeResourceInterface } from './resources/MeResourceInterface';
 import { OperationResourceInterface } from './resources/OperationResourceInterface';
 import { SettingResourceInterface } from './resources/SettingResourceInterface';
@@ -29,6 +30,7 @@ export interface ApiClientInterface {
   operation: OperationResourceInterface;
   setting: SettingResourceInterface;
   stock: StockResourceInterface;
+  financialSecurity: FinancialSecurityResourceInterface;
 
   get<T>(url: string, additionnalHeaders?: HeadersInit): Promise<T | ApiClientError>;
   post<T>(url: string, body: object, additionnalHeaders?: HeadersInit,): Promise<T | ApiClientError>;

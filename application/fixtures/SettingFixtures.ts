@@ -22,6 +22,14 @@ export class SettingFixtures {
         code: SettingEnum.SAVINGS_RATE,
         value: 1,
       },
+      {
+        code: SettingEnum.STOCK_ORDER_PURCHASE_FEE,
+        value: 1,
+      },
+      {
+        code: SettingEnum.STOCK_ORDER_SALE_FEE,
+        value: 1,
+      },
     ];
 
     for (const setting of settings) {

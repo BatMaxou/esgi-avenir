@@ -1,4 +1,4 @@
-import { AccountRepositoryInterface } from "../../../../application/repositories/AccountRepositoryInterface";
+import { AccountRepositoryInterface, UpdateAccountPayload } from "../../../../application/repositories/AccountRepositoryInterface";
 import { Account } from "../../../../domain/entities/Account";
 import { AccountNotFoundError } from "../../../../domain/errors/entities/account/AccountNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
@@ -55,7 +55,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
     }
   }
 
-  public async update(account: Omit<Partial<Account>, 'iban' | 'isSavings'> & { id: number }): Promise<Account | AccountNotFoundError> {
+  public async update(account: UpdateAccountPayload): Promise<Account | AccountNotFoundError> {
     try {
       const { id, ...toUpdate } = account;
 

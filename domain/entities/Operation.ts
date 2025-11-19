@@ -68,6 +68,26 @@ export class Operation {
         };
 
         break;
+      case OperationEnum.FEE:
+        if (!maybeFromId || maybeToId !== undefined) {
+          return new InvalidAccountError('Invalid source account for fee operation.');
+        };
+        
+        if (maybeToId !== undefined) {
+          return new InvalidAccountError('Destination should be empty for fee operation.');
+        };
+
+        break;
+      case OperationEnum.TO_BANK:
+        if (!maybeFromId || maybeToId !== undefined) {
+          return new InvalidAccountError('Invalid source account for to bank operation.');
+        };
+        
+        if (maybeToId !== undefined) {
+          return new InvalidAccountError('Destination should be empty for to bank operation.');
+        };
+
+        break;
       default:
         return new InvalidOperationTypeError('Invalid operation type.');
     }

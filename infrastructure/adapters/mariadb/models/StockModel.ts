@@ -5,6 +5,7 @@ interface StockModelInterface extends Model<InferAttributes<StockModelInterface>
   name: string,
   baseQuantity: number,
   basePrice: number,
+  disabled: boolean,
 }
 
 export class StockModel {
@@ -28,6 +29,11 @@ export class StockModel {
       basePrice: {
         type: DataTypes.FLOAT,
         allowNull: false,
+      },
+      disabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     });
   }

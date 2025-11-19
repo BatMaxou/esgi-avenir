@@ -17,9 +17,18 @@ export interface UpdateStockPayloadInterface {
   baseQuantity?: number;
 }
 
+export interface PurchaseBaseStockPayloadInterface {
+  accountId: number;
+}
+
+export interface PurchaseBaseStockResponseInterface {
+  success: boolean;
+}
+
 export interface StockResourceInterface {
   create(data: CreateStockPayloadInterface): Promise<GetStockResponseInterface | ApiClientError>;
   update(data: UpdateStockPayloadInterface): Promise<GetStockResponseInterface | ApiClientError>;
-  getAll(term?: string | number | boolean): Promise<GetStockListResponseInterface | ApiClientError>;
+  getAll(term?: string): Promise<GetStockListResponseInterface | ApiClientError>;
+  purchaseBaseStock(id: number, data: PurchaseBaseStockPayloadInterface): Promise<PurchaseBaseStockResponseInterface | ApiClientError>;
 }
 

@@ -3,6 +3,7 @@ import { ApiClientError } from "../../../../application/services/api/ApiClientEr
 import { MeResourceInterface } from "../../../../application/services/api/resources/MeResourceInterface";
 import { paths } from "../../../../application/services/api/paths";
 import type { User } from "../../../../domain/entities/User";
+import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 
 export class MeResource implements MeResourceInterface {
   constructor(private apiClient: ApiClientInterface) {}

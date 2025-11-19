@@ -15,6 +15,8 @@ import { AccountResourceInterface } from "../../../../application/services/api/r
 import { SettingResource } from "../resources/SettingResource";
 import { StockResourceInterface } from "../../../../application/services/api/resources/StockResourceInterface";
 import { StockResource } from "../resources/StockRessource";
+import { FinancialSecurityResourceInterface } from "../../../../application/services/api/resources/FinancialSecurityResourceInterface";
+import { FinancialSecurityResource } from "../resources/FinancialSecurityResource";
 
 export class ApiClient implements ApiClientInterface {
   private token: string | null = null;
@@ -25,6 +27,7 @@ export class ApiClient implements ApiClientInterface {
   public operation: OperationResourceInterface;
   public setting: SettingResourceInterface;
   public stock: StockResourceInterface;
+  public financialSecurity: FinancialSecurityResourceInterface;
 
   constructor(private baseUrl: string) {
     this.me = new MeResource(this);
@@ -33,6 +36,7 @@ export class ApiClient implements ApiClientInterface {
     this.operation = new OperationResource(this);
     this.setting = new SettingResource(this);
     this.stock = new StockResource(this);
+    this.financialSecurity = new FinancialSecurityResource(this);
 
     this.token = getCookie("token");
   }
