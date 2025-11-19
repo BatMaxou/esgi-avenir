@@ -15,6 +15,6 @@ export const initModels = (connection: Sequelize) => {
 
   new OperationModel(connection, accountModel);
   new SettingModel(connection);
-  new StockOrderModel(connection, userModel, stockModel);
+  new StockOrderModel(connection, userModel, stockModel, accountModel);
   new FinancialSecurityModel(connection, userModel, stockModel);
 };

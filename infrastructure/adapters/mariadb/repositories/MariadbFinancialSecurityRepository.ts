@@ -7,6 +7,7 @@ import { FinancialSecurityModel } from "../models/FinancialSecurityModel";
 import { UserModel } from "../models/UserModel";
 import { StockModel } from "../models/StockModel";
 import { StockNotFoundError } from "../../../../domain/errors/entities/stock/StockNotFoundError";
+import { FinancialSecurityNotFoundError } from "../../../../domain/errors/entities/financial-security/FinancialSecurityNotFoundError";
 
 export class MariadbFinancialSecurityRepository implements FinancialSecurityRepositoryInterface {
   private financialSecurityModel: FinancialSecurityModel;
@@ -42,6 +43,61 @@ export class MariadbFinancialSecurityRepository implements FinancialSecurityRepo
       }
 
       throw error;
+    }
+  }
+
+  public async findAllByOwner(ownerId: number): Promise<FinancialSecurity[]> {
+    const foundFinancialSecurities = await this.financialSecurityModel.model.findAll({
+      where: {
+        ownerId: ownerId,
+      },
+    });
+
+    const financialSecurities: FinancialSecurity[] = [];
+
+    foundFinancialSecurities.forEach((foundFinancialSecurity) => {
+      const maybeFinancialSecurity = FinancialSecurity.from(foundFinancialSecurity);
+      if (maybeFinancialSecurity instanceof Error) {
+        throw maybeFinancialSecurity;
+      }
+
+      financialSecurities.push(maybeFinancialSecurity);
+    });
+
+    return financialSecurities;
+  }
+
+  public async findAllByStock(stockId: number): Promise<FinancialSecurity[]> {
+    const foundFinancialSecurities = await this.financialSecurityModel.model.findAll({
+      where: {
+        stockId,
+      },
+    });
+
+    const financialSecurities: FinancialSecurity[] = [];
+
+    foundFinancialSecurities.forEach((foundFinancialSecurity) => {
+      const maybeFinancialSecurity = FinancialSecurity.from(foundFinancialSecurity);
+      if (maybeFinancialSecurity instanceof Error) {
+        throw maybeFinancialSecurity;
+      }
+
+      financialSecurities.push(maybeFinancialSecurity);
+    });
+
+    return financialSecurities;
+  }
+
+  public async delete(id: number): Promise<boolean | FinancialSecurityNotFoundError> {
+    try {
+      const deletedCount = await this.financialSecurityModel.model.destroy({ where: { id } });
+      if (deletedCount === 0) {
+        return new FinancialSecurityNotFoundError('Financial security not found.');
+      }
+
+      return true;
+    } catch (error) {
+      throw new FinancialSecurityNotFoundError('Financial security not found.');
     }
   }
 }

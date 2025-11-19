@@ -164,8 +164,8 @@ export class UserController {
 
     const updateUserUsecase = new UpdateUserUsecase(this.userRepository, this.passwordHasher);
     const maybeUser = await updateUserUsecase.execute(
-      maybeParams.id,
       {
+        id: maybeParams.id,
         email: maybeEmail,
         password: maybePassword,
         firstName: maybeCommand.firstName,

@@ -1,4 +1,4 @@
-import { StockRepositoryInterface } from '../../repositories/StockRepositoryInterface';
+import { StockRepositoryInterface, UpdateStockPayload } from '../../repositories/StockRepositoryInterface';
 import { Stock } from '../../../domain/entities/Stock';
 import { StockNotFoundError } from '../../../domain/errors/entities/stock/StockNotFoundError';
 import { InvalidBaseQuantityError } from '../../../domain/errors/entities/stock/InvalidBaseQuantityError';
@@ -8,10 +8,9 @@ export class UpdateStockUsecase {
     private readonly stockRepository: StockRepositoryInterface,
   ) {}
 
-  public async execute(
-    id: number,
-    toUpdate: Omit<Partial<Stock>, 'basePrice'>,
-  ): Promise<Stock | StockNotFoundError | InvalidBaseQuantityError> {
+  public async execute(stock: UpdateStockPayload): Promise<Stock | StockNotFoundError | InvalidBaseQuantityError> {
+    const { id, ...toUpdate } = stock;
+
     const maybeStock = await this.stockRepository.findById(id);
     if (maybeStock instanceof StockNotFoundError) {
       return maybeStock;
@@ -21,10 +20,7 @@ export class UpdateStockUsecase {
       return new InvalidBaseQuantityError('Base quantity cannot be decreased');
     }
 
-    return await this.stockRepository.update({
-      id,
-      ...toUpdate,
-    });
+    return await this.stockRepository.update(stock);
   }
 }
 

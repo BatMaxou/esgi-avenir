@@ -1,0 +1,7 @@
+export class StockOrderNotFoundError extends Error {
+  public constructor(message: string) {
+    super(message);
+
+    this.name = 'StockOrderNotFoundError';
+  }
+}

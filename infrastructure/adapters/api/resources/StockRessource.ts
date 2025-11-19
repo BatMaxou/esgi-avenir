@@ -6,7 +6,7 @@ import { CreateStockPayloadInterface, UpdateStockPayloadInterface, StockResource
 export class StockResource implements StockResourceInterface {
   constructor(private apiClient: ApiClientInterface) {}
 
-  public async getAll(term?: string | number | boolean): Promise<GetStockListResponseInterface | ApiClientError> {
+  public async getAll(term?: string): Promise<GetStockListResponseInterface | ApiClientError> {
     return this.apiClient.get<GetStockListResponseInterface>(`${paths.stock.list(term ? { term } : undefined)}`);
   }
 

@@ -3,6 +3,7 @@ import { InvalidBaseQuantityError } from "../errors/entities/stock/InvalidBaseQu
 
 export interface HydratedStock extends Stock {
   balance: number;
+  remainingQuantity: number;
 }
 
 export class Stock {

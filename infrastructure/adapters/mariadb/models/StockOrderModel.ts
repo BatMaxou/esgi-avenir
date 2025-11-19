@@ -3,6 +3,7 @@ import { StockOrderStatusEnum } from "../../../../domain/enums/StockOrderStatusE
 import { StockOrderTypeEnum } from "../../../../domain/enums/StockOrderTypeEnum";
 import { StockModel } from "./StockModel";
 import { UserModel } from "./UserModel";
+import { AccountModel } from "./AccountModel";
 
 interface StockOrderModelInterface extends Model<InferAttributes<StockOrderModelInterface>, InferCreationAttributes<StockOrderModelInterface>> {
   id: CreationOptional<number>;
@@ -11,12 +12,18 @@ interface StockOrderModelInterface extends Model<InferAttributes<StockOrderModel
   status: StockOrderStatusEnum,
   ownerId?: number,
   stockId?: number,
+  accountId?: number,
 }
 
 export class StockOrderModel {
   public model: ModelCtor<StockOrderModelInterface>;
 
-  public constructor(connection: Sequelize, userModel: UserModel, stockModel: StockModel) {
+  public constructor(
+    connection: Sequelize,
+    userModel: UserModel,
+    stockModel: StockModel,
+    accountModel: AccountModel,
+  ) {
     this.model = connection.define<StockOrderModelInterface>('stock_order', {
       id: {
         type: DataTypes.INTEGER,
@@ -37,15 +44,18 @@ export class StockOrderModel {
       },
     });
 
-    this.associate(userModel, stockModel);
+    this.associate(userModel, stockModel, accountModel);
   }
 
-  private associate(userModel: UserModel, stockModel: StockModel) {
+  private associate(userModel: UserModel, stockModel: StockModel, accountModel: AccountModel): void {
     this.model.belongsTo(userModel.model, {
       foreignKey: 'ownerId',
     });
     this.model.belongsTo(stockModel.model, {
       foreignKey: 'stockId',
+    });
+    this.model.belongsTo(accountModel.model, {
+      foreignKey: 'accountId',
     });
   }
 }

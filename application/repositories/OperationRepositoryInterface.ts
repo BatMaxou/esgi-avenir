@@ -4,5 +4,5 @@ import { RepositoryInterface } from "./RepositoryInterface"
 
 export interface OperationRepositoryInterface extends RepositoryInterface {
   create: (operation: Operation) => Promise<Operation | AccountNotFoundError>
-  findByAccount: (accountId: number) => Promise<Operation[] | AccountNotFoundError>
+  findByAccount: (accountId: number) => Promise<Operation[]>
 }

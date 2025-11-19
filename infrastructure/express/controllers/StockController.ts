@@ -13,10 +13,14 @@ import { UpdateStockUsecase } from "../../../application/usecases/stock/UpdateSt
 import { GetStockListQuery } from "../../../domain/queries/stock/GetStockListQuery";
 import { InvalidGetListStockQueryError } from "../../../domain/errors/queries/stock/InvalidGetListStockQueryError";
 import { GetStockListUsecase } from "../../../application/usecases/stock/GetStockListUsecase";
+import { StockOrderRepositoryInterface } from "../../../application/repositories/StockOrderRepositoryInterface";
+import { FinancialSecurityRepositoryInterface } from "../../../application/repositories/FinancialSecurityRepositoryInterface";
 
 export class StockController {
   public constructor(
     private readonly stockRepository: StockRepositoryInterface,
+    private readonly stockOrderRepository: StockOrderRepositoryInterface,
+    private readonly financialSecurityRepository: FinancialSecurityRepositoryInterface,
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -72,8 +76,8 @@ export class StockController {
 
     const updateStockUsecase = new UpdateStockUsecase(this.stockRepository);
     const maybeStock = await updateStockUsecase.execute(
-      maybeParams.id,
       {
+        id: maybeParams.id,
         name: maybeCommand.name,
         baseQuantity: maybeCommand.baseQuantity,
       }
@@ -107,7 +111,11 @@ export class StockController {
       });
     }
 
-    const getListUsecase = new GetStockListUsecase(this.stockRepository);
+    const getListUsecase = new GetStockListUsecase(
+      this.stockRepository,
+      this.stockOrderRepository,
+      this.financialSecurityRepository
+    );
     const stocks = await getListUsecase.execute(maybeQuery.term || '');
 
     response.status(200).json(stocks.map((stock) => ({
@@ -115,7 +123,8 @@ export class StockController {
       name: stock.name,
       baseQuantity: stock.baseQuantity,
       basePrice: stock.basePrice,
-      balance: 0,
+      balance: stock.balance,
+      remainingQuantity: stock.remainingQuantity,
     })));
   }
 }

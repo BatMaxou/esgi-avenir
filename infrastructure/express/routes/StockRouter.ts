@@ -16,6 +16,8 @@ export class StockRouter {
   ) {
     const stockController = new StockController(
       repositoryResolver.getStockRepository(),
+      repositoryResolver.getStockOrderRepository(),
+      repositoryResolver.getFinancialSecurityRepository(),
     );
 
     app.post(

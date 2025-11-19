@@ -3,4 +3,6 @@ export enum OperationEnum {
   DEPOSIT = 'deposit',
   WITHDRAWAL = 'withdrawal',
   INTEREST = 'interest',
+  FEE = 'fee',
+  TO_BANK = 'to_bank',
 };

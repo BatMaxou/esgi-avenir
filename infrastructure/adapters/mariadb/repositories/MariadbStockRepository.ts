@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { StockRepositoryInterface } from "../../../../application/repositories/StockRepositoryInterface";
+import { StockRepositoryInterface, UpdateStockPayload } from "../../../../application/repositories/StockRepositoryInterface";
 import { Stock } from "../../../../domain/entities/Stock";
 import { StockNotFoundError } from "../../../../domain/errors/entities/stock/StockNotFoundError";
 import { databaseDsn } from "../../../express/utils/tools";
@@ -73,7 +73,7 @@ export class MariadbStockRepository implements StockRepositoryInterface {
     return stocks;
   }
 
-  public async update(stock: Omit<Partial<Stock>, 'basePrice'> & { id: number }): Promise<Stock | StockNotFoundError> {
+  public async update(stock: UpdateStockPayload): Promise<Stock | StockNotFoundError> {
     try {
       const { id, ...toUpdate } = stock;
 

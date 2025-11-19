@@ -1,7 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import cron from "node-cron";
 
 import { RepositoryResolver } from "../adapters/services/RepositoryResolver";
 import { Mailer } from "../adapters/nodemailer/services/Mailer";
@@ -18,6 +17,7 @@ import { Scheduler } from "../adapters/nodecron/services/Scheduler";
 import { Calendar } from "./calendar/Calendar";
 import { SettingRouter } from "./routes/SettingRouter";
 import { StockRouter } from "./routes/StockRouter";
+import { StockOrderRouter } from "./routes/StockOrderRouter";
 
 const startServer = async () => {
   const app = express();
@@ -82,6 +82,13 @@ const startServer = async () => {
   (new StockRouter()).register(
     app,
     repositoryResolver,
+    tokenManager,
+  );
+
+  (new StockOrderRouter()).register(
+    app,
+    repositoryResolver,
+    mailer,
     tokenManager,
   );
 

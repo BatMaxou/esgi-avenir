@@ -1,4 +1,4 @@
-import { UserRepositoryInterface } from "../../../../application/repositories/UserRepositoryInterface";
+import { UpdateUserPayload, UserRepositoryInterface } from "../../../../application/repositories/UserRepositoryInterface";
 import { User } from "../../../../domain/entities/User";
 import { EmailExistsError } from "../../../../domain/errors/entities/user/EmailExistsError";
 import { databaseDsn } from "../../../express/utils/tools";
@@ -41,7 +41,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
     }
   }
 
-  public async update(user: Partial<User> & { id: number }): Promise<User | UserNotFoundError | EmailExistsError> {
+  public async update(user: UpdateUserPayload): Promise<User | UserNotFoundError | EmailExistsError> {
     try {
       const { id, email, password, roles, ...toUpdate } = user;
 

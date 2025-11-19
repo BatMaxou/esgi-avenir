@@ -17,11 +17,25 @@ export class OperationFixtures {
 
   public async load(): Promise<boolean | Error> {
     const operations: MockOperation[] = [
+      // ------
+      // Init for stock orders
       {
-        amount: 100,
+        amount: 5000,
         type: OperationEnum.DEPOSIT,
         toId: 1,
       },
+      {
+        amount: 5000,
+        type: OperationEnum.DEPOSIT,
+        toId: 4,
+      },
+      {
+        amount: 5000,
+        type: OperationEnum.DEPOSIT,
+        toId: 6,
+      },
+      // ------
+      // Regular operations
       {
         amount: 50,
         type: OperationEnum.TRANSFER,
@@ -33,6 +47,8 @@ export class OperationFixtures {
         type: OperationEnum.WITHDRAWAL,
         fromId: 2,
       },
+      // ------
+      // Savings account operations
       {
         amount: 100,
         type: OperationEnum.DEPOSIT,
