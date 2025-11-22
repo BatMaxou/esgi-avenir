@@ -30,7 +30,7 @@ export class AccountController {
   public constructor(
     private readonly accountRepository: AccountRepositoryInterface,
     private readonly operationRepository: OperationRepositoryInterface,
-    private readonly mailer: MailerInterface,
+    private readonly mailer: MailerInterface
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -44,15 +44,16 @@ export class AccountController {
     const owner = request.user;
     if (!owner) {
       return response.status(401).json({
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
 
-    const createUsecase = new CreateAccountUsecase(this.accountRepository, bankCode, branchCode);
-    const maybeAccount = await createUsecase.execute(
-      maybeCommand.name,
-      owner,
+    const createUsecase = new CreateAccountUsecase(
+      this.accountRepository,
+      bankCode,
+      branchCode
     );
+    const maybeAccount = await createUsecase.execute(maybeCommand.name, owner);
 
     if (maybeAccount instanceof Error) {
       return response.status(400).json({
@@ -61,9 +62,7 @@ export class AccountController {
     }
 
     const sendEmailUsecase = new SendAccountCreationEmailUsecase(this.mailer);
-    await sendEmailUsecase.execute(
-      owner.email,
-    );
+    await sendEmailUsecase.execute(owner.email);
 
     response.status(201).json({
       id: maybeAccount.id,
@@ -85,15 +84,19 @@ export class AccountController {
     const owner = request.user;
     if (!owner) {
       return response.status(401).json({
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
 
-    const createUsecase = new CreateAccountUsecase(this.accountRepository, bankCode, branchCode);
+    const createUsecase = new CreateAccountUsecase(
+      this.accountRepository,
+      bankCode,
+      branchCode
+    );
     const maybeAccount = await createUsecase.execute(
       maybeCommand.name,
       owner,
-      true,
+      true
     );
 
     if (maybeAccount instanceof Error) {
@@ -103,9 +106,7 @@ export class AccountController {
     }
 
     const sendEmailUsecase = new SendAccountCreationEmailUsecase(this.mailer);
-    await sendEmailUsecase.execute(
-      owner.email,
-    );
+    await sendEmailUsecase.execute(owner.email);
 
     response.status(201).json({
       id: maybeAccount.id,
@@ -120,11 +121,14 @@ export class AccountController {
     const owner = request.user;
     if (!owner) {
       return response.status(401).json({
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
-    
-    const getAccountListUsecase = new GetAccountListUsecase(this.accountRepository, this.operationRepository);
+
+    const getAccountListUsecase = new GetAccountListUsecase(
+      this.accountRepository,
+      this.operationRepository
+    );
     const accounts = await getAccountListUsecase.execute(owner);
 
     const accountsResponse = accounts.map((account) => ({
@@ -149,11 +153,14 @@ export class AccountController {
     const owner = request.user;
     if (!owner) {
       return response.status(401).json({
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
 
-    const getAccountUsecase = new GetAccountUsecase(this.accountRepository, this.operationRepository);
+    const getAccountUsecase = new GetAccountUsecase(
+      this.accountRepository,
+      this.operationRepository
+    );
     const maybeAccount = await getAccountUsecase.execute(maybeParams.id, owner);
     if (maybeAccount instanceof AccountNotFoundError) {
       return response.status(404).json({
@@ -164,6 +171,8 @@ export class AccountController {
     response.status(200).json({
       id: maybeAccount.id,
       name: maybeAccount.name,
+      owner: maybeAccount.owner,
+      ownerId: maybeAccount.ownerId,
       iban: maybeAccount.iban,
       isSavings: maybeAccount.isSavings,
       amount: maybeAccount.amount,
@@ -188,11 +197,13 @@ export class AccountController {
     const owner = request.user;
     if (!owner) {
       return response.status(401).json({
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
 
-    const updateAccountUsecase = new UpdateAccountUsecase(this.accountRepository);
+    const updateAccountUsecase = new UpdateAccountUsecase(
+      this.accountRepository
+    );
     const maybeAccount = await updateAccountUsecase.execute(
       maybeParams.id,
       owner,
@@ -218,7 +229,7 @@ export class AccountController {
       name: maybeAccount.name,
       iban: maybeAccount.iban,
       isSavings: maybeAccount.isSavings,
-    }); 
+    });
   }
 
   public async delete(request: Request, response: Response) {
@@ -232,14 +243,16 @@ export class AccountController {
     const owner = request.user;
     if (!owner) {
       return response.status(401).json({
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
 
-    const deleteAccountUsecase = new DeleteAccountUsecase(this.accountRepository);
+    const deleteAccountUsecase = new DeleteAccountUsecase(
+      this.accountRepository
+    );
     const maybeSuccess = await deleteAccountUsecase.execute(
       maybeParams.id,
-      owner,
+      owner
     );
 
     if (maybeSuccess instanceof AccountNotFoundError) {
@@ -249,9 +262,7 @@ export class AccountController {
     }
 
     const sendEmailUsecase = new SendAccountDeletionEmailUsecase(this.mailer);
-    await sendEmailUsecase.execute(
-      owner.email,
-    );
+    await sendEmailUsecase.execute(owner.email);
 
     response.status(200).json({
       success: maybeSuccess,
@@ -269,11 +280,14 @@ export class AccountController {
     const owner = request.user;
     if (!owner) {
       return response.status(401).json({
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
 
-    const getListUsecase = new GetOperationListUsecase(this.accountRepository, this.operationRepository);
+    const getListUsecase = new GetOperationListUsecase(
+      this.accountRepository,
+      this.operationRepository
+    );
     const operations = await getListUsecase.execute(maybeParams.id, owner);
 
     if (operations instanceof AccountNotFoundError) {
@@ -282,6 +296,10 @@ export class AccountController {
       });
     }
 
-    response.status(200).json(operations);
+    const sortedOperations = operations.sort(
+      (a, b) => (b.id ?? 0) - (a.id ?? 0)
+    );
+
+    response.status(200).json(sortedOperations);
   }
 }

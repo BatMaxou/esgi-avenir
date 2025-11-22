@@ -5,13 +5,13 @@ import { UserNotFoundError } from "../../../domain/errors/entities/user/UserNotF
 
 export class MeController {
   public constructor(
-    private readonly userRepository: UserRepositoryInterface,
+    private readonly userRepository: UserRepositoryInterface
   ) {}
 
   public async me(request: Request, response: Response) {
     if (!request.user || !request.user.id) {
       return response.status(401).json({
-        error: 'Unauthorized.',
+        error: "Unauthorized.",
       });
     }
 
@@ -26,9 +26,10 @@ export class MeController {
 
     response.status(200).json({
       id: maybeUser.id,
-      email: maybeUser.email.value,
+      email: maybeUser.email,
       firstName: maybeUser.firstName,
       lastName: maybeUser.lastName,
+      roles: maybeUser.roles,
     });
   }
 }

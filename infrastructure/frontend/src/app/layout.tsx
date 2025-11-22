@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
+import { Raleway } from "next/font/google";
 
 import "./globals.css";
 import { ApiClientProvider } from "@/contexts/ApiContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
+import { AccountsProvider } from "@/contexts/AccountsContext";
+
+const raleway = Raleway({
+  subsets: ["latin"],
+  variable: "--font-raleway",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,7 +19,13 @@ export const metadata: Metadata = {
 };
 
 const Providers = ({ children }: { children: ReactNode }) => {
-  return <ApiClientProvider>{children}</ApiClientProvider>;
+  return (
+    <ApiClientProvider>
+      <AuthProvider>
+        <AccountsProvider>{children}</AccountsProvider>
+      </AuthProvider>
+    </ApiClientProvider>
+  );
 };
 
 export default function RootLayout({
@@ -21,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body suppressHydrationWarning={true}>
+      <body className={raleway.variable} suppressHydrationWarning={true}>
         <Providers>{children}</Providers>
         <Toaster />
       </body>
