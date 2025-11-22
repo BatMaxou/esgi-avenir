@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useApiClient } from "@/contexts/ApiContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z.object({
   email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
@@ -34,6 +35,7 @@ const formSchema = z.object({
 export function LoginForm() {
   const apiClient = useApiClient();
   const router = useRouter();
+  const { me } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,15 +48,14 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    console.log(values);
     try {
       const response = await apiClient.apiClient.login(
         values.email,
         values.password
       );
       let errorMessage;
-      console.log(response);
       if ("token" in response && response.token) {
+        await me();
         router.push("/home");
         setLoading(false);
       } else {
