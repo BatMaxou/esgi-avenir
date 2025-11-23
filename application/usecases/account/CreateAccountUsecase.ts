@@ -3,7 +3,6 @@ import { AccountRepositoryInterface } from '../../repositories/AccountRepository
 import { InvalidIbanError } from '../../../domain/errors/values/iban/InvalidIbanError';
 import { IbanValue } from '../../../domain/values/IbanValue';
 import { User } from '../../../domain/entities/User';
-import { InvalidOwnerError } from '../../../domain/errors/entities/account/InvalidOwnerError';
 import { IbanExistsError } from '../../../domain/errors/entities/account/IbanExistsError';
 import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotFoundError';
 
@@ -39,7 +38,7 @@ export class CreateAccountUsecase {
     });
     if (
       maybeNewAccount instanceof InvalidIbanError
-      || maybeNewAccount instanceof InvalidOwnerError
+      || maybeNewAccount instanceof UserNotFoundError
     ) {
       return maybeNewAccount;
     }

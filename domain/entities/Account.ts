@@ -1,7 +1,7 @@
 import { User } from "./User";
-import { InvalidOwnerError } from "../errors/entities/account/InvalidOwnerError";
 import { InvalidIbanError } from "../errors/values/iban/InvalidIbanError";
 import { IbanValue } from "../values/IbanValue";
+import { UserNotFoundError } from "../errors/entities/user/UserNotFoundError";
 
 export interface HydratedAccount extends Account {
   amount: number;
@@ -24,10 +24,10 @@ export class Account {
     ownerId?: number,
     owner?: User,
     isSavings?: boolean,
-  }): Account | InvalidOwnerError | InvalidIbanError {
+  }): Account | UserNotFoundError | InvalidIbanError {
     const maybeOwnerId = ownerId ?? owner?.id;
     if (!maybeOwnerId) {
-      return new InvalidOwnerError('Account must have a valid ownerId or owner.');
+      return new UserNotFoundError('Account must have a valid ownerId or owner.');
     }
 
     const maybeIban = IbanValue.from(iban);

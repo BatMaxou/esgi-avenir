@@ -5,6 +5,7 @@ import { SettingRepositoryInterface } from "../repositories/SettingRepositoryInt
 import { StockRepositoryInterface } from "../repositories/StockRepositoryInterface"
 import { StockOrderRepositoryInterface } from "../repositories/StockOrderRepositoryInterface"
 import { FinancialSecurityRepositoryInterface } from "../repositories/FinancialSecurityRepositoryInterface"
+import { BeneficiaryRepositoryInterface } from "../repositories/BeneficiaryRepositoryInterface"
 
 export interface RepositoryResolverInterface {
   getUserRepository(): UserRepositoryInterface
@@ -14,4 +15,5 @@ export interface RepositoryResolverInterface {
   getStockRepository(): StockRepositoryInterface
   getStockOrderRepository(): StockOrderRepositoryInterface
   getFinancialSecurityRepository(): FinancialSecurityRepositoryInterface
+  getBeneficiaryRepository(): BeneficiaryRepositoryInterface
 }

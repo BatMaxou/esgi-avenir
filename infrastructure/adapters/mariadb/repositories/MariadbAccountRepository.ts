@@ -13,11 +13,12 @@ import { Sequelize } from "sequelize";
 
 export class MariadbAccountRepository implements AccountRepositoryInterface {
   private accountModel: AccountModel;
+  private userModel: UserModel;
 
   public constructor() {
     const connection = new MariadbConnection(databaseDsn).getConnection();
-    const userModel = new UserModel(connection);
-    this.accountModel = new AccountModel(connection, userModel);
+    this.userModel = new UserModel(connection);
+    this.accountModel = new AccountModel(connection, this.userModel);
   }
 
   public async create(account: Account): Promise<Account | IbanExistsError | UserNotFoundError | UserAlreadyHaveSavingsAccountError> {
@@ -118,7 +119,17 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
   public async findById(id: number): Promise<Account | AccountNotFoundError> {
     try {
-      const foundAccount = await this.accountModel.model.findByPk(id);
+      const foundAccount = await this.accountModel.model.findByPk(
+        id,
+        {
+          include: [
+            {
+              model: this.userModel.model,
+              as: 'owner',
+            }
+          ],
+        }
+      );
       if (!foundAccount) {
         return new AccountNotFoundError('Account not found.');
       }
@@ -136,7 +147,15 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
   public async findByIban(iban: IbanValue): Promise<Account | AccountNotFoundError> {
     try {
-      const foundAccount = await this.accountModel.model.findOne({ where: { iban: iban.value } });
+      const foundAccount = await this.accountModel.model.findOne({
+        where: { iban: iban.value },
+        include: [
+          {
+            model: this.userModel.model,
+            as: 'owner',
+          }
+        ],
+      });
       if (!foundAccount) {
         return new AccountNotFoundError('Account not found.');
       }
@@ -148,6 +167,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
       return maybeAccount;
     } catch (error) {
+      console.error(error);
       throw new AccountNotFoundError('Account not found');
     }
   }

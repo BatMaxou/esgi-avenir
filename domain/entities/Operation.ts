@@ -1,7 +1,8 @@
 import { OperationEnum } from '../enums/OperationEnum';
-import { InvalidAccountError } from '../errors/entities/operation/InvalidAccountError';
 import { Account } from './Account';
 import { InvalidOperationTypeError } from '../errors/entities/operation/InvalidOperationTypeError';
+import { AccountNotFoundError } from '../errors/entities/account/AccountNotFoundError';
+import { AccountNotEmptyError } from '../errors/entities/operation/AccountNotEmptyError';
 
 export interface HydratedOperation extends Operation {
   from: string | null;
@@ -27,64 +28,64 @@ export class Operation {
     from?: Account,
     toId?: number,
     to?: Account,
-  }): Operation | InvalidAccountError {
+  }): Operation | InvalidOperationTypeError | AccountNotFoundError | AccountNotEmptyError {
     const maybeFromId = fromId ?? from?.id;
     const maybeToId = toId ?? to?.id;
 
     switch (type) {
       case OperationEnum.DEPOSIT:
         if (!maybeToId) {
-          return new InvalidAccountError('Invalid destination account for deposit operation.');
+          return new AccountNotFoundError('Invalid destination account for deposit operation.');
         };
         
         if (maybeFromId !== undefined) {
-          return new InvalidAccountError('Source should be empty for deposit operation.');
+          return new AccountNotEmptyError('Source should be empty for deposit operation.');
         };
 
         break;
       case OperationEnum.INTEREST:
         if (!maybeToId) {
-          return new InvalidAccountError('Invalid destination account for interest operation.');
+          return new AccountNotFoundError('Invalid destination account for interest operation.');
         }
 
         if (maybeFromId !== undefined) {
-          return new InvalidAccountError('Source should be empty for interest operation.');
+          return new AccountNotEmptyError('Source should be empty for interest operation.');
         }
       
         break;
       case OperationEnum.WITHDRAWAL:
         if (!maybeFromId || maybeToId !== undefined) {
-          return new InvalidAccountError('Invalid source account for withdrawal operation.');
+          return new AccountNotFoundError('Invalid source account for withdrawal operation.');
         };
         
         if (maybeToId !== undefined) {
-          return new InvalidAccountError('Destination should be empty for withdrawal operation.');
+          return new AccountNotEmptyError('Destination should be empty for withdrawal operation.');
         };
 
         break;
       case OperationEnum.TRANSFER:
         if (!maybeFromId || !maybeToId) {
-          return new InvalidAccountError('Invalid source or destination account for transfer operation.');
+          return new AccountNotFoundError('Invalid source or destination account for transfer operation.');
         };
 
         break;
       case OperationEnum.FEE:
         if (!maybeFromId || maybeToId !== undefined) {
-          return new InvalidAccountError('Invalid source account for fee operation.');
+          return new AccountNotFoundError('Invalid source account for fee operation.');
         };
         
         if (maybeToId !== undefined) {
-          return new InvalidAccountError('Destination should be empty for fee operation.');
+          return new AccountNotEmptyError('Destination should be empty for fee operation.');
         };
 
         break;
       case OperationEnum.TO_BANK:
         if (!maybeFromId || maybeToId !== undefined) {
-          return new InvalidAccountError('Invalid source account for to bank operation.');
+          return new AccountNotFoundError('Invalid source account for to bank operation.');
         };
         
         if (maybeToId !== undefined) {
-          return new InvalidAccountError('Destination should be empty for to bank operation.');
+          return new AccountNotEmptyError('Destination should be empty for to bank operation.');
         };
 
         break;

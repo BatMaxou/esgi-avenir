@@ -3,7 +3,6 @@ import { OperationRepositoryInterface } from '../../repositories/OperationReposi
 import { Operation } from '../../../domain/entities/Operation';
 import { OperationEnum } from '../../../domain/enums/OperationEnum';
 import { AccountNotFoundError } from '../../../domain/errors/entities/account/AccountNotFoundError';
-import { InvalidAccountError } from '../../../domain/errors/entities/operation/InvalidAccountError';
 import { AccountAmountValue } from '../../../domain/values/AccountAmountValue';
 import { InsufficientFundsError } from '../../../domain/errors/entities/account/InsufficientFundsError';
 import { SettingRepositoryInterface } from '../../repositories/SettingRepositoryInterface';
@@ -17,11 +16,11 @@ import { StockNotFoundError } from '../../../domain/errors/entities/stock/StockN
 import { DisabledStockError } from '../../../domain/errors/entities/stock/DisabledStockError';
 import { InsufficientBaseQuantityError } from '../../../domain/errors/entities/stock/InsufficientBaseQuantityError';
 import { Stock } from '../../../domain/entities/Stock';
-import { InvalidOwnerError } from '../../../domain/errors/entities/financial-security/InvalidOwnerError';
-import { InvalidStockError } from '../../../domain/errors/entities/financial-security/InvalidStockError';
 import { InvalidPurchasePriceError } from '../../../domain/errors/entities/financial-security/InvalidPurchasePriceError';
 import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotFoundError';
 import { AccountRepositoryInterface } from '../../repositories/AccountRepositoryInterface';
+import { AccountNotEmptyError } from '../../../domain/errors/entities/operation/AccountNotEmptyError';
+import { InvalidOperationTypeError } from '../../../domain/errors/entities/operation/InvalidOperationTypeError';
 
 type Transaction = {
   fromId: number;
@@ -41,7 +40,7 @@ export class PurchaseBaseStockUsecase {
     user: User,
     stockId: number,
     accountId: number,
-  ): Promise<FinancialSecurity | StockNotFoundError | DisabledStockError | InsufficientBaseQuantityError | SettingNotFoundError | InvalidSettingValueError | AccountNotFoundError | InsufficientFundsError | InvalidAccountError | InvalidOwnerError | InvalidStockError | InvalidPurchasePriceError | UserNotFoundError | AccountNotFoundError> {
+  ): Promise<FinancialSecurity | AccountNotFoundError | StockNotFoundError | DisabledStockError | InsufficientBaseQuantityError | SettingNotFoundError | InvalidSettingValueError | InsufficientFundsError | AccountNotEmptyError | InvalidOperationTypeError | UserNotFoundError | InvalidPurchasePriceError> {
     // -----------
     // Check Account ownership
     const maybeAccount = await this.accountRepository.findById(accountId);
@@ -94,12 +93,20 @@ export class PurchaseBaseStockUsecase {
     // -----------
     // Generate operations
     const maybeToBankOperation = this.getToBankOperation(maybeTransaction);
-    if (maybeToBankOperation instanceof InvalidAccountError) {
+    if (
+      maybeToBankOperation instanceof AccountNotFoundError
+      || maybeToBankOperation instanceof AccountNotEmptyError
+      || maybeToBankOperation instanceof InvalidOperationTypeError
+    ) {
       return maybeToBankOperation;
     }
 
     const maybePurchaseFeeOperation = this.getFeeOperation(maybeTransaction.fromId, maybePurchaseFee);
-    if (maybePurchaseFeeOperation instanceof InvalidAccountError) {
+    if (
+      maybePurchaseFeeOperation instanceof AccountNotFoundError
+      || maybePurchaseFeeOperation instanceof AccountNotEmptyError
+      || maybePurchaseFeeOperation instanceof InvalidOperationTypeError
+    ) {
       return maybePurchaseFeeOperation;
     }
 
@@ -111,8 +118,8 @@ export class PurchaseBaseStockUsecase {
       purchasePrice: maybeTransaction.amount,
     });
     if (
-      maybeFinancialSecurity instanceof InvalidOwnerError
-      || maybeFinancialSecurity instanceof InvalidStockError
+      maybeFinancialSecurity instanceof UserNotFoundError
+      || maybeFinancialSecurity instanceof StockNotFoundError
       || maybeFinancialSecurity instanceof InvalidPurchasePriceError
     ) {
       return maybeFinancialSecurity;
@@ -125,11 +132,11 @@ export class PurchaseBaseStockUsecase {
       this.operationRepository.create(maybePurchaseFeeOperation),
     ]);
 
-    if (maybeCreatedToBankOperation instanceof InvalidAccountError) {
+    if (maybeCreatedToBankOperation instanceof AccountNotFoundError) {
       return maybeCreatedToBankOperation;
     }
 
-    if (maybeCreatedPurchaseFeeOperation instanceof InvalidAccountError) {
+    if (maybeCreatedPurchaseFeeOperation instanceof AccountNotFoundError) {
       return maybeCreatedPurchaseFeeOperation;
     }
 
@@ -204,14 +211,14 @@ export class PurchaseBaseStockUsecase {
     };
   }
 
-  private getToBankOperation(transaction: Transaction): Operation | InvalidAccountError {
+  private getToBankOperation(transaction: Transaction): Operation | AccountNotFoundError | AccountNotEmptyError | InvalidOperationTypeError  {
     return Operation.from({
       type: OperationEnum.TO_BANK,
       ...transaction,
     })
   }
 
-  private getFeeOperation(accountId: number, amount: number): Operation | InvalidAccountError {
+  private getFeeOperation(accountId: number, amount: number): Operation | AccountNotFoundError | AccountNotEmptyError | InvalidOperationTypeError {
     return Operation.from({
       type: OperationEnum.FEE,
       fromId: accountId,
