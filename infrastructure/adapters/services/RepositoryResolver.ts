@@ -10,6 +10,7 @@ import { MariadbSettingRepository } from "../../adapters/mariadb/repositories/Ma
 import { MariadbStockRepository } from "../mariadb/repositories/MariadbStockRepository";
 import { MariadbStockOrderRepository } from "../mariadb/repositories/MariadbStockOrderRepository";
 import { MariadbFinancialSecurityRepository } from "../mariadb/repositories/MariadbFinancialSecurityRepository";
+import { MariadbBeneficiaryRepository } from "../mariadb/repositories/MariadbBeneficiaryRepository";
 
 type RepositoryFactory<T extends RepositoryInterface> = () => T;
 
@@ -22,6 +23,7 @@ const repositoryFactories: Record<string, Record<string, RepositoryFactory<Repos
     StockRepository: () => new MariadbStockRepository(),
     StockOrderRepository: () => new MariadbStockOrderRepository(),
     FinancialSecurityRepository: () => new MariadbFinancialSecurityRepository(),
+    BeneficiaryRepository: () => new MariadbBeneficiaryRepository(),
   },
   // mongodb: {
   //   UserRepository: () => new MongodbUserRepository(),
@@ -69,6 +71,10 @@ export class RepositoryResolver implements RepositoryResolverInterface {
 
   public getFinancialSecurityRepository(): MariadbFinancialSecurityRepository {
     return this.getRepository<MariadbFinancialSecurityRepository>('FinancialSecurityRepository');
+  }
+
+  public getBeneficiaryRepository(): MariadbBeneficiaryRepository {
+    return this.getRepository<MariadbBeneficiaryRepository>('BeneficiaryRepository');
   }
 
   private getRepository<T extends RepositoryInterface>(name: string): T {

@@ -1,8 +1,8 @@
 import { User } from "./User";
-import { InvalidOwnerError } from "../errors/entities/financial-security/InvalidOwnerError";
 import { Stock } from "./Stock";
-import { InvalidStockError } from "../errors/entities/financial-security/InvalidStockError";
 import { InvalidPurchasePriceError } from "../errors/entities/financial-security/InvalidPurchasePriceError";
+import { UserNotFoundError } from "../errors/entities/user/UserNotFoundError";
+import { StockNotFoundError } from "../errors/entities/stock/StockNotFoundError";
 
 export class FinancialSecurity {
   public id?: number;
@@ -21,19 +21,19 @@ export class FinancialSecurity {
     owner?: User,
     stockId?: number,
     stock?: Stock,
-  }): FinancialSecurity | InvalidOwnerError | InvalidStockError | InvalidPurchasePriceError {
+  }): FinancialSecurity | UserNotFoundError | StockNotFoundError | InvalidPurchasePriceError {
     const maybeOwnerId = ownerId ?? owner?.id;
     if (!maybeOwnerId) {
-      return new InvalidOwnerError('FinancialSecurity must have a valid ownerId or owner.');
+      return new UserNotFoundError('FinancialSecurity must have a valid ownerId or owner.');
     }
 
     const maybeStockId = stockId ?? stock?.id;
     if (!maybeStockId) {
-      return new InvalidStockError('FinancialSecurity must have a valid stockId or stock.');
+      return new StockNotFoundError('FinancialSecurity must have a valid stockId or stock.');
     }
 
     if (purchasePrice < 0) {
-      return new InvalidStockError('FinancialSecurity must have a non-negative purchase price.');
+      return new InvalidPurchasePriceError('FinancialSecurity must have a non-negative purchase price.');
     }
 
     const financialSecurity = new this(

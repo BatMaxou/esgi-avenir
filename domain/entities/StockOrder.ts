@@ -3,10 +3,10 @@ import { Stock } from "./Stock";
 import { StockOrderTypeEnum } from "../enums/StockOrderTypeEnum";
 import { StockOrderStatusEnum } from "../enums/StockOrderStatusEnum";
 import { Account } from "./Account";
-import { InvalidAccountError } from "../errors/entities/stock-order/InvalidAccountError";
-import { InvalidOwnerError } from "../errors/entities/stock-order/InvalidOwnerError";
 import { InvalidAmountError } from "../errors/entities/stock-order/InvalidAmountError";
-import { InvalidStockError } from "../errors/entities/stock-order/InvalidStockError";
+import { UserNotFoundError } from "../errors/entities/user/UserNotFoundError";
+import { StockNotFoundError } from "../errors/entities/stock/StockNotFoundError";
+import { AccountNotFoundError } from "../errors/entities/account/AccountNotFoundError";
 
 export class StockOrder {
   public id?: number;
@@ -33,20 +33,20 @@ export class StockOrder {
     stock?: Stock,
     accountId?: number,
     account?: Account,
-  }): StockOrder | InvalidOwnerError | InvalidStockError | InvalidAccountError | InvalidAmountError {
+  }): StockOrder | InvalidAmountError | UserNotFoundError | StockNotFoundError | AccountNotFoundError {
     const maybeOwnerId = ownerId ?? owner?.id;
     if (!maybeOwnerId) {
-      return new InvalidOwnerError('StockOrder must have a valid ownerId or owner.');
+      return new UserNotFoundError('StockOrder must have a valid ownerId or owner.');
     }
 
     const maybeStockId = stockId ?? stock?.id;
     if (!maybeStockId) {
-      return new InvalidStockError('StockOrder must have a valid stockId or stock.');
+      return new StockNotFoundError('StockOrder must have a valid stockId or stock.');
     }
 
     const maybeAccountId = accountId ?? account?.id;
     if (!maybeAccountId) {
-      return new InvalidAccountError('StockOrder must have a valid accountId or account.');
+      return new AccountNotFoundError('StockOrder must have a valid accountId or account.');
     }
 
     if (amount < 0) {

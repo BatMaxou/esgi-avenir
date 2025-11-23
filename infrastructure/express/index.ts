@@ -19,6 +19,7 @@ import { SettingRouter } from "./routes/SettingRouter";
 import { StockRouter } from "./routes/StockRouter";
 import { StockOrderRouter } from "./routes/StockOrderRouter";
 import { FinancialSecurityRouter } from "./routes/FinancialSecurityRouter";
+import { BeneficiaryRouter } from "./routes/BeneficiaryRouter";
 
 const startServer = async () => {
   const app = express();
@@ -97,6 +98,13 @@ const startServer = async () => {
   (new FinancialSecurityRouter()).register(
     app,
     repositoryResolver,
+    tokenManager,
+  );
+
+  (new BeneficiaryRouter()).register(
+    app,
+    repositoryResolver,
+    mailer,
     tokenManager,
   );
 

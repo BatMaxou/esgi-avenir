@@ -9,6 +9,7 @@ export interface GetAccountListResponseInterface extends Array<GetHydratedAccoun
 
 export interface CreateAccountPayloadInterface {
   name: string;
+  iban: string;
 }
 
 export interface UpdateAccountPayloadInterface {

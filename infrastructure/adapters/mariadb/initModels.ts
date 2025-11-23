@@ -7,6 +7,7 @@ import { SettingModel } from "./models/SettingModel";
 import { StockModel } from "./models/StockModel";
 import { StockOrderModel } from "./models/StockOrderModel";
 import { FinancialSecurityModel } from "./models/FinancialSecurityModel";
+import { BeneficiaryModel } from "./models/BeneficiaryModel";
 
 export const initModels = (connection: Sequelize) => {
   const userModel = new UserModel(connection);
@@ -17,4 +18,5 @@ export const initModels = (connection: Sequelize) => {
   new SettingModel(connection);
   new StockOrderModel(connection, userModel, stockModel, accountModel);
   new FinancialSecurityModel(connection, userModel, stockModel);
+  new BeneficiaryModel(connection, userModel, accountModel);
 };

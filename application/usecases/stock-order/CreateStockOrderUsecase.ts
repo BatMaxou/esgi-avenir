@@ -4,14 +4,13 @@ import { User } from '../../../domain/entities/User';
 import { StockOrderTypeEnum } from '../../../domain/enums/StockOrderTypeEnum';
 import { StockOrderStatusEnum } from '../../../domain/enums/StockOrderStatusEnum';
 import { InvalidAmountError } from '../../../domain/errors/entities/stock-order/InvalidAmountError';
-import { InvalidOwnerError } from '../../../domain/errors/entities/stock-order/InvalidOwnerError';
-import { InvalidStockError } from '../../../domain/errors/entities/stock-order/InvalidStockError';
-import { InvalidAccountError } from '../../../domain/errors/entities/stock-order/InvalidAccountError';
 import { StockRepositoryInterface } from '../../repositories/StockRepositoryInterface';
 import { StockNotFoundError } from '../../../domain/errors/entities/stock/StockNotFoundError';
 import { DisabledStockError } from '../../../domain/errors/entities/stock/DisabledStockError';
 import { FinancialSecurityRepositoryInterface } from '../../repositories/FinancialSecurityRepositoryInterface';
 import { FinancialSecurityNotFoundError } from '../../../domain/errors/entities/financial-security/FinancialSecurityNotFoundError';
+import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotFoundError';
+import { AccountNotFoundError } from '../../../domain/errors/entities/account/AccountNotFoundError';
 
 export class CreateStockOrderUsecase {
   public constructor(
@@ -26,7 +25,7 @@ export class CreateStockOrderUsecase {
     owner: User,
     stockId: number,
     accountId: number,
-  ): Promise<StockOrder | InvalidAccountError | InvalidOwnerError | InvalidAmountError | InvalidStockError | StockNotFoundError | DisabledStockError> {
+  ): Promise<StockOrder | InvalidAmountError | StockNotFoundError | DisabledStockError | FinancialSecurityNotFoundError | UserNotFoundError | AccountNotFoundError> {
     const maybeStock = await this.stockRepository.findById(stockId);
     if (maybeStock instanceof StockNotFoundError) {
       return maybeStock;
@@ -37,7 +36,7 @@ export class CreateStockOrderUsecase {
     }
     
     if (!owner.id) {
-      return new InvalidOwnerError('Owner is not valid.');
+      return new UserNotFoundError('Owner is not valid.');
     }
 
     const maybeOwnedFinancialSecurity = await this.financialSecurityRepository.findOneByStockAndOwner(stockId, owner.id);
@@ -54,10 +53,10 @@ export class CreateStockOrderUsecase {
       accountId,
     });
     if (
-      maybeNewStockOrder instanceof InvalidAccountError
-      || maybeNewStockOrder instanceof InvalidOwnerError
+      maybeNewStockOrder instanceof AccountNotFoundError
+      || maybeNewStockOrder instanceof UserNotFoundError
       || maybeNewStockOrder instanceof InvalidAmountError
-      || maybeNewStockOrder instanceof InvalidStockError
+      || maybeNewStockOrder instanceof StockNotFoundError
     ) {
       return maybeNewStockOrder;
     }

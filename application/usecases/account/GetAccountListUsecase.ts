@@ -1,6 +1,5 @@
 import { HydratedAccount } from '../../../domain/entities/Account';
 import { User } from '../../../domain/entities/User';
-import { AccountNotFoundError } from '../../../domain/errors/entities/account/AccountNotFoundError';
 import { AccountAmountValue } from '../../../domain/values/AccountAmountValue';
 import { AccountRepositoryInterface } from '../../repositories/AccountRepositoryInterface';
 import { OperationRepositoryInterface } from '../../repositories/OperationRepositoryInterface';

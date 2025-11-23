@@ -41,6 +41,7 @@ export class AccountModel {
   private associate(userModel: UserModel) {
     this.model.belongsTo(userModel.model, {
       foreignKey: 'ownerId',
+      as: 'owner',
     });
   }
 }

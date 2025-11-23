@@ -56,6 +56,12 @@ export const paths = {
   },
   financialSecurity: {
     list: '/api/financial-securities',
-  }
+  },
+  beneficiary: {
+    create: '/api/beneficiaries',
+    list: (params: QueryParams | undefined = undefined) => `/api/beneficiaries${buildQueryString(params)}`,
+    update: (id?: number | string | null) => `/api/beneficiaries/${id || ':id'}`,
+    delete: (id?: number | string | null) => `/api/beneficiaries/${id || ':id'}`,
+  },
 };
 
