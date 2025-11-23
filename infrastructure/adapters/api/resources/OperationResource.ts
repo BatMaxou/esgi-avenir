@@ -7,6 +7,6 @@ export class OperationResource implements OperationResourceInterface {
   constructor(private apiClient: ApiClientInterface) {}
 
   public async create(data: CreateOperationPayloadInterface): Promise<GetOperationResponseInterface | ApiClientError> {
-    return this.apiClient.post<GetOperationResponseInterface>(`${paths.account.create}`, data);
+    return this.apiClient.post<GetOperationResponseInterface>(paths.account.create, data);
   }
 }

@@ -205,9 +205,9 @@ export class AccountController {
       this.accountRepository
     );
     const maybeAccount = await updateAccountUsecase.execute(
-      maybeParams.id,
       owner,
       {
+        id: maybeParams.id,
         name: maybeCommand.name,
       }
     );

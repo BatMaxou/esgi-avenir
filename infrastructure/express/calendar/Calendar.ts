@@ -17,6 +17,6 @@ export class Calendar {
       this.repositoryResolver.getSettingRepository(),
     );
     
-    this.scheduler.schedule('* * * * *', () => usecase.execute());
+    this.scheduler.schedule('0 2 * * *', () => usecase.execute());
   }
 }

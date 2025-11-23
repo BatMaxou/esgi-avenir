@@ -8,30 +8,30 @@ export class AccountResource implements AccountResourceInterface {
   constructor(private apiClient: ApiClientInterface) {}
 
   public async get(id: number): Promise<GetHydratedAccountResponseInterface | ApiClientError> {
-    return this.apiClient.get<GetHydratedAccountResponseInterface>(`${paths.account.detail(id)}`);
+    return this.apiClient.get<GetHydratedAccountResponseInterface>(paths.account.detail(id));
   }
 
   public async getAll(): Promise<GetAccountListResponseInterface | ApiClientError> {
-    return this.apiClient.get<GetAccountListResponseInterface>(`${paths.account.list}`);
+    return this.apiClient.get<GetAccountListResponseInterface>(paths.account.list);
   }
 
   public async create(data: CreateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError> {
-    return this.apiClient.post<GetAccountResponseInterface>(`${paths.account.create}`, data);
+    return this.apiClient.post<GetAccountResponseInterface>(paths.account.create, data);
   }
 
   public async createSavings(data: CreateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError> {
-    return this.apiClient.post<GetAccountResponseInterface>(`${paths.account.createSavings}`, data);
+    return this.apiClient.post<GetAccountResponseInterface>(paths.account.createSavings, data);
   }
 
   public async update(data: UpdateAccountPayloadInterface): Promise<GetAccountResponseInterface | ApiClientError> {
-    return this.apiClient.put<GetAccountResponseInterface>(`${paths.account.update(data.id)}`, data);
+    return this.apiClient.put<GetAccountResponseInterface>(paths.account.update(data.id), data);
   }
 
   public async delete(id: number): Promise<DeleteResponseInterface | ApiClientError> {
-    return this.apiClient.delete(`${paths.account.delete(id)}`);
+    return this.apiClient.delete(paths.account.delete(id));
   }
 
   public async getOperations(id: number): Promise<GetOperationListResponseInterface | ApiClientError> {
-    return this.apiClient.get<GetOperationListResponseInterface>(`${paths.account.operations(id)}`);
+    return this.apiClient.get<GetOperationListResponseInterface>(paths.account.operations(id));
   }
 }

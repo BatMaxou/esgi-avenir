@@ -21,16 +21,13 @@ export class GetAccountListUsecase {
     const accounts = await this.accountRepository.findAllByOwner(owner.id);
 
     return Promise.all(accounts.map(async (account) => {
-      if (!account.id) {
+      const id = account.id;
+      if (!id) {
         return { ...account, amount: 0 };
       }
 
-      const operations = await this.operationRepository.findByAccount(account.id);
-      if (operations instanceof AccountNotFoundError) {
-        return { ...account, amount: 0 };
-      }
-  
-      const amountValue = AccountAmountValue.from(account.id, operations);
+      const operations = await this.operationRepository.findByAccount(id);
+      const amountValue = AccountAmountValue.from(id, operations);
 
       return { ...account, amount: amountValue.value  };
     }));

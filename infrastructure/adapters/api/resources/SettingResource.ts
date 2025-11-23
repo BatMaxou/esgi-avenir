@@ -7,10 +7,10 @@ export class SettingResource implements SettingResourceInterface {
   constructor(private apiClient: ApiClientInterface) {}
 
   public async getAll(): Promise<GetSettingListResponseInterface | ApiClientError> {
-    return this.apiClient.get<GetSettingListResponseInterface>(`${paths.setting.list}`);
+    return this.apiClient.get<GetSettingListResponseInterface>(paths.setting.list);
   }
 
   public async upsert(data: UpsertSettingPayloadInterface): Promise<GetSettingResponseInterface | ApiClientError> {
-    return this.apiClient.post<GetSettingResponseInterface>(`${paths.setting.upsert}`, data);
+    return this.apiClient.post<GetSettingResponseInterface>(paths.setting.upsert, data);
   }
 }

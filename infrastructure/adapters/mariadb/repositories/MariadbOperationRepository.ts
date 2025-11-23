@@ -12,9 +12,10 @@ export class MariadbOperationRepository implements OperationRepositoryInterface 
   private operationModel: OperationModel;
 
   public constructor() {
-    const userModel = new UserModel(new MariadbConnection(databaseDsn).getConnection());
-    const accountModel = new AccountModel(new MariadbConnection(databaseDsn).getConnection(), userModel);
-    this.operationModel = new OperationModel(new MariadbConnection(databaseDsn).getConnection(), accountModel);
+    const connection = new MariadbConnection(databaseDsn).getConnection();
+    const userModel = new UserModel(connection);
+    const accountModel = new AccountModel(connection, userModel);
+    this.operationModel = new OperationModel(connection, accountModel);
   }
 
   public async create(operation: Operation): Promise<Operation | AccountNotFoundError> {
@@ -41,31 +42,26 @@ export class MariadbOperationRepository implements OperationRepositoryInterface 
     }
   }
 
-  public async findByAccount(accountId: number): Promise<Operation[] | AccountNotFoundError> {
-    try {
-      const foundOperations = await this.operationModel.model.findAll({
-        where: {
-          [Op.or]: [
-            { fromId: accountId },
-            { toId: accountId },
-          ],
-        },
-      });
-      const operations: Operation[] = [];
+  public async findByAccount(accountId: number): Promise<Operation[]> {
+    const foundOperations = await this.operationModel.model.findAll({
+      where: {
+        [Op.or]: [
+          { fromId: accountId },
+          { toId: accountId },
+        ],
+      },
+    });
+    const operations: Operation[] = [];
 
-      foundOperations.forEach((foundOperation) => {
-        const maybeOperation = Operation.from(foundOperation);
-        if (maybeOperation instanceof Error) {
-          throw maybeOperation;
-        }
+    foundOperations.forEach((foundOperation) => {
+      const maybeOperation = Operation.from(foundOperation);
+      if (maybeOperation instanceof Error) {
+        throw maybeOperation;
+      }
 
-        operations.push(maybeOperation);
-      });
+      operations.push(maybeOperation);
+    });
 
-      return operations;
-    }
-    catch (error) {
-      return new AccountNotFoundError('Account not found.');
-    }
+    return operations;
   }
 }
