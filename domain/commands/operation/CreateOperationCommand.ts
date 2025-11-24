@@ -1,12 +1,8 @@
+import { CreateOperationPayloadInterface } from "../../../application/services/api/resources/OperationResourceInterface";
 import { OperationEnum } from "../../enums/OperationEnum";
 import { InvalidCreateOperationCommandError } from "../../errors/commands/operation/InvalidCreateOperationCommandError";
 
-interface Body {
-  type?: string;
-  amount?: number | string;
-  fromId?: number | string;
-  toId?: number | string;
-}
+interface Body extends Partial<CreateOperationPayloadInterface> {}
 
 export class CreateOperationCommand {
   public static from(body: Body): CreateOperationCommand | InvalidCreateOperationCommandError {
@@ -18,6 +14,7 @@ export class CreateOperationCommand {
       || typeof body.fromId !== 'number'
       || !body.toId
       || typeof body.toId !== 'number'
+      || (body.name && typeof body.name !== 'string')
     ) {
       return new InvalidCreateOperationCommandError('Payload is not valid.');
     }
@@ -31,6 +28,7 @@ export class CreateOperationCommand {
       body.amount,
       body.fromId,
       body.toId,
+      body.name,
     );
   }
 
@@ -39,6 +37,7 @@ export class CreateOperationCommand {
     public amount: number,
     public fromId: number,
     public toId: number,
+    public name?: string,
   ) {
   }
 }
