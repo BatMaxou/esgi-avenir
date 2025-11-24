@@ -6,6 +6,8 @@ import { StockRepositoryInterface } from "../repositories/StockRepositoryInterfa
 import { StockOrderRepositoryInterface } from "../repositories/StockOrderRepositoryInterface"
 import { FinancialSecurityRepositoryInterface } from "../repositories/FinancialSecurityRepositoryInterface"
 import { BeneficiaryRepositoryInterface } from "../repositories/BeneficiaryRepositoryInterface"
+import { BankCreditRepositoryInterface } from "../repositories/BankCreditRepositoryInterface"
+import { MonthlyPaymentRepositoryInterface } from "../repositories/MonthlyPaymentRepositoryInterface"
 
 export interface RepositoryResolverInterface {
   getUserRepository(): UserRepositoryInterface
@@ -16,4 +18,6 @@ export interface RepositoryResolverInterface {
   getStockOrderRepository(): StockOrderRepositoryInterface
   getFinancialSecurityRepository(): FinancialSecurityRepositoryInterface
   getBeneficiaryRepository(): BeneficiaryRepositoryInterface
+  getBankCreditRepository(): BankCreditRepositoryInterface
+  getMonthlyPaymentRepository(): MonthlyPaymentRepositoryInterface
 }

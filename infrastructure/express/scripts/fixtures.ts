@@ -10,6 +10,8 @@ import { StockFixtures } from "../../../application/fixtures/StockFixtures";
 import { StockOrderFixtures } from "../../../application/fixtures/StockOrderFixtures";
 import { FinancialSecurityFixtures } from "../../../application/fixtures/FinancialSecurityFixtures";
 import { BeneficiaryFixtures } from "../../../application/fixtures/BeneficiaryFixtures";
+import { BankCreditFixtures } from "../../../application/fixtures/BankCreditFixtures";
+import { MonthlyPaymentFixtures } from "../../../application/fixtures/MonthlyPaymentFixtures";
 import { initModels } from "../../adapters/mariadb/initModels";
 
 const fixtures = async () => {
@@ -39,6 +41,11 @@ const fixtures = async () => {
     await Promise.all([
       await new OperationFixtures(repositoryResolver.getOperationRepository()).load(),
       await new BeneficiaryFixtures(repositoryResolver.getBeneficiaryRepository()).load(),
+      await new BankCreditFixtures(repositoryResolver.getBankCreditRepository()).load(),
+    ]);
+
+    await Promise.all([
+      await new MonthlyPaymentFixtures(repositoryResolver.getMonthlyPaymentRepository()).load(),
     ]);
 
     console.log("✅ Fixtures loaded successfully.");

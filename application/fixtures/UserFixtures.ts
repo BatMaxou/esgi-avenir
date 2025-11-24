@@ -52,6 +52,22 @@ export class UserFixtures {
         roles: [RoleEnum.USER],
         enabled: true,
       },
+      {
+        firstName: 'Avenir',
+        lastName: 'Advisor',
+        email: 'advisor@avenir.com',
+        password: this.passwordHasher.createHash('azertyuiAZ123#'),
+        roles: [RoleEnum.USER, RoleEnum.ADVISOR],
+        enabled: true,
+      },
+      {
+        firstName: 'Avenir',
+        lastName: 'Second Advisor',
+        email: 'second.advisor@avenir.com',
+        password: this.passwordHasher.createHash('azertyuiAZ123#'),
+        roles: [RoleEnum.USER, RoleEnum.ADVISOR],
+        enabled: true,
+      },
     ];
 
     for (const user of users) {
