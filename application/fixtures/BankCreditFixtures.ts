@@ -1,13 +1,16 @@
 import { BankCreditRepositoryInterface } from '../repositories/BankCreditRepositoryInterface';
 import { BankCredit } from '../../domain/entities/BankCredit';
+import { BankCreditStatusEnum } from '../../domain/enums/BankCreditStatusEnum';
 
 type MockBankCredit = {
   amount: number,
   insurancePercentage: number,
   interestPercentage: number,
   durationInMonths: number,
+  status: BankCreditStatusEnum,
   advisorId: number,
   accountId: number,
+  ownerId?: number,
 }
 
 export class BankCreditFixtures {
@@ -22,16 +25,20 @@ export class BankCreditFixtures {
         insurancePercentage: 1,
         interestPercentage: 3.5,
         durationInMonths: 24,
+        status: BankCreditStatusEnum.APPROVED,
         advisorId: 5,
         accountId: 1,
+        ownerId: 2,
       },
       {
         amount: 5000,
         insurancePercentage: 0.5,
         interestPercentage: 2.5,
         durationInMonths: 12,
+        status: BankCreditStatusEnum.APPROVED,
         advisorId: 6,
         accountId: 4,
+        ownerId: 3,
       },
     ];
 

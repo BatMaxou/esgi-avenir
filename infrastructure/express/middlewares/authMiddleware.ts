@@ -26,7 +26,7 @@ export const authMiddleware = (
       return response.status(401).json({ message: 'Unauthorized' });
     }
 
-    const [method, token, ...other] = split;
+    const [method, token, ..._] = split;
     if (method !== 'Bearer') {
       return response.status(401).json({ message: 'Unauthorized' });
     }

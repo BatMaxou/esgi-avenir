@@ -79,4 +79,16 @@ export class User {
       this.roles.push(RoleEnum.USER);
     }
   }
+
+  public isDirector(): boolean {
+    return this.roles.includes(RoleEnum.DIRECTOR);
+  }
+
+  public isAdvisor(): boolean {
+    return this.roles.includes(RoleEnum.ADVISOR);
+  }
+
+  public isBanned(): boolean {
+    return this.roles.includes(RoleEnum.BANNED);
+  }
 }

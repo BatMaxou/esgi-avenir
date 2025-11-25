@@ -34,7 +34,7 @@ export class UserRouter {
     app.get(
       paths.user.list,
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
-      roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+      roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR, RoleEnum.ADVISOR], forbiddenRoles: [RoleEnum.BANNED] }),
       async (req, res) => {
         await userController.list(req, res);
       }

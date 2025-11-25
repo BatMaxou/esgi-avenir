@@ -8,11 +8,13 @@ export class MonthlyPayment {
   public static from({
     id,
     amount,
+    createdAt,
     bankCreditId,
     bankCredit,
   }: {
     id?: number,
     amount: number,
+    createdAt?: Date,
     bankCreditId?: number,
     bankCredit?: BankCredit,
   }): MonthlyPayment | BankCreditNotFoundError | InvalidAmountError {
@@ -29,6 +31,7 @@ export class MonthlyPayment {
       amount,
       maybeBankCreditId,
       bankCredit ?? undefined,
+      createdAt,
     );
 
     if (id) {
@@ -42,6 +45,7 @@ export class MonthlyPayment {
     public amount: number,
     public bankCreditId: number,
     public bankCredit?: BankCredit,
+    public createdAt?: Date,
   ) {
   }
 }

@@ -20,6 +20,7 @@ import { StockRouter } from "./routes/StockRouter";
 import { StockOrderRouter } from "./routes/StockOrderRouter";
 import { FinancialSecurityRouter } from "./routes/FinancialSecurityRouter";
 import { BeneficiaryRouter } from "./routes/BeneficiaryRouter";
+import { BankCreditRouter } from "./routes/BankCreditRouter";
 
 const startServer = async () => {
   const app = express();
@@ -102,6 +103,13 @@ const startServer = async () => {
   );
 
   (new BeneficiaryRouter()).register(
+    app,
+    repositoryResolver,
+    mailer,
+    tokenManager,
+  );
+
+  (new BankCreditRouter()).register(
     app,
     repositoryResolver,
     mailer,

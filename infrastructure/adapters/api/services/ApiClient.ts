@@ -19,6 +19,8 @@ import { FinancialSecurityResourceInterface } from "../../../../application/serv
 import { FinancialSecurityResource } from "../resources/FinancialSecurityResource";
 import { BeneficiaryResourceInterface } from "../../../../application/services/api/resources/BeneficiaryResourceInterface";
 import { BeneficiaryResource } from "../resources/BeneficiaryResource";
+import { BankCreditResourceInterface } from "../../../../application/services/api/resources/BankCreditResourceInterface";
+import { BankCreditResource } from "../resources/BankCreditResource";
 
 export class ApiClient implements ApiClientInterface {
   private token: string | null = null;
@@ -31,6 +33,7 @@ export class ApiClient implements ApiClientInterface {
   public stock: StockResourceInterface;
   public financialSecurity: FinancialSecurityResourceInterface;
   public beneficiary: BeneficiaryResourceInterface;
+  public bankCredit: BankCreditResourceInterface;
 
   constructor(private baseUrl: string) {
     this.me = new MeResource(this);
@@ -41,6 +44,7 @@ export class ApiClient implements ApiClientInterface {
     this.stock = new StockResource(this);
     this.financialSecurity = new FinancialSecurityResource(this);
     this.beneficiary = new BeneficiaryResource(this);
+    this.bankCredit = new BankCreditResource(this);
 
     this.token = getCookie("token");
   }

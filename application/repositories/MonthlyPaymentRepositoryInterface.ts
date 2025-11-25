@@ -6,4 +6,5 @@ import { RepositoryInterface } from "./RepositoryInterface"
 
 export interface MonthlyPaymentRepositoryInterface extends RepositoryInterface {
   create: (monthlyPayment: MonthlyPayment) => Promise<MonthlyPayment | UserNotFoundError | AccountNotFoundError | InvalidAmountError>;
+  findAllByBankCredit: (bankCreditId: number) => Promise<MonthlyPayment[]>
 }

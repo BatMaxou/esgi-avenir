@@ -4,6 +4,7 @@ import { BankCreditModel } from "./BankCreditModel";
 interface MonthlyPaymentModelInterface extends Model<InferAttributes<MonthlyPaymentModelInterface>, InferCreationAttributes<MonthlyPaymentModelInterface>> {
   id: CreationOptional<number>;
   amount: number;
+  createdAt: CreationOptional<Date>;
   bankCreditId?: number;
 }
 
@@ -20,6 +21,11 @@ export class MonthlyPaymentModel {
       amount: {
         type: DataTypes.FLOAT,
         allowNull: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     });
 

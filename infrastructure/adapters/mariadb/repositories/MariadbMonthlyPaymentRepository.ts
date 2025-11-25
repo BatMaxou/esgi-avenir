@@ -42,4 +42,25 @@ export class MariadbMonthlyPaymentRepository implements MonthlyPaymentRepository
       throw error;
     }
   }
+
+  public async findAllByBankCredit(bankCreditId: number): Promise<MonthlyPayment[]> {
+    const foundMonthlyPayments = await this.monthlyPaymentModel.model.findAll({
+      where: {
+        bankCreditId,
+      },
+    });
+
+    const monthlyPayments: MonthlyPayment[] = [];
+
+    foundMonthlyPayments.forEach((foundMonthlyPayment) => {
+      const maybeMonthlyPayment = MonthlyPayment.from(foundMonthlyPayment);
+      if (maybeMonthlyPayment instanceof Error) {
+        throw maybeMonthlyPayment;
+      }
+
+      monthlyPayments.push(maybeMonthlyPayment);
+    });
+
+    return monthlyPayments;
+  }
 }

@@ -1,6 +1,7 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, ModelCtor, Sequelize } from "sequelize";
 import { UserModel } from "./UserModel";
 import { AccountModel } from "./AccountModel";
+import { BankCreditStatusEnum } from "../../../../domain/enums/BankCreditStatusEnum";
 
 interface BankCreditModelInterface extends Model<InferAttributes<BankCreditModelInterface>, InferCreationAttributes<BankCreditModelInterface>> {
   id: CreationOptional<number>;
@@ -8,8 +9,10 @@ interface BankCreditModelInterface extends Model<InferAttributes<BankCreditModel
   insurancePercentage: number;
   interestPercentage: number;
   durationInMonths: number;
+  status: BankCreditStatusEnum;
   accountId?: number;
   advisorId?: number;
+  ownerId?: number;
 }
 
 export class BankCreditModel {
@@ -38,6 +41,10 @@ export class BankCreditModel {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      status: {
+        type: DataTypes.ENUM(...Object.values(BankCreditStatusEnum)),
+        allowNull: false,
+      },
     });
 
     this.associate(userModel, accountModel);
@@ -50,6 +57,10 @@ export class BankCreditModel {
     });
     this.model.belongsTo(accountModel.model, {
       foreignKey: 'accountId',
+    });
+    this.model.belongsTo(userModel.model, {
+      foreignKey: 'ownerId',
+      as: 'owner',
     });
   }
 }
