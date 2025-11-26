@@ -7,6 +7,8 @@ import { ApiClientProvider } from "@/contexts/ApiContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
 import { AccountsProvider } from "@/contexts/AccountsContext";
+import { NavigationProvider } from "@/contexts/NavigationContext";
+import { NavigationLoader } from "@/components/providers/NavigationLoader";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -20,11 +22,13 @@ export const metadata: Metadata = {
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (
-    <ApiClientProvider>
-      <AuthProvider>
-        <AccountsProvider>{children}</AccountsProvider>
-      </AuthProvider>
-    </ApiClientProvider>
+    <NavigationProvider>
+      <ApiClientProvider>
+        <AuthProvider>
+          <AccountsProvider>{children}</AccountsProvider>
+        </AuthProvider>
+      </ApiClientProvider>
+    </NavigationProvider>
   );
 };
 
@@ -36,7 +40,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={raleway.variable} suppressHydrationWarning={true}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <NavigationLoader />
+          {children}
+        </Providers>
         <Toaster />
       </body>
     </html>

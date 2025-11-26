@@ -2,28 +2,24 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useApiClient } from "@/contexts/ApiContext";
-import { HydratedAccount } from "../../../../../../../../domain/entities/Account";
 import { ApiClientError } from "../../../../../../../../application/services/api/ApiClientError";
-import { GetHydratedAccountResponseInterface } from "../../../../../../../../application/services/api/resources/AccountResourceInterface";
-import { User } from "../../../../../../../../domain/entities/User";
-import { GetUserResponseInterface } from "../../../../../../../../application/services/api/resources/UserResourceInterface";
-import { useAuth } from "@/contexts/AuthContext";
-import { RoleEnum } from "../../../../../../../../domain/enums/RoleEnum";
 import { Separator } from "../../../../../components/ui/separator";
 import { Operation } from "../../../../../../../../domain/entities/Operation";
 import { useAccounts } from "@/contexts/AccountsContext";
 import OperationAccountItem from "@/components/operations/OperationAccountItem";
+import { useNavigation } from "@/contexts/NavigationContext";
 
 export default function AccountDetailsPage() {
   const params = useParams();
   const accountId = params.id as string;
-  const { apiClient } = useApiClient();
-  const { user } = useAuth();
   const { account, isAccountLoading, getAccount } = useAccounts();
+  const { endNavigation } = useNavigation();
   const [operations, setOperations] = useState<Operation[] | ApiClientError>(
     []
   );
+  useEffect(() => {
+    endNavigation();
+  }, []);
 
   useEffect(() => {
     const fetchAccount = () => {
@@ -36,7 +32,12 @@ export default function AccountDetailsPage() {
   }, [accountId]);
 
   if (isAccountLoading) {
-    return <div>Chargement...</div>;
+    return (
+      <div className="text-center mt-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+        <p className="mt-4 text-gray-600">Chargement...</p>
+      </div>
+    );
   }
 
   if (!account) {

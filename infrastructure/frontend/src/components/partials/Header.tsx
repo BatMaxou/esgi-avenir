@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
 import {
@@ -12,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from "next/image";
+import { LoadingLink } from "../links/LoadingLink";
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -32,7 +31,7 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center justify-between gap-8 h-full">
-            <Link href="/home" className="flex items-center space-x-2">
+            <LoadingLink href="/home" className="flex items-center space-x-2">
               <img
                 src="/assets/logo/logo-flat-no-bg.svg"
                 alt="Avenir Logo"
@@ -40,11 +39,11 @@ export default function Header() {
                 height={40}
                 className="object-contain"
               />
-            </Link>
+            </LoadingLink>
 
             <nav className="hidden md:flex h-full">
               {navLinks.map((link) => (
-                <Link
+                <LoadingLink
                   key={link.href}
                   href={link.href}
                   className={`text-sm font-medium transition-colors hover:text-red-600 flex flex-col justify-center items-center px-4 ${
@@ -54,7 +53,7 @@ export default function Header() {
                   } hover:bg-gray-50 hover:border-b-2 hover:border-red-600 transition-all ease-in-out duration-500`}
                 >
                   {link.label}
-                </Link>
+                </LoadingLink>
               ))}
             </nav>
           </div>
@@ -96,7 +95,7 @@ export default function Header() {
       <div className="md:hidden border-t border-gray-200">
         <nav className="flex overflow-x-auto">
           {navLinks.map((link) => (
-            <Link
+            <LoadingLink
               key={link.href}
               href={link.href}
               className={`flex-1 text-center py-3 text-sm font-medium transition-colors ${
@@ -106,7 +105,7 @@ export default function Header() {
               }`}
             >
               {link.label}
-            </Link>
+            </LoadingLink>
           ))}
         </nav>
       </div>

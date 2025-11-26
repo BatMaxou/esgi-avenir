@@ -4,7 +4,7 @@ import { HydratedAccount } from "../../../../../domain/entities/Account";
 import { useAccounts } from "@/contexts/AccountsContext";
 import { Item } from "../ui/item";
 import { Skeleton } from "../ui/skeleton";
-import Link from "next/link";
+import { LoadingLink } from "../links/LoadingLink";
 type Props = {
   displayLength?: number;
   displayStyle?: "grid" | "list";
@@ -64,7 +64,10 @@ const AccountList = ({
       ) : (
         <ul className="flex flex-col space-y-2">
           {accounts.map((account) => (
-            <Link href={`/accounts/details/${account.id}`} key={account.id}>
+            <LoadingLink
+              href={`/accounts/details/${account.id}`}
+              key={account.id}
+            >
               <Item
                 key={account.id}
                 className="p-4 border border-gray-300 rounded-lg shadow-sm bg-white flex flex-row justify-between items-center hover:bg-gray-50 cursor-pointer"
@@ -87,7 +90,7 @@ const AccountList = ({
                   {account.amount.toFixed(2)} €
                 </p>
               </Item>
-            </Link>
+            </LoadingLink>
           ))}
         </ul>
       )}
