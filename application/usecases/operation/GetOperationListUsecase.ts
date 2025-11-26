@@ -3,11 +3,14 @@ import { AccountNotFoundError } from '../../../domain/errors/entities/account/Ac
 import { OperationRepositoryInterface } from '../../repositories/OperationRepositoryInterface';
 import { AccountRepositoryInterface } from '../../repositories/AccountRepositoryInterface';
 import { User } from '../../../domain/entities/User';
+import { BeneficiaryRepositoryInterface } from '../../repositories/BeneficiaryRepositoryInterface';
+import { BeneficiaryNotFoundError } from '../../../domain/errors/entities/beneficiary/BeneficiaryNotFoundError';
 
 export class GetOperationListUsecase {
   public constructor(
     private readonly accountRepository: AccountRepositoryInterface,
     private readonly operationRepository: OperationRepositoryInterface,
+    private readonly beneficiaryRepository: BeneficiaryRepositoryInterface,
   ) {}
 
   public async execute(
@@ -30,7 +33,7 @@ export class GetOperationListUsecase {
 
     return Promise.all(maybeOperations.map(async (operation) => {
       if (!operation.id) {
-        return { ...operation, from: null, to: null };
+        return { ...operation, from: null, to: null, fromBeneficiary: null, toBeneficiary: null };
       }
 
       const maybeFrom = operation.fromId
@@ -47,11 +50,48 @@ export class GetOperationListUsecase {
         : null
       ;
 
-      if (maybeFrom instanceof AccountNotFoundError || maybeTo instanceof AccountNotFoundError) {
-        return { ...operation, from: null, to: null };
+      if (
+        maybeFrom instanceof AccountNotFoundError
+        || maybeTo instanceof AccountNotFoundError
+      ) {
+        return { ...operation, from: null, to: null, fromBeneficiary: null, toBeneficiary: null };
       }
 
-      return { ...operation, from: maybeFrom ? maybeFrom.iban.value : null, to: maybeTo ? maybeTo.iban.value : null };
+      const maybeFromBeneficiary = maybeFrom && maybeFrom.id
+        ? await this.beneficiaryRepository.findByOwnerAndAccount(userAccount.ownerId, maybeFrom.id)
+        : null;
+      const maybeToBeneficiary = maybeTo && maybeTo.id
+        ? await this.beneficiaryRepository.findByOwnerAndAccount(userAccount.ownerId, maybeTo.id)
+        : null;
+
+      if (
+        maybeFromBeneficiary instanceof BeneficiaryNotFoundError
+        || maybeToBeneficiary instanceof BeneficiaryNotFoundError
+      ) {
+        return { ...operation, from: null, to: null, fromBeneficiary: null, toBeneficiary: null };
+      }
+
+      return {
+        ...operation,
+        from: maybeFrom ? maybeFrom.iban.value : null,
+        to: maybeTo ? maybeTo.iban.value : null,
+        fromBeneficiary: maybeFromBeneficiary
+          ? {
+            id: maybeFromBeneficiary.id,
+            name: maybeFromBeneficiary.name,
+            accountId: maybeFromBeneficiary.ownerId,
+          }
+          : null
+        ,
+        toBeneficiary: maybeToBeneficiary
+          ? {
+            id: maybeToBeneficiary.id,
+            name: maybeToBeneficiary.name,
+            accountId: maybeToBeneficiary.ownerId,
+          }
+          : null
+        ,
+      };
     }));
   }
 }

@@ -19,7 +19,8 @@ export class AccountRouter {
     const accountController = new AccountController(
       repositoryResolver.getAccountRepository(),
       repositoryResolver.getOperationRepository(),
-      mailer
+      repositoryResolver.getBeneficiaryRepository(),
+      mailer,
     );
 
     app.post(

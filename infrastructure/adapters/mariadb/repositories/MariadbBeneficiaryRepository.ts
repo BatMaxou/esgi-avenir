@@ -117,4 +117,28 @@ export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterf
       throw new BeneficiaryNotFoundError('Beneficiary not found.');
     }
   }
+
+  public async findByOwnerAndAccount(ownerId: number, accountId: number): Promise<Beneficiary | BeneficiaryNotFoundError> {
+    try {
+      const foundBeneficiary = await this.beneficiaryModel.model.findOne({
+        where: {
+          ownerId,
+          accountId,
+        },
+      });
+
+      if (!foundBeneficiary) {
+        return new BeneficiaryNotFoundError('Beneficiary not found.');
+      }
+
+      const maybeBeneficiary = Beneficiary.from(foundBeneficiary);
+      if (maybeBeneficiary instanceof Error) {
+        throw maybeBeneficiary;
+      }
+
+      return maybeBeneficiary;
+    } catch (error) {
+      throw new BeneficiaryNotFoundError('Beneficiary not found.');
+    }
+  }
 }
