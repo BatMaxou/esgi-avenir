@@ -214,6 +214,7 @@ export class PurchaseBaseStockUsecase {
   private getToBankOperation(transaction: Transaction): Operation | AccountNotFoundError | AccountNotEmptyError | InvalidOperationTypeError  {
     return Operation.from({
       type: OperationEnum.TO_BANK,
+      name: OperationEnum.TO_BANK,
       ...transaction,
     })
   }
@@ -221,6 +222,7 @@ export class PurchaseBaseStockUsecase {
   private getFeeOperation(accountId: number, amount: number): Operation | AccountNotFoundError | AccountNotEmptyError | InvalidOperationTypeError {
     return Operation.from({
       type: OperationEnum.FEE,
+      name: OperationEnum.FEE,
       fromId: accountId,
       amount,
     });

@@ -16,6 +16,8 @@ export class Operation {
     id,
     amount,
     type,
+    name,
+    createdAt,
     fromId,
     from,
     toId,
@@ -24,6 +26,8 @@ export class Operation {
     id?: number,
     amount: number,
     type: OperationEnum,
+    name?: string,
+    createdAt?: Date,
     fromId?: number,
     from?: Account,
     toId?: number,
@@ -37,7 +41,7 @@ export class Operation {
         if (!maybeToId) {
           return new AccountNotFoundError('Invalid destination account for deposit operation.');
         };
-        
+
         if (maybeFromId !== undefined) {
           return new AccountNotEmptyError('Source should be empty for deposit operation.');
         };
@@ -51,13 +55,13 @@ export class Operation {
         if (maybeFromId !== undefined) {
           return new AccountNotEmptyError('Source should be empty for interest operation.');
         }
-      
+
         break;
       case OperationEnum.WITHDRAWAL:
         if (!maybeFromId || maybeToId !== undefined) {
           return new AccountNotFoundError('Invalid source account for withdrawal operation.');
         };
-        
+
         if (maybeToId !== undefined) {
           return new AccountNotEmptyError('Destination should be empty for withdrawal operation.');
         };
@@ -73,7 +77,7 @@ export class Operation {
         if (!maybeFromId || maybeToId !== undefined) {
           return new AccountNotFoundError('Invalid source account for fee operation.');
         };
-        
+
         if (maybeToId !== undefined) {
           return new AccountNotEmptyError('Destination should be empty for fee operation.');
         };
@@ -83,7 +87,7 @@ export class Operation {
         if (!maybeFromId || maybeToId !== undefined) {
           return new AccountNotFoundError('Invalid source account for to bank operation.');
         };
-        
+
         if (maybeToId !== undefined) {
           return new AccountNotEmptyError('Destination should be empty for to bank operation.');
         };
@@ -96,6 +100,8 @@ export class Operation {
     const operation = new this(
       Math.round(amount * 100) / 100,
       type,
+      name,
+      createdAt,
       maybeFromId,
       maybeToId,
     );
@@ -110,6 +116,8 @@ export class Operation {
   private constructor(
     public amount: number,
     public type: OperationEnum,
+    public name?: string,
+    public createdAt?: Date,
     public fromId?: number,
     public toId?: number,
   ) {

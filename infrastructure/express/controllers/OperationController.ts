@@ -34,6 +34,7 @@ export class OperationController {
       maybeCommand.fromId,
       maybeCommand.toId,
       owner,
+      maybeCommand.name,
     );
 
     if (maybeOperation instanceof Error) {

@@ -230,6 +230,7 @@ export class AcceptStockOrderUsecase {
   private getTransferOperation(transaction: Transaction): Operation | InvalidAccountError {
     return Operation.from({
       type: OperationEnum.TRANSFER,
+      name: OperationEnum.TRANSFER,
       ...transaction,
     })
   }
@@ -237,6 +238,7 @@ export class AcceptStockOrderUsecase {
   private getFeeOperation(accountId: number, amount: number): Operation | InvalidAccountError {
     return Operation.from({
       type: OperationEnum.FEE,
+      name: OperationEnum.FEE,
       fromId: accountId,
       amount,
     });

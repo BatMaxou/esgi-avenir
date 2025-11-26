@@ -297,7 +297,7 @@ export class AccountController {
     }
 
     const sortedOperations = operations.sort(
-      (a, b) => (b.id ?? 0) - (a.id ?? 0)
+      (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
     );
 
     response.status(200).json(sortedOperations);

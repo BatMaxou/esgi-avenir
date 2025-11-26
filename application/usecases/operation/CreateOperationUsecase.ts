@@ -22,6 +22,7 @@ export class CreateOperationUsecase {
     fromId: number,
     toId: number,
     user: User,
+    name?: string,
   ): Promise<Operation | AccountNotFoundError | InsufficientFundsError | UserNotFoundError | AccountNotEmptyError | InvalidOperationTypeError> {
     const maybeUserAccount = await this.accountRepository.findById(fromId);
     if (maybeUserAccount instanceof AccountNotFoundError) {
@@ -52,6 +53,7 @@ export class CreateOperationUsecase {
       amount,
       fromId,
       toId,
+      name,
     });
       if (
         maybeNewOperation instanceof UserNotFoundError

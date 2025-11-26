@@ -44,6 +44,7 @@ export class ApplyInterestUsecase {
 
       const maybeNewOperation = Operation.from({
         type: OperationEnum.INTEREST,
+        name: OperationEnum.INTEREST,
         amount: interest,
         toId: id, 
       });

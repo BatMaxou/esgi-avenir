@@ -6,6 +6,8 @@ interface OperationModelInterface extends Model<InferAttributes<OperationModelIn
   id: CreationOptional<number>;
   amount: number;
   type: OperationEnum;
+  name?: string;
+  createdAt: CreationOptional<Date>;
   fromId?: number;
   toId?: number;
 }
@@ -27,6 +29,15 @@ export class OperationModel {
       type: {
         type: DataTypes.ENUM(...Object.values(OperationEnum)),
         allowNull: false,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     });
 

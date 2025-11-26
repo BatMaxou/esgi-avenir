@@ -25,6 +25,7 @@ export class MariadbOperationRepository implements OperationRepositoryInterface 
         type: operation.type,
         fromId: operation.fromId,
         toId: operation.toId,
+        name: operation.name,
       });
 
       const maybeOperation = Operation.from(createdOperation);

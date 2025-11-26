@@ -5,6 +5,7 @@ import { OperationEnum } from '../../domain/enums/OperationEnum';
 type MockOperation = {
   amount: number,
   type: OperationEnum,
+  name?: string,
   fromId?: number,
   toId?: number,
 }
@@ -20,16 +21,19 @@ export class OperationFixtures {
       // Init for stock orders
       {
         amount: 5000,
+        name: 'Initial deposit for stock orders',
         type: OperationEnum.DEPOSIT,
         toId: 1,
       },
       {
         amount: 5000,
+        name: 'Initial deposit for stock orders',
         type: OperationEnum.DEPOSIT,
         toId: 4,
       },
       {
         amount: 5000,
+        name: 'Initial deposit for stock orders',
         type: OperationEnum.DEPOSIT,
         toId: 6,
       },
