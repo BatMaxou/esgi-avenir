@@ -2,12 +2,17 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { AccountsDisplay } from "@/components/accounts/AccountsDisplay";
 import { Separator } from "@radix-ui/react-separator";
-import Link from "next/link";
 import { Icon } from "@iconify/react";
+import { LoadingLink } from "@/components/links/LoadingLink";
+import { useEffect } from "react";
+import { useNavigation } from "@/contexts/NavigationContext";
 
 export default function Home() {
-  const { user, logout } = useAuth();
-
+  const { user } = useAuth();
+  const { endNavigation } = useNavigation();
+  useEffect(() => {
+    endNavigation();
+  }, []);
   return user ? (
     <div className="flex flex-row justify-start gap-8">
       <div className="flex flex-2 flex-col justify-start items-start gap-8">
@@ -15,12 +20,12 @@ export default function Home() {
           <h2 className="text-lg mb-2 font-bold">Mes comptes</h2>
           <AccountsDisplay displayLength={3} displayStyle="list" />
           <div className="flex flex-row justify-end">
-            <Link href="/accounts" className="">
+            <LoadingLink href="/accounts" className="">
               <p className="text-red-600 font-semibold hover:underline mt-2 inline-block text-end">
                 Voir tous mes comptes
                 <Icon icon="mdi:arrow-right" className="inline-block ml-1" />
               </p>
-            </Link>
+            </LoadingLink>
           </div>
         </div>
         <div className="w-full overflow-scroll">

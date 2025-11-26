@@ -8,6 +8,7 @@ import Header from "@/components/partials/Header";
 import { useAccounts } from "@/contexts/AccountsContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Banner } from "@/components/partials/Banner";
+import { NavigationLoader } from "@/components/providers/NavigationLoader";
 
 type Props = {
   children: ReactNode;
@@ -42,6 +43,7 @@ export default function ProtectedLayout({ children }: Props) {
 
   return (
     <ProtectedRoute requiredRoles={[RoleEnum.USER]}>
+      <NavigationLoader />
       <div className="min-h-screen bg-gray-50">
         <Header />
         <Banner title={pageTitle} />
