@@ -13,6 +13,7 @@ import { MariadbFinancialSecurityRepository } from "../mariadb/repositories/Mari
 import { MariadbBeneficiaryRepository } from "../mariadb/repositories/MariadbBeneficiaryRepository";
 import { MariadbBankCreditRepository } from "../mariadb/repositories/MariadbBankCreditRepository";
 import { MariadbMonthlyPaymentRepository } from "../mariadb/repositories/MariadbMonthlyPaymentRepository";
+import { MariadbNewsRepository } from "../mariadb/repositories/MariadbNewsRepository";
 import { SettingRepositoryInterface } from "../../../application/repositories/SettingRepositoryInterface";
 import { StockRepositoryInterface } from "../../../application/repositories/StockRepositoryInterface";
 import { StockOrderRepositoryInterface } from "../../../application/repositories/StockOrderRepositoryInterface";
@@ -20,6 +21,7 @@ import { FinancialSecurityRepositoryInterface } from "../../../application/repos
 import { BeneficiaryRepositoryInterface } from "../../../application/repositories/BeneficiaryRepositoryInterface";
 import { BankCreditRepositoryInterface } from "../../../application/repositories/BankCreditRepositoryInterface";
 import { MonthlyPaymentRepositoryInterface } from "../../../application/repositories/MonthlyPaymentRepositoryInterface";
+import { NewsRepositoryInterface } from "../../../application/repositories/NewsRepositoryInterface";
 
 type RepositoryFactory<T extends RepositoryInterface> = () => T;
 
@@ -35,6 +37,7 @@ const repositoryFactories: Record<string, Record<string, RepositoryFactory<Repos
     BeneficiaryRepository: () => new MariadbBeneficiaryRepository(),
     BankCreditRepository: () => new MariadbBankCreditRepository(),
     MonthlyPaymentRepository: () => new MariadbMonthlyPaymentRepository(),
+    NewsRepository: () => new MariadbNewsRepository(),
   },
   // mongodb: {
   //   UserRepository: () => new MongodbUserRepository(),
@@ -47,6 +50,7 @@ const repositoryFactories: Record<string, Record<string, RepositoryFactory<Repos
   //   BeneficiaryRepository: () => new MongodbBeneficiaryRepository(),
   //   BankCreditRepository: () => new MongodbBankCreditRepository(),
   //   MonthlyPaymentRepository: () => new MongodbMonthlyPaymentRepository(),
+  //   NewsRepository: () => new MongodbNewsRepository(),
   // },
 };
 
@@ -97,6 +101,10 @@ export class RepositoryResolver implements RepositoryResolverInterface {
 
   public getMonthlyPaymentRepository(): MonthlyPaymentRepositoryInterface {
     return this.getRepository<MariadbMonthlyPaymentRepository>('MonthlyPaymentRepository');
+  }
+
+  public getNewsRepository(): NewsRepositoryInterface {
+    return this.getRepository<MariadbNewsRepository>('NewsRepository');
   }
 
   private getRepository<T extends RepositoryInterface>(name: string): T {

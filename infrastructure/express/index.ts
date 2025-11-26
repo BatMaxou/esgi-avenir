@@ -21,6 +21,7 @@ import { StockOrderRouter } from "./routes/StockOrderRouter";
 import { FinancialSecurityRouter } from "./routes/FinancialSecurityRouter";
 import { BeneficiaryRouter } from "./routes/BeneficiaryRouter";
 import { BankCreditRouter } from "./routes/BankCreditRouter";
+import { NewsRouter } from "./routes/NewsRouter";
 
 const startServer = async () => {
   const app = express();
@@ -113,6 +114,12 @@ const startServer = async () => {
     app,
     repositoryResolver,
     mailer,
+    tokenManager,
+  );
+
+  (new NewsRouter()).register(
+    app,
+    repositoryResolver,
     tokenManager,
   );
 

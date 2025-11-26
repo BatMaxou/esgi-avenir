@@ -8,6 +8,7 @@ import { FinancialSecurityRepositoryInterface } from "../repositories/FinancialS
 import { BeneficiaryRepositoryInterface } from "../repositories/BeneficiaryRepositoryInterface"
 import { BankCreditRepositoryInterface } from "../repositories/BankCreditRepositoryInterface"
 import { MonthlyPaymentRepositoryInterface } from "../repositories/MonthlyPaymentRepositoryInterface"
+import { NewsRepositoryInterface } from "../repositories/NewsRepositoryInterface"
 
 export interface RepositoryResolverInterface {
   getUserRepository(): UserRepositoryInterface
@@ -20,4 +21,5 @@ export interface RepositoryResolverInterface {
   getBeneficiaryRepository(): BeneficiaryRepositoryInterface
   getBankCreditRepository(): BankCreditRepositoryInterface
   getMonthlyPaymentRepository(): MonthlyPaymentRepositoryInterface
+  getNewsRepository(): NewsRepositoryInterface
 }

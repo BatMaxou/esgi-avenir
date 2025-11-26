@@ -7,6 +7,10 @@ import { OperationResourceInterface } from './resources/OperationResourceInterfa
 import { SettingResourceInterface } from './resources/SettingResourceInterface';
 import { StockResourceInterface } from './resources/StockResourceInterface';
 import { UserResourceInterface } from './resources/UserResourceInterface';
+import { StockOrderResourceInterface } from './resources/StockOrderResourceInterface';
+import { BankCreditResourceInterface } from './resources/BankCreditResourceInterface';
+import { MonthlyPaymentResourceInterface } from './resources/MonthlyPaymentResourceInterface';
+import { NewsResourceInterface } from './resources/NewsResourceInterface';
 
 export interface LoginResponseInterface {
   token: string;
@@ -31,8 +35,11 @@ export interface ApiClientInterface {
   operation: OperationResourceInterface;
   setting: SettingResourceInterface;
   stock: StockResourceInterface;
+  stockOrder: StockOrderResourceInterface;
   financialSecurity: FinancialSecurityResourceInterface;
   beneficiary: BeneficiaryResourceInterface;
+  bankCredit: BankCreditResourceInterface;
+  news: NewsResourceInterface;
 
   get<T>(url: string, additionnalHeaders?: HeadersInit): Promise<T | ApiClientError>;
   post<T>(url: string, body: object, additionnalHeaders?: HeadersInit,): Promise<T | ApiClientError>;

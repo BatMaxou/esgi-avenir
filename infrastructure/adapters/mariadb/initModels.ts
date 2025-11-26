@@ -10,6 +10,7 @@ import { FinancialSecurityModel } from "./models/FinancialSecurityModel";
 import { BeneficiaryModel } from "./models/BeneficiaryModel";
 import { BankCreditModel } from "./models/BankCreditModel";
 import { MonthlyPaymentModel } from "./models/MonthlyPaymentModel";
+import { NewsModel } from "./models/NewsModel";
 
 export const initModels = (connection: Sequelize) => {
   const userModel = new UserModel(connection);
@@ -23,4 +24,5 @@ export const initModels = (connection: Sequelize) => {
   new FinancialSecurityModel(connection, userModel, stockModel);
   new BeneficiaryModel(connection, userModel, accountModel);
   new MonthlyPaymentModel(connection, bankCreditModel);
+  new NewsModel(connection, userModel);
 };
