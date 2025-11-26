@@ -25,11 +25,13 @@ import { GetAccountUsecase } from "../../../application/usecases/account/GetAcco
 import { GetAccountOperationsParams } from "../../../domain/params/account/GetAccountOperationsParams";
 import { InvalidGetAccountOperationsParamsError } from "../../../domain/errors/params/account/InvalidGetAccountOperationsParamsError";
 import { GetOperationListUsecase } from "../../../application/usecases/operation/GetOperationListUsecase";
+import { BeneficiaryRepositoryInterface } from "../../../application/repositories/BeneficiaryRepositoryInterface";
 
 export class AccountController {
   public constructor(
     private readonly accountRepository: AccountRepositoryInterface,
     private readonly operationRepository: OperationRepositoryInterface,
+    private readonly beneficiaryRepository: BeneficiaryRepositoryInterface,
     private readonly mailer: MailerInterface
   ) {}
 
@@ -286,7 +288,8 @@ export class AccountController {
 
     const getListUsecase = new GetOperationListUsecase(
       this.accountRepository,
-      this.operationRepository
+      this.operationRepository,
+      this.beneficiaryRepository,
     );
     const operations = await getListUsecase.execute(maybeParams.id, owner);
 

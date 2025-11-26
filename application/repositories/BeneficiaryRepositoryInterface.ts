@@ -14,5 +14,6 @@ export interface BeneficiaryRepositoryInterface extends RepositoryInterface {
   update: (beneficiary: UpdateBeneficiaryPayload) => Promise<Beneficiary | BeneficiaryNotFoundError>
   delete: (id: number) => Promise<boolean | BeneficiaryNotFoundError>
   findById: (id: number) => Promise<Beneficiary | BeneficiaryNotFoundError>
+  findByOwnerAndAccount: (ownerId: number, accountId: number) => Promise<Beneficiary | BeneficiaryNotFoundError>
   findAllByOwnerLike: (ownerId: number, term: string) => Promise<Beneficiary[]>
 }

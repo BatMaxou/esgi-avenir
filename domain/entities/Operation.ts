@@ -3,10 +3,13 @@ import { Account } from './Account';
 import { InvalidOperationTypeError } from '../errors/entities/operation/InvalidOperationTypeError';
 import { AccountNotFoundError } from '../errors/entities/account/AccountNotFoundError';
 import { AccountNotEmptyError } from '../errors/entities/operation/AccountNotEmptyError';
+import { Beneficiary } from './Beneficiary';
 
 export interface HydratedOperation extends Operation {
   from: string | null;
   to: string | null;
+  fromBeneficiary: Pick<Beneficiary, 'id' | 'name' | 'accountId'> | null;
+  toBeneficiary: Pick<Beneficiary, 'id' | 'name' | 'accountId'> | null;
 }
 
 export class Operation {
