@@ -61,7 +61,7 @@ export const AccountsProvider = ({ children }: Props) => {
       console.error("Failed to fetch account:", response.message);
     } else {
       setAccount({ ...response, operations: [] });
-      if (user?.roles.includes(RoleEnum.DIRECTOR || RoleEnum.ADVISER)) {
+      if (user?.roles.includes(RoleEnum.DIRECTOR || RoleEnum.ADVISOR)) {
         const ownerResponse: GetUserResponseInterface | ApiClientError =
           await apiClient.user.get(response.ownerId);
         if (ownerResponse instanceof ApiClientError) {

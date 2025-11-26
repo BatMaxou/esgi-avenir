@@ -11,6 +11,15 @@ import { MariadbStockRepository } from "../mariadb/repositories/MariadbStockRepo
 import { MariadbStockOrderRepository } from "../mariadb/repositories/MariadbStockOrderRepository";
 import { MariadbFinancialSecurityRepository } from "../mariadb/repositories/MariadbFinancialSecurityRepository";
 import { MariadbBeneficiaryRepository } from "../mariadb/repositories/MariadbBeneficiaryRepository";
+import { MariadbBankCreditRepository } from "../mariadb/repositories/MariadbBankCreditRepository";
+import { MariadbMonthlyPaymentRepository } from "../mariadb/repositories/MariadbMonthlyPaymentRepository";
+import { SettingRepositoryInterface } from "../../../application/repositories/SettingRepositoryInterface";
+import { StockRepositoryInterface } from "../../../application/repositories/StockRepositoryInterface";
+import { StockOrderRepositoryInterface } from "../../../application/repositories/StockOrderRepositoryInterface";
+import { FinancialSecurityRepositoryInterface } from "../../../application/repositories/FinancialSecurityRepositoryInterface";
+import { BeneficiaryRepositoryInterface } from "../../../application/repositories/BeneficiaryRepositoryInterface";
+import { BankCreditRepositoryInterface } from "../../../application/repositories/BankCreditRepositoryInterface";
+import { MonthlyPaymentRepositoryInterface } from "../../../application/repositories/MonthlyPaymentRepositoryInterface";
 
 type RepositoryFactory<T extends RepositoryInterface> = () => T;
 
@@ -24,6 +33,8 @@ const repositoryFactories: Record<string, Record<string, RepositoryFactory<Repos
     StockOrderRepository: () => new MariadbStockOrderRepository(),
     FinancialSecurityRepository: () => new MariadbFinancialSecurityRepository(),
     BeneficiaryRepository: () => new MariadbBeneficiaryRepository(),
+    BankCreditRepository: () => new MariadbBankCreditRepository(),
+    MonthlyPaymentRepository: () => new MariadbMonthlyPaymentRepository(),
   },
   // mongodb: {
   //   UserRepository: () => new MongodbUserRepository(),
@@ -33,6 +44,9 @@ const repositoryFactories: Record<string, Record<string, RepositoryFactory<Repos
   //   StockRepository: () => new MongodbStockRepository(),
   //   StockOrderRepository: () => new MongodbStockOrderRepository(),
   //   FinancialSecurityRepository: () => new MongodbFinancialSecurityRepository(),
+  //   BeneficiaryRepository: () => new MongodbBeneficiaryRepository(),
+  //   BankCreditRepository: () => new MongodbBankCreditRepository(),
+  //   MonthlyPaymentRepository: () => new MongodbMonthlyPaymentRepository(),
   // },
 };
 
@@ -57,24 +71,32 @@ export class RepositoryResolver implements RepositoryResolverInterface {
     return this.getRepository<OperationRepositoryInterface>('OperationRepository');
   }
 
-  public getSettingRepository(): MariadbSettingRepository {
+  public getSettingRepository(): SettingRepositoryInterface {
     return this.getRepository<MariadbSettingRepository>('SettingRepository');
   }
 
-  public getStockRepository(): MariadbStockRepository {
+  public getStockRepository(): StockRepositoryInterface {
     return this.getRepository<MariadbStockRepository>('StockRepository');
   }
 
-  public getStockOrderRepository(): MariadbStockOrderRepository {
+  public getStockOrderRepository(): StockOrderRepositoryInterface {
     return this.getRepository<MariadbStockOrderRepository>('StockOrderRepository');
   }
 
-  public getFinancialSecurityRepository(): MariadbFinancialSecurityRepository {
+  public getFinancialSecurityRepository(): FinancialSecurityRepositoryInterface {
     return this.getRepository<MariadbFinancialSecurityRepository>('FinancialSecurityRepository');
   }
 
-  public getBeneficiaryRepository(): MariadbBeneficiaryRepository {
+  public getBeneficiaryRepository(): BeneficiaryRepositoryInterface {
     return this.getRepository<MariadbBeneficiaryRepository>('BeneficiaryRepository');
+  }
+
+  public getBankCreditRepository(): BankCreditRepositoryInterface {
+    return this.getRepository<MariadbBankCreditRepository>('BankCreditRepository');
+  }
+
+  public getMonthlyPaymentRepository(): MonthlyPaymentRepositoryInterface {
+    return this.getRepository<MariadbMonthlyPaymentRepository>('MonthlyPaymentRepository');
   }
 
   private getRepository<T extends RepositoryInterface>(name: string): T {

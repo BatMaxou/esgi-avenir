@@ -63,5 +63,10 @@ export const paths = {
     update: (id?: number | string | null) => `/api/beneficiaries/${id || ':id'}`,
     delete: (id?: number | string | null) => `/api/beneficiaries/${id || ':id'}`,
   },
+  bankCredit: {
+    create: '/api/bank-credits',
+    list: '/api/bank-credits',
+    payments: (id?: number | string | null) => `/api/bank-credits/${id || ':id'}/payments`,
+  },
 };
 

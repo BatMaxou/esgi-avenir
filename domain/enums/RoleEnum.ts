@@ -1,6 +1,6 @@
 export enum RoleEnum {
   USER = 'user',
   DIRECTOR = 'director',
-  ADVISER = 'advisor',
+  ADVISOR = 'advisor',
   BANNED = 'banned',
 };
