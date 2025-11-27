@@ -19,9 +19,6 @@ import { GetNewsUsecase } from "../../../application/usecases/news/GetNewsUsecas
 import { GetNewsListQuery } from "../../../domain/queries/news/GetNewsListQuery";
 import { UpdateNewsCommand } from "../../../domain/commands/news/UpdateNewsCommand";
 import { InvalidGetNewsListQueryError } from "../../../domain/errors/queries/news/InvalidGetNewsListQueryError";
-import { GetLastNewsQuery } from "../../../domain/queries/news/GetLastNewsQuery";
-import { InvalidGetLastNewsQueryError } from "../../../domain/errors/queries/news/InvalidGetLastNewsQueryError";
-import { GetLastNewsListUsecase } from "../../../application/usecases/news/GetLastNewsListUsecase";
 import { HtmlContentValue } from "../../../domain/values/HtmlContentValue";
 import { InvalidHtmlContentError } from "../../../domain/errors/values/html-content/InvalidHtmlContentError";
 
@@ -106,34 +103,7 @@ export class NewsController {
     }
 
     const getListUsecase = new GetNewsListUsecase(this.newsRepository);
-    const newsList = await getListUsecase.execute(maybeQuery.term || '');
-
-    response.status(200).json(newsList.map((news) => ({
-      id: news.id,
-      title: news.title,
-      content: news.content,
-      authorId: news.authorId,
-      createdAt: news.createdAt,
-      ...(news.author ? {
-        author: {
-          id: news.author.id,
-          firstName: news.author.firstName,
-          lastName: news.author.lastName,
-        }
-      } : {})
-    })));
-  }
-
-  public async last(request: Request, response: Response) {
-    const maybeQuery = GetLastNewsQuery.from(request.query);
-    if (maybeQuery instanceof InvalidGetLastNewsQueryError) {
-      return response.status(400).json({
-        error: maybeQuery.message,
-      });
-    }
-
-    const getListUsecase = new GetLastNewsListUsecase(this.newsRepository);
-    const newsList = await getListUsecase.execute(maybeQuery.count);
+    const newsList = await getListUsecase.execute(maybeQuery.term || '', maybeQuery.count || 16);
 
     response.status(200).json(newsList.map((news) => ({
       id: news.id,

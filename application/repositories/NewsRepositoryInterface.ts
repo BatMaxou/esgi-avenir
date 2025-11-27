@@ -14,6 +14,5 @@ export interface NewsRepositoryInterface extends RepositoryInterface {
   update: (news: UpdateNewsPayload) => Promise<News | NewsNotFoundError | InvalidHtmlContentError>
   delete: (id: number) => Promise<boolean | NewsNotFoundError>
   findById: (id: number) => Promise<News | NewsNotFoundError>
-  findLast: (count: number) => Promise<News[]>
-  findAllLike: (term: string) => Promise<News[]>
+  findAllLike: (term: string, count: number) => Promise<News[]>
 }

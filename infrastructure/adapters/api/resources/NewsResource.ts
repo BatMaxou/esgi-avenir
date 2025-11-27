@@ -10,12 +10,11 @@ export class NewsResource implements NewsResourceInterface {
     return this.apiClient.get<GetNewsResponseInterface>(paths.news.detail(id));
   }
 
-  public async getAll(term?: string): Promise<GetNewsListResponseInterface | ApiClientError> {
-    return this.apiClient.get<GetNewsListResponseInterface>(paths.stock.list(term ? { term } : undefined));
-  }
-
-  public async getLast(count?: number): Promise<GetNewsListResponseInterface | ApiClientError> {
-    return this.apiClient.get<GetNewsListResponseInterface>(paths.stock.list(count ? { count } : undefined));
+  public async getAll(term?: string, count?: number): Promise<GetNewsListResponseInterface | ApiClientError> {
+    return this.apiClient.get<GetNewsListResponseInterface>(paths.stock.list(term || count ? {
+      ...(term ? { term  } : {}),
+      ...(count ? { count } : {}),
+    } : undefined));
   }
 
   public async create(data: CreateNewsPayloadInterface): Promise<GetNewsResponseInterface | ApiClientError> {

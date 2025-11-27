@@ -6,8 +6,8 @@ export class GetNewsListUsecase {
     private readonly newsRepository: NewsRepositoryInterface,
   ) {}
 
-  public async execute(term: string): Promise<News[]> {
-    return await this.newsRepository.findAllLike(term);
+  public async execute(term: string, limit: number): Promise<News[]> {
+    return await this.newsRepository.findAllLike(term, limit);
   }
 }
 
