@@ -12,6 +12,7 @@ import { FinancialSecurityFixtures } from "../../../application/fixtures/Financi
 import { BeneficiaryFixtures } from "../../../application/fixtures/BeneficiaryFixtures";
 import { BankCreditFixtures } from "../../../application/fixtures/BankCreditFixtures";
 import { MonthlyPaymentFixtures } from "../../../application/fixtures/MonthlyPaymentFixtures";
+import { NewsFixtures } from "../../../application/fixtures/NewsFixtures";
 import { initModels } from "../../adapters/mariadb/initModels";
 
 const fixtures = async () => {
@@ -36,6 +37,7 @@ const fixtures = async () => {
       await new AccountFixtures(repositoryResolver.getAccountRepository(), bankCode, branchCode).load(),
       await new StockOrderFixtures(repositoryResolver.getStockOrderRepository()).load(),
       await new FinancialSecurityFixtures(repositoryResolver.getFinancialSecurityRepository()).load(),
+      await new NewsFixtures(repositoryResolver.getNewsRepository()).load(),
     ]);
 
     await Promise.all([

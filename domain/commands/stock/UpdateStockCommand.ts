@@ -7,7 +7,10 @@ interface Body {
 
 export class UpdateStockCommand {
   public static from(body: Body): UpdateStockCommand | InvalidUpdateStockCommandError {
-    if (!body.name || !body.baseQuantity) {
+    if (
+      body.name && typeof body.name !== 'string'
+      || body.baseQuantity && typeof body.baseQuantity !== 'number'
+    ) {
       return new InvalidUpdateStockCommandError('Payload is not valid.');
     }
 
@@ -18,8 +21,8 @@ export class UpdateStockCommand {
   }
 
   private constructor(
-    public name: string,
-    public baseQuantity: number,
+    public name?: string,
+    public baseQuantity?: number,
   ) {
   }
 }

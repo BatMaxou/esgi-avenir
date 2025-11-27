@@ -1,0 +1,8 @@
+export class InvalidUpdateNewsCommandError extends Error {
+  public constructor(message: string) {
+    super(message);
+
+    this.name = 'InvalidUpdateNewsCommandError';
+  }
+}
+
