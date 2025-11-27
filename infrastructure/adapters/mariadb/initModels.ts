@@ -11,12 +11,19 @@ import { BeneficiaryModel } from "./models/BeneficiaryModel";
 import { BankCreditModel } from "./models/BankCreditModel";
 import { MonthlyPaymentModel } from "./models/MonthlyPaymentModel";
 import { NewsModel } from "./models/NewsModel";
+import { PrivateChannelModel } from "./models/PrivateChannelModel";
+import { CompanyChannelModel } from "./models/CompanyChannelModel";
+import { PrivateMessageModel } from "./models/PrivateMessageModel";
+import { CompanyMessageModel } from "./models/CompanyMessageModel";
+import { NotificationModel } from "./models/NotificationModel";
 
 export const initModels = (connection: Sequelize) => {
   const userModel = new UserModel(connection);
   const accountModel = new AccountModel(connection, userModel);
   const stockModel = new StockModel(connection);
   const bankCreditModel = new BankCreditModel(connection, userModel, accountModel);
+  const privateChannelModel = new PrivateChannelModel(connection, userModel);
+  const companyChannelModel = new CompanyChannelModel(connection, userModel);
 
   new OperationModel(connection, accountModel);
   new SettingModel(connection);
@@ -25,4 +32,7 @@ export const initModels = (connection: Sequelize) => {
   new BeneficiaryModel(connection, userModel, accountModel);
   new MonthlyPaymentModel(connection, bankCreditModel);
   new NewsModel(connection, userModel);
+  new PrivateMessageModel(connection, userModel, privateChannelModel);
+  new CompanyMessageModel(connection, userModel, companyChannelModel);
+  new NotificationModel(connection, userModel);
 };
