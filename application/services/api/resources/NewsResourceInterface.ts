@@ -18,8 +18,7 @@ export interface UpdateNewsPayloadInterface {
 
 export interface NewsResourceInterface {
   get(id: number): Promise<GetNewsResponseInterface | ApiClientError>;
-  getAll(term?: string): Promise<GetNewsListResponseInterface | ApiClientError>;
-  getLast(count?: number): Promise<GetNewsListResponseInterface | ApiClientError>;
+  getAll(term?: string, count?: number): Promise<GetNewsListResponseInterface | ApiClientError>;
   create(data: CreateNewsPayloadInterface): Promise<GetNewsResponseInterface | ApiClientError>;
   update(data: UpdateNewsPayloadInterface): Promise<GetNewsResponseInterface | ApiClientError>;
   delete(id: number): Promise<DeleteResponseInterface | ApiClientError>;

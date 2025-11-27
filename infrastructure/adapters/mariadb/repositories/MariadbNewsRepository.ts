@@ -87,39 +87,15 @@ export class MariadbNewsRepository implements NewsRepositoryInterface {
     }
   }
 
-  public async findAllLike(term: string): Promise<News[]> {
+  public async findAllLike(term: string, limit?: number): Promise<News[]> {
     const foundNewsList = await this.newsModel.model.findAll({
+      order: [['createdAt', 'DESC']],
+      limit,
       where: {
         title: {
           [Op.like]: `%${term}%`
         }
       },
-      include: [
-        {
-          model: this.userModel.model,
-          as: 'author',
-        }
-      ],
-    });
-
-    const newsList: News[] = [];
-
-    foundNewsList.forEach((foundNews) => {
-      const maybeNews = News.from(foundNews);
-      if (maybeNews instanceof Error) {
-        throw maybeNews;
-      }
-
-      newsList.push(maybeNews);
-    });
-
-    return newsList;
-  }
-
-  public async findLast(limit: number): Promise<News[]> {
-    const foundNewsList = await this.newsModel.model.findAll({
-      order: [['createdAt', 'DESC']],
-      limit,
       include: [
         {
           model: this.userModel.model,

@@ -71,7 +71,6 @@ export const paths = {
   news: {
     create: '/api/news',
     list: (params: QueryParams | undefined = undefined) => `/api/news${buildQueryString(params)}`,
-    last: (params: QueryParams | undefined = undefined) => `/api/news${buildQueryString(params)}`,
     detail: (id?: number | string | null) => `/api/news/${id || ':id'}`,
     update: (id?: number | string | null) => `/api/news/${id || ':id'}`,
     delete: (id?: number | string | null) => `/api/news/${id || ':id'}`,

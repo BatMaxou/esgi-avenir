@@ -42,13 +42,6 @@ export class NewsRouter {
     );
 
     app.get(
-      paths.news.last(),
-      async (req, res) => {
-        await newsController.last(req, res);
-      }
-    );
-
-    app.get(
       paths.news.detail(),
       async (req, res) => {
         await newsController.get(req, res);
