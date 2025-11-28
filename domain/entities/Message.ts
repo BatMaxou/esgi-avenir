@@ -27,6 +27,9 @@ export class Message {
     }
 
     const maybeChannelId = channelId ?? channel?.id;
+    if (!maybeChannelId) {
+      return new ChannelNotFoundError('Message must have a valid channelId or channel.');
+    }
 
     const message = new this(
       content,
@@ -46,7 +49,7 @@ export class Message {
   private constructor(
     public content: string,
     public userId: number,
-    public channelId?: number,
+    public channelId: number,
     public user?: User,
     public channel?: ChannelInterface,
   ) {

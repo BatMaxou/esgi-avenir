@@ -1,4 +1,9 @@
+import { Message } from './Message';
 import { ChannelInterface } from '../interfaces/ChannelInterface';
+
+export interface HydratedCompanyChannel extends CompanyChannel {
+  messages: Message[];
+}
 
 export class CompanyChannel implements ChannelInterface {
   public id?: number;

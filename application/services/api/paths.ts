@@ -75,5 +75,25 @@ export const paths = {
     update: (id?: number | string | null) => `/api/news/${id || ':id'}`,
     delete: (id?: number | string | null) => `/api/news/${id || ':id'}`,
   },
+  companyChannel: {
+    list: '/api/company-channels',
+    detail: (id?: number | string | null) => `/api/company-channels/${id || ':id'}`,
+    create: '/api/company-channels',
+    update: (id?: number | string | null) => `/api/company-channels/${id || ':id'}`,
+    writeMessage: (id?: number | string | null) => `/api/company-channels/${id || ':id'}/messages`,
+  },
+  privateChannel: {
+    list: '/api/private-channels',
+    detail: (id?: number | string | null) => `/api/private-channels/${id || ':id'}`,
+    update: (id?: number | string | null) => `/api/private-channels/${id || ':id'}`,
+    writeMessage: (id?: number | string | null) => `/api/private-channels/${id || ':id'}/messages`,
+  },
+  privateMessage: {
+    create: '/api/private-messages',
+  },
+  notification: {
+    list: '/api/notifications',
+    create: '/api/notifications',
+  },
 };
 

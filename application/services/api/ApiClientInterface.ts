@@ -9,8 +9,11 @@ import { StockResourceInterface } from './resources/StockResourceInterface';
 import { UserResourceInterface } from './resources/UserResourceInterface';
 import { StockOrderResourceInterface } from './resources/StockOrderResourceInterface';
 import { BankCreditResourceInterface } from './resources/BankCreditResourceInterface';
-import { MonthlyPaymentResourceInterface } from './resources/MonthlyPaymentResourceInterface';
 import { NewsResourceInterface } from './resources/NewsResourceInterface';
+import { CompanyChannelResourceInterface } from './resources/CompanyChannelResourceInterface';
+import { PrivateChannelResourceInterface } from './resources/PrivateChannelResourceInterface';
+import { PrivateMessageResourceInterface } from './resources/PrivateMessageResourceInterface';
+import { NotificationResourceInterface } from './resources/NotificationResourceInterface';
 
 export interface LoginResponseInterface {
   token: string;
@@ -40,6 +43,10 @@ export interface ApiClientInterface {
   beneficiary: BeneficiaryResourceInterface;
   bankCredit: BankCreditResourceInterface;
   news: NewsResourceInterface;
+  companyChannel: CompanyChannelResourceInterface;
+  privateChannel: PrivateChannelResourceInterface;
+  privateMessage: PrivateMessageResourceInterface;
+  notification: NotificationResourceInterface;
 
   get<T>(url: string, additionnalHeaders?: HeadersInit): Promise<T | ApiClientError>;
   post<T>(url: string, body: object, additionnalHeaders?: HeadersInit,): Promise<T | ApiClientError>;

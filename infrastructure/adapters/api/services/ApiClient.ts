@@ -25,6 +25,14 @@ import { StockOrderResourceInterface } from "../../../../application/services/ap
 import { StockOrderResource } from "../resources/StockOrderResource";
 import { NewsResourceInterface } from "../../../../application/services/api/resources/NewsResourceInterface";
 import { NewsResource } from "../resources/NewsResource";
+import { PrivateMessageResourceInterface } from "../../../../application/services/api/resources/PrivateMessageResourceInterface";
+import { PrivateChannelResourceInterface } from "../../../../application/services/api/resources/PrivateChannelResourceInterface";
+import { CompanyChannelResourceInterface } from "../../../../application/services/api/resources/CompanyChannelResourceInterface";
+import { NotificationResourceInterface } from "../../../../application/services/api/resources/NotificationResourceInterface";
+import { PrivateMessageResource } from "../resources/PrivateMessageRessource";
+import { PrivateChannelResource } from "../resources/PrivateChannelRessource";
+import { CompanyChannelResource } from "../resources/CompanyChannelRessource";
+import { NotificationResource } from "../resources/NotificationRessource";
 
 export class ApiClient implements ApiClientInterface {
   private token: string | null = null;
@@ -40,6 +48,10 @@ export class ApiClient implements ApiClientInterface {
   public beneficiary: BeneficiaryResourceInterface;
   public bankCredit: BankCreditResourceInterface;
   public news: NewsResourceInterface;
+  public privateMessage: PrivateMessageResourceInterface;
+  public privateChannel: PrivateChannelResourceInterface;
+  public companyChannel: CompanyChannelResourceInterface;
+  public notification: NotificationResourceInterface;
 
   constructor(private baseUrl: string) {
     this.me = new MeResource(this);
@@ -53,6 +65,10 @@ export class ApiClient implements ApiClientInterface {
     this.beneficiary = new BeneficiaryResource(this);
     this.bankCredit = new BankCreditResource(this);
     this.news = new NewsResource(this);
+    this.privateMessage = new PrivateMessageResource(this);
+    this.privateChannel = new PrivateChannelResource(this);
+    this.companyChannel = new CompanyChannelResource(this);
+    this.notification = new NotificationResource(this);
 
     this.token = getCookie("token");
   }

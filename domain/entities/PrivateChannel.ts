@@ -1,6 +1,11 @@
 import { User } from "./User";
+import { Message } from "./Message";
 import { UserNotFoundError } from "../errors/entities/user/UserNotFoundError";
 import { ChannelInterface } from "../interfaces/ChannelInterface";
+
+export interface HydratedPrivateChannel extends PrivateChannel {
+  messages: Message[];
+}
 
 export class PrivateChannel implements ChannelInterface {
   public id?: number;
