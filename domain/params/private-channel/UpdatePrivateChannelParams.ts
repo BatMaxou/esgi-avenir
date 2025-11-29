@@ -1,0 +1,23 @@
+import { InvalidUpdatePrivateChannelParamsError } from "../../errors/params/private-channel/InvalidUpdatePrivateChannelParamsError";
+
+interface Params {
+  id?: string;
+}
+
+export class UpdatePrivateChannelParams {
+  public static from(params: Params): UpdatePrivateChannelParams | InvalidUpdatePrivateChannelParamsError {
+    if (!params.id) {
+      return new InvalidUpdatePrivateChannelParamsError('Params not valid.');
+    }
+
+    return new UpdatePrivateChannelParams(
+      parseInt(params.id, 10),
+    );
+  }
+
+  private constructor(
+    public id: number,
+  ) {
+  }
+}
+

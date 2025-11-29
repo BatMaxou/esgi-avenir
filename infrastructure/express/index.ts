@@ -22,6 +22,10 @@ import { FinancialSecurityRouter } from "./routes/FinancialSecurityRouter";
 import { BeneficiaryRouter } from "./routes/BeneficiaryRouter";
 import { BankCreditRouter } from "./routes/BankCreditRouter";
 import { NewsRouter } from "./routes/NewsRouter";
+import { NotificationRouter } from "./routes/NotificationRouter";
+import { PrivateMessageRouter } from "./routes/PrivateMessageRouter";
+import { PrivateChannelRouter } from "./routes/PrivateChannelRouter";
+import { CompanyChannelRouter } from "./routes/CompanyChannelRouter";
 
 const startServer = async () => {
   const app = express();
@@ -118,6 +122,30 @@ const startServer = async () => {
   );
 
   (new NewsRouter()).register(
+    app,
+    repositoryResolver,
+    tokenManager,
+  );
+
+  (new NotificationRouter()).register(
+    app,
+    repositoryResolver,
+    tokenManager,
+  );
+
+  (new PrivateMessageRouter()).register(
+    app,
+    repositoryResolver,
+    tokenManager,
+  );
+
+  (new PrivateChannelRouter()).register(
+    app,
+    repositoryResolver,
+    tokenManager,
+  );
+
+  (new CompanyChannelRouter()).register(
     app,
     repositoryResolver,
     tokenManager,

@@ -18,7 +18,7 @@ export const roleMiddleware = ({ mandatoryRoles, forbiddenRoles }: Parameters) =
       return response.status(401).json({ message: 'Unauthorized' });
     }
 
-    if (mandatoryRoles && mandatoryRoles.some(role => !user.roles.includes(role))) {
+    if (mandatoryRoles && mandatoryRoles.every(role => !user.roles.includes(role))) {
       return response.status(403).json({ message: 'Forbidden' });
     }
 

@@ -16,7 +16,6 @@ export interface UpdateCompanyChannelPayloadInterface {
 }
 
 export interface WriteCompanyMessagePayloadInterface {
-  channelId: number;
   content: string;
 }
 

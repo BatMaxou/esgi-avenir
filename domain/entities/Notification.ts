@@ -11,13 +11,15 @@ export class Notification {
     advisor,
     userId,
     user,
+    createdAt,
   }: {
     id?: number,
     content: string,
     advisorId?: number,
     advisor?: User,
-    userId?: number,
+    userId?: number | null,
     user?: User,
+    createdAt?: Date,
   }): Notification | UserNotFoundError {
     const maybeAdvisorId = advisorId ?? advisor?.id;
     if (!maybeAdvisorId) {
@@ -30,6 +32,7 @@ export class Notification {
       content,
       maybeAdvisorId,
       maybeUserId,
+      createdAt,
       advisor ?? undefined,
       user ?? undefined,
     );
@@ -44,7 +47,8 @@ export class Notification {
   private constructor(
     public content: string,
     public advisorId: number,
-    public userId?: number,
+    public userId?: number | null,
+    public createdAt?: Date,
     public advisor?: User,
     public user?: User,
   ) {

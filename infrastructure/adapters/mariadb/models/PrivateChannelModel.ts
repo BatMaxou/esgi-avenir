@@ -5,7 +5,7 @@ interface PrivateChannelModelInterface extends Model<InferAttributes<PrivateChan
   id: CreationOptional<number>;
   title: string;
   userId?: number;
-  advisorId?: number;
+  advisorId?: number | null;
 }
 
 export class PrivateChannelModel {
@@ -33,7 +33,10 @@ export class PrivateChannelModel {
       as: 'user',
     });
     this.model.belongsTo(userModel.model, {
-      foreignKey: 'advisorId',
+      foreignKey: {
+        'name': 'advisorId',
+        allowNull: true,
+      },
       as: 'advisor',
     });
   }

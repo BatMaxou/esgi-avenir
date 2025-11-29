@@ -4,8 +4,9 @@ import { UserModel } from "./UserModel";
 interface NotificationModelInterface extends Model<InferAttributes<NotificationModelInterface>, InferCreationAttributes<NotificationModelInterface>> {
   id: CreationOptional<number>;
   content: string;
+  createdAt: CreationOptional<Date>;
   advisorId?: number,
-  userId?: number;
+  userId?: number | null;
 }
 
 export class NotificationModel {
@@ -22,6 +23,11 @@ export class NotificationModel {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
     });
 
     this.associate(userModel);
@@ -33,7 +39,10 @@ export class NotificationModel {
       as: 'advisor',
     });
     this.model.belongsTo(userModel.model, {
-      foreignKey: 'userId',
+      foreignKey: {
+        name: 'userId',
+        allowNull: true,
+      },
       as: 'user',
     });
   }

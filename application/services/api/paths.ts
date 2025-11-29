@@ -76,9 +76,9 @@ export const paths = {
     delete: (id?: number | string | null) => `/api/news/${id || ':id'}`,
   },
   companyChannel: {
+    create: '/api/company-channels',
     list: '/api/company-channels',
     detail: (id?: number | string | null) => `/api/company-channels/${id || ':id'}`,
-    create: '/api/company-channels',
     update: (id?: number | string | null) => `/api/company-channels/${id || ':id'}`,
     writeMessage: (id?: number | string | null) => `/api/company-channels/${id || ':id'}/messages`,
   },
@@ -86,6 +86,7 @@ export const paths = {
     list: '/api/private-channels',
     detail: (id?: number | string | null) => `/api/private-channels/${id || ':id'}`,
     update: (id?: number | string | null) => `/api/private-channels/${id || ':id'}`,
+    attributeTo: (id?: number | string | null) => `/api/private-channels/${id || ':id'}/attribute-to`,
     writeMessage: (id?: number | string | null) => `/api/private-channels/${id || ':id'}/messages`,
   },
   privateMessage: {

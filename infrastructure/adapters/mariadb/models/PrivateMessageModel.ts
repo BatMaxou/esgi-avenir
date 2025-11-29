@@ -5,6 +5,7 @@ import { PrivateChannelModel } from "./PrivateChannelModel";
 interface PrivateMessageModelInterface extends Model<InferAttributes<PrivateMessageModelInterface>, InferCreationAttributes<PrivateMessageModelInterface>> {
   id: CreationOptional<number>;
   content: string;
+  createdAt: CreationOptional<Date>;
   userId?: number;
   channelId?: number;
 }
@@ -22,6 +23,11 @@ export class PrivateMessageModel {
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     });
 

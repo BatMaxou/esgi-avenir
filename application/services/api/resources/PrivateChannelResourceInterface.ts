@@ -11,8 +11,11 @@ export interface UpdatePrivateChannelPayloadInterface {
   title?: string;
 }
 
+export interface AttributePrivateChannelToResponseInterface {
+  success: boolean;
+}
+
 export interface WritePrivateMessagePayloadInterface {
-  channelId: number;
   content: string;
 }
 
@@ -20,6 +23,7 @@ export interface PrivateChannelResourceInterface {
   get(id: number): Promise<GetHydratedPrivateChannelResponseInterface | ApiClientError>;
   getAll(): Promise<GetPrivateChannelListResponseInterface | ApiClientError>;
   update(data: UpdatePrivateChannelPayloadInterface): Promise<GetPrivateChannelResponseInterface | ApiClientError>;
+  attributeTo(id: number): Promise<AttributePrivateChannelToResponseInterface | ApiClientError>;
   writeMessage(data: WritePrivateMessagePayloadInterface): Promise<GetMessageResponseInterface | ApiClientError>;
 }
 

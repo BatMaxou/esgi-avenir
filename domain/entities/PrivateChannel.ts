@@ -22,7 +22,7 @@ export class PrivateChannel implements ChannelInterface {
     title: string,
     userId?: number,
     user?: User,
-    advisorId?: number,
+    advisorId?: number | null,
     advisor?: User,
   }): PrivateChannel | UserNotFoundError {
     const maybeUserId = userId ?? user?.id;
@@ -31,9 +31,6 @@ export class PrivateChannel implements ChannelInterface {
     }
 
     const maybeAdvisorId = advisorId ?? advisor?.id;
-    if (!maybeAdvisorId) {
-      return new UserNotFoundError('Channel must have a valid advisorId or advisor.');
-    }
 
     const privateChannel = new this(
       title,
@@ -53,7 +50,7 @@ export class PrivateChannel implements ChannelInterface {
   private constructor(
     public title: string,
     public userId: number,
-    public advisorId: number,
+    public advisorId?: number,
     public user?: User,
     public advisor?: User,
   ) {

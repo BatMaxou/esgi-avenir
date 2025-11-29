@@ -5,6 +5,7 @@ import { CompanyChannelModel } from "./CompanyChannelModel";
 interface CompanyMessageModelInterface extends Model<InferAttributes<CompanyMessageModelInterface>, InferCreationAttributes<CompanyMessageModelInterface>> {
   id: CreationOptional<number>;
   content: string;
+  createdAt: CreationOptional<Date>;
   userId?: number;
   channelId?: number;
 }
@@ -22,6 +23,11 @@ export class CompanyMessageModel {
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     });
 

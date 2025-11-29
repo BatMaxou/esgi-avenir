@@ -13,6 +13,7 @@ export class Message {
     user,
     channelId,
     channel,
+    createdAt,
   }: {
     id?: number,
     content: string,
@@ -20,6 +21,7 @@ export class Message {
     user?: User,
     channelId?: number,
     channel?: ChannelInterface,
+    createdAt?: Date,
   }): Message | UserNotFoundError | ChannelNotFoundError {
     const maybeUserId = userId ?? user?.id;
     if (!maybeUserId) {
@@ -35,6 +37,7 @@ export class Message {
       content,
       maybeUserId,
       maybeChannelId,
+      createdAt,
       user ?? undefined,
       channel ?? undefined,
     );
@@ -50,6 +53,7 @@ export class Message {
     public content: string,
     public userId: number,
     public channelId: number,
+    public createdAt?: Date,
     public user?: User,
     public channel?: ChannelInterface,
   ) {
