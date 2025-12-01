@@ -26,6 +26,7 @@ type AccountsContextType = {
   isAccountsLoading: boolean;
   getAccount: (id: number) => Promise<void>;
   getAccounts: () => Promise<void>;
+  refreshAccounts: () => Promise<void>;
 };
 
 export const AccountsContext = createContext<AccountsContextType | undefined>(
@@ -137,6 +138,10 @@ export const AccountsProvider = ({ children }: Props) => {
     setIsAccountsLoading(false);
   };
 
+  const refreshAccounts = async () => {
+    await getAccounts();
+  };
+
   return (
     <AccountsContext.Provider
       value={{
@@ -146,6 +151,7 @@ export const AccountsProvider = ({ children }: Props) => {
         isAccountsLoading,
         getAccount,
         getAccounts,
+        refreshAccounts,
       }}
     >
       {children}

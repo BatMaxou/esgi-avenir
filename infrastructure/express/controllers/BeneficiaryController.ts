@@ -31,8 +31,8 @@ export class BeneficiaryController {
   public async create(request: Request, response: Response) {
     const maybeCommand = CreateBeneficiaryCommand.from(request.body);
     if (
-      maybeCommand instanceof InvalidCreateBeneficiaryCommandError
-      || maybeCommand instanceof InvalidIbanError
+      maybeCommand instanceof InvalidCreateBeneficiaryCommandError ||
+      maybeCommand instanceof InvalidIbanError
     ) {
       return response.status(400).json({
         error: maybeCommand.message,
@@ -46,8 +46,15 @@ export class BeneficiaryController {
       });
     }
 
-    const createUsecase = new CreateBeneficiaryUsecase(this.beneficiaryRepository, this.accountRepository);
-    const maybeBeneficiary = await createUsecase.execute(maybeCommand.iban, owner, maybeCommand.name);
+    const createUsecase = new CreateBeneficiaryUsecase(
+      this.beneficiaryRepository,
+      this.accountRepository
+    );
+    const maybeBeneficiary = await createUsecase.execute(
+      maybeCommand.iban,
+      owner,
+      maybeCommand.name
+    );
 
     if (maybeBeneficiary instanceof Error) {
       return response.status(400).json({
@@ -55,7 +62,9 @@ export class BeneficiaryController {
       });
     }
 
-    const sendEmailUsecase = new SendBeneficiaryCreationEmailUsecase(this.mailer);
+    const sendEmailUsecase = new SendBeneficiaryCreationEmailUsecase(
+      this.mailer
+    );
     await sendEmailUsecase.execute(maybeBeneficiary.name, owner.email);
 
     response.status(201).json({
@@ -79,13 +88,35 @@ export class BeneficiaryController {
       });
     }
 
-    const getListUsecase = new GetBeneficiaryListUsecase(this.beneficiaryRepository);
-    const beneficiaries = await getListUsecase.execute(owner, maybeQuery.term || '');
+    const getListUsecase = new GetBeneficiaryListUsecase(
+      this.beneficiaryRepository
+    );
+    const beneficiaries = await getListUsecase.execute(
+      owner,
+      maybeQuery.term || ""
+    );
 
-    response.status(200).json(beneficiaries.map((beneficiary) => ({
-      id: beneficiary.id,
-      name: beneficiary.name,
-    })));
+    response.status(200).json(
+      beneficiaries.map((beneficiary) => ({
+        id: beneficiary.id,
+        name: beneficiary.name,
+        ownerId: beneficiary.ownerId,
+        accountId: beneficiary.accountId,
+        owner: beneficiary.owner
+          ? {
+              id: beneficiary.owner.id,
+              firstName: beneficiary.owner.firstName,
+              lastName: beneficiary.owner.lastName,
+            }
+          : null,
+        account: beneficiary.account
+          ? {
+              id: beneficiary.account.id,
+              iban: { value: beneficiary.account.iban.value },
+            }
+          : null,
+      }))
+    );
   }
 
   public async update(request: Request, response: Response) {
@@ -110,14 +141,13 @@ export class BeneficiaryController {
       });
     }
 
-    const updateBeneficiaryUsecase = new UpdateBeneficiaryUsecase(this.beneficiaryRepository);
-    const maybeBeneficiary = await updateBeneficiaryUsecase.execute(
-      owner,
-      {
-        id: maybeParams.id,
-        name: maybeCommand.name,
-      }
+    const updateBeneficiaryUsecase = new UpdateBeneficiaryUsecase(
+      this.beneficiaryRepository
     );
+    const maybeBeneficiary = await updateBeneficiaryUsecase.execute(owner, {
+      id: maybeParams.id,
+      name: maybeCommand.name,
+    });
 
     if (maybeBeneficiary instanceof BeneficiaryNotFoundError) {
       return response.status(404).json({
