@@ -6,8 +6,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "../ui/button";
+} from "@/components/ui/atoms/dialog";
+import { Button } from "@/components/ui/atoms/button";
 import { Icon } from "@iconify/react";
 
 interface CheckMailDialogProps {

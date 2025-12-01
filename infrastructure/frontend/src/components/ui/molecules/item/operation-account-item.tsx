@@ -1,13 +1,22 @@
 "use client";
 
-import { Operation } from "../../../../../domain/entities/Operation";
-import { OperationEnum } from "../../../../../domain/enums/OperationEnum";
-import { Item, ItemActions, ItemContent, ItemMedia } from "../ui/item";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemMedia,
+} from "@/components/ui/atoms/item";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/atoms/avatar";
 import {
   HydratedAccountWithOperations,
   useAccounts,
 } from "@/contexts/AccountsContext";
+import { Operation } from "../../../../../../../domain/entities/Operation";
+import { OperationEnum } from "../../../../../../../domain/enums/OperationEnum";
 
 type OperationAccountItemProps = {
   operation: Operation;

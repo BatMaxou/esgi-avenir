@@ -1,11 +1,13 @@
 "use client";
 import { useAuth } from "@/contexts/AuthContext";
-import { AccountsDisplay } from "@/components/accounts/AccountsDisplay";
-import { Separator } from "@radix-ui/react-separator";
+import { AccountsDisplay } from "@/components/ui/molecules/lists/accounts-display";
+import { Separator } from "@/components/ui/atoms/separator";
 import { Icon } from "@iconify/react";
-import { LoadingLink } from "@/components/links/LoadingLink";
+import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 import { useEffect } from "react";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { TransferCard } from "@/components/ui/molecules/cards/transfer-card";
+import InvestmentCard from "@/components/ui/molecules/cards/investment-card";
 
 export default function Home() {
   const { user } = useAuth();
@@ -28,35 +30,24 @@ export default function Home() {
             </LoadingLink>
           </div>
         </div>
-        <div className="w-full overflow-scroll">
+        {/* <div className="w-full overflow-scroll">
           <h2 className="text-lg mb-2 font-bold">Dernières transactions</h2>
-          {/* <OperationsHistory displayLength={12} displayStyle="grid" /> */}
-        </div>
+          <OperationsHistory displayLength={12} displayStyle="grid" />
+        </div> */}
       </div>
-      <Separator />
+      <Separator orientation="vertical" className="h-full border-2" />
       <div className="flex-1 space-y-8">
         <div>
           <h2 className="text-lg mb-2 font-bold">Virements</h2>
-          <div className="h-48 w-full bg-gradient-to-br from-red-500 to-red-700 rounded-lg shadow-lg">
-            <div className="h-full bg-[url('/assets/images/transfer-icon.svg')] bg-no-repeat bg-[320px_40px] bg-[length:150px_150px] flex items-start">
-              <h3 className="text-4xl uppercase font-bold text-white drop-shadow-lg p-6">
-                Transférer de <br />
-                l'argent
-              </h3>
-            </div>
-          </div>
+          <LoadingLink href="/transfers">
+            <TransferCard />
+          </LoadingLink>
         </div>
-
         <div>
           <h2 className="text-lg mb-2 font-bold">Investissemnts</h2>
-          <div className="h-48 w-full bg-white border-2 border-red-700 rounded-lg shadow-lg">
-            <div className="h-full bg-[url('/assets/images/trading-bars-icon.svg')] bg-no-repeat bg-[320px_40px] bg-[length:150px_150px] flex items-start">
-              <h3 className="text-4xl uppercase font-bold text-red-600 drop-shadow-lg p-6">
-                Consultez vos <br />
-                investissements
-              </h3>
-            </div>
-          </div>
+          <LoadingLink href="/investments">
+            <InvestmentCard />
+          </LoadingLink>
         </div>
       </div>
     </div>

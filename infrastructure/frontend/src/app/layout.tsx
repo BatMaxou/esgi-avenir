@@ -5,7 +5,7 @@ import { Raleway } from "next/font/google";
 import "./globals.css";
 import { ApiClientProvider } from "@/contexts/ApiContext";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/atoms/sonner";
 import { AccountsProvider } from "@/contexts/AccountsContext";
 import { NavigationProvider } from "@/contexts/NavigationContext";
 import { NavigationLoader } from "@/components/providers/NavigationLoader";

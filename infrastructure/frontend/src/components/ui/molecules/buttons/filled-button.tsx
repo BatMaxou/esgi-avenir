@@ -10,8 +10,8 @@ interface FilledButtonProps {
   className?: string;
 }
 
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/atoms/button";
+import { Spinner } from "@/components/ui/atoms/spinner";
 import { Icon } from "@iconify/react";
 
 export function FilledButton({

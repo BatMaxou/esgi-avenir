@@ -14,11 +14,11 @@ import { HydratedAccount } from "../../../../../../../domain/entities/Account";
 import TransferFromAccountDialog from "../dialogs/transfer-from-account-dialog";
 import TransferToAccountDialog from "../dialogs/transfer-to-account-dialog";
 import { AmountInput } from "@/components/ui/molecules/inputs/amount-input";
-import { FilledButton } from "@/components/ui/molecules/buttons/FilledButton";
+import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
 import InputStartIcon from "../inputs/input-start-icon";
 
 // Others components
-import { Item, ItemActions, ItemContent } from "../../item";
+import { Item, ItemActions, ItemContent } from "@/components/ui/atoms/item";
 import { Icon } from "@iconify/react";
 import { useApiClient } from "@/contexts/ApiContext";
 import { OperationEnum } from "../../../../../../../domain/enums/OperationEnum";

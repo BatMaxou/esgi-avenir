@@ -4,10 +4,10 @@ import { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { RoleEnum } from "../../../../../domain/enums/RoleEnum";
-import Header from "@/components/partials/Header";
+import Header from "@/components/ui/molecules/partials/header";
 import { useAccounts } from "@/contexts/AccountsContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Banner } from "@/components/partials/Banner";
+import { Banner } from "@/components/ui/atoms/banner";
 import { NavigationLoader } from "@/components/providers/NavigationLoader";
 import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
 

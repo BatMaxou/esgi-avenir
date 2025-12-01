@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useState } from "react";
-import { Input } from "../../input";
+import { Input } from "@/components/ui/atoms/input";
 
 type AmountInputProps = Omit<React.ComponentProps<typeof Input>, "onChange"> & {
   currency?: string;

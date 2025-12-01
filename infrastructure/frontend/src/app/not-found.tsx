@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { LoadingLink } from "@/components/links/LoadingLink";
+import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 
 export default function NotFound() {
   return (
