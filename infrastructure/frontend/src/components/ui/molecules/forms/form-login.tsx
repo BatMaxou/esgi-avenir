@@ -9,7 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Local imports
-import { FilledButton } from "@/components/ui/molecules/buttons/FilledButton";
+import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
 import { showErrorToast } from "@/lib/toast";
 import {
   Form,
@@ -18,8 +18,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/atoms/form";
+import { Input } from "@/components/ui/atoms/input";
 import { useApiClient } from "@/contexts/ApiContext";
 import { useAuth } from "@/contexts/AuthContext";
 

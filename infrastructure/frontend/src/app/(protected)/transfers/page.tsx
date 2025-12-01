@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Separator } from "@radix-ui/react-separator";
+import { Separator } from "@/components/ui/atoms/separator";
 import { useNavigation } from "@/contexts/NavigationContext";
-import { Item, ItemContent } from "@/components/ui/item";
+import { Item, ItemContent } from "@/components/ui/atoms/item";
 import { useAccounts } from "@/contexts/AccountsContext";
 import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
 import TransferForm from "@/components/ui/molecules/forms/transfer-form";

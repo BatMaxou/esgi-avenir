@@ -7,7 +7,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/atoms/dialog";
 import {
   Tabs,
   TabsContent,
@@ -18,7 +18,7 @@ import { Icon } from "@iconify/react";
 import { HydratedAccount } from "../../../../../../../domain/entities/Account";
 import { Beneficiary } from "../../../../../../../domain/entities/Beneficiary";
 import InputSearchLoader from "../inputs/input-search-loader";
-import { FilledButton } from "@/components/ui/molecules/buttons/FilledButton";
+import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
 
 interface TransferFromAccountProps {
   open: boolean;

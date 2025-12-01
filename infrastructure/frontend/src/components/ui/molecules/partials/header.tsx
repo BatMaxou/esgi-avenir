@@ -10,8 +10,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { LoadingLink } from "../links/LoadingLink";
+} from "@/components/ui/atoms/dropdown-menu";
+import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 
 export default function Header() {
   const { user, logout } = useAuth();

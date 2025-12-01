@@ -3,10 +3,10 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ApiClientError } from "../../../../../../../../application/services/api/ApiClientError";
-import { Separator } from "../../../../../components/ui/separator";
+import { Separator } from "@/components/ui/atoms/separator";
 import { Operation } from "../../../../../../../../domain/entities/Operation";
 import { useAccounts } from "@/contexts/AccountsContext";
-import OperationAccountItem from "@/components/operations/OperationAccountItem";
+import OperationAccountItem from "@/components/ui/molecules/item/operation-account-item";
 import { useNavigation } from "@/contexts/NavigationContext";
 
 export default function AccountDetailsPage() {

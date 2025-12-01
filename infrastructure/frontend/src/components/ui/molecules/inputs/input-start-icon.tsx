@@ -1,7 +1,7 @@
 import { ChangeEvent, useId } from "react";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/atoms/input";
+import { Label } from "@/components/ui/atoms/label";
 import { Icon } from "@iconify/react";
 
 interface InputStartIconProps {

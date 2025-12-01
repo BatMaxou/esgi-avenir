@@ -1,10 +1,11 @@
 "use client";
 
-import { HydratedAccount } from "../../../../../domain/entities/Account";
 import { useAccounts } from "@/contexts/AccountsContext";
-import { Item } from "../ui/item";
-import { Skeleton } from "../ui/skeleton";
-import { LoadingLink } from "../links/LoadingLink";
+import { Item } from "@/components/ui/atoms/item";
+import { Skeleton } from "@/components/ui/atoms/skeleton";
+import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
+import { HydratedAccount } from "../../../../../../../domain/entities/Account";
+
 type Props = {
   displayLength?: number;
   displayStyle?: "grid" | "list";

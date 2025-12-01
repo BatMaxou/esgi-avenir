@@ -6,7 +6,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/atoms/dialog";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import { HydratedAccount } from "../../../../../../../domain/entities/Account";

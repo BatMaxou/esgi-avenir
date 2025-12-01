@@ -4,8 +4,8 @@
 import { useState } from "react";
 
 // Local components
-import { LoginForm } from "../components/forms/form-login";
-import { RegisterForm } from "../components/forms/form-register";
+import { LoginForm } from "@/components/ui/molecules/forms/form-login";
+import { RegisterForm } from "@/components/ui/molecules/forms/form-register";
 import Image from "next/image";
 
 // Images

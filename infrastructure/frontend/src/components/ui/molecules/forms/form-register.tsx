@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 // Local imports
-import { Button } from "@/components/ui/button";
+import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
 import {
   Form,
   FormControl,
@@ -14,21 +14,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/atoms/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { FieldSeparator } from "@/components/ui/field";
+} from "@/components/ui/atoms/select";
+import { Input } from "@/components/ui/atoms/input";
+import { FieldSeparator } from "@/components/ui/atoms/field";
 import { useState } from "react";
-import CheckMailDialog from "../dialogs/check-mail-dialog";
+import CheckMailDialog from "@/components/ui/molecules/dialogs/check-mail-dialog";
 import { useApiClient } from "@/contexts/ApiContext";
 import { showErrorToast } from "@/lib/toast";
-import { FilledButton } from "@/components/ui/molecules/buttons/FilledButton";
 
 const formSchema = z
   .object({

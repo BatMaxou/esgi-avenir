@@ -4,8 +4,8 @@ import { useEffect, useId, useState } from "react";
 
 import { LoaderCircleIcon, SearchIcon } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/atoms/input";
+import { Label } from "@/components/ui/atoms/label";
 
 interface InputSearchLoaderProps {
   label: string;
