@@ -35,6 +35,16 @@ a {
   text-decoration: none;
 }
 
+input:focus-visible {
+  outline: none;
+  box-shadow: none !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  display: none;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -146,6 +156,14 @@ a {
   --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.553 0.013 58.071);
+}
+
+.focus-visible\:ring-\[3px\] {
+  &:focus-visible {
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px)
+      var(#ffffff00, #ffffff00);
+    box-shadow: none;
+  }
 }
 
 @layer base {

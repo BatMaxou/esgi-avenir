@@ -28,7 +28,7 @@ import { useState } from "react";
 import CheckMailDialog from "../dialogs/check-mail-dialog";
 import { useApiClient } from "@/contexts/ApiContext";
 import { showErrorToast } from "@/lib/toast";
-import { FilledButton } from "../buttons/FilledButton";
+import { FilledButton } from "@/components/ui/molecules/buttons/FilledButton";
 
 const formSchema = z
   .object({

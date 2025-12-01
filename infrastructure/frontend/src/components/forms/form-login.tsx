@@ -9,7 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Local imports
-import { FilledButton } from "@/components/buttons/FilledButton";
+import { FilledButton } from "@/components/ui/molecules/buttons/FilledButton";
 import { showErrorToast } from "@/lib/toast";
 import {
   Form,

@@ -1,5 +1,9 @@
-import { BeneficiaryRepositoryInterface, UpdateBeneficiaryPayload } from "../../../../application/repositories/BeneficiaryRepositoryInterface";
+import {
+  BeneficiaryRepositoryInterface,
+  UpdateBeneficiaryPayload,
+} from "../../../../application/repositories/BeneficiaryRepositoryInterface";
 import { Beneficiary } from "../../../../domain/entities/Beneficiary";
+import { Account } from "../../../../domain/entities/Account";
 import { BeneficiaryNotFoundError } from "../../../../domain/errors/entities/beneficiary/BeneficiaryNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
 import { databaseDsn } from "../../../express/utils/tools";
@@ -10,17 +14,25 @@ import { Op } from "sequelize";
 import { AccountModel } from "../models/AccountModel";
 import { AccountNotFoundError } from "../../../../domain/errors/entities/account/AccountNotFoundError";
 
-export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterface {
+export class MariadbBeneficiaryRepository
+  implements BeneficiaryRepositoryInterface
+{
   private beneficiaryModel: BeneficiaryModel;
 
   public constructor() {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     const userModel = new UserModel(connection);
     const accountModel = new AccountModel(connection, userModel);
-    this.beneficiaryModel = new BeneficiaryModel(connection, userModel, accountModel);
+    this.beneficiaryModel = new BeneficiaryModel(
+      connection,
+      userModel,
+      accountModel
+    );
   }
 
-  public async create(beneficiary: Beneficiary): Promise<Beneficiary | UserNotFoundError | AccountNotFoundError> {
+  public async create(
+    beneficiary: Beneficiary
+  ): Promise<Beneficiary | UserNotFoundError | AccountNotFoundError> {
     try {
       const createdBeneficiary = await this.beneficiaryModel.model.create({
         name: beneficiary.name,
@@ -35,11 +47,14 @@ export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterf
 
       return maybeBeneficiary;
     } catch (error) {
-      if (error instanceof Error && error.name === 'SequelizeForeignKeyConstraintError') {
-        if (error.message.includes('ownerId')) {
-          return new UserNotFoundError('User not found.');
-        } else if (error.message.includes('accountId')) {
-          return new AccountNotFoundError('Account not found.');
+      if (
+        error instanceof Error &&
+        error.name === "SequelizeForeignKeyConstraintError"
+      ) {
+        if (error.message.includes("ownerId")) {
+          return new UserNotFoundError("User not found.");
+        } else if (error.message.includes("accountId")) {
+          return new AccountNotFoundError("Account not found.");
         }
       }
 
@@ -47,36 +62,69 @@ export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterf
     }
   }
 
-  public async update(beneficiary: UpdateBeneficiaryPayload): Promise<Beneficiary | BeneficiaryNotFoundError> {
+  public async update(
+    beneficiary: UpdateBeneficiaryPayload
+  ): Promise<Beneficiary | BeneficiaryNotFoundError> {
     try {
       const { id, ...toUpdate } = beneficiary;
 
-      await this.beneficiaryModel.model.update({
-        ...toUpdate,
-      }, {
-        where: { id },
-      });
+      await this.beneficiaryModel.model.update(
+        {
+          ...toUpdate,
+        },
+        {
+          where: { id },
+        }
+      );
 
       return await this.findById(id);
     } catch (error) {
-      throw new BeneficiaryNotFoundError('Beneficiary not found.');
+      throw new BeneficiaryNotFoundError("Beneficiary not found.");
     }
   }
 
-  public async findAllByOwnerLike(ownerId: number, term: string): Promise<Beneficiary[]> {
+  public async findAllByOwnerLike(
+    ownerId: number,
+    term: string
+  ): Promise<Beneficiary[]> {
     const foundBeneficiaries = await this.beneficiaryModel.model.findAll({
       where: {
         ownerId: ownerId,
         name: {
-          [Op.like]: `%${term}%`
-        }
+          [Op.like]: `%${term}%`,
+        },
       },
+      include: [
+        {
+          association: "account",
+          required: false,
+        },
+        {
+          association: "owner",
+          required: false,
+        },
+      ],
     });
 
     const beneficiaries: Beneficiary[] = [];
 
     foundBeneficiaries.forEach((foundBeneficiary) => {
-      const maybeBeneficiary = Beneficiary.from(foundBeneficiary);
+      const beneficiaryData = foundBeneficiary.get();
+
+      // Transform account if it exists
+      let account = undefined;
+      if (beneficiaryData.account) {
+        const maybeAccount = Account.from(beneficiaryData.account);
+        if (!(maybeAccount instanceof Error)) {
+          account = maybeAccount;
+        }
+      }
+
+      const maybeBeneficiary = Beneficiary.from({
+        ...beneficiaryData,
+        account,
+      });
+
       if (maybeBeneficiary instanceof Error) {
         throw maybeBeneficiary;
       }
@@ -87,11 +135,13 @@ export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterf
     return beneficiaries;
   }
 
-  public async findById(id: number): Promise<Beneficiary | BeneficiaryNotFoundError> {
+  public async findById(
+    id: number
+  ): Promise<Beneficiary | BeneficiaryNotFoundError> {
     try {
       const foundBeneficiary = await this.beneficiaryModel.model.findByPk(id);
       if (!foundBeneficiary) {
-        return new BeneficiaryNotFoundError('Beneficiary not found.');
+        return new BeneficiaryNotFoundError("Beneficiary not found.");
       }
 
       const maybeBeneficiary = Beneficiary.from(foundBeneficiary);
@@ -101,24 +151,29 @@ export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterf
 
       return maybeBeneficiary;
     } catch (error) {
-      throw new BeneficiaryNotFoundError('Beneficiary not found');
+      throw new BeneficiaryNotFoundError("Beneficiary not found");
     }
   }
 
   public async delete(id: number): Promise<boolean | BeneficiaryNotFoundError> {
     try {
-      const deletedCount = await this.beneficiaryModel.model.destroy({ where: { id } });
+      const deletedCount = await this.beneficiaryModel.model.destroy({
+        where: { id },
+      });
       if (deletedCount === 0) {
-        return new BeneficiaryNotFoundError('Beneficiary not found.');
+        return new BeneficiaryNotFoundError("Beneficiary not found.");
       }
 
       return true;
     } catch (error) {
-      throw new BeneficiaryNotFoundError('Beneficiary not found.');
+      throw new BeneficiaryNotFoundError("Beneficiary not found.");
     }
   }
 
-  public async findByOwnerAndAccount(ownerId: number, accountId: number): Promise<Beneficiary | BeneficiaryNotFoundError> {
+  public async findByOwnerAndAccount(
+    ownerId: number,
+    accountId: number
+  ): Promise<Beneficiary | BeneficiaryNotFoundError> {
     try {
       const foundBeneficiary = await this.beneficiaryModel.model.findOne({
         where: {
@@ -128,7 +183,7 @@ export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterf
       });
 
       if (!foundBeneficiary) {
-        return new BeneficiaryNotFoundError('Beneficiary not found.');
+        return new BeneficiaryNotFoundError("Beneficiary not found.");
       }
 
       const maybeBeneficiary = Beneficiary.from(foundBeneficiary);
@@ -138,7 +193,7 @@ export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterf
 
       return maybeBeneficiary;
     } catch (error) {
-      throw new BeneficiaryNotFoundError('Beneficiary not found.');
+      throw new BeneficiaryNotFoundError("Beneficiary not found.");
     }
   }
 }

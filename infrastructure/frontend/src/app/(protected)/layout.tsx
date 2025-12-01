@@ -9,6 +9,7 @@ import { useAccounts } from "@/contexts/AccountsContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Banner } from "@/components/partials/Banner";
 import { NavigationLoader } from "@/components/providers/NavigationLoader";
+import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
 
 type Props = {
   children: ReactNode;
@@ -26,6 +27,7 @@ const pageTitles: Record<string, string> = {
 export default function ProtectedLayout({ children }: Props) {
   const pathname = usePathname();
   const { getAccounts } = useAccounts();
+  const { getBeneficiaries } = useBeneficiaries();
   const { isAuthenticated, isLoading } = useAuth();
 
   // Nommage des routes dynamiques
@@ -38,13 +40,14 @@ export default function ProtectedLayout({ children }: Props) {
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
       getAccounts();
+      getBeneficiaries();
     }
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, isLoading, pathname]);
 
   return (
     <ProtectedRoute requiredRoles={[RoleEnum.USER]}>
       <NavigationLoader />
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
         <Header />
         <Banner title={pageTitle} />
         <main className="container mx-auto px-4 py-8">{children}</main>

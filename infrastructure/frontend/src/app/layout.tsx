@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AccountsProvider } from "@/contexts/AccountsContext";
 import { NavigationProvider } from "@/contexts/NavigationContext";
 import { NavigationLoader } from "@/components/providers/NavigationLoader";
+import { BeneficiariesProvider } from "@/contexts/BeneficiariesContext";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -25,7 +26,9 @@ const Providers = ({ children }: { children: ReactNode }) => {
     <NavigationProvider>
       <ApiClientProvider>
         <AuthProvider>
-          <AccountsProvider>{children}</AccountsProvider>
+          <AccountsProvider>
+            <BeneficiariesProvider>{children}</BeneficiariesProvider>
+          </AccountsProvider>
         </AuthProvider>
       </ApiClientProvider>
     </NavigationProvider>
