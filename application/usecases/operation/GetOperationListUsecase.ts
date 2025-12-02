@@ -31,7 +31,7 @@ export class GetOperationListUsecase {
       return maybeOperations;
     }
 
-    return Promise.all(maybeOperations.map(async (operation) => {
+    const operations = await Promise.all(maybeOperations.map(async (operation) => {
       if (!operation.id) {
         return { ...operation, from: null, to: null, fromBeneficiary: null, toBeneficiary: null };
       }
@@ -93,6 +93,10 @@ export class GetOperationListUsecase {
         ,
       };
     }));
+
+    return operations.sort(
+      (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
+    );
   }
 }
 

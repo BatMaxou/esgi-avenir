@@ -140,10 +140,6 @@ export class BankCreditController {
       });
     }
 
-    const sortedPayments = maybePayments.sort(
-      (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
-    );
-
-    response.status(200).json(sortedPayments);
+    response.status(200).json(maybePayments);
   }
 }

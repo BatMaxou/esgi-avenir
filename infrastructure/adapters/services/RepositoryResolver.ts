@@ -22,6 +22,14 @@ import { BeneficiaryRepositoryInterface } from "../../../application/repositorie
 import { BankCreditRepositoryInterface } from "../../../application/repositories/BankCreditRepositoryInterface";
 import { MonthlyPaymentRepositoryInterface } from "../../../application/repositories/MonthlyPaymentRepositoryInterface";
 import { NewsRepositoryInterface } from "../../../application/repositories/NewsRepositoryInterface";
+import { MariadbCompanyChannelRepository } from "../mariadb/repositories/MariadbCompanyChannelRepository";
+import { MariadbPrivateChannelRepository } from "../mariadb/repositories/MariadbPrivateChannelRepository";
+import { MariadbMessageRepository } from "../mariadb/repositories/MariadbMessageRepository";
+import { MariadbNotificationRepository } from "../mariadb/repositories/MariadbNotificationRepository";
+import { CompanyChannelRepositoryInterface } from "../../../application/repositories/CompanyChannelRepositoryInterface";
+import { PrivateChannelRepositoryInterface } from "../../../application/repositories/PrivateChannelRepositoryInterface";
+import { MessageRepositoryInterface } from "../../../application/repositories/MessageRepositoryInterface";
+import { NotificationRepositoryInterface } from "../../../application/repositories/NotificationRepositoryInterface";
 
 type RepositoryFactory<T extends RepositoryInterface> = () => T;
 
@@ -38,6 +46,10 @@ const repositoryFactories: Record<string, Record<string, RepositoryFactory<Repos
     BankCreditRepository: () => new MariadbBankCreditRepository(),
     MonthlyPaymentRepository: () => new MariadbMonthlyPaymentRepository(),
     NewsRepository: () => new MariadbNewsRepository(),
+    CompanyChannelRepository: () => new MariadbCompanyChannelRepository(),
+    PrivateChannelRepository: () => new MariadbPrivateChannelRepository(),
+    MessageRepository: () => new MariadbMessageRepository(),
+    NotificationRepository: () => new MariadbNotificationRepository(),
   },
   // mongodb: {
   //   UserRepository: () => new MongodbUserRepository(),
@@ -51,6 +63,10 @@ const repositoryFactories: Record<string, Record<string, RepositoryFactory<Repos
   //   BankCreditRepository: () => new MongodbBankCreditRepository(),
   //   MonthlyPaymentRepository: () => new MongodbMonthlyPaymentRepository(),
   //   NewsRepository: () => new MongodbNewsRepository(),
+  //   CompanyChannelRepository: () => new MongodbCompanyChannelRepository(),
+  //   PrivateChannelRepository: () => new MongodbPrivateChannelRepository(),
+  //   MessageRepository: () => new MongodbMessageRepository(),
+  //   NotificationRepository: () => new MongodbNotificationRepository(),
   // },
 };
 
@@ -105,6 +121,22 @@ export class RepositoryResolver implements RepositoryResolverInterface {
 
   public getNewsRepository(): NewsRepositoryInterface {
     return this.getRepository<MariadbNewsRepository>('NewsRepository');
+  }
+
+  public getCompanyChannelRepository(): CompanyChannelRepositoryInterface {
+    return this.getRepository<MariadbCompanyChannelRepository>('CompanyChannelRepository');
+  }
+
+  public getPrivateChannelRepository(): PrivateChannelRepositoryInterface {
+    return this.getRepository<MariadbPrivateChannelRepository>('PrivateChannelRepository');
+  }
+
+  public getMessageRepository(): MessageRepositoryInterface {
+    return this.getRepository<MariadbMessageRepository>('MessageRepository');
+  }
+
+  public getNotificationRepository(): NotificationRepositoryInterface {
+    return this.getRepository<MariadbNotificationRepository>('NotificationRepository');
   }
 
   private getRepository<T extends RepositoryInterface>(name: string): T {

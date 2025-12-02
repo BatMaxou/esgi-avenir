@@ -31,7 +31,11 @@ export class GetMonthlyPaymentListUsecase {
       return new BankCreditNotFoundError('Bank credit not found.');
     }
 
-    return await this.monthlyPaymentRepository.findAllByBankCredit(bankCreditId);
+    const payments = await this.monthlyPaymentRepository.findAllByBankCredit(bankCreditId);
+
+    return payments.sort(
+      (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
+    );
   }
 }
 

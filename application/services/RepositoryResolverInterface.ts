@@ -9,6 +9,10 @@ import { BeneficiaryRepositoryInterface } from "../repositories/BeneficiaryRepos
 import { BankCreditRepositoryInterface } from "../repositories/BankCreditRepositoryInterface"
 import { MonthlyPaymentRepositoryInterface } from "../repositories/MonthlyPaymentRepositoryInterface"
 import { NewsRepositoryInterface } from "../repositories/NewsRepositoryInterface"
+import { NotificationRepositoryInterface } from "../repositories/NotificationRepositoryInterface"
+import { PrivateChannelRepositoryInterface } from "../repositories/PrivateChannelRepositoryInterface"
+import { CompanyChannelRepositoryInterface } from "../repositories/CompanyChannelRepositoryInterface"
+import { MessageRepositoryInterface } from "../repositories/MessageRepositoryInterface"
 
 export interface RepositoryResolverInterface {
   getUserRepository(): UserRepositoryInterface
@@ -22,4 +26,8 @@ export interface RepositoryResolverInterface {
   getBankCreditRepository(): BankCreditRepositoryInterface
   getMonthlyPaymentRepository(): MonthlyPaymentRepositoryInterface
   getNewsRepository(): NewsRepositoryInterface
+  getNotificationRepository(): NotificationRepositoryInterface
+  getPrivateChannelRepository():PrivateChannelRepositoryInterface
+  getCompanyChannelRepository(): CompanyChannelRepositoryInterface
+  getMessageRepository(): MessageRepositoryInterface
 }

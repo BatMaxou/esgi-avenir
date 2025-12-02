@@ -13,6 +13,10 @@ import { BeneficiaryFixtures } from "../../../application/fixtures/BeneficiaryFi
 import { BankCreditFixtures } from "../../../application/fixtures/BankCreditFixtures";
 import { MonthlyPaymentFixtures } from "../../../application/fixtures/MonthlyPaymentFixtures";
 import { NewsFixtures } from "../../../application/fixtures/NewsFixtures";
+import { CompanyChannelFixtures } from "../../../application/fixtures/CompanyChannelFixtures";
+import { PrivateChannelFixtures } from "../../../application/fixtures/PrivateChannelFixtures";
+import { MessageFixtures } from "../../../application/fixtures/MessageFixtures";
+import { NotificationFixtures } from "../../../application/fixtures/NotificationFixtures";
 import { initModels } from "../../adapters/mariadb/initModels";
 
 const fixtures = async () => {
@@ -38,12 +42,16 @@ const fixtures = async () => {
       await new StockOrderFixtures(repositoryResolver.getStockOrderRepository()).load(),
       await new FinancialSecurityFixtures(repositoryResolver.getFinancialSecurityRepository()).load(),
       await new NewsFixtures(repositoryResolver.getNewsRepository()).load(),
+      await new CompanyChannelFixtures(repositoryResolver.getCompanyChannelRepository()).load(),
+      await new PrivateChannelFixtures(repositoryResolver.getPrivateChannelRepository()).load(),
+      await new NotificationFixtures(repositoryResolver.getNotificationRepository()).load(),
     ]);
 
     await Promise.all([
       await new OperationFixtures(repositoryResolver.getOperationRepository()).load(),
       await new BeneficiaryFixtures(repositoryResolver.getBeneficiaryRepository()).load(),
       await new BankCreditFixtures(repositoryResolver.getBankCreditRepository()).load(),
+      await new MessageFixtures(repositoryResolver.getMessageRepository()).load(),
     ]);
 
     await Promise.all([

@@ -299,10 +299,6 @@ export class AccountController {
       });
     }
 
-    const sortedOperations = operations.sort(
-      (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
-    );
-
-    response.status(200).json(sortedOperations);
+    response.status(200).json(operations);
   }
 }
