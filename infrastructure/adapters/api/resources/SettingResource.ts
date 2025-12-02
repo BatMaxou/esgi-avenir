@@ -2,6 +2,7 @@ import { ApiClientError } from "../../../../application/services/api/ApiClientEr
 import { ApiClientInterface } from "../../../../application/services/api/ApiClientInterface";
 import { paths } from "../../../../application/services/api/paths";
 import { GetSettingListResponseInterface, GetSettingResponseInterface, SettingResourceInterface, UpsertSettingPayloadInterface } from "../../../../application/services/api/resources/SettingResourceInterface";
+import { SettingEnum } from "../../../../domain/enums/SettingEnum";
 
 export class SettingResource implements SettingResourceInterface {
   constructor(private apiClient: ApiClientInterface) {}
@@ -14,7 +15,7 @@ export class SettingResource implements SettingResourceInterface {
     return this.apiClient.post<GetSettingResponseInterface>(paths.setting.upsert, data);
   }
 
-  public async getByCode(code: string): Promise<GetSettingResponseInterface | ApiClientError> {
+  public async getByCode(code: SettingEnum): Promise<GetSettingResponseInterface | ApiClientError> {
     return this.apiClient.get<GetSettingResponseInterface>(paths.setting.detail(code));
   }
 }
