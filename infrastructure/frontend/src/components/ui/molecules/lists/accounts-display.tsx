@@ -46,7 +46,7 @@ const AccountList = ({
   isLoading: boolean;
 }) => {
   return (
-    <div>
+    <div className="w-full">
       {isLoading ? (
         <ul className="flex flex-col space-y-2">
           {[1, 2, 3].map((key) => (
