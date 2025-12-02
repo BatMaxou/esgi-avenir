@@ -40,6 +40,15 @@ export class SettingRouter {
         await settingController.list(req, res);
       }
     );
+
+    app.get(
+      paths.setting.detail(),
+      authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+      roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
+      async (req, res) => {
+        await settingController.get(req, res);
+      }
+    );
   }
 }
 

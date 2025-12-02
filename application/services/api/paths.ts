@@ -40,6 +40,7 @@ export const paths = {
   setting: {
     list: '/api/settings',
     upsert: '/api/settings',
+    detail: (code?: string | null) => `/api/settings/${code || ':code'}`,
   },
   stock: {
     create: '/api/stocks',

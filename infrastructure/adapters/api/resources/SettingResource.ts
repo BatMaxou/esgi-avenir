@@ -13,4 +13,8 @@ export class SettingResource implements SettingResourceInterface {
   public async upsert(data: UpsertSettingPayloadInterface): Promise<GetSettingResponseInterface | ApiClientError> {
     return this.apiClient.post<GetSettingResponseInterface>(paths.setting.upsert, data);
   }
+
+  public async getByCode(code: string): Promise<GetSettingResponseInterface | ApiClientError> {
+    return this.apiClient.get<GetSettingResponseInterface>(paths.setting.detail(code));
+  }
 }

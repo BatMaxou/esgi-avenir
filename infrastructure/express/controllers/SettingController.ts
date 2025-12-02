@@ -6,10 +6,13 @@ import { InvalidUpsertSettingCommandError } from "../../../domain/errors/command
 import { UpsertSettingUsecase } from "../../../application/usecases/setting/UpsertSettingUsecase";
 import { GetSettingListUsecase } from "../../../application/usecases/setting/GetSettingListUsecase";
 import { SendUpdateSavingsRateEmailUsecase } from "../../../application/usecases/email/SendUpdateSavingsRateEmailUsecase";
-import { User } from "../../../domain/entities/User";
 import { MailerInterface } from "../../../application/services/email/MailerInterface";
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
 import { AccountRepositoryInterface } from "../../../application/repositories/AccountRepositoryInterface";
+import { SettingNotFoundError } from "../../../domain/errors/entities/setting/SettingNotFoundError";
+import { GetSettingParams } from "../../../domain/params/setting/GetSettingParams";
+import { InvalidGetSettingParamsError } from "../../../domain/errors/params/setting/InvalidGetSettingParamsError";
+import { GetSettingUsecase } from "../../../application/usecases/setting/GetSettingUsecase";
 
 export class SettingController {
   public constructor(
@@ -54,6 +57,25 @@ export class SettingController {
           );
         });
       }
+    }
+
+    response.status(200).json(maybeSetting);
+  }
+
+  public async get(request: Request, response: Response) {
+    const maybeParams = GetSettingParams.from(request.params);
+    if (maybeParams instanceof InvalidGetSettingParamsError) {
+      return response.status(400).json({
+        error: maybeParams.message,
+      });
+    }
+
+    const getUsecase = new GetSettingUsecase(this.settingRepository);
+    const maybeSetting = await getUsecase.execute(maybeParams.code);
+    if (maybeSetting instanceof SettingNotFoundError) {
+      return response.status(404).json({
+        error: maybeSetting.message,
+      });
     }
 
     response.status(200).json(maybeSetting);

@@ -13,5 +13,6 @@ export interface UpsertSettingPayloadInterface {
 export interface SettingResourceInterface {
   getAll(): Promise<GetSettingListResponseInterface | ApiClientError>;
   upsert(data: UpsertSettingPayloadInterface): Promise<GetSettingResponseInterface | ApiClientError>;
+  getByCode(code: SettingEnum): Promise<GetSettingResponseInterface | ApiClientError>;
 }
 
