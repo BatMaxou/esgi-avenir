@@ -14,61 +14,45 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/atoms/tabs";
-import { Icon } from "@iconify/react";
 import { HydratedAccount } from "../../../../../../../domain/entities/Account";
 import { Beneficiary } from "../../../../../../../domain/entities/Beneficiary";
 import InputSearchLoader from "../inputs/input-search-loader";
 import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
+import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
+import { BeneficiariesList } from "../lists/beneficiaries-list";
 
 interface TransferFromAccountProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   userAccounts?: HydratedAccount[];
-  userBeneficiaries?: Beneficiary[] | null;
   setToAccount: (toAccount: HydratedAccount | Beneficiary | undefined) => void;
   fromAccount?: HydratedAccount | undefined;
   isLoadingAccounts: boolean;
-  isLoadingBeneficiaries: boolean;
+  onOpenAddBeneficiary?: () => void;
 }
 
 const TransferToAccountDialog = ({
   open,
   setOpen,
   userAccounts,
-  userBeneficiaries,
   setToAccount,
   fromAccount,
   isLoadingAccounts,
-  isLoadingBeneficiaries,
+  onOpenAddBeneficiary,
 }: TransferFromAccountProps) => {
-  const handleClose = () => {
-    setOpen(false);
-    setToAccount(undefined);
-  };
-
+  const { beneficiaries, isBeneficiariesLoading } = useBeneficiaries();
   const [accounts, setAccounts] = useState<HydratedAccount[]>(
     userAccounts || []
   );
-  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[] | null>(
-    userBeneficiaries || []
-  );
+
   const [newAccountList, setNewAccountList] = useState<HydratedAccount[]>([]);
   const [newBeneficiariesList, setNewBeneficiariesList] = useState<
     Beneficiary[]
-  >([]);
-
-  useEffect(() => {
-    if (!userBeneficiaries) return;
-    setBeneficiaries(userBeneficiaries);
-  }, [userBeneficiaries]);
+  >(beneficiaries && beneficiaries.length > 0 ? beneficiaries : []);
 
   useEffect(() => {
     setAccounts(newAccountList);
   }, [newAccountList]);
-
-  useEffect(() => {
-    setBeneficiaries(newBeneficiariesList);
-  }, [newBeneficiariesList]);
 
   // Tab columns
   const tabs = [
@@ -132,7 +116,7 @@ const TransferToAccountDialog = ({
           <InputSearchLoader
             label="Rechercher un bénéficiaire"
             items={beneficiaries!}
-            filterOnKey={["firstName", "lastName"]}
+            filterOnKey={["firstName", "lastName", "name"]}
             setNewItems={setNewBeneficiariesList}
           />
           <FilledButton
@@ -140,40 +124,23 @@ const TransferToAccountDialog = ({
             icon="mdi:plus"
             iconPosition="start"
             className="w-full mt-4"
-            onClick={() => {}}
+            onClick={() => {
+              if (onOpenAddBeneficiary) {
+                onOpenAddBeneficiary();
+              }
+            }}
           />
-          <div className="w-full mt-4 flex-1 overflow-y-auto space-y-4 h-full">
-            {isLoadingBeneficiaries ? (
+          <div className="w-full mt-4 flex-1 overflow-y-auto space-y-4">
+            {isBeneficiariesLoading ? (
               <p>Chargement des bénéficiaires...</p>
             ) : (
-              <>
-                {beneficiaries ? (
-                  <>
-                    {beneficiaries.map((beneficiary) => (
-                      <div
-                        key={beneficiary.id}
-                        className="p-4 border border-gray-300 rounded-lg shadow-sm bg-white flex flex-row justify-between items-center hover:cursor-pointer hover:bg-gray-100"
-                        onClick={() => {
-                          setToAccount(beneficiary);
-                          setOpen(false);
-                        }}
-                      >
-                        <div>
-                          <p className="font-semibold text-gray-800 mb-1">
-                            {beneficiary.owner?.firstName}{" "}
-                            {beneficiary.owner?.lastName}
-                          </p>
-                          <p className="font-semibold text-gray-800 mb-1">
-                            {beneficiary.account?.iban.value}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <p>Aucun bénéficiaires enregistrés</p>
-                )}
-              </>
+              <BeneficiariesList
+                beneficiaries={newBeneficiariesList}
+                onClick={(beneficiary) => {
+                  setToAccount(beneficiary);
+                  setOpen(false);
+                }}
+              />
             )}
           </div>
         </>

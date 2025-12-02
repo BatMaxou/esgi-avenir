@@ -4,7 +4,6 @@ import { useState } from "react";
 
 // Contexts
 import { useAccounts } from "@/contexts/AccountsContext";
-import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
 
 // Types
 import { Beneficiary } from "../../../../../../../domain/entities/Beneficiary";
@@ -23,9 +22,14 @@ import { Icon } from "@iconify/react";
 import { useApiClient } from "@/contexts/ApiContext";
 import { OperationEnum } from "../../../../../../../domain/enums/OperationEnum";
 
-export default function TransferForm() {
+interface TransferFormProps {
+  onOpenAddBeneficiary?: () => void;
+}
+
+export default function TransferForm({
+  onOpenAddBeneficiary,
+}: TransferFormProps) {
   const { accounts, isAccountsLoading, refreshAccounts } = useAccounts();
-  const { beneficiaries, isBeneficiariesLoading } = useBeneficiaries();
   const apiClient = useApiClient();
 
   const [confirmationView, showConfirmationView] = useState(false);
@@ -61,7 +65,19 @@ export default function TransferForm() {
 
   const handleSubmitTransfer = async () => {
     const fromAccountId = fromAccount?.id;
-    const toAccountId = toAccount?.id;
+
+    // Si c'est un bénéficiaire, on prend l'ID du compte associé
+    let toAccountId: number | undefined;
+    if (toAccount) {
+      if ("account" in toAccount && toAccount.account) {
+        // C'est un bénéficiaire
+        toAccountId = toAccount.account.id;
+      } else {
+        // C'est un compte direct
+        toAccountId = toAccount.id;
+      }
+    }
+
     const transferAmount = amount;
     const transferName = customTransferName;
 
@@ -110,11 +126,10 @@ export default function TransferForm() {
         open={openShowToAccountModal}
         setOpen={setOpenShowToAccountModal}
         userAccounts={accounts}
-        userBeneficiaries={beneficiaries}
         setToAccount={setToAccount}
         fromAccount={fromAccount}
         isLoadingAccounts={isAccountsLoading}
-        isLoadingBeneficiaries={isBeneficiariesLoading}
+        onOpenAddBeneficiary={onOpenAddBeneficiary}
       />
 
       <div className="flex flex-3 flex-col justify-start items-start border border-color-gray-300 p-6 rounded-lg shadow space-y-4">
@@ -194,27 +209,15 @@ export default function TransferForm() {
                 <ItemContent>
                   {toAccount ? (
                     <>
-                      {"owner" in toAccount ? (
-                        <>
-                          <p className={`text-lg font-bold`}>
-                            {toAccount.owner?.firstName}{" "}
-                            {toAccount.owner?.lastName}
-                          </p>
-                          {"account" in toAccount && (
-                            <p className={`text-md font-semibold`}>
-                              {toAccount.account?.iban.value}
-                            </p>
-                          )}
-                        </>
+                      <p className={`text-lg font-bold`}>{toAccount.name}</p>
+                      {"account" in toAccount ? (
+                        <p className={`text-md font-semibold`}>
+                          {toAccount.account?.iban.value}
+                        </p>
                       ) : (
-                        <>
-                          <p className={`text-lg font-bold`}>
-                            {toAccount.name}
-                          </p>
-                          <p className={`text-md font-semibold`}>
-                            {(toAccount as HydratedAccount).iban?.value}
-                          </p>
-                        </>
+                        <p className={`text-md font-semibold`}>
+                          {(toAccount as HydratedAccount).iban?.value}
+                        </p>
                       )}
                     </>
                   ) : (
