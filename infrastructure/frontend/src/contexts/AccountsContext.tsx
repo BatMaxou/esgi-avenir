@@ -4,12 +4,16 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
-import { GetAccountListResponseInterface } from "../../../../application/services/api/resources/AccountResourceInterface";
+import {
+  GetAccountListResponseInterface,
+  GetAccountResponseInterface,
+} from "../../../../application/services/api/resources/AccountResourceInterface";
 import { HydratedAccount } from "../../../../domain/entities/Account";
 import { useAuth } from "./AuthContext";
 import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 import { GetUserResponseInterface } from "../../../../application/services/api/resources/UserResourceInterface";
 import { Operation } from "../../../../domain/entities/Operation";
+import { toast } from "sonner";
 
 type Props = {
   children: ReactNode;
@@ -27,6 +31,10 @@ type AccountsContextType = {
   getAccount: (id: number) => Promise<void>;
   getAccounts: () => Promise<void>;
   refreshAccounts: () => Promise<void>;
+  createAccount: (data: {
+    name: string;
+    isSavings: boolean;
+  }) => Promise<GetAccountResponseInterface | null>;
 };
 
 export const AccountsContext = createContext<AccountsContextType | undefined>(
@@ -142,6 +150,37 @@ export const AccountsProvider = ({ children }: Props) => {
     await getAccounts();
   };
 
+  const createAccount = async (data: { name: string; isSavings: boolean }) => {
+    setIsAccountsLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsAccountsLoading(false);
+      toast.error("Vous devez être connecté pour créer un compte");
+      return null;
+    }
+
+    const payload = { name: data.name };
+    const response = data.isSavings
+      ? await apiClient.account.createSavings(payload)
+      : await apiClient.account.create(payload);
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to create account:", response.message);
+      toast.error("Erreur lors de la création du compte");
+      setIsAccountsLoading(false);
+      return null;
+    }
+
+    toast.success(
+      data.isSavings
+        ? "Compte épargne créé avec succès"
+        : "Compte courant créé avec succès"
+    );
+    await refreshAccounts();
+    setIsAccountsLoading(false);
+    return response;
+  };
+
   return (
     <AccountsContext.Provider
       value={{
@@ -152,6 +191,7 @@ export const AccountsProvider = ({ children }: Props) => {
         getAccount,
         getAccounts,
         refreshAccounts,
+        createAccount,
       }}
     >
       {children}

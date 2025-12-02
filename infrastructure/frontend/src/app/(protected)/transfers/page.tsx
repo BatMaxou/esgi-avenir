@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/atoms/separator";
 import { useNavigation } from "@/contexts/NavigationContext";
-import { Item, ItemContent } from "@/components/ui/atoms/item";
 import TransferForm from "@/components/ui/molecules/forms/transfer-form";
 import AddBeneficiaryDialog from "@/components/ui/molecules/dialogs/add-beneficiary-dialog";
 import UserBeneficiariesDialog from "@/components/ui/molecules/dialogs/user-beneficiaries-dialog";
