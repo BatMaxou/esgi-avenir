@@ -10,8 +10,13 @@ export class DeleteStockOrderParams {
       return new InvalidDeleteStockOrderParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidDeleteStockOrderParamsError('Params not valid.');
+    }
+
     return new DeleteStockOrderParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

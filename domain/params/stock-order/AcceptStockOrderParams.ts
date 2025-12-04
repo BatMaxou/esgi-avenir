@@ -9,9 +9,14 @@ export class AcceptStockOrderParams {
     if (!params.id) {
       return new InvalidAcceptStockOrderParamsError('Params not valid.');
     }
+    
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidAcceptStockOrderParamsError('Params not valid.');
+    }
 
     return new AcceptStockOrderParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

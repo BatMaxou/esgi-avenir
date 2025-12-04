@@ -10,8 +10,13 @@ export class GetNewsParams {
       return new InvalidGetNewsParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidGetNewsParamsError('Params not valid.');
+    }
+
     return new GetNewsParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

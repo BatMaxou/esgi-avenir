@@ -10,8 +10,13 @@ export class WriteCompanyMessageParams {
       return new InvalidWriteCompanyMessageParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidWriteCompanyMessageParamsError('Params not valid.');
+    }
+
     return new WriteCompanyMessageParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

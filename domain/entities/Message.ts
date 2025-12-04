@@ -1,6 +1,6 @@
 import { User } from "./User";
 import { UserNotFoundError } from "../errors/entities/user/UserNotFoundError";
-import { ChannelInterface } from "../interfaces/ChannelInterface";
+import { ChannelInterface } from "../entities/interfaces/ChannelInterface";
 import { ChannelNotFoundError } from "../errors/entities/channel/ChannelNotFoundError";
 
 export class Message {

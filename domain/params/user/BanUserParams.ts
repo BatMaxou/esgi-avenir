@@ -10,8 +10,13 @@ export class BanUserParams {
       return new InvalidBanUserParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidBanUserParamsError('Params not valid.');
+    }
+
     return new BanUserParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

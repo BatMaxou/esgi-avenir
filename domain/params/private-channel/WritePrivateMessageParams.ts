@@ -10,8 +10,13 @@ export class WritePrivateMessageParams {
       return new InvalidWritePrivateMessageParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidWritePrivateMessageParamsError('Params not valid.');
+    }
+
     return new WritePrivateMessageParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 
