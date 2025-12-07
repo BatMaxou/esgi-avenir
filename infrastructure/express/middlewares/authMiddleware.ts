@@ -4,12 +4,6 @@ import { User } from "../../../domain/entities/User";
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
 import { TokenManagerInterface } from "../../../application/services/token/TokenManagerInterface";
 
-declare module 'express' {
-  interface Request {
-    user?: User;
-  }
-}
-
 export const authMiddleware = (
   userRepository: UserRepositoryInterface,
   tokenManager: TokenManagerInterface,

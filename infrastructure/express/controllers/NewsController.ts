@@ -21,10 +21,13 @@ import { UpdateNewsCommand } from "../../../domain/commands/news/UpdateNewsComma
 import { InvalidGetNewsListQueryError } from "../../../domain/errors/queries/news/InvalidGetNewsListQueryError";
 import { HtmlContentValue } from "../../../domain/values/HtmlContentValue";
 import { InvalidHtmlContentError } from "../../../domain/errors/values/html-content/InvalidHtmlContentError";
+import { SseExpressServerClient } from "../services/sse/SseExpressServerClient";
+import { SubscribeNewsUsecase } from "../../../application/usecases/news/SubscribeNewsUsecase";
 
 export class NewsController {
   public constructor(
     private readonly newsRepository: NewsRepositoryInterface,
+    private readonly sseServerClient: SseExpressServerClient,
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -42,7 +45,7 @@ export class NewsController {
       });
     }
 
-    const createUsecase = new CreateNewsUsecase(this.newsRepository);
+    const createUsecase = new CreateNewsUsecase(this.newsRepository, this.sseServerClient);
     const maybeNews = await createUsecase.execute(
       maybeCommand.title,
       maybeCommand.content,
@@ -213,5 +216,17 @@ export class NewsController {
     response.status(200).json({
       success: maybeSuccess,
     });
+  }
+
+  public subscribe(request: Request, response: Response) {
+    const user = request.user;
+    if (!user || !user.id) {
+      return response.status(401).json({
+        error: "Unauthorized",
+      });
+    }
+
+    const subscribeUsecase = new SubscribeNewsUsecase(this.sseServerClient);
+    subscribeUsecase.execute(request, response, user);
   }
 }

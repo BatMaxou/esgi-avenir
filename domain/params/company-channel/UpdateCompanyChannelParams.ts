@@ -10,8 +10,13 @@ export class UpdateCompanyChannelParams {
       return new InvalidUpdateCompanyChannelParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidUpdateCompanyChannelParamsError('Params not valid.');
+    }
+
     return new UpdateCompanyChannelParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

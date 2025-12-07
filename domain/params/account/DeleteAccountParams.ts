@@ -10,8 +10,13 @@ export class DeleteAccountParams {
       return new InvalidDeleteAccountParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidDeleteAccountParamsError('Params not valid.');
+    }
+
     return new DeleteAccountParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

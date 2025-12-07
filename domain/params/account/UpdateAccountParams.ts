@@ -10,8 +10,13 @@ export class UpdateAccountParams {
       return new InvalidUpdateAccountParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidUpdateAccountParamsError('Params not valid.');
+    }
+
     return new UpdateAccountParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

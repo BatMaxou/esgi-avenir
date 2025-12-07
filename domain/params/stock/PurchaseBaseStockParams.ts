@@ -10,8 +10,13 @@ export class PurchaseBaseStockParams {
       return new InvalidPurchaseBaseStockParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidPurchaseBaseStockParamsError('Params not valid.');
+    }
+
     return new PurchaseBaseStockParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

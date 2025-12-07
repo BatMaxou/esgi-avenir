@@ -10,8 +10,13 @@ export class GetUserParams {
       return new InvalidGetUserParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidGetUserParamsError('Params not valid.');
+    }
+
     return new GetUserParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

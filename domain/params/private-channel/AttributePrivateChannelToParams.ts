@@ -10,8 +10,13 @@ export class AttributePrivateChannelToParams {
       return new InvalidAttributePrivateChannelToParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidAttributePrivateChannelToParamsError('Params not valid.');
+    }
+
     return new AttributePrivateChannelToParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 
