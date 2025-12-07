@@ -45,7 +45,7 @@ export class MariadbMessageRepository implements MessageRepositoryInterface {
         }
       }
 
-      throw error;
+      return new UserNotFoundError('User not found.');
     }
   }
 
@@ -72,63 +72,71 @@ export class MariadbMessageRepository implements MessageRepositoryInterface {
         }
       }
 
-      throw error;
+      return new UserNotFoundError('User not found.');
     }
   }
 
   public async findByPrivateChannel(channelId: number): Promise<Message[]> {
-    const foundMessages = await this.privateMessageModel.model.findAll({
-      where: {
-        channelId,
-      },
-      include: [
-        {
-          model: this.userModel.model,
-          as: 'user',
+    try {
+      const foundMessages = await this.privateMessageModel.model.findAll({
+        where: {
+          channelId,
+        },
+        include: [
+          {
+            model: this.userModel.model,
+            as: 'user',
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+      });
+
+      const messages: Message[] = [];
+
+      foundMessages.forEach((foundMessage) => {
+        const maybeMessage = Message.from(foundMessage);
+        if (maybeMessage instanceof Error) {
+          throw maybeMessage;
         }
-      ],
-      order: [['createdAt', 'DESC']],
-    });
 
-    const messages: Message[] = [];
+        messages.push(maybeMessage);
+      });
 
-    foundMessages.forEach((foundMessage) => {
-      const maybeMessage = Message.from(foundMessage);
-      if (maybeMessage instanceof Error) {
-        throw maybeMessage;
-      }
-
-      messages.push(maybeMessage);
-    });
-
-    return messages;
+      return messages;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async findByCompanyChannel(channelId: number): Promise<Message[]> {
-    const foundMessages = await this.companyMessageModel.model.findAll({
-      where: {
-        channelId,
-      },
-      include: [
-        {
-          model: this.userModel.model,
-          as: 'user',
+    try {
+      const foundMessages = await this.companyMessageModel.model.findAll({
+        where: {
+          channelId,
+        },
+        include: [
+          {
+            model: this.userModel.model,
+            as: 'user',
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+      });
+
+      const messages: Message[] = [];
+
+      foundMessages.forEach((foundMessage) => {
+        const maybeMessage = Message.from(foundMessage);
+        if (maybeMessage instanceof Error) {
+          throw maybeMessage;
         }
-      ],
-      order: [['createdAt', 'DESC']],
-    });
 
-    const messages: Message[] = [];
+        messages.push(maybeMessage);
+      });
 
-    foundMessages.forEach((foundMessage) => {
-      const maybeMessage = Message.from(foundMessage);
-      if (maybeMessage instanceof Error) {
-        throw maybeMessage;
-      }
-
-      messages.push(maybeMessage);
-    });
-
-    return messages;
+      return messages;
+    } catch (error) {
+      return [];
+    }
   }
 }

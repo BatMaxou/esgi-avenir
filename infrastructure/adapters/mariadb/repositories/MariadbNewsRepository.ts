@@ -38,7 +38,7 @@ export class MariadbNewsRepository implements NewsRepositoryInterface {
         return new UserNotFoundError('User not found.');
       }
 
-      throw new UserNotFoundError('User not found.');
+      return new UserNotFoundError('User not found.');
     }
   }
 
@@ -55,7 +55,7 @@ export class MariadbNewsRepository implements NewsRepositoryInterface {
 
       return await this.findById(id);
     } catch (error) {
-      throw new NewsNotFoundError('News not found.');
+      return new NewsNotFoundError('News not found.');
     }
   }
 
@@ -83,39 +83,43 @@ export class MariadbNewsRepository implements NewsRepositoryInterface {
 
       return maybeNews;
     } catch (error) {
-      throw new NewsNotFoundError('News not found');
+      return new NewsNotFoundError('News not found');
     }
   }
 
   public async findAllLike(term: string, limit?: number): Promise<News[]> {
-    const foundNewsList = await this.newsModel.model.findAll({
-      order: [['createdAt', 'DESC']],
-      limit,
-      where: {
-        title: {
-          [Op.like]: `%${term}%`
+    try {
+      const foundNewsList = await this.newsModel.model.findAll({
+        order: [['createdAt', 'DESC']],
+        limit,
+        where: {
+          title: {
+            [Op.like]: `%${term}%`
+          }
+        },
+        include: [
+          {
+            model: this.userModel.model,
+            as: 'author',
+          }
+        ],
+      });
+
+      const newsList: News[] = [];
+
+      foundNewsList.forEach((foundNews) => {
+        const maybeNews = News.from(foundNews);
+        if (maybeNews instanceof Error) {
+          throw maybeNews;
         }
-      },
-      include: [
-        {
-          model: this.userModel.model,
-          as: 'author',
-        }
-      ],
-    });
 
-    const newsList: News[] = [];
+        newsList.push(maybeNews);
+      });
 
-    foundNewsList.forEach((foundNews) => {
-      const maybeNews = News.from(foundNews);
-      if (maybeNews instanceof Error) {
-        throw maybeNews;
-      }
-
-      newsList.push(maybeNews);
-    });
-
-    return newsList;
+      return newsList;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async delete(id: number): Promise<boolean | NewsNotFoundError> {
@@ -127,7 +131,7 @@ export class MariadbNewsRepository implements NewsRepositoryInterface {
 
       return true;
     } catch (error) {
-      throw new NewsNotFoundError('News not found.');
+      return new NewsNotFoundError('News not found.');
     }
   }
 }

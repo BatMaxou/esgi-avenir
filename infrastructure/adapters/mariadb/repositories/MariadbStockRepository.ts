@@ -47,31 +47,35 @@ export class MariadbStockRepository implements StockRepositoryInterface {
 
       return maybeStock;
     } catch (error) {
-      throw new StockNotFoundError('Stock not found');
+      return new StockNotFoundError('Stock not found');
     }
   }
 
   public async findAllLike(term: string): Promise<Stock[]> {
-    const foundStocks = await this.stockModel.model.findAll({
-      where: {
-        name: {
-          [Op.like]: `%${term}%`
+    try {
+      const foundStocks = await this.stockModel.model.findAll({
+        where: {
+          name: {
+            [Op.like]: `%${term}%`
+          }
+        },
+      });
+
+      const stocks: Stock[] = [];
+
+      foundStocks.forEach((foundStock) => {
+        const maybeStock = Stock.from(foundStock);
+        if (maybeStock instanceof Error) {
+          throw maybeStock;
         }
-      },
-    });
 
-    const stocks: Stock[] = [];
+        stocks.push(maybeStock);
+      });
 
-    foundStocks.forEach((foundStock) => {
-      const maybeStock = Stock.from(foundStock);
-      if (maybeStock instanceof Error) {
-        throw maybeStock;
-      }
-
-      stocks.push(maybeStock);
-    });
-
-    return stocks;
+      return stocks;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async update(stock: UpdateStockPayload): Promise<Stock | StockNotFoundError> {
@@ -86,7 +90,7 @@ export class MariadbStockRepository implements StockRepositoryInterface {
 
       return await this.findById(id);
     } catch (error) {
-      throw new StockNotFoundError('Stock not found.');
+      return new StockNotFoundError('Stock not found.');
     }
   }
 }

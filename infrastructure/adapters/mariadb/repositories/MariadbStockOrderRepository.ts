@@ -52,7 +52,7 @@ export class MariadbStockOrderRepository implements StockOrderRepositoryInterfac
         }
       }
 
-      throw error;
+      return new UserNotFoundError('User not found.');
     }
   }
 
@@ -70,74 +70,86 @@ export class MariadbStockOrderRepository implements StockOrderRepositoryInterfac
 
       return maybeStockOrder;
     } catch (error) {
-      throw new StockOrderNotFoundError('StockOrder not found');
+      return new StockOrderNotFoundError('StockOrder not found');
     }
   }
 
   public async findAllByOwner(ownerId: number): Promise<StockOrder[]> {
-    const foundStockOrders = await this.stockOrderModel.model.findAll({
-      where: {
-        ownerId,
-      },
-    });
+    try {
+      const foundStockOrders = await this.stockOrderModel.model.findAll({
+        where: {
+          ownerId,
+        },
+      });
 
-    const stockOrders: StockOrder[] = [];
+      const stockOrders: StockOrder[] = [];
 
-    foundStockOrders.forEach((foundStockOrder) => {
-      const maybeStockOrder = StockOrder.from(foundStockOrder);
-      if (maybeStockOrder instanceof Error) {
-        throw maybeStockOrder;
-      }
+      foundStockOrders.forEach((foundStockOrder) => {
+        const maybeStockOrder = StockOrder.from(foundStockOrder);
+        if (maybeStockOrder instanceof Error) {
+          throw maybeStockOrder;
+        }
 
-      stockOrders.push(maybeStockOrder);
-    });
+        stockOrders.push(maybeStockOrder);
+      });
 
-    return stockOrders;
+      return stockOrders;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async findMatchByStock(stockId: number, type: StockOrderTypeEnum): Promise<StockOrder[]> {
-    const foundStockOrders = await this.stockOrderModel.model.findAll({
-      where: {
-        status: StockOrderStatusEnum.PENDING,
-        type,
-        stockId,
-      },
-    });
+    try {
+      const foundStockOrders = await this.stockOrderModel.model.findAll({
+        where: {
+          status: StockOrderStatusEnum.PENDING,
+          type,
+          stockId,
+        },
+      });
 
-    const stockOrders: StockOrder[] = [];
+      const stockOrders: StockOrder[] = [];
 
-    foundStockOrders.forEach((foundStockOrder) => {
-      const maybeStockOrder = StockOrder.from(foundStockOrder);
-      if (maybeStockOrder instanceof Error) {
-        throw maybeStockOrder;
-      }
+      foundStockOrders.forEach((foundStockOrder) => {
+        const maybeStockOrder = StockOrder.from(foundStockOrder);
+        if (maybeStockOrder instanceof Error) {
+          throw maybeStockOrder;
+        }
 
-      stockOrders.push(maybeStockOrder);
-    });
+        stockOrders.push(maybeStockOrder);
+      });
 
-    return stockOrders;
+      return stockOrders;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async findCompletedByStock(stockId: number): Promise<StockOrder[]> {
-    const foundStockOrders = await this.stockOrderModel.model.findAll({
-      where: {
-        status: StockOrderStatusEnum.COMPLETED,
-        stockId,
-      },
-    });
+    try {
+      const foundStockOrders = await this.stockOrderModel.model.findAll({
+        where: {
+          status: StockOrderStatusEnum.COMPLETED,
+          stockId,
+        },
+      });
 
-    const stockOrders: StockOrder[] = [];
+      const stockOrders: StockOrder[] = [];
 
-    foundStockOrders.forEach((foundStockOrder) => {
-      const maybeStockOrder = StockOrder.from(foundStockOrder);
-      if (maybeStockOrder instanceof Error) {
-        throw maybeStockOrder;
-      }
+      foundStockOrders.forEach((foundStockOrder) => {
+        const maybeStockOrder = StockOrder.from(foundStockOrder);
+        if (maybeStockOrder instanceof Error) {
+          throw maybeStockOrder;
+        }
 
-      stockOrders.push(maybeStockOrder);
-    });
+        stockOrders.push(maybeStockOrder);
+      });
 
-    return stockOrders;
+      return stockOrders;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async update(stockOrder: UpdateStockOrderPayload): Promise<StockOrder | StockOrderNotFoundError> {
@@ -152,7 +164,7 @@ export class MariadbStockOrderRepository implements StockOrderRepositoryInterfac
 
       return await this.findById(id);
     } catch (error) {
-      throw new StockOrderNotFoundError('StockOrder not found.');
+      return new StockOrderNotFoundError('StockOrder not found.');
     }
   }
 
@@ -165,7 +177,7 @@ export class MariadbStockOrderRepository implements StockOrderRepositoryInterfac
 
       return true;
     } catch (error) {
-      throw new StockOrderNotFoundError('StockOrder not found.');
+      return new StockOrderNotFoundError('StockOrder not found.');
     }
   }
 }

@@ -7,6 +7,7 @@ interface AccountModelInterface extends Model<InferAttributes<AccountModelInterf
   name: string;
   ownerId?: number;
   isSavings?: boolean;
+  isDeleted?: boolean;
 }
 
 export class AccountModel {
@@ -29,6 +30,11 @@ export class AccountModel {
         allowNull: false,
       },
       isSavings: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      isDeleted: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,

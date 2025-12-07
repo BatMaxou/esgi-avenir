@@ -17,6 +17,7 @@ export class Account {
     ownerId,
     owner,
     isSavings = false,
+    isDeleted = false,
   }: {
     id?: number,
     iban: string,
@@ -24,6 +25,7 @@ export class Account {
     ownerId?: number,
     owner?: User,
     isSavings?: boolean,
+    isDeleted?: boolean,
   }): Account | UserNotFoundError | InvalidIbanError {
     const maybeOwnerId = ownerId ?? owner?.id;
     if (!maybeOwnerId) {
@@ -41,6 +43,7 @@ export class Account {
       maybeOwnerId,
       owner ?? undefined,
       isSavings,
+      isDeleted,
     );
 
     if (id) {
@@ -56,6 +59,7 @@ export class Account {
     public ownerId: number,
     public owner?: User,
     public isSavings: boolean = false,
+    public isDeleted: boolean = false,
   ) {
   }
 }

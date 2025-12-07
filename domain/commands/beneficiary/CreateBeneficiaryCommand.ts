@@ -1,9 +1,10 @@
 import { CreateAccountPayloadInterface } from "../../../application/services/api/resources/AccountResourceInterface";
+import { CreateBeneficiaryPayloadInterface } from "../../../application/services/api/resources/BeneficiaryResourceInterface";
 import { InvalidCreateBeneficiaryCommandError } from "../../errors/commands/beneficiary/InvalidCreateBeneficiaryCommandError";
 import { InvalidIbanError } from "../../errors/values/iban/InvalidIbanError";
 import { IbanValue } from "../../values/IbanValue";
 
-interface Body extends Partial<CreateAccountPayloadInterface> {}
+interface Body extends Partial<CreateBeneficiaryPayloadInterface> {}
 
 export class CreateBeneficiaryCommand {
   public static from(body: Body): CreateBeneficiaryCommand | InvalidCreateBeneficiaryCommandError | InvalidIbanError {

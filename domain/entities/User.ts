@@ -19,6 +19,7 @@ export class User {
     roles,
     enabled = false,
     confirmationToken = null,
+    isDeleted = false,
   }: {
     id?: number,
     firstName: string,
@@ -28,6 +29,7 @@ export class User {
     roles?: RoleEnum[] | string,
     enabled?: boolean,
     confirmationToken?: string | null,
+    isDeleted?: boolean,
   }): User | InvalidEmailError | InvalidPasswordError | InvalidRolesError {
     const maybeEmail = EmailValue.from(email);
     if (maybeEmail instanceof InvalidEmailError) {
@@ -56,6 +58,7 @@ export class User {
       enabled,
       maybeRoles,
       confirmationToken,
+      isDeleted,
     );
 
     if (id) {
@@ -73,6 +76,7 @@ export class User {
     public enabled: boolean = false,
     roles: RoleEnum[] = [],
     public confirmationToken?: string | null,
+    public isDeleted: boolean = false,
   ) {
     this.roles = roles;
     if (!this.roles.includes(RoleEnum.USER)) {

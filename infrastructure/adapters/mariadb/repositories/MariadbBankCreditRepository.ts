@@ -54,7 +54,7 @@ export class MariadbBankCreditRepository implements BankCreditRepositoryInterfac
         }
       }
 
-      throw error;
+      return new UserNotFoundError('User not found.');
     }
   }
 
@@ -70,7 +70,7 @@ export class MariadbBankCreditRepository implements BankCreditRepositoryInterfac
 
       return await this.findById(id);
     } catch (error) {
-      throw new BankCreditNotFoundError('BankCredit not found.');
+      return new BankCreditNotFoundError('BankCredit not found.');
     }
   }
 
@@ -97,70 +97,82 @@ export class MariadbBankCreditRepository implements BankCreditRepositoryInterfac
 
       return maybeBankCredit;
     } catch (error) {
-      throw new BankCreditNotFoundError('BankCredit not found');
+      return new BankCreditNotFoundError('BankCredit not found.');
     }
   }
 
   public async findAllByAdvisor(advisorId: number): Promise<BankCredit[]> {
-    const foundBankCredits = await this.bankCreditModel.model.findAll({
-      where: {
-        advisorId,
-      },
-    });
+    try {
+      const foundBankCredits = await this.bankCreditModel.model.findAll({
+        where: {
+          advisorId,
+        },
+      });
 
-    const bankCredits: BankCredit[] = [];
+      const bankCredits: BankCredit[] = [];
 
-    foundBankCredits.forEach((foundBankCredit) => {
-      const maybeBankCredit = BankCredit.from(foundBankCredit);
-      if (maybeBankCredit instanceof Error) {
-        throw maybeBankCredit;
-      }
+      foundBankCredits.forEach((foundBankCredit) => {
+        const maybeBankCredit = BankCredit.from(foundBankCredit);
+        if (maybeBankCredit instanceof Error) {
+          throw maybeBankCredit;
+        }
 
-      bankCredits.push(maybeBankCredit);
-    });
+        bankCredits.push(maybeBankCredit);
+      });
 
-    return bankCredits;
+      return bankCredits;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async findAllByOwner(ownerId: number): Promise<BankCredit[]> {
-    const foundBankCredits = await this.bankCreditModel.model.findAll({
-      where: {
-        ownerId,
-      },
-    });
+    try {
+      const foundBankCredits = await this.bankCreditModel.model.findAll({
+        where: {
+          ownerId,
+        },
+      });
 
-    const bankCredits: BankCredit[] = [];
+      const bankCredits: BankCredit[] = [];
 
-    foundBankCredits.forEach((foundBankCredit) => {
-      const maybeBankCredit = BankCredit.from(foundBankCredit);
-      if (maybeBankCredit instanceof Error) {
-        throw maybeBankCredit;
-      }
+      foundBankCredits.forEach((foundBankCredit) => {
+        const maybeBankCredit = BankCredit.from(foundBankCredit);
+        if (maybeBankCredit instanceof Error) {
+          throw maybeBankCredit;
+        }
 
-      bankCredits.push(maybeBankCredit);
-    });
+        bankCredits.push(maybeBankCredit);
+      });
 
-    return bankCredits;
+      return bankCredits;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async findAllNotCompleted(): Promise<BankCredit[]> {
-    const foundBankCredits = await this.bankCreditModel.model.findAll({
-      where: {
-        status: BankCreditStatusEnum.APPROVED,
-      },
-    });
+    try {
+      const foundBankCredits = await this.bankCreditModel.model.findAll({
+        where: {
+          status: BankCreditStatusEnum.APPROVED,
+        },
+      });
 
-    const bankCredits: BankCredit[] = [];
+      const bankCredits: BankCredit[] = [];
 
-    foundBankCredits.forEach((foundBankCredit) => {
-      const maybeBankCredit = BankCredit.from(foundBankCredit);
-      if (maybeBankCredit instanceof Error) {
-        throw maybeBankCredit;
-      }
+      foundBankCredits.forEach((foundBankCredit) => {
+        const maybeBankCredit = BankCredit.from(foundBankCredit);
+        if (maybeBankCredit instanceof Error) {
+          throw maybeBankCredit;
+        }
 
-      bankCredits.push(maybeBankCredit);
-    });
+        bankCredits.push(maybeBankCredit);
+      });
 
-    return bankCredits;
+      return bankCredits;
+    } catch (error) {
+      return [];
+    }
   }
 }

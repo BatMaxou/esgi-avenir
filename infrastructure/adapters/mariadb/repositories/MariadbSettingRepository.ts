@@ -31,7 +31,7 @@ export class MariadbSettingRepository implements SettingRepositoryInterface {
 
       return await this.findByCode(setting.code);
     } catch (error) {
-      throw new SettingNotFoundError('Setting not found.');
+      return new SettingNotFoundError('Setting not found.');
     }
   }
 
@@ -49,23 +49,27 @@ export class MariadbSettingRepository implements SettingRepositoryInterface {
 
       return maybeSetting;
     } catch (error) {
-      throw new SettingNotFoundError('Setting not found');
+      return new SettingNotFoundError('Setting not found');
     }
   }
 
   public async findAll(): Promise<Setting[]> {
-    const foundSettings = await this.settingModel.model.findAll();
-    const settings: Setting[] = [];
+    try {
+      const foundSettings = await this.settingModel.model.findAll();
+      const settings: Setting[] = [];
 
-    foundSettings.forEach((foundSetting) => {
-      const maybeSetting = Setting.from(foundSetting);
-      if (maybeSetting instanceof Error) {
-        throw maybeSetting;
-      }
+      foundSettings.forEach((foundSetting) => {
+        const maybeSetting = Setting.from(foundSetting);
+        if (maybeSetting instanceof Error) {
+          throw maybeSetting;
+        }
 
-      settings.push(maybeSetting);
-    });
+        settings.push(maybeSetting);
+      });
 
-    return settings;
+      return settings;
+    } catch (error) {
+      return [];
+    }
   }
 }

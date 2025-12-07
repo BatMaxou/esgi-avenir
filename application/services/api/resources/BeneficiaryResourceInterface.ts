@@ -7,8 +7,8 @@ export interface GetBeneficiaryListResponseInterface
   extends Array<GetBeneficiaryResponseInterface> {}
 
 export interface CreateBeneficiaryPayloadInterface {
-  name: string;
   iban: string;
+  name?: string;
 }
 
 export interface UpdateBeneficiaryPayloadInterface {
