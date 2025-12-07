@@ -35,6 +35,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
         name: account.name,
         ownerId: account.ownerId,
         isSavings: account.isSavings,
+        isDeleted: account.isDeleted,
       });
 
       const maybeAccount = Account.from(createdAccount);
@@ -52,13 +53,17 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
         return new UserNotFoundError('User not found.');
       }
 
-      throw new UserNotFoundError('User not found.');
+      return new UserNotFoundError('User not found.');
     }
   }
 
   public async update(account: UpdateAccountPayload): Promise<Account | AccountNotFoundError> {
     try {
-      const { id, ...toUpdate } = account;
+      const { id, isDeleted, ...toUpdate } = account;
+
+      if (isDeleted) {
+        return new AccountNotFoundError('Account not found.');
+      }
 
       await this.accountModel.model.update({
         ...toUpdate,
@@ -68,7 +73,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
       return await this.findById(id);
     } catch (error) {
-      throw new AccountNotFoundError('Account not found.');
+      return new AccountNotFoundError('Account not found.');
     }
   }
 
@@ -78,6 +83,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
         where: {
           ownerId: ownerId,
           isSavings: true,
+          isDeleted: false,
         },
       });
 
@@ -92,7 +98,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
       return maybeAccount;
     } catch (error) {
-      throw new AccountNotFoundError('Savings account not found.');
+      return new AccountNotFoundError('Savings account not found.');
     }
   }
 
@@ -100,6 +106,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
     const foundAccounts = await this.accountModel.model.findAll({
       where: {
         ownerId: ownerId,
+        isDeleted: false,
       },
     });
 
@@ -130,7 +137,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
           ],
         }
       );
-      if (!foundAccount) {
+      if (!foundAccount || foundAccount.isDeleted) {
         return new AccountNotFoundError('Account not found.');
       }
 
@@ -141,7 +148,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
       return maybeAccount;
     } catch (error) {
-      throw new AccountNotFoundError('Account not found');
+      return new AccountNotFoundError('Account not found');
     }
   }
 
@@ -167,8 +174,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
       return maybeAccount;
     } catch (error) {
-      console.error(error);
-      throw new AccountNotFoundError('Account not found');
+      return new AccountNotFoundError('Account not found');
     }
   }
 
@@ -186,14 +192,19 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
 
   public async delete(id: number): Promise<boolean | AccountNotFoundError> {
     try {
-      const deletedCount = await this.accountModel.model.destroy({ where: { id } });
-      if (deletedCount === 0) {
+      const result = await this.accountModel.model.update({
+        isDeleted: true,
+      }, {
+        where: { id },
+      });
+
+      if (result[0] === 0) {
         return new AccountNotFoundError('Account not found.');
       }
 
       return true;
     } catch (error) {
-      throw new AccountNotFoundError('Account not found.');
+      return new AccountNotFoundError('Account not found.');
     }
   }
 
@@ -204,6 +215,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
       ],
       where: {
         isSavings: true,
+        isDeleted: false,
       },
     });
 
@@ -214,6 +226,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
     const foundAccounts = await this.accountModel.model.findAll({
       where: {
         isSavings: true,
+        isDeleted: false,
       },
     });
 

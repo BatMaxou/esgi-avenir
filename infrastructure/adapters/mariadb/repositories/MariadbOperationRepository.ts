@@ -39,30 +39,34 @@ export class MariadbOperationRepository implements OperationRepositoryInterface 
         return new AccountNotFoundError('Account not found.');
       }
 
-      throw new AccountNotFoundError('Account not found.');
+      return new AccountNotFoundError('Account not found.');
     }
   }
 
   public async findByAccount(accountId: number): Promise<Operation[]> {
-    const foundOperations = await this.operationModel.model.findAll({
-      where: {
-        [Op.or]: [
-          { fromId: accountId },
-          { toId: accountId },
-        ],
-      },
-    });
-    const operations: Operation[] = [];
+    try {
+      const foundOperations = await this.operationModel.model.findAll({
+        where: {
+          [Op.or]: [
+            { fromId: accountId },
+            { toId: accountId },
+          ],
+        },
+      });
+      const operations: Operation[] = [];
 
-    foundOperations.forEach((foundOperation) => {
-      const maybeOperation = Operation.from(foundOperation);
-      if (maybeOperation instanceof Error) {
-        throw maybeOperation;
-      }
+      foundOperations.forEach((foundOperation) => {
+        const maybeOperation = Operation.from(foundOperation);
+        if (maybeOperation instanceof Error) {
+          throw maybeOperation;
+        }
 
-      operations.push(maybeOperation);
-    });
+        operations.push(maybeOperation);
+      });
 
-    return operations;
+      return operations;
+    } catch (error) {
+      return [];
+    }
   }
 }

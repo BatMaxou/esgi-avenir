@@ -39,28 +39,32 @@ export class MariadbMonthlyPaymentRepository implements MonthlyPaymentRepository
         return new BankCreditNotFoundError('Bank credit not found.');
       }
 
-      throw error;
+      return new BankCreditNotFoundError('Bank credit not found.');
     }
   }
 
   public async findAllByBankCredit(bankCreditId: number): Promise<MonthlyPayment[]> {
-    const foundMonthlyPayments = await this.monthlyPaymentModel.model.findAll({
-      where: {
-        bankCreditId,
-      },
-    });
+    try {
+      const foundMonthlyPayments = await this.monthlyPaymentModel.model.findAll({
+        where: {
+          bankCreditId,
+        },
+      });
 
-    const monthlyPayments: MonthlyPayment[] = [];
+      const monthlyPayments: MonthlyPayment[] = [];
 
-    foundMonthlyPayments.forEach((foundMonthlyPayment) => {
-      const maybeMonthlyPayment = MonthlyPayment.from(foundMonthlyPayment);
-      if (maybeMonthlyPayment instanceof Error) {
-        throw maybeMonthlyPayment;
-      }
+      foundMonthlyPayments.forEach((foundMonthlyPayment) => {
+        const maybeMonthlyPayment = MonthlyPayment.from(foundMonthlyPayment);
+        if (maybeMonthlyPayment instanceof Error) {
+          throw maybeMonthlyPayment;
+        }
 
-      monthlyPayments.push(maybeMonthlyPayment);
-    });
+        monthlyPayments.push(maybeMonthlyPayment);
+      });
 
-    return monthlyPayments;
+      return monthlyPayments;
+    } catch (error) {
+      return [];
+    }
   }
 }

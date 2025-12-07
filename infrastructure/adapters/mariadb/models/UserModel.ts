@@ -10,6 +10,7 @@ interface UserModelInterface extends Model<InferAttributes<UserModelInterface>, 
   roles: string | RoleEnum[];
   enabled?: CreationOptional<boolean>;
   confirmationToken?: CreationOptional<string | null>;
+  isDeleted?: CreationOptional<boolean>;
 }
 
 export class UserModel {
@@ -51,6 +52,11 @@ export class UserModel {
       confirmationToken: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      isDeleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     })
   }
