@@ -175,7 +175,7 @@ const AccountList = ({
                       : "text-green-600 font-extrabold text-base"
                   }
                 >
-                  {account.amount < 0 ? "-" : "+"}
+                  {account.amount < 0 ? "" : "+"}
                   {account.amount.toFixed(2)} €
                 </p>
               </Item>

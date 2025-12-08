@@ -88,7 +88,7 @@ export default function AccountDetailsPage() {
                 account.amount < 0 ? "text-red-600" : "text-green-600"
               }`}
             >
-              {account.amount < 0 ? "-" : "+"}
+              {account.amount < 0 ? "" : "+"}
               {account.amount.toFixed(2)} €
             </p>
           </div>
