@@ -8,6 +8,8 @@ import {
   DialogTitle,
 } from "@/components/ui/atoms/dialog";
 import AddAccountForm from "../forms/add-account-form";
+import { useSettings } from "@/contexts/SettingsContext";
+import { useEffect } from "react";
 
 interface AddAccountDialogProps {
   open: boolean;
@@ -28,6 +30,15 @@ export default function AddAccountDialog({
     onOpenChange(false);
   };
 
+  const { savingsRate, isSettingsLoading, getSavingsRate } = useSettings();
+
+  useEffect(() => {
+    if (open && isSavings) {
+      getSavingsRate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, isSavings]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
@@ -36,9 +47,24 @@ export default function AddAccountDialog({
             {isSavings ? "Créer un compte épargne" : "Créer un compte courant"}
           </DialogTitle>
           <DialogDescription>
-            {isSavings
-              ? "Ajoutez un nouveau compte épargne à votre liste de comptes."
-              : "Ajoutez un nouveau compte courant à votre liste de comptes."}
+            {isSavings ? (
+              <>
+                <span>
+                  Ajoutez un nouveau compte épargne à votre liste de comptes.
+                </span>
+                <br />
+                <span>
+                  Le taux d'épargne actuel est de :{" "}
+                  <b>
+                    {isSettingsLoading ? "Chargement..." : `${savingsRate}%`}
+                  </b>
+                </span>
+              </>
+            ) : (
+              <span>
+                Ajoutez un nouveau compte courant à votre liste de comptes.
+              </span>
+            )}
           </DialogDescription>
         </DialogHeader>
         <AddAccountForm
