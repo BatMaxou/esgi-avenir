@@ -29,8 +29,8 @@ export default function AccountsPage() {
   return (
     <>
       <div className="flex flex-row justify-start gap-8">
-        <div className="flex-2">
-          <AccountsDisplay displayStyle="list" />
+        <div className="flex-2 overflow-y-scroll">
+          <AccountsDisplay displayStyle="list" separatedByTypes={true} />
         </div>
         <Separator orientation="vertical" className="h-full border-2" />
         <div className="flex-1 space-y-4">

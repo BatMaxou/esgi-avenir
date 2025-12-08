@@ -9,17 +9,62 @@ import { HydratedAccount } from "../../../../../../../domain/entities/Account";
 type Props = {
   displayLength?: number;
   displayStyle?: "grid" | "list";
+  separatedByTypes?: boolean;
 };
 
 export function AccountsDisplay({
   displayLength,
-  displayStyle = "grid",
+  displayStyle = "list",
+  separatedByTypes = false,
 }: Props) {
   const { accounts, isAccountsLoading } = useAccounts();
 
+  if (separatedByTypes) {
+    const currentAccounts = accounts.filter((a) => !a.isSavings);
+    const savingsAccounts = accounts.filter((a) => a.isSavings);
+
+    return (
+      <div className="space-y-8">
+        <div>
+          <h2 className="text-lg font-bold mb-4">Comptes courants</h2>
+          {displayStyle === "grid" ? (
+            <AccountGrid
+              accounts={currentAccounts}
+              isLoading={isAccountsLoading}
+            />
+          ) : (
+            <AccountList
+              accounts={currentAccounts}
+              isLoading={isAccountsLoading}
+            />
+          )}
+        </div>
+        <div>
+          <h2 className="text-lg font-bold mb-4">Comptes épargne</h2>
+          {displayStyle === "grid" ? (
+            <AccountGrid
+              accounts={savingsAccounts}
+              isLoading={isAccountsLoading}
+            />
+          ) : (
+            <AccountList
+              accounts={savingsAccounts}
+              isLoading={isAccountsLoading}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  const sortedAccounts = [...accounts].sort((a, b) => {
+    if (a.isSavings === b.isSavings) return 0;
+    return a.isSavings ? 1 : -1;
+  });
+
   const displayedAccounts = displayLength
-    ? accounts.slice(0, displayLength)
-    : accounts;
+    ? sortedAccounts.slice(0, displayLength)
+    : sortedAccounts;
 
   return displayStyle === "grid" ? (
     <AccountGrid accounts={displayedAccounts} isLoading={isAccountsLoading} />

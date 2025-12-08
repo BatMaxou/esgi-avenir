@@ -35,6 +35,11 @@ type AccountsContextType = {
     name: string;
     isSavings: boolean;
   }) => Promise<GetAccountResponseInterface | null>;
+  updateAccount: (
+    id: number,
+    data: { name: string }
+  ) => Promise<GetAccountResponseInterface | null>;
+  deleteAccount: (id: number) => Promise<boolean>;
 };
 
 export const AccountsContext = createContext<AccountsContextType | undefined>(
@@ -181,6 +186,54 @@ export const AccountsProvider = ({ children }: Props) => {
     return response;
   };
 
+  const updateAccount = async (id: number, data: { name: string }) => {
+    setIsAccountLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsAccountLoading(false);
+      toast.error("Vous devez être connecté pour modifier un compte");
+      return null;
+    }
+
+    const response = await apiClient.account.update({ id, ...data });
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to update account:", response.message);
+      toast.error("Erreur lors de la modification du compte");
+      setIsAccountLoading(false);
+      return null;
+    }
+
+    toast.success("Compte modifié avec succès");
+    await getAccount(id);
+    setIsAccountLoading(false);
+    return response;
+  };
+
+  const deleteAccount = async (id: number) => {
+    setIsAccountLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsAccountLoading(false);
+      toast.error("Vous devez être connecté pour supprimer un compte");
+      return false;
+    }
+
+    const response = await apiClient.account.delete(id);
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to delete account:", response.message);
+      toast.error("Erreur lors de la suppression du compte");
+      setIsAccountLoading(false);
+      return false;
+    }
+
+    toast.success("Compte supprimé avec succès");
+    await refreshAccounts();
+    setIsAccountLoading(false);
+    return true;
+  };
+
   return (
     <AccountsContext.Provider
       value={{
@@ -192,6 +245,8 @@ export const AccountsProvider = ({ children }: Props) => {
         getAccounts,
         refreshAccounts,
         createAccount,
+        updateAccount,
+        deleteAccount,
       }}
     >
       {children}

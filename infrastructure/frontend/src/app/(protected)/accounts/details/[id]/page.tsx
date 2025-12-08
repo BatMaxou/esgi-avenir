@@ -2,23 +2,26 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ApiClientError } from "../../../../../../../../application/services/api/ApiClientError";
 import { Separator } from "@/components/ui/atoms/separator";
-import { Operation } from "../../../../../../../../domain/entities/Operation";
 import { useAccounts } from "@/contexts/AccountsContext";
 import OperationAccountItem from "@/components/ui/molecules/item/operation-account-item";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { Item, ItemActions, ItemContent } from "@/components/ui/atoms/item";
+import { Icon } from "@iconify/react";
+import UpdateAccountDialog from "@/components/ui/molecules/dialogs/update-account-dialog";
+import DeleteAccountDialog from "@/components/ui/molecules/dialogs/delete-account-dialog";
 
 export default function AccountDetailsPage() {
   const params = useParams();
   const accountId = params.id as string;
   const { account, isAccountLoading, getAccount } = useAccounts();
   const { endNavigation } = useNavigation();
-  const [operations, setOperations] = useState<Operation[] | ApiClientError>(
-    []
-  );
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   useEffect(() => {
     endNavigation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -29,6 +32,7 @@ export default function AccountDetailsPage() {
     if (accountId) {
       fetchAccount();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
 
   if (isAccountLoading) {
@@ -69,10 +73,14 @@ export default function AccountDetailsPage() {
         </div>
       </div>
       <Separator orientation="vertical" />
-      <div className="flex-1 space-y-8">
+      <div className="flex-1">
         <h1 className="text-2xl font-bold mb-4">Informations banquaires</h1>
-        <div className="bg-white p-6 rounded-lg shadow w-full">
+        <div className="bg-white p-6 rounded-lg shadow w-full mb-4">
           <div className="space-y-4">
+            <div>
+              <p className="text-gray-600">Nom du compte</p>
+              <p className="font-semibold">{account.name}</p>
+            </div>
             <div>
               <p className="text-gray-600">IBAN</p>
               <p className="font-semibold">{account.iban.value}</p>
@@ -83,7 +91,41 @@ export default function AccountDetailsPage() {
             </div>
           </div>
         </div>
+        <Item
+          className="bg-white p-4 rounded-lg shadow cursor-pointer hover:bg-gray-50 transition-all mb-4"
+          onClick={() => setIsUpdateModalOpen(true)}
+        >
+          <ItemContent>
+            <span className="font-semibold text-md">Modifier mon compte</span>
+          </ItemContent>
+          <ItemActions>
+            <Icon icon="mdi:chevron-right" className="w-5 h-5 text-gray-400" />
+          </ItemActions>
+        </Item>
+        <Item
+          className="bg-red-600 p-4 rounded-lg shadow cursor-pointer hover:bg-red-700 transition-all"
+          onClick={() => setIsDeleteModalOpen(true)}
+        >
+          <ItemContent>
+            <span className="font-semibold text-md text-white">
+              Supprimer mon compte
+            </span>
+          </ItemContent>
+          <ItemActions>
+            <Icon icon="mdi:chevron-right" className="w-5 h-5 text-white" />
+          </ItemActions>
+        </Item>
       </div>
+      <UpdateAccountDialog
+        open={isUpdateModalOpen}
+        onOpenChange={setIsUpdateModalOpen}
+        account={account}
+      />
+      <DeleteAccountDialog
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        account={account}
+      />
     </div>
   );
 }

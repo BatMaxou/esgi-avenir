@@ -45,7 +45,7 @@ export default function ProtectedLayout({ children }: Props) {
 
   return (
     <ProtectedRoute requiredRoles={[RoleEnum.USER]}>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen max-h-screen overflow-y-hidden bg-white">
         <Header />
         <Banner title={pageTitle} />
         <main className="container mx-auto px-4 py-8">{children}</main>

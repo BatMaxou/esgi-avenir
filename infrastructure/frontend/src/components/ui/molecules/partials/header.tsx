@@ -27,7 +27,7 @@ export default function Header() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="bg-white shadow-md border-b-4 border-red-600">
+    <header className="bg-white shadow-md border-b-4 border-red-600 sticky">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center justify-between gap-8 h-full">
@@ -74,7 +74,9 @@ export default function Header() {
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="start">
-                  <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                  <DropdownMenuLabel className="font-semibold">
+                    Mon compte
+                  </DropdownMenuLabel>
                   <DropdownMenuGroup>
                     <DropdownMenuItem>Profil</DropdownMenuItem>
                     <DropdownMenuItem>Paramètres</DropdownMenuItem>
