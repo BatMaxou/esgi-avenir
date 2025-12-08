@@ -11,17 +11,19 @@ import { Icon } from "@iconify/react";
 import UpdateAccountDialog from "@/components/ui/molecules/dialogs/update-account-dialog";
 import DeleteAccountDialog from "@/components/ui/molecules/dialogs/delete-account-dialog";
 import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
+import { useSettings } from "@/contexts/SettingsContext";
+import { Skeleton } from "@/components/ui/atoms/skeleton";
 
 export default function AccountDetailsPage() {
   const params = useParams();
   const accountId = params.id as string;
   const router = useRouter();
   const { account, accounts, isAccountLoading, getAccount } = useAccounts();
+  const { savingsRate, isSettingsLoading, getSavingsRate } = useSettings();
   const { endNavigation } = useNavigation();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteDisabled, setIsDeleteDisabled] = useState(false);
-
   useEffect(() => {
     endNavigation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,6 +48,13 @@ export default function AccountDetailsPage() {
       setIsDeleteDisabled(false);
     }
   }, [account, accounts]);
+
+  useEffect(() => {
+    if (account?.isSavings) {
+      getSavingsRate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account]);
 
   if (isAccountLoading) {
     return (
@@ -117,6 +126,16 @@ export default function AccountDetailsPage() {
               <p className="text-gray-600">Titulaire</p>
               <p className="font-semibold">{account?.owner?.firstName}</p>
             </div>
+            {account.isSavings && (
+              <div>
+                <p className="text-gray-600">Taux d'épargne</p>
+                {isSettingsLoading ? (
+                  <Skeleton className="h-4 w-12 mb-1" />
+                ) : (
+                  <p className="font-semibold">{savingsRate}%</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <Item
