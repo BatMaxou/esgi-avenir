@@ -14,10 +14,11 @@ import DeleteAccountDialog from "@/components/ui/molecules/dialogs/delete-accoun
 export default function AccountDetailsPage() {
   const params = useParams();
   const accountId = params.id as string;
-  const { account, isAccountLoading, getAccount } = useAccounts();
+  const { account, accounts, isAccountLoading, getAccount } = useAccounts();
   const { endNavigation } = useNavigation();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteDisabled, setIsDeleteDisabled] = useState(false);
 
   useEffect(() => {
     endNavigation();
@@ -26,7 +27,18 @@ export default function AccountDetailsPage() {
 
   useEffect(() => {
     const fetchAccount = () => {
-      getAccount(Number(accountId));
+      getAccount(Number(accountId)).then(() => {
+        if (account && !account.isSavings) {
+          const currentAccounts = accounts.filter((acc) => !acc.isSavings);
+          if (currentAccounts.length === 1 && account.amount !== 0) {
+            setIsDeleteDisabled(true);
+          } else {
+            setIsDeleteDisabled(false);
+          }
+        } else {
+          setIsDeleteDisabled(false);
+        }
+      });
     };
 
     if (accountId) {
@@ -103,16 +115,29 @@ export default function AccountDetailsPage() {
           </ItemActions>
         </Item>
         <Item
-          className="bg-red-600 p-4 rounded-lg shadow cursor-pointer hover:bg-red-700 transition-all"
-          onClick={() => setIsDeleteModalOpen(true)}
+          className={`p-4 rounded-lg shadow transition-all ${
+            isDeleteDisabled
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-red-600 cursor-pointer hover:bg-red-700"
+          }`}
+          onClick={() => !isDeleteDisabled && setIsDeleteModalOpen(true)}
         >
           <ItemContent>
-            <span className="font-semibold text-md text-white">
+            <span
+              className={`font-semibold text-md ${
+                isDeleteDisabled ? "text-gray-500" : "text-white"
+              }`}
+            >
               Supprimer mon compte
             </span>
           </ItemContent>
           <ItemActions>
-            <Icon icon="mdi:chevron-right" className="w-5 h-5 text-white" />
+            <Icon
+              icon="mdi:chevron-right"
+              className={`w-5 h-5 ${
+                isDeleteDisabled ? "text-gray-500" : "text-white"
+              }`}
+            />
           </ItemActions>
         </Item>
       </div>

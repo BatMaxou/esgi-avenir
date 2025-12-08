@@ -219,6 +219,19 @@ export const AccountsProvider = ({ children }: Props) => {
       return false;
     }
 
+    // Vérifier si c'est l'unique compte courant
+    const accountToDelete = accounts.find((acc) => acc.id === id);
+    if (accountToDelete && !accountToDelete.isSavings) {
+      const currentAccounts = accounts.filter((acc) => !acc.isSavings);
+      if (currentAccounts.length === 1 && accountToDelete.amount !== 0) {
+        toast.error(
+          "Impossible de supprimer votre dernier compte courant s'il contient des fonds. Veuillez d'abord transférer les fonds ou créer un nouveau compte courant."
+        );
+        setIsAccountLoading(false);
+        return false;
+      }
+    }
+
     const response = await apiClient.account.delete(id);
 
     if (response instanceof ApiClientError) {
