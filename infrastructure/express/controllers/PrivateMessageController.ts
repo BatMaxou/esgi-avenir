@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-import { CreatePrivateMessageCommand } from "../../../domain/commands/private-message/CreatePrivateMessageCommand";
-import { InvalidCreatePrivateMessageCommandError } from "../../../domain/errors/commands/private-message/InvalidCreatePrivateMessageCommandError";
+import { CreatePrivateMessageCommand } from "../../../application/commands/private-message/CreatePrivateMessageCommand";
+import { InvalidCreatePrivateMessageCommandError } from "../../../application/errors/commands/private-message/InvalidCreatePrivateMessageCommandError";
 import { MessageRepositoryInterface } from "../../../application/repositories/MessageRepositoryInterface";
 import { CreatePrivateChannelUsecase } from "../../../application/usecases/private-channel/CreatePrivateChannelUsecase";
 import { PrivateChannelRepositoryInterface } from "../../../application/repositories/PrivateChannelRepositoryInterface";

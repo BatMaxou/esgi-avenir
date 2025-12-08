@@ -8,18 +8,18 @@ import { UpdateCompanyChannelUsecase } from "../../../application/usecases/compa
 import { ChannelNotFoundError } from "../../../domain/errors/entities/channel/ChannelNotFoundError";
 import { WriteCompanyMessageUsecase } from "../../../application/usecases/company-channel/WriteCompanyMessageUsecase";
 import { CreateCompanyChannelUsecase } from "../../../application/usecases/company-channel/CreateCompanyChannelUsecase";
-import { CreateCompanyChannelCommand } from "../../../domain/commands/company-channel/CreateCompanyChannelCommand";
-import { InvalidCreateCompanyChannelCommandError } from "../../../domain/errors/commands/company-channel/InvalidCreateCompanyChannelCommandError";
-import { GetCompanyChannelParams } from "../../../domain/params/company-channel/GetCompanyChannelParams";
-import { InvalidGetCompanyChannelParamsError } from "../../../domain/errors/params/company-channel/InvalidGetCompanyChannelParamsError";
-import { UpdateCompanyChannelParams } from "../../../domain/params/company-channel/UpdateCompanyChannelParams";
-import { InvalidUpdateCompanyChannelParamsError } from "../../../domain/errors/params/company-channel/InvalidUpdateCompanyChannelParamsError";
-import { UpdateCompanyChannelCommand } from "../../../domain/commands/company-channel/UpdateCompanyChannelCommand";
-import { InvalidUpdateCompanyChannelCommandError } from "../../../domain/errors/commands/company-channel/InvalidUpdateCompanyChannelCommandError";
-import { WriteCompanyMessageParams } from "../../../domain/params/company-channel/WriteCompanyMessageParams";
-import { InvalidWriteCompanyMessageParamsError } from "../../../domain/errors/params/company-channel/InvalidWriteCompanyMessageParamsError";
-import { WriteCompanyMessageCommand } from "../../../domain/commands/company-channel/WriteCompanyMessageCommand";
-import { InvalidWriteCompanyMessageCommandError } from "../../../domain/errors/commands/company-channel/InvalidWriteCompanyMessageCommandError";
+import { CreateCompanyChannelCommand } from "../../../application/commands/company-channel/CreateCompanyChannelCommand";
+import { InvalidCreateCompanyChannelCommandError } from "../../../application/errors/commands/company-channel/InvalidCreateCompanyChannelCommandError";
+import { GetCompanyChannelParams } from "../../../application/params/company-channel/GetCompanyChannelParams";
+import { InvalidGetCompanyChannelParamsError } from "../../../application/errors/params/company-channel/InvalidGetCompanyChannelParamsError";
+import { UpdateCompanyChannelParams } from "../../../application/params/company-channel/UpdateCompanyChannelParams";
+import { InvalidUpdateCompanyChannelParamsError } from "../../../application/errors/params/company-channel/InvalidUpdateCompanyChannelParamsError";
+import { UpdateCompanyChannelCommand } from "../../../application/commands/company-channel/UpdateCompanyChannelCommand";
+import { InvalidUpdateCompanyChannelCommandError } from "../../../application/errors/commands/company-channel/InvalidUpdateCompanyChannelCommandError";
+import { WriteCompanyMessageParams } from "../../../application/params/company-channel/WriteCompanyMessageParams";
+import { InvalidWriteCompanyMessageParamsError } from "../../../application/errors/params/company-channel/InvalidWriteCompanyMessageParamsError";
+import { WriteCompanyMessageCommand } from "../../../application/commands/company-channel/WriteCompanyMessageCommand";
+import { InvalidWriteCompanyMessageCommandError } from "../../../application/errors/commands/company-channel/InvalidWriteCompanyMessageCommandError";
 
 export class CompanyChannelController {
   public constructor(
