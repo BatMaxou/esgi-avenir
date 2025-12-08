@@ -2,23 +2,23 @@ import { Request, Response } from "express";
 
 import { MailerInterface } from "../../../application/services/email/MailerInterface";
 import { BeneficiaryRepositoryInterface } from "../../../application/repositories/BeneficiaryRepositoryInterface";
-import { CreateBeneficiaryCommand } from "../../../domain/commands/beneficiary/CreateBeneficiaryCommand";
-import { InvalidCreateBeneficiaryCommandError } from "../../../domain/errors/commands/beneficiary/InvalidCreateBeneficiaryCommandError";
+import { CreateBeneficiaryCommand } from "../../../application/commands/beneficiary/CreateBeneficiaryCommand";
+import { InvalidCreateBeneficiaryCommandError } from "../../../application/errors/commands/beneficiary/InvalidCreateBeneficiaryCommandError";
 import { CreateBeneficiaryUsecase } from "../../../application/usecases/beneficiary/CreateBeneficiaryUsecase";
-import { UpdateBeneficiaryParams } from "../../../domain/params/beneficiary/UpdateBeneficiaryParams";
-import { InvalidUpdateBeneficiaryCommandError } from "../../../domain/errors/commands/beneficiary/InvalidUpdateBeneficiaryCommandError";
+import { UpdateBeneficiaryParams } from "../../../application/params/beneficiary/UpdateBeneficiaryParams";
+import { InvalidUpdateBeneficiaryCommandError } from "../../../application/errors/commands/beneficiary/InvalidUpdateBeneficiaryCommandError";
 import { UpdateBeneficiaryUsecase } from "../../../application/usecases/beneficiary/UpdateBeneficiaryUsecase";
 import { BeneficiaryNotFoundError } from "../../../domain/errors/entities/beneficiary/BeneficiaryNotFoundError";
-import { UpdateBeneficiaryCommand } from "../../../domain/commands/beneficiary/UpdateBeneficiaryCommand";
-import { InvalidUpdateBeneficiaryParamsError } from "../../../domain/errors/params/beneficiary/InvalidUpdateBeneficiaryParamsError";
-import { DeleteBeneficiaryParams } from "../../../domain/params/beneficiary/DeleteBeneficiaryParams";
-import { InvalidDeleteBeneficiaryParamsError } from "../../../domain/errors/params/beneficiary/InvalidDeleteBeneficiaryParamsError";
+import { UpdateBeneficiaryCommand } from "../../../application/commands/beneficiary/UpdateBeneficiaryCommand";
+import { InvalidUpdateBeneficiaryParamsError } from "../../../application/errors/params/beneficiary/InvalidUpdateBeneficiaryParamsError";
+import { DeleteBeneficiaryParams } from "../../../application/params/beneficiary/DeleteBeneficiaryParams";
+import { InvalidDeleteBeneficiaryParamsError } from "../../../application/errors/params/beneficiary/InvalidDeleteBeneficiaryParamsError";
 import { DeleteBeneficiaryUsecase } from "../../../application/usecases/beneficiary/DeleteBeneficiaryUsecase";
 import { GetBeneficiaryListUsecase } from "../../../application/usecases/beneficiary/GetBeneficiaryListUsecase";
 import { AccountRepositoryInterface } from "../../../application/repositories/AccountRepositoryInterface";
 import { SendBeneficiaryCreationEmailUsecase } from "../../../application/usecases/email/SendBeneficiaryCreationEmailUsecase";
-import { GetBeneficiaryListQuery } from "../../../domain/queries/beneficiary/GetBeneficiaryListQuery";
-import { InvalidGetListBeneficiaryQueryError } from "../../../domain/errors/queries/beneficiary/InvalidGetListBeneficiaryQueryError";
+import { GetBeneficiaryListQuery } from "../../../application/queries/beneficiary/GetBeneficiaryListQuery";
+import { InvalidGetListBeneficiaryQueryError } from "../../../application/errors/queries/beneficiary/InvalidGetListBeneficiaryQueryError";
 import { InvalidIbanError } from "../../../domain/errors/values/iban/InvalidIbanError";
 
 export class BeneficiaryController {

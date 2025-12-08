@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 
 import { OperationRepositoryInterface } from "../../../application/repositories/OperationRepositoryInterface";
-import { CreateOperationCommand } from "../../../domain/commands/operation/CreateOperationCommand";
-import { InvalidCreateOperationCommandError } from "../../../domain/errors/commands/operation/InvalidCreateOperationCommandError";
+import { CreateOperationCommand } from "../../../application/commands/operation/CreateOperationCommand";
+import { InvalidCreateOperationCommandError } from "../../../application/errors/commands/operation/InvalidCreateOperationCommandError";
 import { CreateOperationUsecase } from "../../../application/usecases/operation/CreateOperationUsecase";
 import { AccountRepositoryInterface } from "../../../application/repositories/AccountRepositoryInterface";
 

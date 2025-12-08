@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { SettingRepositoryInterface } from "../../../application/repositories/SettingRepositoryInterface";
 import { SettingEnum } from "../../../domain/enums/SettingEnum";
-import { UpsertSettingCommand } from "../../../domain/commands/setting/UpsertSettingCommand";
-import { InvalidUpsertSettingCommandError } from "../../../domain/errors/commands/setting/InvalidUpsertSettingCommandError";
+import { UpsertSettingCommand } from "../../../application/commands/setting/UpsertSettingCommand";
+import { InvalidUpsertSettingCommandError } from "../../../application/errors/commands/setting/InvalidUpsertSettingCommandError";
 import { UpsertSettingUsecase } from "../../../application/usecases/setting/UpsertSettingUsecase";
 import { GetSettingListUsecase } from "../../../application/usecases/setting/GetSettingListUsecase";
 import { SendUpdateSavingsRateEmailUsecase } from "../../../application/usecases/email/SendUpdateSavingsRateEmailUsecase";
@@ -10,8 +10,8 @@ import { MailerInterface } from "../../../application/services/email/MailerInter
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
 import { AccountRepositoryInterface } from "../../../application/repositories/AccountRepositoryInterface";
 import { SettingNotFoundError } from "../../../domain/errors/entities/setting/SettingNotFoundError";
-import { GetSettingParams } from "../../../domain/params/setting/GetSettingParams";
-import { InvalidGetSettingParamsError } from "../../../domain/errors/params/setting/InvalidGetSettingParamsError";
+import { GetSettingParams } from "../../../application/params/setting/GetSettingParams";
+import { InvalidGetSettingParamsError } from "../../../application/errors/params/setting/InvalidGetSettingParamsError";
 import { GetSettingUsecase } from "../../../application/usecases/setting/GetSettingUsecase";
 
 export class SettingController {

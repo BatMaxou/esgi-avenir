@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 
 import { NotificationRepositoryInterface } from "../../../application/repositories/NotificationRepositoryInterface";
-import { InvalidCreateNotificationCommandError } from "../../../domain/errors/commands/notification/InvalidCreateNotificationCommandError";
+import { InvalidCreateNotificationCommandError } from "../../../application/errors/commands/notification/InvalidCreateNotificationCommandError";
 import { GetNotificationListUsecase } from "../../../application/usecases/notification/GetNotificationListUsecase";
 import { CreateNotificationUsecase } from "../../../application/usecases/notification/CreateNotificationUsecase";
-import { CreateNotificationCommand } from "../../../domain/commands/notification/CreateNotificationCommand";
+import { CreateNotificationCommand } from "../../../application/commands/notification/CreateNotificationCommand";
 import { SseExpressServerClient } from "../services/sse/SseExpressServerClient";
 import { SubscribeNotificationUsecase } from "../../../application/usecases/notification/SubscribeNotificationUsecase";
 

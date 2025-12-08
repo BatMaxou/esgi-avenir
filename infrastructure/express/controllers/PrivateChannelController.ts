@@ -5,20 +5,20 @@ import { PrivateChannelRepositoryInterface } from "../../../application/reposito
 import { GetPrivateChannelListUsecase } from "../../../application/usecases/private-channel/GetPrivateChannelListUsecase";
 import { GetPrivateChannelUsecase } from "../../../application/usecases/private-channel/GetPrivateChannelUsecase";
 import { UpdatePrivateChannelUsecase } from "../../../application/usecases/private-channel/UpdatePrivateChannelUsecase";
-import { GetPrivateChannelParams } from "../../../domain/params/private-channel/GetPrivateChannelParams";
-import { InvalidGetPrivateChannelParamsError } from "../../../domain/errors/params/private-channel/InvalidGetPrivateChannelParamsError";
+import { GetPrivateChannelParams } from "../../../application/params/private-channel/GetPrivateChannelParams";
+import { InvalidGetPrivateChannelParamsError } from "../../../application/errors/params/private-channel/InvalidGetPrivateChannelParamsError";
 import { ChannelNotFoundError } from "../../../domain/errors/entities/channel/ChannelNotFoundError";
-import { UpdatePrivateChannelParams } from "../../../domain/params/private-channel/UpdatePrivateChannelParams";
-import { InvalidUpdatePrivateChannelParamsError } from "../../../domain/errors/params/private-channel/InvalidUpdatePrivateChannelParamsError";
-import { UpdatePrivateChannelCommand } from "../../../domain/commands/private-channel/UpdatePrivateChannelCommand";
-import { InvalidUpdatePrivateChannelCommandError } from "../../../domain/errors/commands/private-channel/InvalidUpdatePrivateChannelCommandError";
+import { UpdatePrivateChannelParams } from "../../../application/params/private-channel/UpdatePrivateChannelParams";
+import { InvalidUpdatePrivateChannelParamsError } from "../../../application/errors/params/private-channel/InvalidUpdatePrivateChannelParamsError";
+import { UpdatePrivateChannelCommand } from "../../../application/commands/private-channel/UpdatePrivateChannelCommand";
+import { InvalidUpdatePrivateChannelCommandError } from "../../../application/errors/commands/private-channel/InvalidUpdatePrivateChannelCommandError";
 import { WritePrivateMessageUsecase } from "../../../application/usecases/private-channel/WritePrivateMessageUsecase";
-import { WritePrivateMessageParams } from "../../../domain/params/private-channel/WritePrivateMessageParams";
-import { InvalidWritePrivateMessageParamsError } from "../../../domain/errors/params/private-channel/InvalidWritePrivateMessageParamsError";
-import { WritePrivateMessageCommand } from "../../../domain/commands/private-channel/WritePrivateMessageCommand";
-import { InvalidWritePrivateMessageCommandError } from "../../../domain/errors/commands/private-channel/InvalidWritePrivateMessageCommandError";
-import { AttributePrivateChannelToParams } from "../../../domain/params/private-channel/AttributePrivateChannelToParams";
-import { InvalidAttributePrivateChannelToParamsError } from "../../../domain/errors/params/private-channel/InvalidAttributePrivateChannelToParamsError";
+import { WritePrivateMessageParams } from "../../../application/params/private-channel/WritePrivateMessageParams";
+import { InvalidWritePrivateMessageParamsError } from "../../../application/errors/params/private-channel/InvalidWritePrivateMessageParamsError";
+import { WritePrivateMessageCommand } from "../../../application/commands/private-channel/WritePrivateMessageCommand";
+import { InvalidWritePrivateMessageCommandError } from "../../../application/errors/commands/private-channel/InvalidWritePrivateMessageCommandError";
+import { AttributePrivateChannelToParams } from "../../../application/params/private-channel/AttributePrivateChannelToParams";
+import { InvalidAttributePrivateChannelToParamsError } from "../../../application/errors/params/private-channel/InvalidAttributePrivateChannelToParamsError";
 
 export class PrivateChannelController {
   public constructor(

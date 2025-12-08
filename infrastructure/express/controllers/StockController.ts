@@ -1,24 +1,24 @@
 import { Request, Response } from "express";
 
 import { StockRepositoryInterface } from "../../../application/repositories/StockRepositoryInterface";
-import { CreateStockCommand } from "../../../domain/commands/stock/CreateStockCommand";
-import { InvalidCreateStockCommandError } from "../../../domain/errors/commands/stock/InvalidCreateStockCommandError";
-import { InvalidUpdateStockCommandError } from "../../../domain/errors/commands/stock/InvalidUpdateStockCommandError";
+import { CreateStockCommand } from "../../../application/commands/stock/CreateStockCommand";
+import { InvalidCreateStockCommandError } from "../../../application/errors/commands/stock/InvalidCreateStockCommandError";
+import { InvalidUpdateStockCommandError } from "../../../application/errors/commands/stock/InvalidUpdateStockCommandError";
 import { StockNotFoundError } from "../../../domain/errors/entities/stock/StockNotFoundError";
-import { UpdateStockCommand } from "../../../domain/commands/stock/UpdateStockCommand";
-import { UpdateStockParams } from "../../../domain/params/stock/UpdateStockParams";
-import { InvalidUpdateStockParamsError } from "../../../domain/errors/params/stock/InvalidUpdateStockParamsError";
+import { UpdateStockCommand } from "../../../application/commands/stock/UpdateStockCommand";
+import { UpdateStockParams } from "../../../application/params/stock/UpdateStockParams";
+import { InvalidUpdateStockParamsError } from "../../../application/errors/params/stock/InvalidUpdateStockParamsError";
 import { CreateStockUsecase } from "../../../application/usecases/stock/CreateStockUsecase"
 import { UpdateStockUsecase } from "../../../application/usecases/stock/UpdateStockUsecase";
-import { GetStockListQuery } from "../../../domain/queries/stock/GetStockListQuery";
-import { InvalidGetListStockQueryError } from "../../../domain/errors/queries/stock/InvalidGetListStockQueryError";
+import { GetStockListQuery } from "../../../application/queries/stock/GetStockListQuery";
+import { InvalidGetListStockQueryError } from "../../../application/errors/queries/stock/InvalidGetListStockQueryError";
 import { GetStockListUsecase } from "../../../application/usecases/stock/GetStockListUsecase";
 import { StockOrderRepositoryInterface } from "../../../application/repositories/StockOrderRepositoryInterface";
 import { FinancialSecurityRepositoryInterface } from "../../../application/repositories/FinancialSecurityRepositoryInterface";
-import { PurchaseBaseStockParams } from "../../../domain/params/stock/PurchaseBaseStockParams";
-import { InvalidPurchaseBaseStockParamsError } from "../../../domain/errors/params/stock/InvalidPurchaseBaseStockParamsError";
-import { PurchaseBaseStockCommand } from "../../../domain/commands/stock/PurchaseBaseStockCommand";
-import { InvalidPurchaseBaseStockCommandError } from "../../../domain/errors/commands/stock/InvalidPurchaseBaseStockCommandError";
+import { PurchaseBaseStockParams } from "../../../application/params/stock/PurchaseBaseStockParams";
+import { InvalidPurchaseBaseStockParamsError } from "../../../application/errors/params/stock/InvalidPurchaseBaseStockParamsError";
+import { PurchaseBaseStockCommand } from "../../../application/commands/stock/PurchaseBaseStockCommand";
+import { InvalidPurchaseBaseStockCommandError } from "../../../application/errors/commands/stock/InvalidPurchaseBaseStockCommandError";
 import { PurchaseBaseStockUsecase } from "../../../application/usecases/stock/PurchaseBaseStockUsecase";
 import { OperationRepositoryInterface } from "../../../application/repositories/OperationRepositoryInterface";
 import { SettingRepositoryInterface } from "../../../application/repositories/SettingRepositoryInterface";
