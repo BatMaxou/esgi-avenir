@@ -44,8 +44,7 @@ export default function RootLayout({
     <html lang="fr">
       <body className={raleway.variable} suppressHydrationWarning={true}>
         <Providers>
-          <NavigationLoader />
-          {children}
+          <NavigationLoader>{children}</NavigationLoader>
         </Providers>
         <Toaster />
       </body>

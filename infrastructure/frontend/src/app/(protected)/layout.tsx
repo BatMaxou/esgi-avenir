@@ -8,7 +8,6 @@ import Header from "@/components/ui/molecules/partials/header";
 import { useAccounts } from "@/contexts/AccountsContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Banner } from "@/components/ui/atoms/banner";
-import { NavigationLoader } from "@/components/providers/NavigationLoader";
 import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
 
 type Props = {
@@ -46,8 +45,7 @@ export default function ProtectedLayout({ children }: Props) {
 
   return (
     <ProtectedRoute requiredRoles={[RoleEnum.USER]}>
-      <NavigationLoader />
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen max-h-screen overflow-y-hidden bg-white">
         <Header />
         <Banner title={pageTitle} />
         <main className="container mx-auto px-4 py-8">{children}</main>

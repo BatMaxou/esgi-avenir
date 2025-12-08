@@ -191,7 +191,7 @@ export default function TransferForm({
                           : "text-green-600"
                       }`}
                     >
-                      {fromAccount.amount < 0 ? "-" : "+"}
+                      {fromAccount.amount < 0 ? "" : "+"}
                       {`${fromAccount.amount.toFixed(2)} €`}
                     </span>
                   ) : (
@@ -235,7 +235,7 @@ export default function TransferForm({
                               : "text-green-600"
                           }`}
                         >
-                          {toAccount.amount < 0 ? "-" : "+"}
+                          {toAccount.amount < 0 ? "" : "+"}
                           {`${toAccount.amount.toFixed(2)} €`}
                         </span>
                       ) : null}

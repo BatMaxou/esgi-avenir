@@ -1,35 +1,51 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ApiClientError } from "../../../../../../../../application/services/api/ApiClientError";
 import { Separator } from "@/components/ui/atoms/separator";
-import { Operation } from "../../../../../../../../domain/entities/Operation";
 import { useAccounts } from "@/contexts/AccountsContext";
 import OperationAccountItem from "@/components/ui/molecules/item/operation-account-item";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { Item, ItemActions, ItemContent } from "@/components/ui/atoms/item";
+import { Icon } from "@iconify/react";
+import UpdateAccountDialog from "@/components/ui/molecules/dialogs/update-account-dialog";
+import DeleteAccountDialog from "@/components/ui/molecules/dialogs/delete-account-dialog";
+import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
 
 export default function AccountDetailsPage() {
   const params = useParams();
   const accountId = params.id as string;
-  const { account, isAccountLoading, getAccount } = useAccounts();
+  const router = useRouter();
+  const { account, accounts, isAccountLoading, getAccount } = useAccounts();
   const { endNavigation } = useNavigation();
-  const [operations, setOperations] = useState<Operation[] | ApiClientError>(
-    []
-  );
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteDisabled, setIsDeleteDisabled] = useState(false);
+
   useEffect(() => {
     endNavigation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const fetchAccount = () => {
-      getAccount(Number(accountId));
-    };
-
     if (accountId) {
-      fetchAccount();
+      getAccount(Number(accountId));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
+
+  useEffect(() => {
+    if (account && !account.isSavings) {
+      const currentAccounts = accounts.filter((acc) => !acc.isSavings);
+      if (currentAccounts.length === 1 && account.amount !== 0) {
+        setIsDeleteDisabled(true);
+      } else {
+        setIsDeleteDisabled(false);
+      }
+    } else {
+      setIsDeleteDisabled(false);
+    }
+  }, [account, accounts]);
 
   if (isAccountLoading) {
     return (
@@ -41,7 +57,23 @@ export default function AccountDetailsPage() {
   }
 
   if (!account) {
-    return <div>Compte introuvable</div>;
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          Compte introuvable
+        </h2>
+        <p className="text-gray-600 mb-6">
+          Le compte que vous cherchez n'existe pas ou a été supprimé.
+        </p>
+        <FilledButton
+          onClick={() => router.push("/accounts")}
+          className="px-6 py-2 font-semibold"
+          label="Retour à mes comptes"
+          icon="mdi:arrow-left"
+          iconPosition="start"
+        />
+      </div>
+    );
   }
 
   return (
@@ -56,7 +88,7 @@ export default function AccountDetailsPage() {
                 account.amount < 0 ? "text-red-600" : "text-green-600"
               }`}
             >
-              {account.amount < 0 ? "-" : "+"}
+              {account.amount < 0 ? "" : "+"}
               {account.amount.toFixed(2)} €
             </p>
           </div>
@@ -69,10 +101,14 @@ export default function AccountDetailsPage() {
         </div>
       </div>
       <Separator orientation="vertical" />
-      <div className="flex-1 space-y-8">
+      <div className="flex-1">
         <h1 className="text-2xl font-bold mb-4">Informations banquaires</h1>
-        <div className="bg-white p-6 rounded-lg shadow w-full">
+        <div className="bg-white p-6 rounded-lg shadow w-full mb-4">
           <div className="space-y-4">
+            <div>
+              <p className="text-gray-600">Nom du compte</p>
+              <p className="font-semibold">{account.name}</p>
+            </div>
             <div>
               <p className="text-gray-600">IBAN</p>
               <p className="font-semibold">{account.iban.value}</p>
@@ -83,7 +119,54 @@ export default function AccountDetailsPage() {
             </div>
           </div>
         </div>
+        <Item
+          className="bg-white p-4 rounded-lg shadow cursor-pointer hover:bg-gray-50 transition-all mb-4"
+          onClick={() => setIsUpdateModalOpen(true)}
+        >
+          <ItemContent>
+            <span className="font-semibold text-md">Modifier mon compte</span>
+          </ItemContent>
+          <ItemActions>
+            <Icon icon="mdi:chevron-right" className="w-5 h-5 text-gray-400" />
+          </ItemActions>
+        </Item>
+        <Item
+          className={`p-4 rounded-lg shadow transition-all ${
+            isDeleteDisabled
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-red-600 cursor-pointer hover:bg-red-700"
+          }`}
+          onClick={() => !isDeleteDisabled && setIsDeleteModalOpen(true)}
+        >
+          <ItemContent>
+            <span
+              className={`font-semibold text-md ${
+                isDeleteDisabled ? "text-gray-500" : "text-white"
+              }`}
+            >
+              Supprimer mon compte
+            </span>
+          </ItemContent>
+          <ItemActions>
+            <Icon
+              icon="mdi:chevron-right"
+              className={`w-5 h-5 ${
+                isDeleteDisabled ? "text-gray-500" : "text-white"
+              }`}
+            />
+          </ItemActions>
+        </Item>
       </div>
+      <UpdateAccountDialog
+        open={isUpdateModalOpen}
+        onOpenChange={setIsUpdateModalOpen}
+        account={account}
+      />
+      <DeleteAccountDialog
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        account={account}
+      />
     </div>
   );
 }
