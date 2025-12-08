@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useApiClient } from "@/contexts/ApiContext";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/components/ui/atoms/spinner";
 
 // Images
 import bgImage from "../../../public/assets/home-card.jpg";
@@ -35,6 +35,7 @@ export default function ConfirmRegister() {
     }
 
     confirmRegistration(token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const confirmRegistration = async (token: string) => {
@@ -81,7 +82,7 @@ export default function ConfirmRegister() {
           {loading && (
             <div className="space-y-4 text-center">
               <div className="w-full flex items-center justify-center">
-                <Spinner className="!size-12" />
+                <Spinner className="size-12!" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-8">
                 Confirmation de votre votre inscription...

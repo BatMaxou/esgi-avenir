@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/atoms/separator";
 import { useAccounts } from "@/contexts/AccountsContext";
@@ -10,10 +10,12 @@ import { Item, ItemActions, ItemContent } from "@/components/ui/atoms/item";
 import { Icon } from "@iconify/react";
 import UpdateAccountDialog from "@/components/ui/molecules/dialogs/update-account-dialog";
 import DeleteAccountDialog from "@/components/ui/molecules/dialogs/delete-account-dialog";
+import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
 
 export default function AccountDetailsPage() {
   const params = useParams();
   const accountId = params.id as string;
+  const router = useRouter();
   const { account, accounts, isAccountLoading, getAccount } = useAccounts();
   const { endNavigation } = useNavigation();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -26,26 +28,24 @@ export default function AccountDetailsPage() {
   }, []);
 
   useEffect(() => {
-    const fetchAccount = () => {
-      getAccount(Number(accountId)).then(() => {
-        if (account && !account.isSavings) {
-          const currentAccounts = accounts.filter((acc) => !acc.isSavings);
-          if (currentAccounts.length === 1 && account.amount !== 0) {
-            setIsDeleteDisabled(true);
-          } else {
-            setIsDeleteDisabled(false);
-          }
-        } else {
-          setIsDeleteDisabled(false);
-        }
-      });
-    };
-
     if (accountId) {
-      fetchAccount();
+      getAccount(Number(accountId));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
+
+  useEffect(() => {
+    if (account && !account.isSavings) {
+      const currentAccounts = accounts.filter((acc) => !acc.isSavings);
+      if (currentAccounts.length === 1 && account.amount !== 0) {
+        setIsDeleteDisabled(true);
+      } else {
+        setIsDeleteDisabled(false);
+      }
+    } else {
+      setIsDeleteDisabled(false);
+    }
+  }, [account, accounts]);
 
   if (isAccountLoading) {
     return (
@@ -57,7 +57,23 @@ export default function AccountDetailsPage() {
   }
 
   if (!account) {
-    return <div>Compte introuvable</div>;
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          Compte introuvable
+        </h2>
+        <p className="text-gray-600 mb-6">
+          Le compte que vous cherchez n'existe pas ou a été supprimé.
+        </p>
+        <FilledButton
+          onClick={() => router.push("/accounts")}
+          className="px-6 py-2 font-semibold"
+          label="Retour à mes comptes"
+          icon="mdi:arrow-left"
+          iconPosition="start"
+        />
+      </div>
+    );
   }
 
   return (
