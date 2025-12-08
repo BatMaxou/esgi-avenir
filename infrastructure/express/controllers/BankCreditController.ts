@@ -5,15 +5,15 @@ import { BankCreditRepositoryInterface } from "../../../application/repositories
 import { SendBankCreditCreationEmailUsecase } from "../../../application/usecases/email/SendBankCreditCreationEmailUsecase";
 import { MonthlyPaymentRepositoryInterface } from "../../../application/repositories/MonthlyPaymentRepositoryInterface";
 import { CreateBankCreditUsecase } from "../../../application/usecases/bank-credit/CreateBankCreditUsecase";
-import { CreateBankCreditCommand } from "../../../domain/commands/bank-credit/CreateBankCreditCommand";
-import { InvalidCreateBankCreditCommandError } from "../../../domain/errors/commands/bank-credit/InvalidCreateBankCreditCommandError";
+import { CreateBankCreditCommand } from "../../../application/commands/bank-credit/CreateBankCreditCommand";
+import { InvalidCreateBankCreditCommandError } from "../../../application/errors/commands/bank-credit/InvalidCreateBankCreditCommandError";
 import { GetBankCreditListUsecase } from "../../../application/usecases/bank-credit/GetBankCreditListUsecase";
 import { BankCreditNotFoundError } from "../../../domain/errors/entities/bank-credit/BankCreditNotFoundError";
 import { AccountRepositoryInterface } from "../../../application/repositories/AccountRepositoryInterface";
 import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
 import { UserNotFoundError } from "../../../domain/errors/entities/user/UserNotFoundError";
-import { GetBankCreditPaymentsParams } from "../../../domain/params/bank-credit/GetBankCreditPaymentsParams";
-import { InvalidGetBankCreditPaymentsParamsError } from "../../../domain/errors/params/bank-credit/InvalidGetBankCreditPaymentsParamsError";
+import { GetBankCreditPaymentsParams } from "../../../application/params/bank-credit/GetBankCreditPaymentsParams";
+import { InvalidGetBankCreditPaymentsParamsError } from "../../../application/errors/params/bank-credit/InvalidGetBankCreditPaymentsParamsError";
 import { GetMonthlyPaymentListUsecase } from "../../../application/usecases/monthly-payment/GetMonthlyPaymentListUsecase";
 
 export class BankCreditController {

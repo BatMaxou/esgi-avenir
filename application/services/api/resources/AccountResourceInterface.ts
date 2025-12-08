@@ -12,7 +12,7 @@ export interface GetAccountListResponseInterface
   extends Array<GetHydratedAccountResponseInterface> {}
 
 export interface CreateAccountPayloadInterface {
-  name: string;
+  name?: string;
 }
 
 export interface UpdateAccountPayloadInterface {
