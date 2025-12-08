@@ -6,6 +6,7 @@ import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { PrivateChannelModel } from "../models/PrivateChannelModel";
 import { UserModel } from "../models/UserModel";
+import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
 
 export class MariadbPrivateChannelRepository implements PrivateChannelRepositoryInterface {
   private privateChannelModel: PrivateChannelModel;
@@ -17,7 +18,7 @@ export class MariadbPrivateChannelRepository implements PrivateChannelRepository
     this.privateChannelModel = new PrivateChannelModel(connection, this.userModel);
   }
 
-  public async create(privateChannel: PrivateChannel): Promise<PrivateChannel> {
+  public async create(privateChannel: PrivateChannel): Promise<PrivateChannel | UserNotFoundError> {
     try {
       const createdPrivateChannel = await this.privateChannelModel.model.create({
         title: privateChannel.title,
@@ -32,7 +33,7 @@ export class MariadbPrivateChannelRepository implements PrivateChannelRepository
 
       return maybePrivateChannel;
     } catch (error) {
-      throw error;
+      return new UserNotFoundError('User not found.');
     }
   }
 
@@ -48,56 +49,64 @@ export class MariadbPrivateChannelRepository implements PrivateChannelRepository
 
       return await this.findById(id);
     } catch (error) {
-      throw new ChannelNotFoundError('Channel not found.');
+      return new ChannelNotFoundError('Channel not found.');
     }
   }
 
   public async findAllByUser(userId: number): Promise<PrivateChannel[]> {
-    const foundPrivateChannels = await this.privateChannelModel.model.findAll({
-      where: {
-        [Op.or]: [
-          { userId },
-        ],
-      },
-    });
+    try {
+      const foundPrivateChannels = await this.privateChannelModel.model.findAll({
+        where: {
+          [Op.or]: [
+            { userId },
+          ],
+        },
+      });
 
-    const privateChannels: PrivateChannel[] = [];
+      const privateChannels: PrivateChannel[] = [];
 
-    foundPrivateChannels.forEach((foundPrivateChannel) => {
-      const maybePrivateChannel = PrivateChannel.from(foundPrivateChannel);
-      if (maybePrivateChannel instanceof Error) {
-        throw maybePrivateChannel;
-      }
+      foundPrivateChannels.forEach((foundPrivateChannel) => {
+        const maybePrivateChannel = PrivateChannel.from(foundPrivateChannel);
+        if (maybePrivateChannel instanceof Error) {
+          throw maybePrivateChannel;
+        }
 
-      privateChannels.push(maybePrivateChannel);
-    });
+        privateChannels.push(maybePrivateChannel);
+      });
 
-    return privateChannels;
+      return privateChannels;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async findAllByAdvisor(advisorId: number): Promise<PrivateChannel[]> {
-    const foundPrivateChannels = await this.privateChannelModel.model.findAll({
-      where: {
-        [Op.or]: [
-          { userId: advisorId },
-          { advisorId: advisorId },
-          { advisorId: null },
-        ],
-      },
-    });
+    try {
+      const foundPrivateChannels = await this.privateChannelModel.model.findAll({
+        where: {
+          [Op.or]: [
+            { userId: advisorId },
+            { advisorId: advisorId },
+            { advisorId: null },
+          ],
+        },
+      });
 
-    const privateChannels: PrivateChannel[] = [];
+      const privateChannels: PrivateChannel[] = [];
 
-    foundPrivateChannels.forEach((foundPrivateChannel) => {
-      const maybePrivateChannel = PrivateChannel.from(foundPrivateChannel);
-      if (maybePrivateChannel instanceof Error) {
-        throw maybePrivateChannel;
-      }
+      foundPrivateChannels.forEach((foundPrivateChannel) => {
+        const maybePrivateChannel = PrivateChannel.from(foundPrivateChannel);
+        if (maybePrivateChannel instanceof Error) {
+          throw maybePrivateChannel;
+        }
 
-      privateChannels.push(maybePrivateChannel);
-    });
+        privateChannels.push(maybePrivateChannel);
+      });
 
-    return privateChannels;
+      return privateChannels;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async findById(id: number): Promise<PrivateChannel | ChannelNotFoundError> {
@@ -111,7 +120,7 @@ export class MariadbPrivateChannelRepository implements PrivateChannelRepository
 
       return maybePrivateChannel;
     } catch (error) {
-      throw new ChannelNotFoundError('Channel not found');
+      return new ChannelNotFoundError('Channel not found');
     }
   }
 }

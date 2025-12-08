@@ -3,10 +3,13 @@ import { NewsRepositoryInterface } from '../../repositories/NewsRepositoryInterf
 import { User } from '../../../domain/entities/User';
 import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotFoundError';
 import { InvalidHtmlContentError } from '../../../domain/errors/values/html-content/InvalidHtmlContentError';
+import { SseServerClientInterface } from '../../services/sse/SseServerClientInterface';
+import { SseRessourceEnum } from '../../services/sse/SseRessourceEnum';
 
-export class CreateNewsUsecase {
+export class CreateNewsUsecase<SseRequest, SseResponse> {
   public constructor(
     private readonly newsRepository: NewsRepositoryInterface,
+    private readonly sseServerClient: SseServerClientInterface<SseRequest, SseResponse>,
   ) {}
 
   public async execute(
@@ -14,19 +17,26 @@ export class CreateNewsUsecase {
     content: string,
     author: User,
   ): Promise<News | UserNotFoundError | InvalidHtmlContentError> {
-    const maybeNewsList = News.from({
+    const maybeNews = News.from({
       title,
       content,
       author,
     });
     if (
-      maybeNewsList instanceof InvalidHtmlContentError
-      || maybeNewsList instanceof UserNotFoundError
+      maybeNews instanceof InvalidHtmlContentError
+      || maybeNews instanceof UserNotFoundError
     ) {
-      return maybeNewsList;
+      return maybeNews;
     }
 
-    return await this.newsRepository.create(maybeNewsList);
+    const maybeNewNews = await this.newsRepository.create(maybeNews);
+
+    this.sseServerClient.broadcast(
+      SseRessourceEnum.NEWS,
+      maybeNewNews,
+    );
+    
+    return maybeNewNews;
   }
 }
 

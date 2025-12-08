@@ -10,8 +10,13 @@ export class UpdateBeneficiaryParams {
       return new InvalidUpdateBeneficiaryParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidUpdateBeneficiaryParamsError('Params not valid.');
+    }
+
     return new UpdateBeneficiaryParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

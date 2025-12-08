@@ -7,14 +7,28 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 import { roleMiddleware } from "../middlewares/roleMiddleware";
 import { RoleEnum } from "../../../domain/enums/RoleEnum";
 import { NewsController } from "../controllers/NewsController";
+import { SseExpressServerClient } from "../services/sse/SseExpressServerClient";
 
 export class NewsRouter {
   public register(
     app: Express,
     repositoryResolver: RepositoryResolverInterface,
     tokenManager: TokenManagerInterface,
+    sseServerClient: SseExpressServerClient,
   ) {
-    const newsController = new NewsController(repositoryResolver.getNewsRepository());
+    const newsController = new NewsController(
+      repositoryResolver.getNewsRepository(),
+      sseServerClient,
+    );
+
+    app.get(
+      paths.news.subscribe,
+      authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+      roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
+      async (req, res) => {
+        newsController.subscribe(req, res);
+      }
+    );
 
     app.post(
       paths.news.create,

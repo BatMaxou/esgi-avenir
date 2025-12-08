@@ -26,6 +26,15 @@ import { NotificationRouter } from "./routes/NotificationRouter";
 import { PrivateMessageRouter } from "./routes/PrivateMessageRouter";
 import { PrivateChannelRouter } from "./routes/PrivateChannelRouter";
 import { CompanyChannelRouter } from "./routes/CompanyChannelRouter";
+import { User } from "../../domain/entities/User";
+import { SseExpressResponseAssistant } from "./services/sse/SseExpressResponseAssistant";
+import { SseExpressServerClient } from "./services/sse/SseExpressServerClient";
+
+declare module 'express' {
+  interface Request {
+    user?: User;
+  }
+}
 
 const startServer = async () => {
   const app = express();
@@ -38,6 +47,9 @@ const startServer = async () => {
   const uniqueIdGenerator = new UniqueIdGenerator();
   const tokenManager = new TokenManager(jwtSecret);
   const scheduler = new Scheduler();
+
+  const sseAssistant = new SseExpressResponseAssistant();
+  const sseServerClient = new SseExpressServerClient(sseAssistant);
 
   app.get('/', (_, res) => {
     res.send("Hello World!");
@@ -125,12 +137,14 @@ const startServer = async () => {
     app,
     repositoryResolver,
     tokenManager,
+    sseServerClient,
   );
 
   (new NotificationRouter()).register(
     app,
     repositoryResolver,
     tokenManager,
+    sseServerClient,
   );
 
   (new PrivateMessageRouter()).register(

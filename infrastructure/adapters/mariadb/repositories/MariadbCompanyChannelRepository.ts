@@ -17,20 +17,13 @@ export class MariadbCompanyChannelRepository implements CompanyChannelRepository
   }
 
   public async create(companyChannel: CompanyChannel): Promise<CompanyChannel> {
-    try {
-      const createdCompanyChannel = await this.companyChannelModel.model.create({
-        title: companyChannel.title,
-      });
+    const createdCompanyChannel = await this.companyChannelModel.model.create({
+      title: companyChannel.title,
+    });
 
-      const maybeCompanyChannel = CompanyChannel.from(createdCompanyChannel);
-      if (maybeCompanyChannel instanceof Error) {
-        throw maybeCompanyChannel;
-      }
+    const maybeCompanyChannel = CompanyChannel.from(createdCompanyChannel);
 
-      return maybeCompanyChannel;
-    } catch (error) {
-      throw error;
-    }
+    return maybeCompanyChannel;
   }
 
   public async update(companyChannel: UpdateCompanyChannelPayload): Promise<CompanyChannel | ChannelNotFoundError> {
@@ -45,7 +38,7 @@ export class MariadbCompanyChannelRepository implements CompanyChannelRepository
 
       return await this.findById(id);
     } catch (error) {
-      throw new ChannelNotFoundError('Channel not found.');
+      return new ChannelNotFoundError('Channel not found.');
     }
   }
 
@@ -64,7 +57,7 @@ export class MariadbCompanyChannelRepository implements CompanyChannelRepository
 
       return maybeCompanyChannel;
     } catch (error) {
-      throw new ChannelNotFoundError('Channel not found');
+      return new ChannelNotFoundError('Channel not found.');
     }
   }
 }

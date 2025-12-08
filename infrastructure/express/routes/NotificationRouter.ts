@@ -7,15 +7,27 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 import { roleMiddleware } from "../middlewares/roleMiddleware";
 import { RoleEnum } from "../../../domain/enums/RoleEnum";
 import { NotificationController } from "../controllers/NotificationController";
+import { SseExpressServerClient } from "../services/sse/SseExpressServerClient";
 
 export class NotificationRouter {
   public register(
     app: Express,
     repositoryResolver: RepositoryResolverInterface,
     tokenManager: TokenManagerInterface,
+    sseServerClient: SseExpressServerClient,
   ) {
     const notificationController = new NotificationController(
       repositoryResolver.getNotificationRepository(),
+      sseServerClient,
+    );
+    
+    app.get(
+      paths.notification.subscribe,
+      authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+      roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
+      async (req, res) => {
+        notificationController.subscribe(req, res);
+      }
     );
 
     app.post(

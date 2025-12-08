@@ -24,6 +24,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
         roles: user.roles,
         enabled: user.enabled,
         confirmationToken: user.confirmationToken,
+        isDeleted: user.isDeleted,
       });
 
       const maybeUser = User.from(createdUser);
@@ -37,7 +38,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
         return new EmailExistsError('Given email already exists.');
       }
 
-      throw error;
+      return new EmailExistsError('Given email already exists.');
     }
   }
 
@@ -64,7 +65,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
         return new EmailExistsError('Given email already exists.');
       }
 
-      throw new UserNotFoundError('User not found.');
+      return new UserNotFoundError('User not found.');
     }
   }
 
@@ -82,24 +83,28 @@ export class MariadbUserRepository implements UserRepositoryInterface {
 
       return maybeUser;
     } catch (error) {
-      throw new UserNotFoundError('User not found.');
+      return new UserNotFoundError('User not found.');
     }
   }
 
   public async findAll(): Promise<User[]> {
-    const foundUsers = await this.userModel.model.findAll();
-    const users: User[] = [];
+    try {
+      const foundUsers = await this.userModel.model.findAll();
+      const users: User[] = [];
 
-    foundUsers.forEach((foundUser) => {
-      const maybeUser = User.from(foundUser);
-      if (maybeUser instanceof Error) {
-        throw maybeUser;
-      }
+      foundUsers.forEach((foundUser) => {
+        const maybeUser = User.from(foundUser);
+        if (maybeUser instanceof Error) {
+          throw maybeUser;
+        }
 
-      users.push(maybeUser);
-    });
+        users.push(maybeUser);
+      });
 
-    return users;
+      return users;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async findByEmail(email: string): Promise<User | UserNotFoundError> {
@@ -116,7 +121,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
 
       return maybeUser;
     } catch (error) {
-      throw new UserNotFoundError('User not found.');
+      return new UserNotFoundError('User not found.');
     }
   }
 
@@ -134,7 +139,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
 
       return maybeUser;
     } catch (error) {
-      throw new UserNotFoundError('User not found.');
+      return new UserNotFoundError('User not found.');
     }
   }
 
@@ -152,7 +157,7 @@ export class MariadbUserRepository implements UserRepositoryInterface {
 
       return maybeUser;
     } catch (error) {
-      throw new UserNotFoundError('Invalid token.');
+      return new UserNotFoundError('Invalid token.');
     }
   }
 
@@ -165,23 +170,27 @@ export class MariadbUserRepository implements UserRepositoryInterface {
 
       return true;
     } catch (error) {
-      throw new UserNotFoundError('User not found.');
+      return new UserNotFoundError('User not found.');
     }
   }
 
   public async findByIds(ids: number[]): Promise<User[]> {
-    const foundUsers = await this.userModel.model.findAll({ where: { id: ids } });
-    const users: User[] = [];
+    try {
+      const foundUsers = await this.userModel.model.findAll({ where: { id: ids } });
+      const users: User[] = [];
 
-    foundUsers.forEach((foundUser) => {
-      const maybeUser = User.from(foundUser);
-      if (maybeUser instanceof Error) {
-        throw maybeUser;
-      }
+      foundUsers.forEach((foundUser) => {
+        const maybeUser = User.from(foundUser);
+        if (maybeUser instanceof Error) {
+          throw maybeUser;
+        }
 
-      users.push(maybeUser);
-    });
+        users.push(maybeUser);
+      });
 
-    return users;
+      return users;
+    } catch (error) {
+      return [];
+    }
   }
 }

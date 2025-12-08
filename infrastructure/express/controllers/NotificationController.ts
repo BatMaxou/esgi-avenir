@@ -5,10 +5,13 @@ import { InvalidCreateNotificationCommandError } from "../../../domain/errors/co
 import { GetNotificationListUsecase } from "../../../application/usecases/notification/GetNotificationListUsecase";
 import { CreateNotificationUsecase } from "../../../application/usecases/notification/CreateNotificationUsecase";
 import { CreateNotificationCommand } from "../../../domain/commands/notification/CreateNotificationCommand";
+import { SseExpressServerClient } from "../services/sse/SseExpressServerClient";
+import { SubscribeNotificationUsecase } from "../../../application/usecases/notification/SubscribeNotificationUsecase";
 
 export class NotificationController {
   public constructor(
     private readonly notificationRepository: NotificationRepositoryInterface,
+    private readonly sseServerClient: SseExpressServerClient,
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -26,7 +29,10 @@ export class NotificationController {
       });
     }
 
-    const createUsecase = new CreateNotificationUsecase(this.notificationRepository);
+    const createUsecase = new CreateNotificationUsecase(
+      this.notificationRepository,
+      this.sseServerClient,
+    );
     const maybeNotification = await createUsecase.execute(
       maybeCommand.content,
       advisor,
@@ -61,5 +67,17 @@ export class NotificationController {
       content: notification.content,
       createdAt: notification.createdAt,
     })));
+  }
+
+  public subscribe(request: Request, response: Response) {
+    const user = request.user;
+    if (!user || !user.id) {
+      return response.status(401).json({
+        error: "Unauthorized",
+      });
+    }
+
+    const subscribeUsecase = new SubscribeNotificationUsecase(this.sseServerClient);
+    subscribeUsecase.execute(request, response, user);
   }
 }

@@ -40,33 +40,37 @@ export class MariadbNotificationRepository implements NotificationRepositoryInte
         }
       }
 
-      throw error;
+      return new UserNotFoundError('User not found.');
     }
   }
 
   public async findAllByUser(userId: number): Promise<Notification[]> {
-    const foundNotifications = await this.notificationModel.model.findAll({
-      where: {
-        [Op.or]: [
-          { userId: userId },
-          { userId: null },
-          { advisorId: userId },
-        ],
-      },
-    });
+    try {
+      const foundNotifications = await this.notificationModel.model.findAll({
+        where: {
+          [Op.or]: [
+            { userId: userId },
+            { userId: null },
+            { advisorId: userId },
+          ],
+        },
+      });
 
-    const notifications: Notification[] = [];
+      const notifications: Notification[] = [];
 
-    foundNotifications.forEach((foundNotification) => {
-      const maybeNotification = Notification.from(foundNotification);
-      if (maybeNotification instanceof Error) {
-        throw maybeNotification;
-      }
+      foundNotifications.forEach((foundNotification) => {
+        const maybeNotification = Notification.from(foundNotification);
+        if (maybeNotification instanceof Error) {
+          throw maybeNotification;
+        }
 
-      notifications.push(maybeNotification);
-    });
+        notifications.push(maybeNotification);
+      });
 
-    return notifications;
+      return notifications;
+    } catch (error) {
+      return [];
+    }
   }
 }
 

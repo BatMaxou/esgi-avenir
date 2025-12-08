@@ -1,5 +1,5 @@
 import { Message } from './Message';
-import { ChannelInterface } from '../interfaces/ChannelInterface';
+import { ChannelInterface } from '../entities/interfaces/ChannelInterface';
 
 export interface HydratedCompanyChannel extends CompanyChannel {
   messages: Message[];

@@ -26,6 +26,7 @@ import { GetAccountOperationsParams } from "../../../domain/params/account/GetAc
 import { InvalidGetAccountOperationsParamsError } from "../../../domain/errors/params/account/InvalidGetAccountOperationsParamsError";
 import { GetOperationListUsecase } from "../../../application/usecases/operation/GetOperationListUsecase";
 import { BeneficiaryRepositoryInterface } from "../../../application/repositories/BeneficiaryRepositoryInterface";
+import { AccountNotSoldableError } from "../../../application/errors/account/AccountNotSoldableError";
 
 export class AccountController {
   public constructor(
@@ -250,7 +251,8 @@ export class AccountController {
     }
 
     const deleteAccountUsecase = new DeleteAccountUsecase(
-      this.accountRepository
+      this.accountRepository,
+      this.operationRepository,
     );
     const maybeSuccess = await deleteAccountUsecase.execute(
       maybeParams.id,
@@ -259,6 +261,12 @@ export class AccountController {
 
     if (maybeSuccess instanceof AccountNotFoundError) {
       return response.status(404).json({
+        error: maybeSuccess.message,
+      });
+    }
+
+    if (maybeSuccess instanceof AccountNotSoldableError) {
+      return response.status(400).json({
         error: maybeSuccess.message,
       });
     }

@@ -10,8 +10,13 @@ export class GetAccountOperationsParams {
       return new InvalidGetAccountOperationsParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidGetAccountOperationsParamsError('Params not valid.');
+    }
+
     return new GetAccountOperationsParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

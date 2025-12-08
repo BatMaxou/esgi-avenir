@@ -10,8 +10,13 @@ export class DeleteBeneficiaryParams {
       return new InvalidDeleteBeneficiaryParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidDeleteBeneficiaryParamsError('Params not valid.');
+    }
+
     return new DeleteBeneficiaryParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 

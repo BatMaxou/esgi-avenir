@@ -58,7 +58,7 @@ export class MariadbBeneficiaryRepository
         }
       }
 
-      throw error;
+      return new UserNotFoundError("User not found.");
     }
   }
 
@@ -79,7 +79,7 @@ export class MariadbBeneficiaryRepository
 
       return await this.findById(id);
     } catch (error) {
-      throw new BeneficiaryNotFoundError("Beneficiary not found.");
+      return new BeneficiaryNotFoundError("Beneficiary not found.");
     }
   }
 
@@ -87,52 +87,56 @@ export class MariadbBeneficiaryRepository
     ownerId: number,
     term: string
   ): Promise<Beneficiary[]> {
-    const foundBeneficiaries = await this.beneficiaryModel.model.findAll({
-      where: {
-        ownerId: ownerId,
-        name: {
-          [Op.like]: `%${term}%`,
+    try {
+      const foundBeneficiaries = await this.beneficiaryModel.model.findAll({
+        where: {
+          ownerId: ownerId,
+          name: {
+            [Op.like]: `%${term}%`,
+          },
         },
-      },
-      include: [
-        {
-          association: "account",
-          required: false,
-        },
-        {
-          association: "owner",
-          required: false,
-        },
-      ],
-    });
-
-    const beneficiaries: Beneficiary[] = [];
-
-    foundBeneficiaries.forEach((foundBeneficiary) => {
-      const beneficiaryData = foundBeneficiary.get();
-
-      // Transform account if it exists
-      let account = undefined;
-      if (beneficiaryData.account) {
-        const maybeAccount = Account.from(beneficiaryData.account);
-        if (!(maybeAccount instanceof Error)) {
-          account = maybeAccount;
-        }
-      }
-
-      const maybeBeneficiary = Beneficiary.from({
-        ...beneficiaryData,
-        account,
+        include: [
+          {
+            association: "account",
+            required: false,
+          },
+          {
+            association: "owner",
+            required: false,
+          },
+        ],
       });
 
-      if (maybeBeneficiary instanceof Error) {
-        throw maybeBeneficiary;
-      }
+      const beneficiaries: Beneficiary[] = [];
 
-      beneficiaries.push(maybeBeneficiary);
-    });
+      foundBeneficiaries.forEach((foundBeneficiary) => {
+        const beneficiaryData = foundBeneficiary.get();
 
-    return beneficiaries;
+        // Transform account if it exists
+        let account = undefined;
+        if (beneficiaryData.account) {
+          const maybeAccount = Account.from(beneficiaryData.account);
+          if (!(maybeAccount instanceof Error)) {
+            account = maybeAccount;
+          }
+        }
+
+        const maybeBeneficiary = Beneficiary.from({
+          ...beneficiaryData,
+          account,
+        });
+
+        if (maybeBeneficiary instanceof Error) {
+          throw maybeBeneficiary;
+        }
+
+        beneficiaries.push(maybeBeneficiary);
+      });
+
+      return beneficiaries;
+    } catch (error) {
+      return [];
+    }
   }
 
   public async findById(
@@ -151,7 +155,7 @@ export class MariadbBeneficiaryRepository
 
       return maybeBeneficiary;
     } catch (error) {
-      throw new BeneficiaryNotFoundError("Beneficiary not found");
+      return new BeneficiaryNotFoundError("Beneficiary not found.");
     }
   }
 
@@ -166,7 +170,7 @@ export class MariadbBeneficiaryRepository
 
       return true;
     } catch (error) {
-      throw new BeneficiaryNotFoundError("Beneficiary not found.");
+      return new BeneficiaryNotFoundError("Beneficiary not found.");
     }
   }
 
@@ -193,7 +197,7 @@ export class MariadbBeneficiaryRepository
 
       return maybeBeneficiary;
     } catch (error) {
-      throw new BeneficiaryNotFoundError("Beneficiary not found.");
+      return new BeneficiaryNotFoundError("Beneficiary not found.");
     }
   }
 }

@@ -10,8 +10,13 @@ export class UpdatePrivateChannelParams {
       return new InvalidUpdatePrivateChannelParamsError('Params not valid.');
     }
 
+    const id = parseInt(params.id, 10);
+    if (isNaN(id) || id <= 0) {
+      return new InvalidUpdatePrivateChannelParamsError('Params not valid.');
+    }
+
     return new UpdatePrivateChannelParams(
-      parseInt(params.id, 10),
+      id,
     );
   }
 
