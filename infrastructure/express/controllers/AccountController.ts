@@ -252,6 +252,7 @@ export class AccountController {
 
     const deleteAccountUsecase = new DeleteAccountUsecase(
       this.accountRepository,
+      this.beneficiaryRepository,
       this.operationRepository,
     );
     const maybeSuccess = await deleteAccountUsecase.execute(
