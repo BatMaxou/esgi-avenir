@@ -4,10 +4,12 @@ import { AccountRepositoryInterface } from '../../repositories/AccountRepository
 import { OperationRepositoryInterface } from '../../repositories/OperationRepositoryInterface';
 import { AccountNotSoldableError } from '../../../application/errors/account/AccountNotSoldableError';
 import { AccountAmountValue } from '../../../domain/values/AccountAmountValue';
+import { BeneficiaryRepositoryInterface } from '../../repositories/BeneficiaryRepositoryInterface';
 
 export class DeleteAccountUsecase {
   public constructor(
     private readonly accountRepository: AccountRepositoryInterface,
+    private readonly beneficiaryRepository: BeneficiaryRepositoryInterface,
     private readonly operationRepository: OperationRepositoryInterface,
   ) {}
 
@@ -33,6 +35,8 @@ export class DeleteAccountUsecase {
     if (amountValue.value !== 0) {
       return new AccountNotSoldableError();
     }
+
+    await this.beneficiaryRepository.deleteByAccount(id);
 
     return await this.accountRepository.delete(id);
   }

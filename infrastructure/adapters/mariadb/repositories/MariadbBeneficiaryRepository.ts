@@ -3,7 +3,6 @@ import {
   UpdateBeneficiaryPayload,
 } from "../../../../application/repositories/BeneficiaryRepositoryInterface";
 import { Beneficiary } from "../../../../domain/entities/Beneficiary";
-import { Account } from "../../../../domain/entities/Account";
 import { BeneficiaryNotFoundError } from "../../../../domain/errors/entities/beneficiary/BeneficiaryNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
 import { databaseDsn } from "../../../express/utils/tools";
@@ -14,19 +13,19 @@ import { Op } from "sequelize";
 import { AccountModel } from "../models/AccountModel";
 import { AccountNotFoundError } from "../../../../domain/errors/entities/account/AccountNotFoundError";
 
-export class MariadbBeneficiaryRepository
-  implements BeneficiaryRepositoryInterface
-{
+export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterface {
+  private userModel: UserModel;
+  private accountModel: AccountModel;
   private beneficiaryModel: BeneficiaryModel;
 
   public constructor() {
     const connection = new MariadbConnection(databaseDsn).getConnection();
-    const userModel = new UserModel(connection);
-    const accountModel = new AccountModel(connection, userModel);
+    this.userModel = new UserModel(connection);
+    this.accountModel = new AccountModel(connection, this.userModel);
     this.beneficiaryModel = new BeneficiaryModel(
       connection,
-      userModel,
-      accountModel
+      this.userModel,
+      this.accountModel
     );
   }
 
@@ -34,6 +33,11 @@ export class MariadbBeneficiaryRepository
     beneficiary: Beneficiary
   ): Promise<Beneficiary | UserNotFoundError | AccountNotFoundError> {
     try {
+      const maybeAccount = await this.accountModel.model.findByPk(beneficiary.accountId);
+      if (!maybeAccount || maybeAccount.isDeleted) {
+        return new AccountNotFoundError("Account not found.");
+      }
+
       const createdBeneficiary = await this.beneficiaryModel.model.create({
         name: beneficiary.name,
         ownerId: beneficiary.ownerId,
@@ -97,12 +101,12 @@ export class MariadbBeneficiaryRepository
         },
         include: [
           {
-            association: "account",
-            required: false,
+            model: this.accountModel.model,
+            as: 'account',
           },
           {
-            association: "owner",
-            required: false,
+            model: this.userModel.model,
+            as: 'owner',
           },
         ],
       });
@@ -110,21 +114,7 @@ export class MariadbBeneficiaryRepository
       const beneficiaries: Beneficiary[] = [];
 
       foundBeneficiaries.forEach((foundBeneficiary) => {
-        const beneficiaryData = foundBeneficiary.get();
-
-        // Transform account if it exists
-        let account = undefined;
-        if (beneficiaryData.account) {
-          const maybeAccount = Account.from(beneficiaryData.account);
-          if (!(maybeAccount instanceof Error)) {
-            account = maybeAccount;
-          }
-        }
-
-        const maybeBeneficiary = Beneficiary.from({
-          ...beneficiaryData,
-          account,
-        });
+        const maybeBeneficiary = Beneficiary.from(foundBeneficiary);
 
         if (maybeBeneficiary instanceof Error) {
           throw maybeBeneficiary;
@@ -171,6 +161,18 @@ export class MariadbBeneficiaryRepository
       return true;
     } catch (error) {
       return new BeneficiaryNotFoundError("Beneficiary not found.");
+    }
+  }
+
+  public async deleteByAccount(id: number): Promise<boolean> {
+    try {
+      await this.beneficiaryModel.model.destroy({
+        where: { accountId: id },
+      });
+
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 

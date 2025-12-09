@@ -112,7 +112,7 @@ export class BeneficiaryController {
         account: beneficiary.account
           ? {
               id: beneficiary.account.id,
-              iban: { value: beneficiary.account.iban.value },
+              iban: { value: beneficiary.account.iban },
             }
           : null,
       }))
