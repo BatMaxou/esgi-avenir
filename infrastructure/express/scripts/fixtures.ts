@@ -28,7 +28,7 @@ const fixtures = async () => {
     await connection.drop();
     await connection.sync();
 
-    const repositoryResolver = new RepositoryResolver(databaseSource);
+    const repositoryResolver = new RepositoryResolver(databaseSource, databaseDsn);
     const passwordHasher = new PasswordHasher();
 
     await Promise.all([

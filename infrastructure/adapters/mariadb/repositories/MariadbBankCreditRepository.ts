@@ -1,6 +1,5 @@
 import { BankCredit } from "../../../../domain/entities/BankCredit";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { BankCreditModel } from "../models/BankCreditModel";
 import { UserModel } from "../models/UserModel";
@@ -19,7 +18,7 @@ export class MariadbBankCreditRepository implements BankCreditRepositoryInterfac
   private userModel: UserModel;
   private accountModel: AccountModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     this.userModel = new UserModel(connection);
     this.accountModel = new AccountModel(connection, this.userModel);

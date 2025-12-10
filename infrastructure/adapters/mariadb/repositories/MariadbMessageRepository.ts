@@ -1,5 +1,4 @@
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { UserModel } from "../models/UserModel";
 import { PrivateMessageModel } from "../models/PrivateMessageModel";
@@ -15,7 +14,7 @@ export class MariadbMessageRepository implements MessageRepositoryInterface {
   private privateMessageModel: PrivateMessageModel;
   private companyMessageModel: CompanyMessageModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     this.userModel = new UserModel(connection);
     this.privateMessageModel = new PrivateMessageModel(connection, this.userModel, new PrivateChannelModel(connection, this.userModel));

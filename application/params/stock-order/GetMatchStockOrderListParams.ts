@@ -1,8 +1,7 @@
 import { InvalidGetMatchStockOrderListParamsError } from "../../errors/params/stock-order/InvalidGetMatchStockOrderListParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class GetMatchStockOrderListParams {
   public static from(params: Params): GetMatchStockOrderListParams | InvalidGetMatchStockOrderListParamsError {

@@ -1,8 +1,7 @@
 import { InvalidGetUserParamsError } from '../../errors/params/user/InvalidGetUserParamsError';
+import { RessourceParamsInterface } from '../RessourceParamsInterface';
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class GetUserParams {
   public static from(params: Params): GetUserParams | InvalidGetUserParamsError {

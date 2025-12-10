@@ -1,8 +1,7 @@
 import { InvalidWriteCompanyMessageParamsError } from "../../errors/params/company-channel/InvalidWriteCompanyMessageParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class WriteCompanyMessageParams {
   public static from(params: Params): WriteCompanyMessageParams | InvalidWriteCompanyMessageParamsError {

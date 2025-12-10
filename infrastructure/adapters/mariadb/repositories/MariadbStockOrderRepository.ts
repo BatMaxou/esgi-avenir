@@ -1,7 +1,6 @@
 import { StockOrderRepositoryInterface, UpdateStockOrderPayload } from "../../../../application/repositories/StockOrderRepositoryInterface";
 import { StockOrder } from "../../../../domain/entities/StockOrder";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { StockOrderModel } from "../models/StockOrderModel";
 import { UserModel } from "../models/UserModel";
@@ -16,7 +15,7 @@ import { StockOrderTypeEnum } from "../../../../domain/enums/StockOrderTypeEnum"
 export class MariadbStockOrderRepository implements StockOrderRepositoryInterface {
   private stockOrderModel: StockOrderModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     const userModel = new UserModel(connection);
     const stockModel = new StockModel(connection);

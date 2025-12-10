@@ -2,14 +2,13 @@ import { Op } from "sequelize";
 import { StockRepositoryInterface, UpdateStockPayload } from "../../../../application/repositories/StockRepositoryInterface";
 import { Stock } from "../../../../domain/entities/Stock";
 import { StockNotFoundError } from "../../../../domain/errors/entities/stock/StockNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { StockModel } from "../models/StockModel";
 
 export class MariadbStockRepository implements StockRepositoryInterface {
   private stockModel: StockModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     this.stockModel = new StockModel(new MariadbConnection(databaseDsn).getConnection());
   }
 

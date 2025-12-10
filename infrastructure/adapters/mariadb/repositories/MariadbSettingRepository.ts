@@ -1,6 +1,5 @@
 import { Setting } from "../../../../domain/entities/Setting";
 import { SettingNotFoundError } from "../../../../domain/errors/entities/setting/SettingNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { SettingModel } from "../models/SettingModel";
 import { SettingEnum } from "../../../../domain/enums/SettingEnum";
@@ -9,7 +8,7 @@ import { SettingRepositoryInterface } from "../../../../application/repositories
 export class MariadbSettingRepository implements SettingRepositoryInterface {
   private settingModel: SettingModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     this.settingModel = new SettingModel(new MariadbConnection(databaseDsn).getConnection());
   }
 

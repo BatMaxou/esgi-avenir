@@ -1,8 +1,7 @@
 import { InvalidDeleteStockOrderParamsError } from "../../errors/params/stock-order/InvalidDeleteStockOrderParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class DeleteStockOrderParams {
   public static from(params: Params): DeleteStockOrderParams | InvalidDeleteStockOrderParamsError {

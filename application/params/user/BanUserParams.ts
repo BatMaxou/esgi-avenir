@@ -1,8 +1,7 @@
 import { InvalidBanUserParamsError } from "../../errors/params/user/InvalidBanUserParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class BanUserParams {
   public static from(params: Params): BanUserParams | InvalidBanUserParamsError {

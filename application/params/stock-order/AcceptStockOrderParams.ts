@@ -1,8 +1,7 @@
 import { InvalidAcceptStockOrderParamsError } from "../../errors/params/stock-order/InvalidAcceptStockOrderParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class AcceptStockOrderParams {
   public static from(params: Params): AcceptStockOrderParams | InvalidAcceptStockOrderParamsError {

@@ -1,7 +1,6 @@
 import { FinancialSecurityRepositoryInterface } from "../../../../application/repositories/FinancialSecurityRepositoryInterface";
 import { FinancialSecurity } from "../../../../domain/entities/FinancialSecurity";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { FinancialSecurityModel } from "../models/FinancialSecurityModel";
 import { UserModel } from "../models/UserModel";
@@ -13,7 +12,7 @@ export class MariadbFinancialSecurityRepository implements FinancialSecurityRepo
   private stockModel: StockModel;
   private financialSecurityModel: FinancialSecurityModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     const userModel = new UserModel(connection);
     this.stockModel = new StockModel(connection);

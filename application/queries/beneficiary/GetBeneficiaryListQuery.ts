@@ -1,11 +1,11 @@
 import { InvalidGetListBeneficiaryQueryError } from "../../errors/queries/beneficiary/InvalidGetListBeneficiaryQueryError";
 
-interface SearchParams {
+export interface BeneficiarySearchParams {
   term?: string | number | boolean;
 }
 
 export class GetBeneficiaryListQuery {
-  public static from(searchParams: SearchParams): GetBeneficiaryListQuery | InvalidGetListBeneficiaryQueryError {
+  public static from(searchParams: BeneficiarySearchParams): GetBeneficiaryListQuery | InvalidGetListBeneficiaryQueryError {
     const term = searchParams.term
     if (term !== undefined && typeof term !== 'string') {
       return new InvalidGetListBeneficiaryQueryError('Query parameters are not valid')

@@ -1,12 +1,12 @@
 import { SettingEnum } from "../../../domain/enums/SettingEnum";
 import { InvalidGetSettingParamsError } from "../../errors/params/setting/InvalidGetSettingParamsError";
 
-interface Params {
+export interface SettingParams {
   code?: string;
 }
 
 export class GetSettingParams {
-  public static from(params: Params): GetSettingParams | InvalidGetSettingParamsError {
+  public static from(params: SettingParams): GetSettingParams | InvalidGetSettingParamsError {
     if (
       !params.code
       || typeof params.code !== 'string'
