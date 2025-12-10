@@ -1,0 +1,244 @@
+"use client";
+
+import { createContext, ReactNode, useContext, useState } from "react";
+import { ApiClientError } from "../../../../application/services/api/ApiClientError";
+import { useApiClient } from "./ApiContext";
+import { getCookie } from "../../../utils/frontend/cookies";
+import {
+  GetUserListResponseInterface,
+  GetUserResponseInterface,
+  CreateUserPayloadInterface,
+  UpdateUserPayloadInterface,
+} from "../../../../application/services/api/resources/UserResourceInterface";
+import { toast } from "sonner";
+
+type Props = {
+  children: ReactNode;
+};
+
+type UsersContextType = {
+  user: GetUserResponseInterface | null;
+  users: GetUserListResponseInterface;
+  isUserLoading: boolean;
+  isUsersLoading: boolean;
+  getUser: (id: number) => Promise<void>;
+  getUsers: () => Promise<void>;
+  createUser: (
+    data: CreateUserPayloadInterface
+  ) => Promise<GetUserResponseInterface | null>;
+  updateUser: (
+    data: UpdateUserPayloadInterface
+  ) => Promise<GetUserResponseInterface | null>;
+  deleteUser: (id: number) => Promise<boolean>;
+  banUser: (id: number) => Promise<GetUserResponseInterface | null>;
+  unbanUser: (id: number) => Promise<GetUserResponseInterface | null>;
+};
+
+export const UsersContext = createContext<UsersContextType | undefined>(
+  undefined
+);
+
+export const UsersProvider = ({ children }: Props) => {
+  const [user, setUser] = useState<GetUserResponseInterface | null>(null);
+  const [users, setUsers] = useState<GetUserListResponseInterface>([]);
+  const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
+  const [isUsersLoading, setIsUsersLoading] = useState<boolean>(false);
+  const { apiClient } = useApiClient();
+
+  const getUser = async (id: number) => {
+    setIsUserLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsUserLoading(false);
+      return;
+    }
+
+    const response = await apiClient.user.get(id);
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to fetch user:", response.message);
+      setUser(null);
+    } else {
+      setUser(response);
+    }
+
+    setIsUserLoading(false);
+  };
+
+  const getUsers = async () => {
+    setIsUsersLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsUsersLoading(false);
+      return;
+    }
+
+    const response = await apiClient.user.getAll();
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to fetch users:", response.message);
+      setUsers([]);
+    } else {
+      setUsers(response);
+    }
+
+    setIsUsersLoading(false);
+  };
+
+  const createUser = async (
+    data: CreateUserPayloadInterface
+  ): Promise<GetUserResponseInterface | null> => {
+    setIsUsersLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsUsersLoading(false);
+      toast.error("Vous devez être connecté pour créer un utilisateur");
+      return null;
+    }
+
+    const response = await apiClient.user.create(data);
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to create user:", response.message);
+      toast.error("Erreur lors de la création de l'utilisateur");
+      setIsUsersLoading(false);
+      return null;
+    }
+
+    toast.success("Utilisateur créé avec succès");
+    await getUsers();
+    setIsUsersLoading(false);
+    return response;
+  };
+
+  const updateUser = async (
+    data: UpdateUserPayloadInterface
+  ): Promise<GetUserResponseInterface | null> => {
+    setIsUserLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsUserLoading(false);
+      toast.error("Vous devez être connecté pour modifier un utilisateur");
+      return null;
+    }
+
+    const response = await apiClient.user.update(data);
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to update user:", response.message);
+      toast.error("Erreur lors de la modification de l'utilisateur");
+      setIsUserLoading(false);
+      return null;
+    }
+
+    toast.success("Utilisateur modifié avec succès");
+    await getUser(data.id);
+    setIsUserLoading(false);
+    return response;
+  };
+
+  const deleteUser = async (id: number): Promise<boolean> => {
+    setIsUserLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsUserLoading(false);
+      toast.error("Vous devez être connecté pour supprimer un utilisateur");
+      return false;
+    }
+
+    const response = await apiClient.user.delete(id);
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to delete user:", response.message);
+      toast.error("Erreur lors de la suppression de l'utilisateur");
+      setIsUserLoading(false);
+      return false;
+    }
+
+    toast.success("Utilisateur supprimé avec succès");
+    await getUsers();
+    setIsUserLoading(false);
+    return true;
+  };
+
+  const banUser = async (
+    id: number
+  ): Promise<GetUserResponseInterface | null> => {
+    setIsUserLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsUserLoading(false);
+      toast.error("Vous devez être connecté pour bannir un utilisateur");
+      return null;
+    }
+
+    const response = await apiClient.user.ban(id);
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to ban user:", response.message);
+      toast.error("Erreur lors du bannissement de l'utilisateur");
+      setIsUserLoading(false);
+      return null;
+    }
+
+    toast.success("Utilisateur banni avec succès");
+    await getUser(id);
+    setIsUserLoading(false);
+    return response;
+  };
+
+  const unbanUser = async (
+    id: number
+  ): Promise<GetUserResponseInterface | null> => {
+    setIsUserLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsUserLoading(false);
+      toast.error("Vous devez être connecté pour débannir un utilisateur");
+      return null;
+    }
+
+    const response = await apiClient.user.unban(id);
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to unban user:", response.message);
+      toast.error("Erreur lors du débannissement de l'utilisateur");
+      setIsUserLoading(false);
+      return null;
+    }
+
+    toast.success("Utilisateur débanni avec succès");
+    await getUser(id);
+    setIsUserLoading(false);
+    return response;
+  };
+
+  return (
+    <UsersContext.Provider
+      value={{
+        user,
+        users,
+        isUserLoading,
+        isUsersLoading,
+        getUser,
+        getUsers,
+        createUser,
+        updateUser,
+        deleteUser,
+        banUser,
+        unbanUser,
+      }}
+    >
+      {children}
+    </UsersContext.Provider>
+  );
+};
+
+export const useUsers = () => {
+  const context = useContext(UsersContext);
+  if (!context) {
+    throw new Error("useUsers must be used within a UsersProvider");
+  }
+
+  return context;
+};
