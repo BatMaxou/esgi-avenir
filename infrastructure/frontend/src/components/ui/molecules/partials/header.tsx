@@ -92,7 +92,16 @@ export default function Header() {
                     <DropdownMenuItem>Paramètres</DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>GitHub</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      window.open(
+                        "https://github.com/BatMaxou/esgi-avenir",
+                        "_blank"
+                      )
+                    }
+                  >
+                    GitHub
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => logout()}>
                     Déconnexion
