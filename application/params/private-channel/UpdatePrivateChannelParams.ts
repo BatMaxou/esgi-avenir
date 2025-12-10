@@ -1,8 +1,7 @@
 import { InvalidUpdatePrivateChannelParamsError } from "../../errors/params/private-channel/InvalidUpdatePrivateChannelParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class UpdatePrivateChannelParams {
   public static from(params: Params): UpdatePrivateChannelParams | InvalidUpdatePrivateChannelParamsError {

@@ -1,6 +1,6 @@
 import { InvalidRegisterCommandError } from '../../errors/commands/auth/InvalidRegisterCommandError';
 
-interface Body {
+export interface RegisterBody {
   email?: string;
   password?: string,
   firstName?: string,
@@ -8,7 +8,7 @@ interface Body {
 }
 
 export class RegisterCommand {
-  public static from(body: Body): RegisterCommand | InvalidRegisterCommandError {
+  public static from(body: RegisterBody): RegisterCommand | InvalidRegisterCommandError {
     if (!body.email || !body.password || !body.firstName || !body.lastName) {
       return new InvalidRegisterCommandError('Payload is not valid.');
     }

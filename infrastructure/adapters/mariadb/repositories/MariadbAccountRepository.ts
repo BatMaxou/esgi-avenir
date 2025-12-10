@@ -2,7 +2,6 @@ import { AccountRepositoryInterface, UpdateAccountPayload } from "../../../../ap
 import { Account } from "../../../../domain/entities/Account";
 import { AccountNotFoundError } from "../../../../domain/errors/entities/account/AccountNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { AccountModel } from "../models/AccountModel";
 import { UserModel } from "../models/UserModel";
@@ -15,7 +14,7 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
   private accountModel: AccountModel;
   private userModel: UserModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     this.userModel = new UserModel(connection);
     this.accountModel = new AccountModel(connection, this.userModel);

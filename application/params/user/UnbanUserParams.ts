@@ -1,8 +1,7 @@
 import { InvalidUnbanUserParamsError } from '../../errors/params/user/InvalidUnbanUserParamsError';
+import { RessourceParamsInterface } from '../RessourceParamsInterface';
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class UnbanUserParams {
   public static from(params: Params): UnbanUserParams | InvalidUnbanUserParamsError {

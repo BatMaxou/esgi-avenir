@@ -1,12 +1,12 @@
 import { InvalidGetNewsListQueryError } from "../../errors/queries/news/InvalidGetNewsListQueryError";
 
-interface SearchParams {
+export interface NewsSearchParams {
   term?: string | number | boolean;
   count?: string | number | boolean;
 }
 
 export class GetNewsListQuery {
-  public static from(searchParams: SearchParams): GetNewsListQuery | InvalidGetNewsListQueryError {
+  public static from(searchParams: NewsSearchParams): GetNewsListQuery | InvalidGetNewsListQueryError {
     const term = searchParams.term
     if (term !== undefined && typeof term !== 'string') {
       return new InvalidGetNewsListQueryError('Query parameters are not valid')

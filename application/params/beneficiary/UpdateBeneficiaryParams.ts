@@ -1,8 +1,7 @@
 import { InvalidUpdateBeneficiaryParamsError } from "../../errors/params/beneficiary/InvalidUpdateBeneficiaryParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class UpdateBeneficiaryParams {
   public static from(params: Params): UpdateBeneficiaryParams | InvalidUpdateBeneficiaryParamsError {

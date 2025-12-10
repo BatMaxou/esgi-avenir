@@ -1,7 +1,6 @@
 import { CompanyChannelRepositoryInterface, UpdateCompanyChannelPayload } from "../../../../application/repositories/CompanyChannelRepositoryInterface";
 import { CompanyChannel } from "../../../../domain/entities/CompanyChannel";
 import { ChannelNotFoundError } from "../../../../domain/errors/entities/channel/ChannelNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { CompanyChannelModel } from "../models/CompanyChannelModel";
 import { UserModel } from "../models/UserModel";
@@ -10,7 +9,7 @@ export class MariadbCompanyChannelRepository implements CompanyChannelRepository
   private companyChannelModel: CompanyChannelModel;
   private userModel: UserModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     this.userModel = new UserModel(connection);
     this.companyChannelModel = new CompanyChannelModel(connection, this.userModel);

@@ -1,8 +1,7 @@
 import { InvalidDeleteNewsParamsError } from "../../errors/params/news/InvalidDeleteNewsParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class DeleteNewsParams {
   public static from(params: Params): DeleteNewsParams | InvalidDeleteNewsParamsError {

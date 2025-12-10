@@ -1,8 +1,7 @@
 import { InvalidDeleteBeneficiaryParamsError } from "../../errors/params/beneficiary/InvalidDeleteBeneficiaryParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class DeleteBeneficiaryParams {
   public static from(params: Params): DeleteBeneficiaryParams | InvalidDeleteBeneficiaryParamsError {

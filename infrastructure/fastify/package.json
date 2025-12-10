@@ -1,0 +1,26 @@
+{
+  "name": "@avenir/fastify",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fastify infrastructure for ESGI Avenir project",
+  "main": "app.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/infrastructure/fastify/src/app.js",
+    "dev": "tsx watch src/app.ts --host 0.0.0.0",
+    "sync": "npm run build && node build/infrastructure/fastify/src/scripts/sync.js",
+    "fixtures": "npm run build && node build/infrastructure/fastify/src/scripts/fixtures.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^5.0.0",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.8",
+    "tsx": "^4.7.0",
+    "typescript": "~5.9.2"
+  }
+}

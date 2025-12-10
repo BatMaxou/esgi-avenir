@@ -2,7 +2,6 @@ import { Op } from "sequelize";
 import { PrivateChannelRepositoryInterface, UpdatePrivateChannelPayload } from "../../../../application/repositories/PrivateChannelRepositoryInterface";
 import { PrivateChannel } from "../../../../domain/entities/PrivateChannel";
 import { ChannelNotFoundError } from "../../../../domain/errors/entities/channel/ChannelNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { PrivateChannelModel } from "../models/PrivateChannelModel";
 import { UserModel } from "../models/UserModel";
@@ -12,7 +11,7 @@ export class MariadbPrivateChannelRepository implements PrivateChannelRepository
   private privateChannelModel: PrivateChannelModel;
   private userModel: UserModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     this.userModel = new UserModel(connection);
     this.privateChannelModel = new PrivateChannelModel(connection, this.userModel);

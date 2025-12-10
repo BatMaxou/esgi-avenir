@@ -1,8 +1,7 @@
 import { InvalidUpdateNewsParamsError } from "../../errors/params/news/InvalidUpdateNewsParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class UpdateNewsParams {
   public static from(params: Params): UpdateNewsParams | InvalidUpdateNewsParamsError {

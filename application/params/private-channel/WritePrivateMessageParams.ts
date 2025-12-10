@@ -1,8 +1,7 @@
 import { InvalidWritePrivateMessageParamsError } from "../../errors/params/private-channel/InvalidWritePrivateMessageParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class WritePrivateMessageParams {
   public static from(params: Params): WritePrivateMessageParams | InvalidWritePrivateMessageParamsError {

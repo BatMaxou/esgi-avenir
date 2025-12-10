@@ -3,7 +3,6 @@ import { News } from "../../../../domain/entities/News";
 import { NewsNotFoundError } from "../../../../domain/errors/entities/news/NewsNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
 import { InvalidHtmlContentError } from "../../../../domain/errors/values/html-content/InvalidHtmlContentError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { NewsModel } from "../models/NewsModel";
 import { UserModel } from "../models/UserModel";
@@ -13,7 +12,7 @@ export class MariadbNewsRepository implements NewsRepositoryInterface {
   private newsModel: NewsModel;
   private userModel: UserModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     this.userModel = new UserModel(connection);
     this.newsModel = new NewsModel(connection, this.userModel);

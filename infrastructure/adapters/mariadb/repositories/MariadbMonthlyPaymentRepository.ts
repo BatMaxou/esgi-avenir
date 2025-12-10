@@ -1,5 +1,4 @@
 import { MonthlyPayment } from "../../../../domain/entities/MonthlyPayment";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { MonthlyPaymentModel } from "../models/MonthlyPaymentModel";
 import { UserModel } from "../models/UserModel";
@@ -13,7 +12,7 @@ export class MariadbMonthlyPaymentRepository implements MonthlyPaymentRepository
   private monthlyPaymentModel: MonthlyPaymentModel;
   private bankCreditModel: BankCreditModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     const userModel = new UserModel(connection);
     const accountModel = new AccountModel(connection, userModel);

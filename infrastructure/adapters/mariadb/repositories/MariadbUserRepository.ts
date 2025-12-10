@@ -1,7 +1,6 @@
 import { UpdateUserPayload, UserRepositoryInterface } from "../../../../application/repositories/UserRepositoryInterface";
 import { User } from "../../../../domain/entities/User";
 import { EmailExistsError } from "../../../../domain/errors/entities/user/EmailExistsError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../../mariadb/config/MariadbConnection";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
 import { UserModel } from "../../mariadb/models/UserModel";
@@ -10,7 +9,7 @@ import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 export class MariadbUserRepository implements UserRepositoryInterface {
   private userModel: UserModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     this.userModel = new UserModel(new MariadbConnection(databaseDsn).getConnection());
   }
 

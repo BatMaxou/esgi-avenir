@@ -1,8 +1,7 @@
 import { InvalidPurchaseBaseStockParamsError } from "../../errors/params/stock/InvalidPurchaseBaseStockParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class PurchaseBaseStockParams {
   public static from(params: Params): PurchaseBaseStockParams | InvalidPurchaseBaseStockParamsError {

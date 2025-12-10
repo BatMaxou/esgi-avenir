@@ -1,8 +1,7 @@
 import { InvalidUpdateAccountParamsError } from "../../errors/params/account/InvalidUpdateAccountParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class UpdateAccountParams {
   public static from(params: Params): UpdateAccountParams | InvalidUpdateAccountParamsError {
