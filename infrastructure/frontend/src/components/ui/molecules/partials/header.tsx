@@ -71,7 +71,7 @@ export default function Header() {
             {user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div className="hidden md:flex items-center space-x-3">
+                  <div className="hidden md:flex items-center space-x-3 cursor-pointer">
                     <div className="text-right">
                       <p className="text-sm font-medium text-gray-900">
                         {user.firstName} {user.lastName}
@@ -88,11 +88,16 @@ export default function Header() {
                     Mon compte
                   </DropdownMenuLabel>
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>Profil</DropdownMenuItem>
-                    <DropdownMenuItem>Paramètres</DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      Profil
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      Paramètres
+                    </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
+                    className="cursor-pointer"
                     onClick={() =>
                       window.open(
                         "https://github.com/BatMaxou/esgi-avenir",
@@ -103,7 +108,10 @@ export default function Header() {
                     GitHub
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => logout()}>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => logout()}
+                  >
                     Déconnexion
                   </DropdownMenuItem>
                 </DropdownMenuContent>
