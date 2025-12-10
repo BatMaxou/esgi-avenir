@@ -37,7 +37,7 @@ export const ProtectedRoute = ({
         }
       }
 
-      if (user?.roles?.includes(RoleEnum.BANNED as any)) {
+      if (user?.roles?.includes(RoleEnum.BANNED)) {
         router.push("/banned");
         return;
       }

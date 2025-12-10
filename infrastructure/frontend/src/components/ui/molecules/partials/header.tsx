@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
+import { RoleEnum } from "@/../../../domain/enums/RoleEnum";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,12 +18,21 @@ export default function Header() {
   const { user, logout } = useAuth();
   const pathname = usePathname();
 
-  const navLinks = [
-    { href: "/home", label: "Accueil" },
-    { href: "/accounts", label: "Comptes" },
-    { href: "/transfers", label: "Virements" },
-    { href: "/investments", label: "Investissements" },
-  ];
+  const isDirector = user?.roles.includes(RoleEnum.DIRECTOR);
+
+  const navLinks = isDirector
+    ? [
+        { href: "/home", label: "Accueil" },
+        { href: "/users", label: "Utilisateurs" },
+        { href: "/settings", label: "Paramètres" },
+        { href: "/actions", label: "Actions" },
+      ]
+    : [
+        { href: "/home", label: "Accueil" },
+        { href: "/accounts", label: "Comptes" },
+        { href: "/transfers", label: "Virements" },
+        { href: "/investments", label: "Investissements" },
+      ];
 
   const isActive = (path: string) => pathname === path;
 
@@ -61,7 +71,7 @@ export default function Header() {
             {user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div className="hidden md:flex items-center space-x-3">
+                  <div className="hidden md:flex items-center space-x-3 cursor-pointer">
                     <div className="text-right">
                       <p className="text-sm font-medium text-gray-900">
                         {user.firstName} {user.lastName}
@@ -78,13 +88,30 @@ export default function Header() {
                     Mon compte
                   </DropdownMenuLabel>
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>Profil</DropdownMenuItem>
-                    <DropdownMenuItem>Paramètres</DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      Profil
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      Paramètres
+                    </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>GitHub</DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      window.open(
+                        "https://github.com/BatMaxou/esgi-avenir",
+                        "_blank"
+                      )
+                    }
+                  >
+                    GitHub
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => logout()}>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => logout()}
+                  >
                     Déconnexion
                   </DropdownMenuItem>
                 </DropdownMenuContent>

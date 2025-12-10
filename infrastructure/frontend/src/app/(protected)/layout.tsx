@@ -21,6 +21,9 @@ const pageTitles: Record<string, string> = {
   "/transfers": "Virements",
   "/investments": "Mes investissements",
   "/profile": "Mon profil",
+  "/users": "Gestion des utilisateurs",
+  "/settings": "Paramètres de la banque",
+  "/actions": "Gestion des actions",
 };
 
 export default function ProtectedLayout({ children }: Props) {
