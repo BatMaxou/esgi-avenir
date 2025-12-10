@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 
-export default function Forbidden() {
+export default function UnauthorizedPage() {
   const router = useRouter();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

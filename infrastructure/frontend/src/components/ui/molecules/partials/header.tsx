@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
+import { RoleEnum } from "@/../../../domain/enums/RoleEnum";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,12 +18,21 @@ export default function Header() {
   const { user, logout } = useAuth();
   const pathname = usePathname();
 
-  const navLinks = [
-    { href: "/home", label: "Accueil" },
-    { href: "/accounts", label: "Comptes" },
-    { href: "/transfers", label: "Virements" },
-    { href: "/investments", label: "Investissements" },
-  ];
+  const isDirector = user?.roles.includes(RoleEnum.DIRECTOR);
+
+  const navLinks = isDirector
+    ? [
+        { href: "/home", label: "Accueil" },
+        { href: "/users", label: "Utilisateurs" },
+        { href: "/settings", label: "Paramètres" },
+        { href: "/actions", label: "Actions" },
+      ]
+    : [
+        { href: "/home", label: "Accueil" },
+        { href: "/accounts", label: "Comptes" },
+        { href: "/transfers", label: "Virements" },
+        { href: "/investments", label: "Investissements" },
+      ];
 
   const isActive = (path: string) => pathname === path;
 
