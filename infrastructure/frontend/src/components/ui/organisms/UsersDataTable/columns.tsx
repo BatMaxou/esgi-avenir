@@ -6,6 +6,7 @@ import {
   PencilIcon,
   TrashIcon,
   BanIcon,
+  EyeIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/atoms/button";
 import {
@@ -14,27 +15,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/atoms/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/molecules/dialogs/alert-dialog";
 import { useState } from "react";
 import { useUsers } from "@/contexts/UsersContext";
 import { toast } from "sonner";
 import { User } from "../../../../../../../domain/entities/User";
 import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
+import { useRouter } from "next/navigation";
+import { DeleteUserDialog } from "@/components/ui/molecules/dialogs/delete-user-dialog";
+import { BanUnbanUserDialog } from "@/components/ui/molecules/dialogs/ban-unban-user-dialog";
+import { UpdateUserDialog } from "@/components/ui/molecules/dialogs/update-user-dialog";
 
-// Actions Cell Component
 function UserActionsCell({ user }: { user: User }) {
-  const { deleteUser, banUser, unbanUser } = useUsers();
+  const { deleteUser, banUser, unbanUser, updateUser, getUsers } = useUsers();
+  const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isBanned = user.roles.includes(RoleEnum.BANNED);
 
@@ -46,11 +42,7 @@ function UserActionsCell({ user }: { user: User }) {
         return;
       }
       await deleteUser(user.id);
-      toast.success("Utilisateur supprimé");
       setIsDeleteDialogOpen(false);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_error) {
-      toast.error("Erreur lors de la suppression");
     } finally {
       setIsLoading(false);
     }
@@ -65,15 +57,30 @@ function UserActionsCell({ user }: { user: User }) {
       }
       if (isBanned) {
         await unbanUser(user.id);
-        toast.success("Utilisateur débanni");
       } else {
         await banUser(user.id);
-        toast.success("Utilisateur banni");
       }
       setIsBanDialogOpen(false);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_error) {
-      toast.error("Erreur lors de l'opération");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdate = async (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    roles: RoleEnum[];
+  }) => {
+    setIsLoading(true);
+    try {
+      if (!user.id) return;
+      await updateUser({
+        id: user.id,
+        ...data,
+      });
+      await getUsers();
+      setIsEditDialogOpen(false);
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +95,17 @@ function UserActionsCell({ user }: { user: User }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => router.push(`/users/${user.id}`)}
+          >
+            <EyeIcon className="mr-2 h-4 w-4" />
+            Consulter
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => setIsEditDialogOpen(true)}
+          >
             <PencilIcon className="mr-2 h-4 w-4" />
             Modifier
           </DropdownMenuItem>
@@ -109,61 +126,41 @@ function UserActionsCell({ user }: { user: User }) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog
+      <UpdateUserDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        user={{
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email || "",
+          roles: user.roles,
+        }}
+        onSubmit={handleUpdate}
+        isLoading={isLoading}
+      />
+
+      <DeleteUserDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Supprimer l&apos;utilisateur</AlertDialogTitle>
-            <AlertDialogDescription>
-              Êtes-vous sûr de vouloir supprimer {user.firstName}{" "}
-              {user.lastName}&nbsp;? Cette action est irréversible.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              disabled={isLoading}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              Supprimer
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        onConfirm={handleDelete}
+        isLoading={isLoading}
+        user={{
+          firstName: user.firstName,
+          lastName: user.lastName,
+        }}
+      />
 
-      {/* Ban/Unban Confirmation Dialog */}
-      <AlertDialog open={isBanDialogOpen} onOpenChange={setIsBanDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {isBanned ? "Débannir" : "Bannir"} l&apos;utilisateur
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {isBanned
-                ? `Êtes-vous sûr de vouloir débannir ${user.firstName} ${user.lastName}&nbsp;?`
-                : `Êtes-vous sûr de vouloir bannir ${user.firstName} ${user.lastName}&nbsp;?`}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleBanToggle}
-              disabled={isLoading}
-              className={
-                isBanned
-                  ? "bg-green-600 hover:bg-green-700"
-                  : "bg-orange-600 hover:bg-orange-700"
-              }
-            >
-              {isBanned ? "Débannir" : "Bannir"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <BanUnbanUserDialog
+        open={isBanDialogOpen}
+        onOpenChange={setIsBanDialogOpen}
+        onConfirm={handleBanToggle}
+        isLoading={isLoading}
+        user={{
+          firstName: user.firstName,
+          lastName: user.lastName,
+        }}
+        isBanned={isBanned}
+      />
     </>
   );
 }
