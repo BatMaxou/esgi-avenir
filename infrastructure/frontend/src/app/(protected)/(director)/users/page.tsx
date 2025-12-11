@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export default function UsersPage() {
   const { endNavigation } = useNavigation();
-  const { users, getUsers } = useUsers();
+  const { users, getUsers, isUsersLoading } = useUsers();
 
   useEffect(() => {
     getUsers();
@@ -16,7 +16,7 @@ export default function UsersPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <UsersDataTable data={users} />
+      <UsersDataTable data={users} isLoading={isUsersLoading} />
     </div>
   );
 }

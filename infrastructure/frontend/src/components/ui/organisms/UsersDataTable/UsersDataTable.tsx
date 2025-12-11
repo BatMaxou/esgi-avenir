@@ -8,9 +8,10 @@ import InputSearchLoader from "../../molecules/inputs/input-search-loader";
 
 interface UsersDataTableProps {
   data: User[];
+  isLoading?: boolean;
 }
 
-export function UsersDataTable({ data }: UsersDataTableProps) {
+export function UsersDataTable({ data, isLoading }: UsersDataTableProps) {
   const [filteredData, setFilteredData] = useState<User[]>(data);
 
   useEffect(() => {
@@ -27,7 +28,12 @@ export function UsersDataTable({ data }: UsersDataTableProps) {
           setNewItems={(items) => setFilteredData(items as User[])}
         />
       </div>
-      <DataTable columns={columns} data={filteredData} pageSize={10} />
+      <DataTable
+        columns={columns}
+        data={filteredData}
+        pageSize={10}
+        isLoading={isLoading}
+      />
     </div>
   );
 }
