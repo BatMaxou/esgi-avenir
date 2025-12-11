@@ -10,6 +10,8 @@ import {
   CreateUserPayloadInterface,
   UpdateUserPayloadInterface,
 } from "../../../../application/services/api/resources/UserResourceInterface";
+import { User } from "../../../../domain/entities/User";
+import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 import { toast } from "sonner";
 
 type Props = {
@@ -18,7 +20,7 @@ type Props = {
 
 type UsersContextType = {
   user: GetUserResponseInterface | null;
-  users: GetUserListResponseInterface;
+  users: User[];
   isUserLoading: boolean;
   isUsersLoading: boolean;
   getUser: (id: number) => Promise<void>;
@@ -40,7 +42,7 @@ export const UsersContext = createContext<UsersContextType | undefined>(
 
 export const UsersProvider = ({ children }: Props) => {
   const [user, setUser] = useState<GetUserResponseInterface | null>(null);
-  const [users, setUsers] = useState<GetUserListResponseInterface>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
   const [isUsersLoading, setIsUsersLoading] = useState<boolean>(false);
   const { apiClient } = useApiClient();
@@ -79,7 +81,32 @@ export const UsersProvider = ({ children }: Props) => {
       console.error("Failed to fetch users:", response.message);
       setUsers([]);
     } else {
-      setUsers(response);
+      const userList = response.map(
+        (userData) =>
+          ({
+            id: userData.id,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            roles: userData.roles || [],
+            enabled: false,
+            confirmationToken: null,
+            isDeleted: false,
+          } as User)
+      );
+
+      const sortedUserList = userList.sort((a, b) => {
+        const getRoleOrder = (roles: string[]) => {
+          if (roles.includes(RoleEnum.BANNED)) return 3;
+          if (roles.includes(RoleEnum.DIRECTOR)) return 0;
+          if (roles.includes(RoleEnum.ADVISOR)) return 1;
+          return 2;
+        };
+
+        return getRoleOrder(a.roles) - getRoleOrder(b.roles);
+      });
+
+      setUsers(sortedUserList);
     }
 
     setIsUsersLoading(false);
