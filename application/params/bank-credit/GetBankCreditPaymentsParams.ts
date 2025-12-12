@@ -1,8 +1,7 @@
 import { InvalidGetBankCreditPaymentsParamsError } from '../../errors/params/bank-credit/InvalidGetBankCreditPaymentsParamsError';
+import { RessourceParamsInterface } from '../RessourceParamsInterface';
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class GetBankCreditPaymentsParams {
   public static from(params: Params): GetBankCreditPaymentsParams | InvalidGetBankCreditPaymentsParamsError {

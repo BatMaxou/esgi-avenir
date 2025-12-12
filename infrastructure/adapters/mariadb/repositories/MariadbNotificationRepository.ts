@@ -1,7 +1,6 @@
 import { Op } from "sequelize";
 import { NotificationRepositoryInterface } from "../../../../application/repositories/NotificationRepositoryInterface";
 import { Notification } from "../../../../domain/entities/Notification";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { NotificationModel } from "../models/NotificationModel";
 import { UserModel } from "../models/UserModel";
@@ -11,7 +10,7 @@ export class MariadbNotificationRepository implements NotificationRepositoryInte
   private notificationModel: NotificationModel;
   private userModel: UserModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     this.userModel = new UserModel(connection);
     this.notificationModel = new NotificationModel(connection, this.userModel);

@@ -1,8 +1,7 @@
 import { InvalidAttributePrivateChannelToParamsError } from "../../errors/params/private-channel/InvalidAttributePrivateChannelToParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class AttributePrivateChannelToParams {
   public static from(params: Params): AttributePrivateChannelToParams | InvalidAttributePrivateChannelToParamsError {

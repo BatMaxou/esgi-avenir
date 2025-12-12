@@ -1,8 +1,7 @@
 import { InvalidGetPrivateChannelParamsError } from "../../errors/params/private-channel/InvalidGetPrivateChannelParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class GetPrivateChannelParams {
   public static from(params: Params): GetPrivateChannelParams | InvalidGetPrivateChannelParamsError {

@@ -10,7 +10,7 @@ import { TokenManager } from "../adapters/jwt/services/TokenManager";
 import { AuthRouter } from "./routes/AuthRouter";
 import { MeRouter } from "./routes/MeRouter";
 import { UserRouter } from "./routes/UserRouter";
-import { databaseSource, mailerHost, mailerPort, mailerFrom, jwtSecret } from "./utils/tools";
+import { databaseSource, databaseDsn, mailerHost, mailerPort, mailerFrom, jwtSecret } from "./utils/tools";
 import { AccountRouter } from "./routes/AccountRouter";
 import { OperationRouter } from "./routes/OperationRouter";
 import { Scheduler } from "../adapters/nodecron/services/Scheduler";
@@ -41,7 +41,7 @@ const startServer = async () => {
   app.use(bodyParser.json());
   app.use(cors());
 
-  const repositoryResolver = new RepositoryResolver(databaseSource);
+  const repositoryResolver = new RepositoryResolver(databaseSource, databaseDsn);
   const mailer = new Mailer(mailerHost, mailerPort, mailerFrom);
   const passwordHasher = new PasswordHasher();
   const uniqueIdGenerator = new UniqueIdGenerator();

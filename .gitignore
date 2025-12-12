@@ -12,6 +12,10 @@ infrastructure/frontend/build/
 # EXPRESS
 infrastructure/express/build/
 
+# FASTIFY
+infrastructure/fastify/build/
+
 # ENV
 infrastructure/frontend/.env.local
 infrastructure/express/.env.local
+infrastructure/fastify/.env.local

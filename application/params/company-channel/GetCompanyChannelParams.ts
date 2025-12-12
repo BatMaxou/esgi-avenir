@@ -1,8 +1,7 @@
 import { InvalidGetCompanyChannelParamsError } from "../../errors/params/company-channel/InvalidGetCompanyChannelParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class GetCompanyChannelParams {
   public static from(params: Params): GetCompanyChannelParams | InvalidGetCompanyChannelParamsError {

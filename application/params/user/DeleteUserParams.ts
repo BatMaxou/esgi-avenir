@@ -1,8 +1,7 @@
 import { InvalidDeleteUserParamsError } from "../../errors/params/user/InvalidDeleteUserParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class DeleteUserParams {
   public static from(params: Params): DeleteUserParams | InvalidDeleteUserParamsError {

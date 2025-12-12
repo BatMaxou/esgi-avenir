@@ -1,5 +1,4 @@
 import { Operation } from "../../../../domain/entities/Operation";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { OperationModel } from "../models/OperationModel";
 import { UserModel } from "../models/UserModel";
@@ -11,7 +10,7 @@ import { Op } from "sequelize";
 export class MariadbOperationRepository implements OperationRepositoryInterface {
   private operationModel: OperationModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     const userModel = new UserModel(connection);
     const accountModel = new AccountModel(connection, userModel);

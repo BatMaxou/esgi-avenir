@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import type { User } from '../../../../domain/entities/User';
 import { TokenPayload, TokenPayloadValue } from '../../../../domain/values/TokenPayloadValue';
 
 export class TokenManager {

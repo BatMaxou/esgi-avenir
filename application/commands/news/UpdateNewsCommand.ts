@@ -1,7 +1,7 @@
-import { UpdateNewsPayload } from "../../../application/repositories/NewsRepositoryInterface";
 import { InvalidUpdateNewsCommandError } from "../../errors/commands/news/InvalidUpdateNewsCommandError";
+import { UpdateNewsPayloadInterface } from "../../services/api/resources/NewsResourceInterface";
 
-interface Body extends Partial<UpdateNewsPayload> {}
+interface Body extends Partial<UpdateNewsPayloadInterface> {}
 
 export class UpdateNewsCommand {
   public static from(body: Body): UpdateNewsCommand | InvalidUpdateNewsCommandError {

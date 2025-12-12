@@ -1,8 +1,7 @@
 import { InvalidUpdateStockParamsError } from "../../errors/params/stock/InvalidUpdateStockParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class UpdateStockParams {
   public static from(params: Params): UpdateStockParams | InvalidUpdateStockParamsError {

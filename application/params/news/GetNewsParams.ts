@@ -1,8 +1,7 @@
 import { InvalidGetNewsParamsError } from "../../errors/params/news/InvalidGetNewsParamsError";
+import { RessourceParamsInterface } from "../RessourceParamsInterface";
 
-interface Params {
-  id?: string;
-}
+interface Params extends RessourceParamsInterface {}
 
 export class GetNewsParams {
   public static from(params: Params): GetNewsParams | InvalidGetNewsParamsError {

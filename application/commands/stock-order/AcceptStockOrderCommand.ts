@@ -1,11 +1,11 @@
 import { InvalidAcceptStockOrderCommandError } from "../../errors/commands/stock-order/InvalidAcceptStockOrderCommandError";
 
-interface Body {
+export interface AcceptStockOrderBody {
   withId?: number | string;
 }
 
 export class AcceptStockOrderCommand {
-  public static from(body: Body): AcceptStockOrderCommand | InvalidAcceptStockOrderCommandError {
+  public static from(body: AcceptStockOrderBody): AcceptStockOrderCommand | InvalidAcceptStockOrderCommandError {
     if (
       !body.withId
       || typeof body.withId !== 'number'

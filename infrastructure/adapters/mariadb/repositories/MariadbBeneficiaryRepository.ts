@@ -5,7 +5,6 @@ import {
 import { Beneficiary } from "../../../../domain/entities/Beneficiary";
 import { BeneficiaryNotFoundError } from "../../../../domain/errors/entities/beneficiary/BeneficiaryNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
-import { databaseDsn } from "../../../express/utils/tools";
 import { MariadbConnection } from "../config/MariadbConnection";
 import { BeneficiaryModel } from "../models/BeneficiaryModel";
 import { UserModel } from "../models/UserModel";
@@ -18,7 +17,7 @@ export class MariadbBeneficiaryRepository implements BeneficiaryRepositoryInterf
   private accountModel: AccountModel;
   private beneficiaryModel: BeneficiaryModel;
 
-  public constructor() {
+  public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     this.userModel = new UserModel(connection);
     this.accountModel = new AccountModel(connection, this.userModel);
