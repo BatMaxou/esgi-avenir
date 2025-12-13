@@ -3,9 +3,9 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
+import { useAuth } from "./AuthContext";
 import { getCookie } from "../../../utils/frontend/cookies";
 import {
-  GetUserListResponseInterface,
   GetUserResponseInterface,
   CreateUserPayloadInterface,
   UpdateUserPayloadInterface,
@@ -46,6 +46,7 @@ export const UsersProvider = ({ children }: Props) => {
   const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
   const [isUsersLoading, setIsUsersLoading] = useState<boolean>(false);
   const { apiClient } = useApiClient();
+  const { user: authUser, me } = useAuth();
 
   const getUser = async (id: number) => {
     setIsUserLoading(true);
@@ -160,6 +161,9 @@ export const UsersProvider = ({ children }: Props) => {
 
     toast.success("Utilisateur modifié avec succès");
     await getUser(data.id);
+    if (authUser?.id === data.id) {
+      await me();
+    }
     setIsUserLoading(false);
     return response;
   };
