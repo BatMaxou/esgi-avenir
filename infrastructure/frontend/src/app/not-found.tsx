@@ -17,8 +17,8 @@ export default function NotFound() {
           />
         </div>
         <div className="text-center">
-          <h1 className="text-9xl font-bold text-[#ff8b8b]">404</h1>
-          <h2 className="text-3xl font-semibold text-gray-800 mt-4">
+          <h1 className="text-9xl font-bold text-light-orange!">404</h1>
+          <h2 className="text-3xl font-semibold mt-4 text-gray-800">
             Page introuvable
           </h2>
           <p className="text-gray-600 mt-2 mb-8">
@@ -26,7 +26,7 @@ export default function NotFound() {
           </p>
           <LoadingLink
             href="/home"
-            className="inline-block px-6 py-3 bg-[#ff8b8b] text-white font-semibold rounded-lg hover:bg-[#e07b7b] transition-colors"
+            className="inline-block px-6 py-3 bg-light-orange text-white font-semibold rounded-lg hover:bg-dark-orange transition-colors"
           >
             Retour à l'accueil
           </LoadingLink>

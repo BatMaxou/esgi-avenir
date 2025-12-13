@@ -3,6 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-light-orange: #ff8b8b;
+  --color-dark-orange: #e07b7b;
+  --color-primary-red: #e7000b;
+  --color-secondary-red: #b5000a;
+}
+
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;

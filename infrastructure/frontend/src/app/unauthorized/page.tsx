@@ -19,7 +19,7 @@ export default function UnauthorizedPage() {
           />
         </div>
         <div className="text-center">
-          <h1 className="text-9xl font-bold text-[#ff8b8b]">403</h1>
+          <h1 className="text-9xl font-bold text-light-orange">401</h1>
           <h2 className="text-3xl font-semibold text-gray-800 mt-4">
             Accès refusé
           </h2>
@@ -30,7 +30,7 @@ export default function UnauthorizedPage() {
           <div className="flex flex-col gap-3">
             <LoadingLink
               href="/home"
-              className="inline-block px-6 py-3 bg-[#ff8b8b] text-white font-semibold rounded-lg hover:bg-[#e07b7b] transition-colors"
+              className="inline-block px-6 py-3 bg-light-orange text-white font-semibold rounded-lg hover:bg-dark-orange transition-colors"
             >
               Retour à l'accueil
             </LoadingLink>

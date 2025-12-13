@@ -227,7 +227,7 @@ export default function DeleteAccountDialog({
                   handleTransferAndDelete();
                 }}
                 disabled={isTransferring}
-                className="bg-[#e7000b] hover:bg-[#b5000a] focus:ring-[#b5000a] cursor-pointer text-white hover:text-white"
+                className="bg-primary-red hover:bg-secondary-red focus:ring-secondary-red cursor-pointer text-white hover:text-white"
               >
                 {isTransferring
                   ? "Traitement en cours..."

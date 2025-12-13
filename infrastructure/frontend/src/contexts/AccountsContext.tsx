@@ -236,7 +236,16 @@ export const AccountsProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to delete account:", response.message);
-      toast.error("Erreur lors de la suppression du compte");
+      if (
+        response.code === 400 &&
+        response.message === "Account is not soldable."
+      ) {
+        toast.error(
+          "Votre compte ne peut pas être supprimé car le solde n'est pas nul."
+        );
+      } else {
+        toast.error("Erreur lors de la suppression du compte");
+      }
       setIsAccountLoading(false);
       return false;
     }

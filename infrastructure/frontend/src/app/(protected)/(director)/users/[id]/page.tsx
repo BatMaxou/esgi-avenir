@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import { useUsers } from "@/contexts/UsersContext";
 import { Button } from "@/components/ui/atoms/button";
 import {
@@ -33,6 +33,7 @@ export default function UserDetailsPage() {
     updateUser,
   } = useUsers();
 
+  const [isUserFetched, setIsUserFetched] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -43,8 +44,15 @@ export default function UserDetailsPage() {
   useEffect(() => {
     if (userId) {
       getUser(userId);
+      setIsUserFetched(true);
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (isUserFetched && !isUserLoading && !user) {
+      notFound();
+    }
+  }, [isUserFetched, isUserLoading, user]);
 
   const handleDelete = async () => {
     setIsLoadingAction(true);
