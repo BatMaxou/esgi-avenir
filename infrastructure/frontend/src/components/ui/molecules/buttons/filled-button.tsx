@@ -30,12 +30,9 @@ export function FilledButton({
       onClick={onClick}
       disabled={disabled || loading}
       type={type}
-      style={{
-        cursor: "pointer",
-        backgroundColor: "#e7000b",
-        position: "relative",
-      }}
-      className={`flex items-center gap-2 ${className || ""}`}
+      className={`flex items-center gap-2 bg-primary-red hover:bg-secondary-red cursor-pointer relative ${
+        className || ""
+      }`}
     >
       {loading ? (
         <Spinner />

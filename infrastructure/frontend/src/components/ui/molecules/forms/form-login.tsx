@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/atoms/input";
 import { useApiClient } from "@/contexts/ApiContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { ApiClientError } from "../../../../../../../application/services/api/ApiClientError";
 
 const formSchema = z.object({
   email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
@@ -59,10 +60,12 @@ export function LoginForm() {
         router.push("/home");
         setLoading(false);
       } else {
-        if ("message" in response) {
+        if (response instanceof ApiClientError) {
           errorMessage =
             String(response.message) === "Unauthorized"
               ? "Email ou mot de passe incorrect."
+              : String(response.message) === "User account is not enabled yet."
+              ? "Veuillez d'abord activer votre compte."
               : "Erreur de connexion";
           showErrorToast(errorMessage);
           setLoading(false);
