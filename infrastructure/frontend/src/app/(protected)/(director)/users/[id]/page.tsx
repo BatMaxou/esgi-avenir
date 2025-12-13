@@ -16,10 +16,13 @@ import { RoleEnum } from "../../../../../../../../domain/enums/RoleEnum";
 import { UpdateUserDialog } from "@/components/ui/molecules/dialogs/update-user-dialog";
 import { DeleteUserDialog } from "@/components/ui/molecules/dialogs/delete-user-dialog";
 import { BanUnbanUserDialog } from "@/components/ui/molecules/dialogs/ban-unban-user-dialog";
+import { RoleBadge } from "@/components/ui/molecules/badges/role-badge";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function UserDetailsPage() {
   const params = useParams();
   const router = useRouter();
+  const { user: authUser } = useAuth();
   const {
     getUser,
     user,
@@ -132,6 +135,7 @@ export default function UserDetailsPage() {
                 : "text-orange-600 hover:text-orange-700"
             }
             onClick={() => setIsBanDialogOpen(true)}
+            disabled={userId === authUser?.id}
           >
             <BanIcon className="h-4 w-4 mr-2" />
             {isBanned ? "Débannir" : "Bannir"}
@@ -139,6 +143,7 @@ export default function UserDetailsPage() {
           <Button
             variant="destructive"
             onClick={() => setIsDeleteDialogOpen(true)}
+            disabled={userId === authUser?.id}
           >
             <TrashIcon className="h-4 w-4 mr-2" />
             Supprimer
@@ -165,16 +170,9 @@ export default function UserDetailsPage() {
               <span className="col-span-2">{user.email}</span>
             </div>
             <div className="grid grid-cols-3 gap-2">
-              <span className="font-medium text-gray-500">Rôles:</span>
-              <div className="col-span-2 flex flex-wrap gap-2">
-                {user.roles.map((role) => (
-                  <span
-                    key={role}
-                    className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium"
-                  >
-                    {role}
-                  </span>
-                ))}
+              <span className="font-medium text-gray-500">Rôle:</span>
+              <div className="col-span-2">
+                <RoleBadge roles={user.roles} />
               </div>
             </div>
           </div>

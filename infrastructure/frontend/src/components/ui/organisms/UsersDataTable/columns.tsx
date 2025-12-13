@@ -24,6 +24,8 @@ import { useRouter } from "next/navigation";
 import { DeleteUserDialog } from "@/components/ui/molecules/dialogs/delete-user-dialog";
 import { BanUnbanUserDialog } from "@/components/ui/molecules/dialogs/ban-unban-user-dialog";
 import { UpdateUserDialog } from "@/components/ui/molecules/dialogs/update-user-dialog";
+import { RoleBadge } from "@/components/ui/molecules/badges/role-badge";
+import { useAuth } from "@/contexts/AuthContext";
 
 function UserActionsCell({ user }: { user: User }) {
   const { deleteUser, banUser, unbanUser, updateUser, getUsers } = useUsers();
@@ -33,6 +35,7 @@ function UserActionsCell({ user }: { user: User }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isBanned = user.roles.includes(RoleEnum.BANNED);
+  const { user: authUser } = useAuth();
 
   const handleDelete = async () => {
     setIsLoading(true);
@@ -109,20 +112,25 @@ function UserActionsCell({ user }: { user: User }) {
             <PencilIcon className="mr-2 h-4 w-4" />
             Modifier
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setIsBanDialogOpen(true)}
-            className="cursor-pointer"
-          >
-            <BanIcon className="mr-2 h-4 w-4" />
-            {isBanned ? "Débannir" : "Bannir"}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setIsDeleteDialogOpen(true)}
-            className="cursor-pointer text-red-600"
-          >
-            <TrashIcon className="mr-2 h-4 w-4" />
-            Supprimer
-          </DropdownMenuItem>
+          {user.id !== authUser?.id && (
+            <DropdownMenuItem
+              onClick={() => setIsBanDialogOpen(true)}
+              className="cursor-pointer text-red-600"
+              disabled={user.id === authUser?.id}
+            >
+              <BanIcon className="mr-2 h-4 w-4 text-red-600" />
+              {isBanned ? "Débannir" : "Bannir"}
+            </DropdownMenuItem>
+          )}
+          {user.id !== authUser?.id && (
+            <DropdownMenuItem
+              onClick={() => setIsDeleteDialogOpen(true)}
+              className="cursor-pointer text-red-600"
+            >
+              <TrashIcon className="mr-2 h-4 w-4 text-red-600" />
+              Supprimer
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -187,27 +195,7 @@ export const columns: ColumnDef<User>[] = [
     header: "Rôle",
     cell: ({ row }) => {
       const roles = row.original.roles || [];
-      const displayRole = roles.find((r) => r !== RoleEnum.USER);
-      const roleLabel =
-        displayRole === RoleEnum.DIRECTOR
-          ? "Directeur"
-          : displayRole === RoleEnum.ADVISOR
-          ? "Conseiller"
-          : "Client";
-      const bgColor =
-        displayRole === RoleEnum.DIRECTOR
-          ? "bg-purple-100 text-purple-800"
-          : displayRole === RoleEnum.ADVISOR
-          ? "bg-blue-100 text-blue-800"
-          : "bg-gray-100 text-gray-800";
-
-      return (
-        <span
-          className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${bgColor}`}
-        >
-          {roleLabel}
-        </span>
-      );
+      return <RoleBadge roles={roles} />;
     },
   },
   {
