@@ -38,7 +38,7 @@ export class UserController {
     private readonly userRepository: UserRepositoryInterface,
     private readonly passwordHasher: PasswordHasherInterface,
     private readonly uniqueIdGenerator: UniqueIdGeneratorInterface,
-    private readonly mailer: MailerInterface,
+    private readonly mailer: MailerInterface
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -63,13 +63,17 @@ export class UserController {
       });
     }
 
-    const createUsecase = new CreateUserUsecase(this.userRepository, this.passwordHasher, this.uniqueIdGenerator);
+    const createUsecase = new CreateUserUsecase(
+      this.userRepository,
+      this.passwordHasher,
+      this.uniqueIdGenerator
+    );
     const maybeUser = await createUsecase.execute(
       maybeEmail.value,
       maybePassword.value,
       maybeCommand.firstName,
       maybeCommand.lastName,
-      maybeCommand.roles,
+      maybeCommand.roles
     );
 
     if (maybeUser instanceof Error) {
@@ -81,7 +85,7 @@ export class UserController {
     const sendEmailUsecase = new SendConfirmationEmailUsecase(this.mailer);
     await sendEmailUsecase.execute(
       maybeEmail,
-      `${frontUrl}/confirm?token=${maybeUser.confirmationToken}`,
+      `${frontUrl}/confirm?token=${maybeUser.confirmationToken}`
     );
 
     response.status(201).json({
@@ -99,7 +103,7 @@ export class UserController {
 
     const usersResponse = users.map((user) => ({
       id: user.id,
-      email: user.email.value,
+      email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       roles: user.roles,
@@ -148,31 +152,36 @@ export class UserController {
       });
     }
 
-    const maybeEmail = maybeCommand.email ? EmailValue.from(maybeCommand.email) : undefined;
+    const maybeEmail = maybeCommand.email
+      ? EmailValue.from(maybeCommand.email)
+      : undefined;
     if (maybeEmail instanceof InvalidEmailError) {
       return response.status(400).json({
         error: maybeEmail.message,
       });
     }
 
-    const maybePassword = maybeCommand.password ? PasswordValue.from(maybeCommand.password) : undefined;
+    const maybePassword = maybeCommand.password
+      ? PasswordValue.from(maybeCommand.password)
+      : undefined;
     if (maybePassword instanceof InvalidPasswordError) {
       return response.status(400).json({
         error: maybePassword.message,
       });
     }
 
-    const updateUserUsecase = new UpdateUserUsecase(this.userRepository, this.passwordHasher);
-    const maybeUser = await updateUserUsecase.execute(
-      {
-        id: maybeParams.id,
-        email: maybeEmail,
-        password: maybePassword,
-        firstName: maybeCommand.firstName,
-        lastName: maybeCommand.lastName,
-        roles: maybeCommand.roles,
-      }
+    const updateUserUsecase = new UpdateUserUsecase(
+      this.userRepository,
+      this.passwordHasher
     );
+    const maybeUser = await updateUserUsecase.execute({
+      id: maybeParams.id,
+      email: maybeEmail,
+      password: maybePassword,
+      firstName: maybeCommand.firstName,
+      lastName: maybeCommand.lastName,
+      roles: maybeCommand.roles,
+    });
 
     if (maybeUser instanceof UserNotFoundError) {
       return response.status(404).json({
@@ -192,7 +201,7 @@ export class UserController {
       firstName: maybeUser.firstName,
       lastName: maybeUser.lastName,
       roles: maybeUser.roles,
-    }); 
+    });
   }
 
   public async delete(request: Request, response: Response) {
@@ -240,7 +249,7 @@ export class UserController {
       firstName: maybeUser.firstName,
       lastName: maybeUser.lastName,
       roles: maybeUser.roles,
-    }); 
+    });
   }
 
   public async unban(request: Request, response: Response) {
@@ -266,7 +275,6 @@ export class UserController {
       firstName: maybeUser.firstName,
       lastName: maybeUser.lastName,
       roles: maybeUser.roles,
-    }); 
+    });
   }
 }
-

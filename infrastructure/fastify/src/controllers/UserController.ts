@@ -33,17 +33,23 @@ import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserN
 import { GetUserListUsecase } from "../../../../application/usecases/user/GetUserListUsecase";
 import { GetUserUsecase } from "../../../../application/usecases/user/GetUserUsecase";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
-import { CreateUserPayloadInterface, UpdateUserPayloadInterface } from "../../../../application/services/api/resources/UserResourceInterface";
+import {
+  CreateUserPayloadInterface,
+  UpdateUserPayloadInterface,
+} from "../../../../application/services/api/resources/UserResourceInterface";
 
 export class UserController {
   public constructor(
     private readonly userRepository: UserRepositoryInterface,
     private readonly passwordHasher: PasswordHasherInterface,
     private readonly uniqueIdGenerator: UniqueIdGeneratorInterface,
-    private readonly mailer: MailerInterface,
+    private readonly mailer: MailerInterface
   ) {}
 
-  public async create(request: FastifyRequest<{Body: CreateUserPayloadInterface}>, response: FastifyReply) {
+  public async create(
+    request: FastifyRequest<{ Body: CreateUserPayloadInterface }>,
+    response: FastifyReply
+  ) {
     const maybeCommand = CreateUserCommand.from(request.body);
     if (maybeCommand instanceof InvalidCreateUserCommandError) {
       return response.status(400).send({
@@ -65,13 +71,17 @@ export class UserController {
       });
     }
 
-    const createUsecase = new CreateUserUsecase(this.userRepository, this.passwordHasher, this.uniqueIdGenerator);
+    const createUsecase = new CreateUserUsecase(
+      this.userRepository,
+      this.passwordHasher,
+      this.uniqueIdGenerator
+    );
     const maybeUser = await createUsecase.execute(
       maybeEmail.value,
       maybePassword.value,
       maybeCommand.firstName,
       maybeCommand.lastName,
-      maybeCommand.roles,
+      maybeCommand.roles
     );
 
     if (maybeUser instanceof Error) {
@@ -83,7 +93,7 @@ export class UserController {
     const sendEmailUsecase = new SendConfirmationEmailUsecase(this.mailer);
     await sendEmailUsecase.execute(
       maybeEmail,
-      `${frontUrl}/confirm?token=${maybeUser.confirmationToken}`,
+      `${frontUrl}/confirm?token=${maybeUser.confirmationToken}`
     );
 
     response.status(201).send({
@@ -101,7 +111,7 @@ export class UserController {
 
     const usersResponse = users.map((user) => ({
       id: user.id,
-      email: user.email.value,
+      email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       roles: user.roles,
@@ -110,7 +120,10 @@ export class UserController {
     response.status(200).send(usersResponse);
   }
 
-  public async get(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async get(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = GetUserParams.from(request.params);
     if (maybeParams instanceof InvalidGetUserParamsError) {
       return response.status(400).send({
@@ -135,7 +148,13 @@ export class UserController {
     });
   }
 
-  public async update(request: FastifyRequest<{Params: RessourceParamsInterface, Body: UpdateUserPayloadInterface}>, response: FastifyReply) {
+  public async update(
+    request: FastifyRequest<{
+      Params: RessourceParamsInterface;
+      Body: UpdateUserPayloadInterface;
+    }>,
+    response: FastifyReply
+  ) {
     const maybeParams = UpdateUserParams.from(request.params);
     if (maybeParams instanceof InvalidUpdateUserParamsError) {
       return response.status(400).send({
@@ -150,31 +169,36 @@ export class UserController {
       });
     }
 
-    const maybeEmail = maybeCommand.email ? EmailValue.from(maybeCommand.email) : undefined;
+    const maybeEmail = maybeCommand.email
+      ? EmailValue.from(maybeCommand.email)
+      : undefined;
     if (maybeEmail instanceof InvalidEmailError) {
       return response.status(400).send({
         error: maybeEmail.message,
       });
     }
 
-    const maybePassword = maybeCommand.password ? PasswordValue.from(maybeCommand.password) : undefined;
+    const maybePassword = maybeCommand.password
+      ? PasswordValue.from(maybeCommand.password)
+      : undefined;
     if (maybePassword instanceof InvalidPasswordError) {
       return response.status(400).send({
         error: maybePassword.message,
       });
     }
 
-    const updateUserUsecase = new UpdateUserUsecase(this.userRepository, this.passwordHasher);
-    const maybeUser = await updateUserUsecase.execute(
-      {
-        id: maybeParams.id,
-        email: maybeEmail,
-        password: maybePassword,
-        firstName: maybeCommand.firstName,
-        lastName: maybeCommand.lastName,
-        roles: maybeCommand.roles,
-      }
+    const updateUserUsecase = new UpdateUserUsecase(
+      this.userRepository,
+      this.passwordHasher
     );
+    const maybeUser = await updateUserUsecase.execute({
+      id: maybeParams.id,
+      email: maybeEmail,
+      password: maybePassword,
+      firstName: maybeCommand.firstName,
+      lastName: maybeCommand.lastName,
+      roles: maybeCommand.roles,
+    });
 
     if (maybeUser instanceof UserNotFoundError) {
       return response.status(404).send({
@@ -194,10 +218,13 @@ export class UserController {
       firstName: maybeUser.firstName,
       lastName: maybeUser.lastName,
       roles: maybeUser.roles,
-    }); 
+    });
   }
 
-  public async delete(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async delete(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = DeleteUserParams.from(request.params);
     if (maybeParams instanceof InvalidDeleteUserParamsError) {
       return response.status(400).send({
@@ -219,7 +246,10 @@ export class UserController {
     });
   }
 
-  public async ban(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async ban(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = BanUserParams.from(request.params);
     if (maybeParams instanceof InvalidBanUserParamsError) {
       return response.status(400).send({
@@ -242,10 +272,13 @@ export class UserController {
       firstName: maybeUser.firstName,
       lastName: maybeUser.lastName,
       roles: maybeUser.roles,
-    }); 
+    });
   }
 
-  public async unban(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async unban(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = UnbanUserParams.from(request.params);
     if (maybeParams instanceof InvalidUnbanUserParamsError) {
       return response.status(400).send({
@@ -268,7 +301,6 @@ export class UserController {
       firstName: maybeUser.firstName,
       lastName: maybeUser.lastName,
       roles: maybeUser.roles,
-    }); 
+    });
   }
 }
-

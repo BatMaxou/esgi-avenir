@@ -140,7 +140,7 @@ function UserActionsCell({ user }: { user: User }) {
         user={{
           firstName: user.firstName,
           lastName: user.lastName,
-          email: user.email || "",
+          email: user.email.value || "",
           roles: user.roles,
         }}
         onSubmit={handleUpdate}
@@ -186,7 +186,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => {
-      const email = row.original.email;
+      const email = row.original.email.value;
       return email?.toString() || "-";
     },
   },
