@@ -5,6 +5,7 @@ import { DataTable } from "../DataTable";
 import { columns } from "./columns";
 import { User } from "../../../../../../../domain/entities/User";
 import InputSearchLoader from "../../molecules/inputs/input-search-loader";
+import { CreateUserDialog } from "../../molecules/dialogs/create-user-dialog";
 
 interface UsersDataTableProps {
   data: User[];
@@ -20,7 +21,8 @@ export function UsersDataTable({ data, isLoading }: UsersDataTableProps) {
 
   return (
     <div className="space-y-4">
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-between items-center">
+        <CreateUserDialog />
         <InputSearchLoader
           label="Rechercher un utilisateur"
           items={data}
