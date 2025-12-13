@@ -175,7 +175,7 @@ export default function UserDetailsPage() {
             </div>
             <div className="grid grid-cols-3 gap-2">
               <span className="font-medium text-gray-500">Email:</span>
-              <span className="col-span-2">{user.email}</span>
+              <span className="col-span-2">{user.email.value}</span>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <span className="font-medium text-gray-500">Rôle:</span>
@@ -193,7 +193,7 @@ export default function UserDetailsPage() {
         user={{
           firstName: user.firstName,
           lastName: user.lastName,
-          email: user.email,
+          email: user.email.value,
           roles: user.roles,
         }}
         onSubmit={handleUpdate}

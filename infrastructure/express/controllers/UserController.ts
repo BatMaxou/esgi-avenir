@@ -130,7 +130,7 @@ export class UserController {
 
     response.status(200).json({
       id: maybeUser.id,
-      email: maybeUser.email.value,
+      email: maybeUser.email,
       firstName: maybeUser.firstName,
       lastName: maybeUser.lastName,
       roles: maybeUser.roles,
