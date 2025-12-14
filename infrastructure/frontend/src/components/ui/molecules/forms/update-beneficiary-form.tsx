@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { FilledButton } from "../buttons/filled-button";
 import { Beneficiary } from "../../../../../../../domain/entities/Beneficiary";
 import { DeleteBeneficiaryAlert } from "../alerts/delete-beneficiary-alert";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 interface UpdateBeneficiaryFormProps {
   beneficiary: Beneficiary;
@@ -42,12 +43,12 @@ export default function UpdateBeneficiaryForm({
     e.preventDefault();
 
     if (!name.trim()) {
-      toast.error("Le nom du bénéficiaire est requis");
+      showErrorToast("Le nom du bénéficiaire est requis");
       return;
     }
 
     if (!beneficiary.id) {
-      toast.error("Identifiant du bénéficiaire manquant");
+      showErrorToast("Identifiant du bénéficiaire manquant");
       return;
     }
 
@@ -57,10 +58,10 @@ export default function UpdateBeneficiaryForm({
     });
 
     if (updatedBeneficiary) {
-      toast.success("Bénéficiaire modifié avec succès");
+      showSuccessToast("Bénéficiaire modifié avec succès");
       onUpdateSuccess?.();
     } else {
-      toast.error("Erreur lors de la modification du bénéficiaire");
+      showErrorToast("Erreur lors de la modification du bénéficiaire");
     }
   };
 
@@ -71,16 +72,16 @@ export default function UpdateBeneficiaryForm({
 
   const handleDelete = async () => {
     if (!beneficiary.id) {
-      toast.error("Bénéficiaire non trouvé");
+      showErrorToast("Bénéficiaire non trouvé");
       return;
     }
     const deleteBeneficiaryResult = await deleteBeneficiary(beneficiary.id);
     if (deleteBeneficiaryResult) {
-      toast.success("Bénéficiaire supprimé avec succès");
+      showSuccessToast("Bénéficiaire supprimé avec succès");
       onDeleteSuccess?.();
       setOpenDeleteDialog(false);
     } else {
-      toast.error("Erreur lors de la suppression du bénéficiaire");
+      showErrorToast("Erreur lors de la suppression du bénéficiaire");
     }
   };
 

@@ -14,6 +14,7 @@ import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 import { GetUserResponseInterface } from "../../../../application/services/api/resources/UserResourceInterface";
 import { Operation } from "../../../../domain/entities/Operation";
 import { toast } from "sonner";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 type Props = {
   children: ReactNode;
@@ -160,7 +161,7 @@ export const AccountsProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsAccountsLoading(false);
-      toast.error("Vous devez être connecté pour créer un compte");
+      showErrorToast("Vous devez être connecté pour créer un compte");
       return null;
     }
 
@@ -171,12 +172,12 @@ export const AccountsProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to create account:", response.message);
-      toast.error("Erreur lors de la création du compte");
+      showErrorToast("Erreur lors de la création du compte");
       setIsAccountsLoading(false);
       return null;
     }
 
-    toast.success(
+    showSuccessToast(
       data.isSavings
         ? "Compte épargne créé avec succès"
         : "Compte courant créé avec succès"
@@ -191,7 +192,7 @@ export const AccountsProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsAccountLoading(false);
-      toast.error("Vous devez être connecté pour modifier un compte");
+      showErrorToast("Vous devez être connecté pour modifier un compte");
       return null;
     }
 
@@ -199,12 +200,12 @@ export const AccountsProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to update account:", response.message);
-      toast.error("Erreur lors de la modification du compte");
+      showErrorToast("Erreur lors de la modification du compte");
       setIsAccountLoading(false);
       return null;
     }
 
-    toast.success("Compte modifié avec succès");
+    showSuccessToast("Compte modifié avec succès");
     await getAccount(id);
     setIsAccountLoading(false);
     return response;
@@ -215,7 +216,7 @@ export const AccountsProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsAccountLoading(false);
-      toast.error("Vous devez être connecté pour supprimer un compte");
+      showErrorToast("Vous devez être connecté pour supprimer un compte");
       return false;
     }
 
@@ -224,7 +225,7 @@ export const AccountsProvider = ({ children }: Props) => {
     if (accountToDelete && !accountToDelete.isSavings) {
       const currentAccounts = accounts.filter((acc) => !acc.isSavings);
       if (currentAccounts.length === 1 && accountToDelete.amount !== 0) {
-        toast.error(
+        showErrorToast(
           "Impossible de supprimer votre dernier compte courant s'il contient des fonds. Veuillez d'abord transférer les fonds ou créer un nouveau compte courant."
         );
         setIsAccountLoading(false);
@@ -240,17 +241,17 @@ export const AccountsProvider = ({ children }: Props) => {
         response.code === 400 &&
         response.message === "Account is not soldable."
       ) {
-        toast.error(
+        showErrorToast(
           "Votre compte ne peut pas être supprimé car le solde n'est pas nul."
         );
       } else {
-        toast.error("Erreur lors de la suppression du compte");
+        showErrorToast("Erreur lors de la suppression du compte");
       }
       setIsAccountLoading(false);
       return false;
     }
 
-    toast.success("Compte supprimé avec succès");
+    showSuccessToast("Compte supprimé avec succès");
     await refreshAccounts();
     setIsAccountLoading(false);
     return true;

@@ -8,6 +8,7 @@ import { useAccounts } from "@/contexts/AccountsContext";
 import { FilledButton } from "../buttons/filled-button";
 import { HydratedAccount } from "../../../../../../../domain/entities/Account";
 import { toast } from "sonner";
+import { showErrorToast } from "@/lib/toast";
 
 interface UpdateAccountFormProps {
   account: HydratedAccount;
@@ -27,12 +28,12 @@ export default function UpdateAccountForm({
     e.preventDefault();
 
     if (!name.trim()) {
-      toast.error("Le nom du compte ne peut pas être vide.");
+      showErrorToast("Le nom du compte ne peut pas être vide.");
       return;
     }
 
     if (!account.id) {
-      toast.error("Impossible de trouver le compte.");
+      showErrorToast("Impossible de trouver le compte.");
       return;
     }
 

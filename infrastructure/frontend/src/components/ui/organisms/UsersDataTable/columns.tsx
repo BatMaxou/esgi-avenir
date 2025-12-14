@@ -26,6 +26,7 @@ import { BanUnbanUserDialog } from "@/components/ui/molecules/dialogs/ban-unban-
 import { UpdateUserDialog } from "@/components/ui/molecules/dialogs/update-user-dialog";
 import { RoleBadge } from "@/components/ui/molecules/badges/role-badge";
 import { useAuth } from "@/contexts/AuthContext";
+import { showErrorToast } from "@/lib/toast";
 
 function UserActionsCell({ user }: { user: User }) {
   const { deleteUser, banUser, unbanUser, updateUser, getUsers } = useUsers();
@@ -41,7 +42,7 @@ function UserActionsCell({ user }: { user: User }) {
     setIsLoading(true);
     try {
       if (!user.id) {
-        toast.error("Utilisateur introuvable");
+        showErrorToast("Utilisateur introuvable");
         return;
       }
       await deleteUser(user.id);
@@ -55,7 +56,7 @@ function UserActionsCell({ user }: { user: User }) {
     setIsLoading(true);
     try {
       if (!user.id) {
-        toast.error("Utilisateur introuvable");
+        showErrorToast("Utilisateur introuvable");
         return;
       }
       if (isBanned) {

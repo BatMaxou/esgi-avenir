@@ -38,7 +38,13 @@ export const OperationsProvider = ({ children }: Props) => {
     const response = await apiClient.operation.create(data);
 
     if (response instanceof ApiClientError) {
-      showErrorToast("Erreur lors du transfert.");
+      const errorResponse =
+        String(response.message) === "Insufficient funds."
+          ? "Fonds insuffisants pour effectuer le transfert."
+          : String(response.message) === "Account not found."
+          ? "Compte introuvable."
+          : "Erreur lors du transfert.";
+      showErrorToast(errorResponse);
       setIsLoading(false);
       return false;
     } else {
