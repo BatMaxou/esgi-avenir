@@ -12,6 +12,7 @@ import { ApiClientError } from "../../../../application/services/api/ApiClientEr
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
 import { User } from "../../../../domain/entities/User";
+import { showErrorToast } from "@/lib/toast";
 
 type Props = {
   children: ReactNode;
@@ -22,6 +23,7 @@ type AuthContextType = {
   isLoading: boolean;
   isAuthenticated: boolean;
   me: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 };
@@ -64,8 +66,31 @@ export const AuthProvider = ({ children }: Props) => {
     }
   };
 
+  const login = async (email: string, password: string) => {
+    setIsLoading(true);
+    const response = await apiClient.login(email, password);
+    let errorMessage;
+
+    if (response instanceof ApiClientError) {
+      errorMessage =
+        String(response.message) === "Unauthorized"
+          ? "Email ou mot de passe incorrect."
+          : String(response.message) === "User account is not enabled yet."
+          ? "Veuillez d'abord activer votre compte."
+          : String(response.message) === "Invalid credentials."
+          ? "Email ou mot de passe incorrect."
+          : "Erreur de connexion";
+      showErrorToast(errorMessage);
+      setIsLoading(false);
+    } else {
+      await me();
+      router.push("/home");
+      setIsLoading(false);
+    }
+  };
+
   const logout = async () => {
-    await apiClient.logout();
+    apiClient.logout();
     setUser(null);
     router.push("/");
   };
@@ -88,6 +113,7 @@ export const AuthProvider = ({ children }: Props) => {
         isLoading,
         isAuthenticated,
         me,
+        login,
         logout,
         refreshUser,
       }}
