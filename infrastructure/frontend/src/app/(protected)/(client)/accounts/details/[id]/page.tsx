@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/atoms/separator";
 import { useAccounts } from "@/contexts/AccountsContext";
@@ -24,6 +24,7 @@ export default function AccountDetailsPage() {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteDisabled, setIsDeleteDisabled] = useState(false);
+  const [isAccountFetched, setAccountFetched] = useState(false);
   useEffect(() => {
     endNavigation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,9 +33,17 @@ export default function AccountDetailsPage() {
   useEffect(() => {
     if (accountId) {
       getAccount(Number(accountId));
+      setAccountFetched(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
+
+  useEffect(() => {
+    if (isAccountFetched && !account && accountId && !isAccountLoading) {
+      notFound();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account, isAccountLoading, isAccountFetched]);
 
   useEffect(() => {
     if (account && !account.isSavings) {
