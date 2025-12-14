@@ -11,7 +11,7 @@ export class NewsResource implements NewsResourceInterface {
   }
 
   public async getAll(term?: string, count?: number): Promise<GetNewsListResponseInterface | ApiClientError> {
-    return this.apiClient.get<GetNewsListResponseInterface>(paths.stock.list(term || count ? {
+    return this.apiClient.get<GetNewsListResponseInterface>(paths.news.list(term || count ? {
       ...(term ? { term  } : {}),
       ...(count ? { count } : {}),
     } : undefined));

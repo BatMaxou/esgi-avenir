@@ -12,6 +12,7 @@ import { NavigationLoader } from "@/components/providers/NavigationLoader";
 import { BeneficiariesProvider } from "@/contexts/BeneficiariesContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { UsersProvider } from "@/contexts/UsersContext";
+import { SseApiClientProvider } from "@/contexts/SseApiContext";
 import { OperationsProvider } from "@/contexts/OperationsContext";
 
 const raleway = Raleway({
@@ -29,15 +30,19 @@ const Providers = ({ children }: { children: ReactNode }) => {
     <NavigationProvider>
       <ApiClientProvider>
         <AuthProvider>
-          <AccountsProvider>
-            <OperationsProvider>
-              <BeneficiariesProvider>
-                <SettingsProvider>
-                  <UsersProvider>{children}</UsersProvider>
-                </SettingsProvider>
-              </BeneficiariesProvider>
-            </OperationsProvider>
-          </AccountsProvider>
+          <SseApiClientProvider>
+            <AccountsProvider>
+              <OperationsProvider>
+                <BeneficiariesProvider>
+                  <SettingsProvider>
+                    <UsersProvider>
+                    {children}
+                  </UsersProvider>
+                  </SettingsProvider>
+                </BeneficiariesProvider>
+              </OperationsProvider>
+            </AccountsProvider>
+          </SseApiClientProvider>
         </AuthProvider>
       </ApiClientProvider>
     </NavigationProvider>

@@ -16,6 +16,7 @@ export interface AttributePrivateChannelToResponseInterface {
 }
 
 export interface WritePrivateMessagePayloadInterface {
+  id: number;
   content: string;
 }
 

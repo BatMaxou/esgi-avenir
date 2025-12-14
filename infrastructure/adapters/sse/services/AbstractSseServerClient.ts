@@ -1,6 +1,6 @@
-import { SseRessourceEnum } from "../../../application/services/sse/SseRessourceEnum";
-import { SseReponsesDataInterface, SseServerClientInterface } from "../../../application/services/sse/SseServerClientInterface";
-import { SseResponseAssistantInterface } from "../../../application/services/sse/SseResponseAssistantInterface";
+import { SseRessourceEnum } from "../../../../application/services/sse/SseRessourceEnum";
+import { SseReponsesDataInterface, SseServerClientInterface } from "../../../../application/services/sse/SseServerClientInterface";
+import { SseResponseAssistantInterface } from "../../../../application/services/sse/SseResponseAssistantInterface";
 
 export abstract class AbstractSseServerClient<SseRequest, SseResponse> implements SseServerClientInterface<SseRequest, SseResponse> {
   private clients: Record<string, any> = {};

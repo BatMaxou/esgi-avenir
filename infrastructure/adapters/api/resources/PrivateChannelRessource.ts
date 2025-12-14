@@ -19,7 +19,11 @@ export class PrivateChannelResource implements PrivateChannelResourceInterface {
     return this.apiClient.put<GetPrivateChannelResponseInterface>(paths.privateChannel.update(data.id), data);
   }
 
+  public async attributeTo(id: number): Promise<{ success: boolean } | ApiClientError> {
+    return this.apiClient.post<{ success: boolean }>(paths.privateChannel.attributeTo(id), {});
+  }
+
   public async writeMessage(data: WritePrivateMessagePayloadInterface): Promise<GetMessageResponseInterface | ApiClientError> {
-    return this.apiClient.put<GetMessageResponseInterface>(paths.privateChannel.writeMessage(data.channelId), data);
+    return this.apiClient.put<GetMessageResponseInterface>(paths.privateChannel.writeMessage(data.id), data);
   }
 }
