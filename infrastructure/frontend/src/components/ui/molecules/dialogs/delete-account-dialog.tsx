@@ -10,7 +10,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/molecules/dialogs/alert-dialog";
 import { useAccounts } from "@/contexts/AccountsContext";
-import { useApiClient } from "@/contexts/ApiContext";
 import { useRouter } from "next/navigation";
 import { HydratedAccount } from "../../../../../../../domain/entities/Account";
 import { Beneficiary } from "../../../../../../../domain/entities/Beneficiary";
@@ -19,6 +18,7 @@ import { toast } from "sonner";
 import TransferToAccountDialog from "./transfer-to-account-dialog";
 import { Item, ItemActions, ItemContent } from "@/components/ui/atoms/item";
 import { Icon } from "@iconify/react";
+import { useOperations } from "@/contexts/OperationsContext";
 
 interface DeleteAccountDialogProps {
   open: boolean;
@@ -38,7 +38,7 @@ export default function DeleteAccountDialog({
     isAccountsLoading,
     getAccount,
   } = useAccounts();
-  const { apiClient } = useApiClient();
+  const { create } = useOperations();
   const router = useRouter();
   const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
   const [isTransferring, setIsTransferring] = useState(false);
@@ -88,7 +88,7 @@ export default function DeleteAccountDialog({
       return;
     }
 
-    const request = await apiClient.operation.create({
+    const response = await create({
       type: OperationEnum.TRANSFER,
       amount: account.amount,
       fromId: account.id,
@@ -96,9 +96,7 @@ export default function DeleteAccountDialog({
       name: `Virement de clôture du compte ${account.name}`,
     });
 
-    if (request && "id" in request && !("message" in request)) {
-      toast.success("Fonds transférés avec succès");
-
+    if (response) {
       const deleteSuccess = await deleteAccount(account.id);
       if (deleteSuccess) {
         onOpenChange(false);
@@ -108,10 +106,6 @@ export default function DeleteAccountDialog({
         setShowTransferConfirmation(false);
         setSelectedToAccount(undefined);
       }
-    } else if (request instanceof Error) {
-      toast.error("Erreur lors du transfert: " + request.message);
-    } else {
-      toast.error("Erreur lors du transfert");
     }
 
     setIsTransferring(false);

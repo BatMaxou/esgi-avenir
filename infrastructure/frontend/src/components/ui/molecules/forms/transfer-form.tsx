@@ -19,8 +19,8 @@ import InputStartIcon from "../inputs/input-start-icon";
 // Others components
 import { Item, ItemActions, ItemContent } from "@/components/ui/atoms/item";
 import { Icon } from "@iconify/react";
-import { useApiClient } from "@/contexts/ApiContext";
 import { OperationEnum } from "../../../../../../../domain/enums/OperationEnum";
+import { useOperations } from "@/contexts/OperationsContext";
 
 interface TransferFormProps {
   onOpenAddBeneficiary?: () => void;
@@ -30,7 +30,7 @@ export default function TransferForm({
   onOpenAddBeneficiary,
 }: TransferFormProps) {
   const { accounts, isAccountsLoading, refreshAccounts } = useAccounts();
-  const apiClient = useApiClient();
+  const { create } = useOperations();
 
   const [confirmationView, showConfirmationView] = useState(false);
 
@@ -86,7 +86,7 @@ export default function TransferForm({
       return;
     }
 
-    const request = await apiClient.apiClient.operation.create({
+    const response = await create({
       type: OperationEnum.TRANSFER,
       amount: parseFloat(transferAmount),
       fromId: fromAccountId,
@@ -94,13 +94,9 @@ export default function TransferForm({
       name: transferName,
     });
 
-    if (request && "id" in request && !("message" in request)) {
+    if (response) {
       refreshAccounts();
       showConfirmationView(true);
-    }
-
-    if (request instanceof Error) {
-      console.error("Transfer failed:", request.message);
     }
   };
 
