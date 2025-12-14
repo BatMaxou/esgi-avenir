@@ -24,6 +24,12 @@ type AuthContextType = {
   isAuthenticated: boolean;
   me: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 };
@@ -69,10 +75,9 @@ export const AuthProvider = ({ children }: Props) => {
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     const response = await apiClient.login(email, password);
-    let errorMessage;
 
     if (response instanceof ApiClientError) {
-      errorMessage =
+      const errorMessage =
         String(response.message) === "Unauthorized"
           ? "Email ou mot de passe incorrect."
           : String(response.message) === "User account is not enabled yet."
@@ -86,6 +91,33 @@ export const AuthProvider = ({ children }: Props) => {
       await me();
       router.push("/home");
       setIsLoading(false);
+    }
+  };
+
+  const register = async (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => {
+    setIsLoading(true);
+    const response = await apiClient.register(
+      email,
+      password,
+      firstName,
+      lastName
+    );
+    if (response instanceof ApiClientError) {
+      const errorMessage =
+        String(response.message) === "Given email already exists."
+          ? "Cet email est déjà utilisé."
+          : "Erreur lors de l'inscription.";
+      showErrorToast(errorMessage);
+      setIsLoading(false);
+      return false;
+    } else {
+      setIsLoading(false);
+      return true;
     }
   };
 
@@ -114,6 +146,7 @@ export const AuthProvider = ({ children }: Props) => {
         isAuthenticated,
         me,
         login,
+        register,
         logout,
         refreshUser,
       }}
