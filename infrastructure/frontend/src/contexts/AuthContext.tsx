@@ -12,6 +12,7 @@ import { ApiClientError } from "../../../../application/services/api/ApiClientEr
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
 import { User } from "../../../../domain/entities/User";
+import { showErrorToast } from "@/lib/toast";
 
 type Props = {
   children: ReactNode;
@@ -22,6 +23,14 @@ type AuthContextType = {
   isLoading: boolean;
   isAuthenticated: boolean;
   me: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => Promise<boolean>;
+  confirmRegistration: (token: string) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 };
@@ -64,8 +73,74 @@ export const AuthProvider = ({ children }: Props) => {
     }
   };
 
+  const login = async (email: string, password: string) => {
+    setIsLoading(true);
+    const response = await apiClient.login(email, password);
+
+    if (response instanceof ApiClientError) {
+      const errorMessage =
+        String(response.message) === "Unauthorized"
+          ? "Email ou mot de passe incorrect."
+          : String(response.message) === "User account is not enabled yet."
+          ? "Veuillez d'abord activer votre compte."
+          : String(response.message) === "Invalid credentials."
+          ? "Email ou mot de passe incorrect."
+          : "Erreur de connexion";
+      showErrorToast(errorMessage);
+      setIsLoading(false);
+    } else {
+      await me();
+      router.push("/home");
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => {
+    setIsLoading(true);
+    const response = await apiClient.register(
+      email,
+      password,
+      firstName,
+      lastName
+    );
+    if (response instanceof ApiClientError) {
+      const errorMessage =
+        String(response.message) === "Given email already exists."
+          ? "Cet email est déjà utilisé."
+          : "Erreur lors de l'inscription.";
+      showErrorToast(errorMessage);
+      setIsLoading(false);
+      return false;
+    } else {
+      setIsLoading(false);
+      return true;
+    }
+  };
+
+  const confirmRegistration = async (token: string) => {
+    setIsLoading(true);
+    const response = await apiClient.confirm(token);
+    if (response instanceof ApiClientError) {
+      showErrorToast("Erreur lors de la confirmation de l'inscription.");
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
+      return false;
+    } else {
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
+      return true;
+    }
+  };
+
   const logout = async () => {
-    await apiClient.logout();
+    apiClient.logout();
     setUser(null);
     router.push("/");
   };
@@ -88,6 +163,9 @@ export const AuthProvider = ({ children }: Props) => {
         isLoading,
         isAuthenticated,
         me,
+        login,
+        register,
+        confirmRegistration,
         logout,
         refreshUser,
       }}

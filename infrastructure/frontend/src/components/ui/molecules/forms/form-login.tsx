@@ -34,10 +34,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const apiClient = useApiClient();
-  const router = useRouter();
-  const { me } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const { login, isLoading } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,35 +45,7 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    try {
-      const response = await apiClient.apiClient.login(
-        values.email,
-        values.password
-      );
-      let errorMessage;
-      if ("token" in response && response.token) {
-        await me();
-        router.push("/home");
-        setLoading(false);
-      } else {
-        if (response instanceof ApiClientError) {
-          errorMessage =
-            String(response.message) === "Unauthorized"
-              ? "Email ou mot de passe incorrect."
-              : String(response.message) === "User account is not enabled yet."
-              ? "Veuillez d'abord activer votre compte."
-              : "Erreur de connexion";
-          showErrorToast(errorMessage);
-          setLoading(false);
-        } else {
-          showErrorToast("Erreur de connexion");
-        }
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-      setLoading(false);
-    }
+    await login(values.email, values.password);
   }
   return (
     <>
@@ -111,7 +80,11 @@ export function LoginForm() {
               </FormItem>
             )}
           />
-          <FilledButton type="submit" loading={loading} label="Se connecter" />
+          <FilledButton
+            type="submit"
+            loading={isLoading}
+            label="Se connecter"
+          />
         </form>
       </Form>
     </>

@@ -26,8 +26,7 @@ import { Input } from "@/components/ui/atoms/input";
 import { FieldSeparator } from "@/components/ui/atoms/field";
 import { useState } from "react";
 import CheckMailDialog from "@/components/ui/molecules/dialogs/check-mail-dialog";
-import { useApiClient } from "@/contexts/ApiContext";
-import { showErrorToast } from "@/lib/toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z
   .object({
@@ -70,9 +69,8 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ setFormType }: RegisterFormProps) {
+  const { register, isLoading } = useAuth();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const apiClient = useApiClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,25 +89,14 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    try {
-      const response = await apiClient.apiClient.register(
-        values.email,
-        values.password,
-        values.firstName,
-        values.lastName
-      );
-      if ("success" in response && response.success) {
-        setOpen(true);
-        setLoading(false);
-      } else {
-        showErrorToast("Erreur durant l'inscription");
-        setLoading(false);
-      }
-    } catch (error) {
-      showErrorToast("Erreur durant l'inscription");
-      console.error("Register failed:", error);
-      setLoading(false);
+    const response = await register(
+      values.email,
+      values.password,
+      values.firstName,
+      values.lastName
+    );
+    if (response) {
+      setOpen(true);
     }
   }
   return (
@@ -321,7 +308,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
           </div>
           <FilledButton
             type="submit"
-            loading={loading}
+            loading={isLoading}
             label="Ouvrir un compte"
           />
         </form>
