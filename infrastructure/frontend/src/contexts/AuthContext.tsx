@@ -30,6 +30,7 @@ type AuthContextType = {
     firstName: string,
     lastName: string
   ) => Promise<boolean>;
+  confirmRegistration: (token: string) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 };
@@ -121,6 +122,23 @@ export const AuthProvider = ({ children }: Props) => {
     }
   };
 
+  const confirmRegistration = async (token: string) => {
+    setIsLoading(true);
+    const response = await apiClient.confirm(token);
+    if (response instanceof ApiClientError) {
+      showErrorToast("Erreur lors de la confirmation de l'inscription.");
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
+      return false;
+    } else {
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
+      return true;
+    }
+  };
+
   const logout = async () => {
     apiClient.logout();
     setUser(null);
@@ -147,6 +165,7 @@ export const AuthProvider = ({ children }: Props) => {
         me,
         login,
         register,
+        confirmRegistration,
         logout,
         refreshUser,
       }}

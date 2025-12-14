@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 //  Components
-import { useApiClient } from "@/contexts/ApiContext";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { Spinner } from "@/components/ui/atoms/spinner";
@@ -15,13 +14,14 @@ import { Spinner } from "@/components/ui/atoms/spinner";
 // Images
 import bgImage from "../../../public/assets/home-card.jpg";
 import logo from "../../../public/assets/logo/logo-avenir.png";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ConfirmRegister() {
   const [loading, setLoading] = useState(true);
   const [confirmState, setConfirmState] = useState<
     "false" | "success" | "error"
   >("false");
-  const apiClient = useApiClient();
+  const { confirmRegistration: confirm } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -39,20 +39,14 @@ export default function ConfirmRegister() {
   }, []);
 
   const confirmRegistration = async (token: string) => {
-    const response = await apiClient.apiClient.confirm(token);
+    const response = await confirm(token);
 
-    if ("success" in response && response.success) {
+    if (response) {
       setConfirmState("success");
       setLoading(false);
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
     } else {
       setConfirmState("error");
       setLoading(false);
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
     }
   };
 
