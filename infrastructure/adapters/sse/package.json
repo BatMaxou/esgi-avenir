@@ -1,0 +1,8 @@
+{
+  "name": "@avenir/sse",
+  "version": "1.0.0",
+  "description": "Sse infrastructure for ESGI Avenir project",
+  "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1"
+  }
+}

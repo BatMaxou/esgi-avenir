@@ -9,6 +9,7 @@ import { useAccounts } from "@/contexts/AccountsContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Banner } from "@/components/ui/atoms/banner";
 import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
+import { NotifierProvider } from "@/contexts/NotifierContext";
 
 type Props = {
   children: ReactNode;
@@ -24,6 +25,7 @@ const pageTitles: Record<string, string> = {
   "/users": "Gestion des utilisateurs",
   "/settings": "Paramètres de la banque",
   "/actions": "Gestion des actions",
+  "/news": "Actualités",
 };
 
 export default function ProtectedLayout({ children }: Props) {
@@ -48,11 +50,13 @@ export default function ProtectedLayout({ children }: Props) {
 
   return (
     <ProtectedRoute requiredRoles={[RoleEnum.USER]}>
-      <div className="min-h-screen max-h-screen overflow-y-hidden bg-white">
-        <Header />
-        <Banner title={pageTitle} />
-        <main className="container mx-auto px-4 py-8">{children}</main>
-      </div>
+      <NotifierProvider>
+        <div className="min-h-screen overflow-y-hidden bg-white">
+          <Header />
+          <Banner title={pageTitle} />
+          <main className="container mx-auto px-4 py-8">{children}</main>
+        </div>
+      </NotifierProvider>
     </ProtectedRoute>
   );
 }

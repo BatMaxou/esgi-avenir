@@ -9,6 +9,7 @@
     "infrastructure/adapters/uuid",
     "infrastructure/adapters/jwt",
     "infrastructure/adapters/nodecron",
+    "infrastructure/adapters/sse",
     "infrastructure/express",
     "infrastructure/fastify",
     "infrastructure/frontend"

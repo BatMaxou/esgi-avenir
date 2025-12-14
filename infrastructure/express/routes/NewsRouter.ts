@@ -1,6 +1,7 @@
 import { Express } from "express";
 
 import { paths } from "../../../application/services/api/paths";
+import { ssePaths } from "../../../application/services/sse/ssePaths";
 import { RepositoryResolverInterface } from "../../../application/services/RepositoryResolverInterface";
 import { TokenManagerInterface } from "../../../application/services/token/TokenManagerInterface";
 import { authMiddleware } from "../middlewares/authMiddleware";
@@ -22,7 +23,7 @@ export class NewsRouter {
     );
 
     app.get(
-      paths.news.subscribe,
+      ssePaths.news.subscribe,
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
       roleMiddleware({ mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] }),
       async (req, res) => {
