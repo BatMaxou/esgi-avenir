@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { Raleway } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
 
 import "./globals.css";
 import { ApiClientProvider } from "@/contexts/ApiContext";
@@ -28,25 +29,27 @@ export const metadata: Metadata = {
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (
-    <NavigationProvider>
-      <ApiClientProvider>
-        <AuthProvider>
-          <SseApiClientProvider>
-            <AccountsProvider>
-              <OperationsProvider>
-                <BeneficiariesProvider>
-                  <SettingsProvider>
-                    <UsersProvider>
-                      <BankCreditsProvider>{children}</BankCreditsProvider>
-                    </UsersProvider>
-                  </SettingsProvider>
-                </BeneficiariesProvider>
-              </OperationsProvider>
-            </AccountsProvider>
-          </SseApiClientProvider>
-        </AuthProvider>
-      </ApiClientProvider>
-    </NavigationProvider>
+    <NextIntlClientProvider>
+      <NavigationProvider>
+        <ApiClientProvider>
+          <AuthProvider>
+            <SseApiClientProvider>
+              <AccountsProvider>
+                <OperationsProvider>
+                  <BeneficiariesProvider>
+                    <SettingsProvider>
+                      <UsersProvider>
+                        <BankCreditsProvider>{children}</BankCreditsProvider>
+                      </UsersProvider>
+                    </SettingsProvider>
+                  </BeneficiariesProvider>
+                </OperationsProvider>
+              </AccountsProvider>
+            </SseApiClientProvider>
+          </AuthProvider>
+        </ApiClientProvider>
+      </NavigationProvider>
+    </NextIntlClientProvider>
   );
 };
 
