@@ -12,6 +12,7 @@ import { NavigationLoader } from "@/components/providers/NavigationLoader";
 import { BeneficiariesProvider } from "@/contexts/BeneficiariesContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { UsersProvider } from "@/contexts/UsersContext";
+import { SseApiClientProvider } from "@/contexts/SseApiContext";
 import { OperationsProvider } from "@/contexts/OperationsContext";
 import { BankCreditsProvider } from "@/contexts/BankCreditContext";
 
@@ -30,17 +31,19 @@ const Providers = ({ children }: { children: ReactNode }) => {
     <NavigationProvider>
       <ApiClientProvider>
         <AuthProvider>
-          <AccountsProvider>
-            <OperationsProvider>
-              <BeneficiariesProvider>
-                <SettingsProvider>
-                  <UsersProvider>
-                    <BankCreditsProvider>{children}</BankCreditsProvider>
-                  </UsersProvider>
-                </SettingsProvider>
-              </BeneficiariesProvider>
-            </OperationsProvider>
-          </AccountsProvider>
+          <SseApiClientProvider>
+            <AccountsProvider>
+              <OperationsProvider>
+                <BeneficiariesProvider>
+                  <SettingsProvider>
+                    <UsersProvider>
+                      <BankCreditsProvider>{children}</BankCreditsProvider>
+                    </UsersProvider>
+                  </SettingsProvider>
+                </BeneficiariesProvider>
+              </OperationsProvider>
+            </AccountsProvider>
+          </SseApiClientProvider>
         </AuthProvider>
       </ApiClientProvider>
     </NavigationProvider>

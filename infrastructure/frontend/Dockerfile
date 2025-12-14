@@ -4,10 +4,12 @@ WORKDIR /app
 
 COPY ./package*.json .
 COPY ./domain/package*.json ./domain/
+COPY ./infrastructure/adapters/sse/package*.json ./infrastructure/adapters/sse/
 COPY ./infrastructure/frontend/package*.json ./infrastructure/frontend/
 
-RUN npm -w infrastructure/frontend install
 RUN npm -w domain install
+RUN npm -w infrastructure/adapters/sse install
+RUN npm -w infrastructure/frontend install
 
 COPY ./domain ./domain
 COPY ./application ./application
