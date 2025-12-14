@@ -12,6 +12,7 @@ import {
 } from "../../../../application/services/api/resources/BeneficiaryResourceInterface";
 import { Beneficiary } from "../../../../domain/entities/Beneficiary";
 import { DeleteResponseInterface } from "../../../../application/services/api/ApiClientInterface";
+import { showErrorToast } from "@/lib/toast";
 
 type Props = {
   children: ReactNode;
@@ -80,6 +81,11 @@ export const BeneficiariesProvider = ({ children }: Props) => {
       await apiClient.beneficiary.create(data);
 
     if (response instanceof ApiClientError) {
+      const errorResponse =
+        String(response.message) === "Account not found."
+          ? "Aucun compte associé trouvé."
+          : "Erreur lors de la mise à jour du bénéficiaire.";
+      showErrorToast(errorResponse);
       console.error("Failed to create beneficiary:", response.message);
       setIsBeneficiaryLoading(false);
       return null;

@@ -12,7 +12,7 @@ import { ApiClientError } from "../../../../application/services/api/ApiClientEr
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
 import { User } from "../../../../domain/entities/User";
-import { showErrorToast } from "@/lib/toast";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 type Props = {
   children: ReactNode;
@@ -142,6 +142,7 @@ export const AuthProvider = ({ children }: Props) => {
   const logout = async () => {
     apiClient.logout();
     setUser(null);
+    showSuccessToast("Vous êtes déconnecté.");
     router.push("/");
   };
 
