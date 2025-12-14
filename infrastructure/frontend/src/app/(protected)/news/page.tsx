@@ -2,6 +2,7 @@
 
 import { notFound } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { useTranslations } from 'next-intl';
 
 import { useAuth } from "@/contexts/AuthContext";
 import { NewsContext } from "@/contexts/NewsContext";
@@ -14,6 +15,7 @@ export default function NewsPage() {
   const { user, isLoading } = useAuth();
   const { apiClient } = useApiClient();
   const { receivedNews } = useContext(NewsContext);
+  const t = useTranslations('page.news');
 
   useEffect(() => {
     if (user) {
@@ -26,19 +28,22 @@ export default function NewsPage() {
   }, [apiClient, user]);
 
   useEffect(() => {
-    setNews(prev => [...prev, ...receivedNews]);
+    const lastNews = receivedNews.length > 0 ? receivedNews.pop() : null;
+    if (!lastNews) {
+      return;
+    }
+
+    setNews(prev => [lastNews, ...prev]);
   }, [receivedNews]);
 
   if (!user && !isLoading) {
     notFound();
   }
 
-  console.log("News rendered with items:", news);
-
   return <div>
-    <h1 className="text-2xl font-bold mb-4">News</h1>
+    <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
     {news.length === 0 ? (
-      <p>No news available.</p>
+      <p>{t('no-results')}</p>
     ) : (
       <ul className="space-y-4">
         {news.map((newsItem) => (
