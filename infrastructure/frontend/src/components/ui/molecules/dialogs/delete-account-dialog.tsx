@@ -19,6 +19,7 @@ import TransferToAccountDialog from "./transfer-to-account-dialog";
 import { Item, ItemActions, ItemContent } from "@/components/ui/atoms/item";
 import { Icon } from "@iconify/react";
 import { useOperations } from "@/contexts/OperationsContext";
+import { showErrorToast } from "@/lib/toast";
 
 interface DeleteAccountDialogProps {
   open: boolean;
@@ -51,14 +52,14 @@ export default function DeleteAccountDialog({
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!account || !account.id) {
-      toast.error("Impossible de trouver le compte.");
+      showErrorToast("Impossible de trouver le compte.");
       return;
     }
     const success = await deleteAccount(account.id);
     if (success) {
-      onOpenChange(false);
       router.push("/accounts");
     }
+    onOpenChange(false);
   };
 
   const handleAccountSelection = (
@@ -83,7 +84,7 @@ export default function DeleteAccountDialog({
     }
 
     if (!toAccountId) {
-      toast.error("Compte de destination invalide");
+      showErrorToast("Compte de destination invalide");
       setIsTransferring(false);
       return;
     }
