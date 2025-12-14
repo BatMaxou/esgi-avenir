@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/atoms/select";
 import { LoaderCircleIcon } from "lucide-react";
 import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
+import { FilledButton } from "../buttons/filled-button";
 
 interface UpdateUserDialogProps {
   open: boolean;
@@ -167,12 +168,11 @@ export function UpdateUserDialog({
           >
             Annuler
           </Button>
-          <Button onClick={handleSubmit} disabled={isLoading}>
-            {isLoading && (
-              <LoaderCircleIcon className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Enregistrer
-          </Button>
+          <FilledButton
+            label="Enregistrer"
+            onClick={handleSubmit}
+            loading={isLoading}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

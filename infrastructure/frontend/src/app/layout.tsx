@@ -13,6 +13,7 @@ import { BeneficiariesProvider } from "@/contexts/BeneficiariesContext";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { UsersProvider } from "@/contexts/UsersContext";
 import { OperationsProvider } from "@/contexts/OperationsContext";
+import { BankCreditsProvider } from "@/contexts/BankCreditContext";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -33,7 +34,9 @@ const Providers = ({ children }: { children: ReactNode }) => {
             <OperationsProvider>
               <BeneficiariesProvider>
                 <SettingsProvider>
-                  <UsersProvider>{children}</UsersProvider>
+                  <UsersProvider>
+                    <BankCreditsProvider>{children}</BankCreditsProvider>
+                  </UsersProvider>
                 </SettingsProvider>
               </BeneficiariesProvider>
             </OperationsProvider>
