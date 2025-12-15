@@ -19,6 +19,7 @@ export default function Header() {
   const pathname = usePathname();
 
   const isDirector = user?.roles.includes(RoleEnum.DIRECTOR);
+  const isAdvisor = user?.roles.includes(RoleEnum.ADVISOR);
 
   const navLinks = isDirector
     ? [
@@ -26,6 +27,11 @@ export default function Header() {
         { href: "/users", label: "Utilisateurs" },
         { href: "/settings", label: "Paramètres" },
         { href: "/actions", label: "Actions" },
+      ]
+    : isAdvisor
+    ? [
+        { href: "/home", label: "Accueil" },
+        { href: "/credits", label: "Crédits" },
       ]
     : [
         { href: "/home", label: "Accueil" },
