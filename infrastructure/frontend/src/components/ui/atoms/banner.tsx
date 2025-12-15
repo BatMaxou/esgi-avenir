@@ -1,5 +1,9 @@
 "use client";
 
+import Image from "next/image";
+
+import banner from "../../../../public/assets/images/home-banner.jpg";
+
 type BannerProps = {
   title: string;
 };
@@ -7,9 +11,10 @@ type BannerProps = {
 export function Banner({ title }: BannerProps) {
   return (
     <div className="relative h-36 w-full overflow-hidden">
-      <img
-        src="/assets/images/home-banner.jpg"
+      <Image
+        src={banner}
         alt="Banner"
+        fill
         className="w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-black/40 flex items-end justify-start">

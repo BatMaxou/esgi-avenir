@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { RoleEnum } from "../../../../../../domain/enums/RoleEnum";
+import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
 
 type Props = {
   children: ReactNode;

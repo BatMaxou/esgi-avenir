@@ -3,7 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { RoleEnum } from "../../../../../../domain/enums/RoleEnum";
+import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
 
 type Props = {
   children: ReactNode;

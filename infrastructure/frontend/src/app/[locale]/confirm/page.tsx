@@ -12,8 +12,8 @@ import { Icon } from "@iconify/react";
 import { Spinner } from "@/components/ui/atoms/spinner";
 
 // Images
-import bgImage from "../../../public/assets/home-card.jpg";
-import logo from "../../../public/assets/logo/logo-avenir.png";
+import bgImage from "../../../../public/assets/home-card.jpg";
+import logo from "../../../../public/assets/logo/logo-avenir.png";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function ConfirmRegister() {

@@ -9,8 +9,8 @@ import { RegisterForm } from "@/components/ui/molecules/forms/form-register";
 import Image from "next/image";
 
 // Images
-import bgImage from "../../public/assets/home-card.jpg";
-import logo from "../../public/assets/logo/logo-avenir.png";
+import bgImage from "../../../public/assets/home-card.jpg";
+import logo from "../../../public/assets/logo/logo-avenir.png";
 
 export default function Landing() {
   const [formType, setFormType] = useState<"login" | "register">("login");
