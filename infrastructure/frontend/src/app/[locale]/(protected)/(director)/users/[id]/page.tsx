@@ -12,7 +12,7 @@ import {
   TrashIcon,
 } from "lucide-react";
 
-import { RoleEnum } from "../../../../../../../../domain/enums/RoleEnum";
+import { RoleEnum } from "../../../../../../../../../domain/enums/RoleEnum";
 import { UpdateUserDialog } from "@/components/ui/molecules/dialogs/update-user-dialog";
 import { DeleteUserDialog } from "@/components/ui/molecules/dialogs/delete-user-dialog";
 import { BanUnbanUserDialog } from "@/components/ui/molecules/dialogs/ban-unban-user-dialog";

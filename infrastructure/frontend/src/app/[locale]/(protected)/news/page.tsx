@@ -7,8 +7,8 @@ import { useTranslations } from 'next-intl';
 import { useAuth } from "@/contexts/AuthContext";
 import { NewsContext } from "@/contexts/NewsContext";
 import { useApiClient } from "@/contexts/ApiContext";
-import { News } from "../../../../../../domain/entities/News";
-import { ApiClientError } from "../../../../../../application/services/api/ApiClientError";
+import { News } from "../../../../../../../domain/entities/News";
+import { ApiClientError } from "../../../../../../../application/services/api/ApiClientError";
 
 export default function NewsPage() {
   const [news, setNews] = useState<News[]>([]);

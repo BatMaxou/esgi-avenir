@@ -4,7 +4,7 @@ import { UpdateSettingDialog } from "@/components/ui/molecules/dialogs/update-se
 import { useNavigation } from "@/contexts/NavigationContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useEffect } from "react";
-import { SettingEnum } from "../../../../../../../domain/enums/SettingEnum";
+import { SettingEnum } from "../../../../../../../../domain/enums/SettingEnum";
 
 export default function DirectorSettingsPage() {
   const { endNavigation } = useNavigation();
