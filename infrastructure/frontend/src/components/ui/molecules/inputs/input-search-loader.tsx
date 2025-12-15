@@ -32,12 +32,17 @@ const InputSearchLoader = ({
       const keysToFilter = Array.isArray(filterOnKey)
         ? filterOnKey
         : [filterOnKey];
-
-      const filteredItems = items.filter((item) =>
-        keysToFilter.some((key) =>
-          String(item[key]).toLowerCase().includes(value.toLowerCase())
-        )
-      );
+      const filteredItems = items.filter((item) => {
+        const filterResult = keysToFilter.some((key) => {
+          const value_to_search = key
+            .split(".")
+            .reduce((obj, k) => obj?.[k], item);
+          return String(value_to_search || "")
+            .toLowerCase()
+            .includes(value.toLowerCase());
+        });
+        return filterResult;
+      });
 
       setNewItems(filteredItems);
       setIsLoading(false);

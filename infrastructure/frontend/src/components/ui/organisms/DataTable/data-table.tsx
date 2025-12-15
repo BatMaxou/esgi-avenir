@@ -129,7 +129,11 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between space-x-2 px-2 py-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0 sm:space-x-2 px-2 sm:py-4">
+        <div className="block sm:hidden text-sm text-muted-foreground">
+          {table.getRowModel().rows.length} résultats affichés
+        </div>
+
         <div className="text-sm text-muted-foreground">
           Page {table.getState().pagination.pageIndex + 1} sur{" "}
           {table.getPageCount()}
@@ -170,7 +174,7 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
 
-        <div className="text-sm text-muted-foreground">
+        <div className="hidden sm:block text-sm text-muted-foreground">
           {table.getRowModel().rows.length} résultats affichés
         </div>
       </div>
