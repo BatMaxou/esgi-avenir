@@ -49,7 +49,7 @@ export class BankCreditController {
 
     const createUsecase = new CreateBankCreditUsecase(
       this.accountRepository,
-      this.bankCreditRepository,
+      this.bankCreditRepository
     );
     const maybeBankCredit = await createUsecase.execute(
       maybeCommand.amount,
@@ -58,7 +58,7 @@ export class BankCreditController {
       maybeCommand.durationInMonths,
       maybeCommand.accountId,
       maybeCommand.ownerId,
-      maybeAdvisor,
+      maybeAdvisor
     );
 
     if (maybeBankCredit instanceof Error) {
@@ -67,7 +67,9 @@ export class BankCreditController {
       });
     }
 
-    const sendEmailUsecase = new SendBankCreditCreationEmailUsecase(this.mailer);
+    const sendEmailUsecase = new SendBankCreditCreationEmailUsecase(
+      this.mailer
+    );
     await sendEmailUsecase.execute(maybeOwner.email);
 
     response.status(201).json({
@@ -77,9 +79,11 @@ export class BankCreditController {
       interestPercentage: maybeBankCredit.interestPercentage,
       durationInMonths: maybeBankCredit.durationInMonths,
       status: maybeBankCredit.status,
-      ...(maybeBankCredit.account ? {
-        account: { iban: maybeBankCredit.account.iban },
-      } : {}),
+      ...(maybeBankCredit.account
+        ? {
+            account: { iban: maybeBankCredit.account.iban },
+          }
+        : {}),
     });
   }
 
@@ -93,7 +97,7 @@ export class BankCreditController {
 
     const getBankCreditListUsecase = new GetBankCreditListUsecase(
       this.bankCreditRepository,
-      this.monthlypaymentRepository,
+      this.monthlypaymentRepository
     );
     const bankCredits = await getBankCreditListUsecase.execute(user);
 
@@ -105,9 +109,21 @@ export class BankCreditController {
       durationInMonths: bankCredit.durationInMonths,
       status: bankCredit.status,
       remains: bankCredit.remains,
-      ...(bankCredit.account ? {
-        account: { iban: bankCredit.account.iban },
-      } : {}),
+      ...(bankCredit.account
+        ? {
+            account: { iban: bankCredit.account.iban },
+          }
+        : {}),
+      ...(bankCredit.owner
+        ? {
+            owner: {
+              id: bankCredit.owner.id,
+              email: bankCredit.owner.email,
+              firstName: bankCredit.owner.firstName,
+              lastName: bankCredit.owner.lastName,
+            },
+          }
+        : {}),
     }));
 
     response.status(200).json(bankCreditsResponse);
@@ -130,7 +146,7 @@ export class BankCreditController {
 
     const getListUsecase = new GetMonthlyPaymentListUsecase(
       this.bankCreditRepository,
-      this.monthlypaymentRepository,
+      this.monthlypaymentRepository
     );
     const maybePayments = await getListUsecase.execute(maybeParams.id, user);
 

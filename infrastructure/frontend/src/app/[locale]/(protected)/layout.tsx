@@ -26,6 +26,7 @@ const pageTitles: Record<string, string> = {
   "/settings": "Paramètres de la banque",
   "/actions": "Gestion des actions",
   "/news": "Actualités",
+  "/credits": "Gestion des crédits",
 };
 
 export default function ProtectedLayout({ children }: Props) {
@@ -34,9 +35,11 @@ export default function ProtectedLayout({ children }: Props) {
   const { getBeneficiaries } = useBeneficiaries();
   const { isAuthenticated, isLoading } = useAuth();
 
+  const pathWithoutLocale = pathname.replace(/^\/(en|fr)/, "") || "/home";
+
   // Nommage des routes dynamiques
-  let pageTitle = pageTitles[pathname];
-  if (!pageTitle && pathname.startsWith("/accounts/details/")) {
+  let pageTitle = pageTitles[pathWithoutLocale];
+  if (!pageTitle && pathWithoutLocale.startsWith("/accounts/details/")) {
     pageTitle = "Mon compte";
   }
   pageTitle = pageTitle || "Espace client";

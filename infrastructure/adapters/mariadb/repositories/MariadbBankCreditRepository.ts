@@ -3,7 +3,10 @@ import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserN
 import { MariadbConnection } from "../config/MariadbConnection";
 import { BankCreditModel } from "../models/BankCreditModel";
 import { UserModel } from "../models/UserModel";
-import { BankCreditRepositoryInterface, UpdateBankCreditPayload } from "../../../../application/repositories/BankCreditRepositoryInterface";
+import {
+  BankCreditRepositoryInterface,
+  UpdateBankCreditPayload,
+} from "../../../../application/repositories/BankCreditRepositoryInterface";
 import { AccountModel } from "../models/AccountModel";
 import { AccountNotFoundError } from "../../../../domain/errors/entities/account/AccountNotFoundError";
 import { InvalidInsurancePercentageError } from "../../../../domain/errors/entities/bank-credit/InvalidInsurancePercentageError";
@@ -13,7 +16,9 @@ import { InvalidDurationInMonthsError } from "../../../../domain/errors/entities
 import { BankCreditNotFoundError } from "../../../../domain/errors/entities/bank-credit/BankCreditNotFoundError";
 import { BankCreditStatusEnum } from "../../../../domain/enums/BankCreditStatusEnum";
 
-export class MariadbBankCreditRepository implements BankCreditRepositoryInterface {
+export class MariadbBankCreditRepository
+  implements BankCreditRepositoryInterface
+{
   private bankCreditModel: BankCreditModel;
   private userModel: UserModel;
   private accountModel: AccountModel;
@@ -22,10 +27,24 @@ export class MariadbBankCreditRepository implements BankCreditRepositoryInterfac
     const connection = new MariadbConnection(databaseDsn).getConnection();
     this.userModel = new UserModel(connection);
     this.accountModel = new AccountModel(connection, this.userModel);
-    this.bankCreditModel = new BankCreditModel(connection, this.userModel, this.accountModel);
+    this.bankCreditModel = new BankCreditModel(
+      connection,
+      this.userModel,
+      this.accountModel
+    );
   }
 
-  public async create(bankCredit: BankCredit): Promise<BankCredit | UserNotFoundError | AccountNotFoundError | InvalidInsurancePercentageError | InvalidInterestPercentageError | InvalidAmountError | InvalidDurationInMonthsError> {
+  public async create(
+    bankCredit: BankCredit
+  ): Promise<
+    | BankCredit
+    | UserNotFoundError
+    | AccountNotFoundError
+    | InvalidInsurancePercentageError
+    | InvalidInterestPercentageError
+    | InvalidAmountError
+    | InvalidDurationInMonthsError
+  > {
     try {
       const createdBankCredit = await this.bankCreditModel.model.create({
         amount: bankCredit.amount,
@@ -45,48 +64,55 @@ export class MariadbBankCreditRepository implements BankCreditRepositoryInterfac
 
       return maybeBankCredit;
     } catch (error) {
-      if (error instanceof Error && error.name === 'SequelizeForeignKeyConstraintError') {
-        if (error.message.includes('advisorId')) {
-          return new UserNotFoundError('User not found.');
-        } else if (error.message.includes('accountId')) {
-          return new AccountNotFoundError('Account not found.');
+      if (
+        error instanceof Error &&
+        error.name === "SequelizeForeignKeyConstraintError"
+      ) {
+        if (error.message.includes("advisorId")) {
+          return new UserNotFoundError("User not found.");
+        } else if (error.message.includes("accountId")) {
+          return new AccountNotFoundError("Account not found.");
         }
       }
 
-      return new UserNotFoundError('User not found.');
+      return new UserNotFoundError("User not found.");
     }
   }
 
-  public async update(stockOrder: UpdateBankCreditPayload): Promise<BankCredit | BankCreditNotFoundError> {
+  public async update(
+    stockOrder: UpdateBankCreditPayload
+  ): Promise<BankCredit | BankCreditNotFoundError> {
     try {
       const { id, ...toUpdate } = stockOrder;
 
-      await this.bankCreditModel.model.update({
-        ...toUpdate,
-      }, {
-        where: { id },
-      });
+      await this.bankCreditModel.model.update(
+        {
+          ...toUpdate,
+        },
+        {
+          where: { id },
+        }
+      );
 
       return await this.findById(id);
     } catch (error) {
-      return new BankCreditNotFoundError('BankCredit not found.');
+      return new BankCreditNotFoundError("BankCredit not found.");
     }
   }
 
-  public async findById(id: number): Promise<BankCredit | BankCreditNotFoundError> {
+  public async findById(
+    id: number
+  ): Promise<BankCredit | BankCreditNotFoundError> {
     try {
-      const foundBankCredit = await this.bankCreditModel.model.findByPk(
-        id,
-        {
-          include: [
-            { model: this.userModel.model, as: 'advisor' },
-            { model: this.accountModel.model },
-            { model: this.userModel.model, as: 'owner' },
-          ],
-        }
-      );
+      const foundBankCredit = await this.bankCreditModel.model.findByPk(id, {
+        include: [
+          { model: this.userModel.model, as: "advisor" },
+          { model: this.accountModel.model },
+          { model: this.userModel.model, as: "owner" },
+        ],
+      });
       if (!foundBankCredit) {
-        return new BankCreditNotFoundError('BankCredit not found.');
+        return new BankCreditNotFoundError("BankCredit not found.");
       }
 
       const maybeBankCredit = BankCredit.from(foundBankCredit);
@@ -96,7 +122,7 @@ export class MariadbBankCreditRepository implements BankCreditRepositoryInterfac
 
       return maybeBankCredit;
     } catch (error) {
-      return new BankCreditNotFoundError('BankCredit not found.');
+      return new BankCreditNotFoundError("BankCredit not found.");
     }
   }
 
@@ -106,6 +132,10 @@ export class MariadbBankCreditRepository implements BankCreditRepositoryInterfac
         where: {
           advisorId,
         },
+        include: [
+          { model: this.accountModel.model },
+          { model: this.userModel.model, as: "owner" },
+        ],
       });
 
       const bankCredits: BankCredit[] = [];

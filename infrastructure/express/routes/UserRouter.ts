@@ -18,23 +18,34 @@ export class UserRouter {
     mailer: MailerInterface,
     passwordHasher: PasswordHasherInterface,
     uniqueIdGenerator: UniqueIdGeneratorInterface,
-    tokenManager: TokenManagerInterface,
+    tokenManager: TokenManagerInterface
   ) {
-    const userController = new UserController(repositoryResolver.getUserRepository(), passwordHasher, uniqueIdGenerator, mailer);
+    const userController = new UserController(
+      repositoryResolver.getUserRepository(),
+      passwordHasher,
+      uniqueIdGenerator,
+      mailer
+    );
 
     app.get(
       paths.user.detail(),
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
-      roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+      roleMiddleware({
+        mandatoryRoles: [RoleEnum.DIRECTOR],
+        forbiddenRoles: [RoleEnum.BANNED],
+      }),
       async (req, res) => {
         await userController.get(req, res);
       }
-    )
+    );
 
     app.get(
       paths.user.list,
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
-      roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR, RoleEnum.ADVISOR], forbiddenRoles: [RoleEnum.BANNED] }),
+      roleMiddleware({
+        mandatoryRoles: [RoleEnum.DIRECTOR],
+        forbiddenRoles: [RoleEnum.BANNED],
+      }),
       async (req, res) => {
         await userController.list(req, res);
       }
@@ -43,7 +54,10 @@ export class UserRouter {
     app.post(
       paths.user.create,
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
-      roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+      roleMiddleware({
+        mandatoryRoles: [RoleEnum.DIRECTOR],
+        forbiddenRoles: [RoleEnum.BANNED],
+      }),
       async (req, res) => {
         await userController.create(req, res);
       }
@@ -52,7 +66,10 @@ export class UserRouter {
     app.put(
       paths.user.update(),
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
-      roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+      roleMiddleware({
+        mandatoryRoles: [RoleEnum.DIRECTOR],
+        forbiddenRoles: [RoleEnum.BANNED],
+      }),
       async (req, res) => {
         await userController.update(req, res);
       }
@@ -61,7 +78,10 @@ export class UserRouter {
     app.delete(
       paths.user.delete(),
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
-      roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+      roleMiddleware({
+        mandatoryRoles: [RoleEnum.DIRECTOR],
+        forbiddenRoles: [RoleEnum.BANNED],
+      }),
       async (req, res) => {
         await userController.delete(req, res);
       }
@@ -70,7 +90,10 @@ export class UserRouter {
     app.post(
       paths.user.ban(),
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
-      roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+      roleMiddleware({
+        mandatoryRoles: [RoleEnum.DIRECTOR],
+        forbiddenRoles: [RoleEnum.BANNED],
+      }),
       async (req, res) => {
         await userController.ban(req, res);
       }
@@ -79,11 +102,13 @@ export class UserRouter {
     app.post(
       paths.user.unban(),
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
-      roleMiddleware({ mandatoryRoles: [RoleEnum.DIRECTOR], forbiddenRoles: [RoleEnum.BANNED] }),
+      roleMiddleware({
+        mandatoryRoles: [RoleEnum.DIRECTOR],
+        forbiddenRoles: [RoleEnum.BANNED],
+      }),
       async (req, res) => {
         await userController.unban(req, res);
       }
     );
   }
 }
-
