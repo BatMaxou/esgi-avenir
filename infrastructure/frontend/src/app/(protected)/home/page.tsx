@@ -5,6 +5,7 @@ import { useNavigation } from "@/contexts/NavigationContext";
 import ClientDashboard from "@/components/dashboards/ClientDashboard";
 import DirectorDashboard from "@/components/dashboards/DirectorDashboard";
 import { RoleEnum } from "@/../../../domain/enums/RoleEnum";
+import AdvisorDashboard from "@/components/dashboards/AdvisorDashboard";
 
 export default function Home() {
   const { user } = useAuth();
@@ -15,6 +16,8 @@ export default function Home() {
   return user ? (
     user.roles.includes(RoleEnum.DIRECTOR) ? (
       <DirectorDashboard />
+    ) : user.roles.includes(RoleEnum.ADVISOR) ? (
+      <AdvisorDashboard />
     ) : (
       <ClientDashboard />
     )
