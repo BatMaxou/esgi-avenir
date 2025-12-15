@@ -27,6 +27,9 @@ import { InvalidGetAccountOperationsParamsError } from "../../../application/err
 import { GetOperationListUsecase } from "../../../application/usecases/operation/GetOperationListUsecase";
 import { BeneficiaryRepositoryInterface } from "../../../application/repositories/BeneficiaryRepositoryInterface";
 import { AccountNotSoldableError } from "../../../application/errors/account/AccountNotSoldableError";
+import { GetAccountListByUserQuery } from "../../../application/queries/account/GetAccountListByUserQuery";
+import { GetAccountListByUserUsecase } from "../../../application/usecases/account/GetAccountListByUserUsecase";
+import { InvalidGetAccountListByUserQueryError } from "../../../application/errors/queries/account/InvalidGetAccountListByUserQueryError";
 
 export class AccountController {
   public constructor(
@@ -309,5 +312,41 @@ export class AccountController {
     }
 
     response.status(200).json(operations);
+  }
+
+  public async listByUser(request: Request, response: Response) {
+    const maybeQuery = GetAccountListByUserQuery.from(request.query);
+    if (maybeQuery instanceof InvalidGetAccountListByUserQueryError) {
+      return response.status(400).json({
+        error: maybeQuery.message,
+      });
+    }
+
+    const getAccountListUsecase = new GetAccountListByUserUsecase(
+      this.accountRepository,
+      this.operationRepository
+    );
+    const accounts = await getAccountListUsecase.execute(
+      maybeQuery.firstName || '',
+      maybeQuery.lastName || '',
+    );
+
+    const accountsResponse = accounts.map((account) => ({
+      id: account.id,
+      name: account.name,
+      iban: account.iban,
+      isSavings: account.isSavings,
+      amount: account.amount,
+      ...(account.owner ? {
+        owner: {
+          id: account.owner.id,
+          firstName: account.owner.firstName,
+          lastName: account.owner.lastName,
+          email: account.owner.email,
+        }
+      } : {})
+    }));
+
+    response.status(200).json(accountsResponse);
   }
 }

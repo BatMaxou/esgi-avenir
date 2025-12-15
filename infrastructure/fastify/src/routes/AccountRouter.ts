@@ -11,6 +11,7 @@ import { AccountController } from "../controllers/AccountController";
 import { CreateAccountPayloadInterface } from "../../../../application/services/api/resources/AccountResourceInterface";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
 import { UpdateAccountPayloadInterface } from "../../../../application/services/api/resources/AccountResourceInterface";
+import { GetAccountListByUserSearchParams } from "../../../../application/queries/account/GetAccountListByUserQuery";
 
 export class AccountRouter {
   public register(
@@ -24,6 +25,15 @@ export class AccountRouter {
       repositoryResolver.getOperationRepository(),
       repositoryResolver.getBeneficiaryRepository(),
       mailer,
+    );
+
+    app.get<{Querystring: GetAccountListByUserSearchParams}>(
+      paths.account.byUser(),
+      async (req, res) => {
+        await authMiddleware(req, res, repositoryResolver.getUserRepository(), tokenManager);
+        await roleMiddleware(req, res, { mandatoryRoles: [RoleEnum.ADVISOR], forbiddenRoles: [RoleEnum.BANNED] });
+        await accountController.listByUser(req, res);
+      }
     );
 
     app.post<{Body: CreateAccountPayloadInterface}>(

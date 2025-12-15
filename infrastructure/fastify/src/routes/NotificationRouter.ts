@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 
 import { paths } from "../../../../application/services/api/paths";
+import { ssePaths } from "../../../../application/services/sse/ssePaths";
 import { RepositoryResolverInterface } from "../../../../application/services/RepositoryResolverInterface";
 import { TokenManagerInterface } from "../../../../application/services/token/TokenManagerInterface";
 import { authMiddleware } from "../middlewares/authMiddleware";
@@ -23,7 +24,7 @@ export class NotificationRouter {
     );
     
     app.get(
-      paths.notification.subscribe,
+      ssePaths.notification.subscribe,
       async (req, res) => {
         await authMiddleware(req, res, repositoryResolver.getUserRepository(), tokenManager);
         await roleMiddleware(req, res, { mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] });

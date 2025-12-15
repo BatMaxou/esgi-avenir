@@ -18,6 +18,7 @@ export interface AccountRepositoryInterface extends RepositoryInterface {
   findById: (id: number) => Promise<Account | AccountNotFoundError>
   findByIban: (iban: IbanValue) => Promise<Account | AccountNotFoundError>
   findAllByOwner: (ownerId: number) => Promise<Account[]>
+  findAllByUser: (firstName: string, lastName: string) => Promise<Account[]>
   findNextId: () => Promise<number>
   findSavingsAccountByOwner: (ownerId: number) => Promise<Account | AccountNotFoundError>
   findSavingsAccountOwnerIds: () => Promise<number[]>

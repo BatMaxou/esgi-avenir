@@ -8,7 +8,7 @@ import { UserModel } from "../models/UserModel";
 import { IbanExistsError } from "../../../../domain/errors/entities/account/IbanExistsError";
 import { IbanValue } from "../../../../domain/values/IbanValue";
 import { UserAlreadyHaveSavingsAccountError } from "../../../../domain/errors/entities/account/UserAlreadyHaveSavingsAccountError";
-import { Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 export class MariadbAccountRepository implements AccountRepositoryInterface {
   private accountModel: AccountModel;
@@ -105,6 +105,37 @@ export class MariadbAccountRepository implements AccountRepositoryInterface {
     const foundAccounts = await this.accountModel.model.findAll({
       where: {
         ownerId: ownerId,
+        isDeleted: false,
+      },
+    });
+
+    const accounts: Account[] = [];
+
+    foundAccounts.forEach((foundAccount) => {
+      const maybeAccount = Account.from(foundAccount);
+      if (maybeAccount instanceof Error) {
+        throw maybeAccount;
+      }
+
+      accounts.push(maybeAccount);
+    });
+
+    return accounts;
+  }
+
+  public async findAllByUser(firstName: string, lastName: string): Promise<Account[]> {
+    const foundAccounts = await this.accountModel.model.findAll({
+      include: [
+        {
+          model: this.userModel.model,
+          as: 'owner',
+          where: {
+            firstName: { [Op.like]: `%${firstName}%` },
+            lastName: { [Op.like]: `%${lastName}%` },
+          },
+        }
+      ],
+      where: {
         isDeleted: false,
       },
     });
