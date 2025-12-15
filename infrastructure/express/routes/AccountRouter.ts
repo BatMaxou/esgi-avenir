@@ -23,6 +23,15 @@ export class AccountRouter {
       mailer,
     );
 
+    app.get(
+      paths.account.byUser(),
+      authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
+      roleMiddleware({ mandatoryRoles: [RoleEnum.ADVISOR], forbiddenRoles: [RoleEnum.BANNED] }),
+      async (req, res) => {
+        await accountController.listByUser(req, res);
+      }
+    );
+
     app.post(
       paths.account.create,
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),

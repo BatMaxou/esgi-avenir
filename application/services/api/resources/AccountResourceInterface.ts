@@ -8,8 +8,7 @@ import { GetOperationListResponseInterface } from "./OperationResourceInterface"
 
 export interface GetAccountResponseInterface extends Account {}
 export interface GetHydratedAccountResponseInterface extends HydratedAccount {}
-export interface GetAccountListResponseInterface
-  extends Array<GetHydratedAccountResponseInterface> {}
+export interface GetAccountListResponseInterface extends Array<GetHydratedAccountResponseInterface> {}
 
 export interface CreateAccountPayloadInterface {
   name?: string;
@@ -18,6 +17,10 @@ export interface CreateAccountPayloadInterface {
 export interface UpdateAccountPayloadInterface {
   id: number;
   name?: string;
+}
+
+export interface GetByUserPayloadInterface {
+  firstName: string;
 }
 
 export interface AccountResourceInterface {
@@ -38,4 +41,5 @@ export interface AccountResourceInterface {
   getOperations(
     id: number
   ): Promise<GetOperationListResponseInterface | ApiClientError>;
+  getByUser(data: GetByUserPayloadInterface): Promise<GetAccountListResponseInterface | ApiClientError>;
 }

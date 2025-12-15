@@ -33,6 +33,10 @@ export const paths = {
     update: (id?: number | string | null) => `/api/accounts/${id || ':id'}`,
     delete: (id?: number | string | null) => `/api/accounts/${id || ':id'}`,
     operations: (id?: number | string | null) => `/api/accounts/${id || ':id'}/operations`,
+    byUser: (firstName?: string | null, lastName?: string | null) => `/api/accounts/by-user${buildQueryString({
+      ...(firstName ? { firstName } : {}),
+      ...(lastName ? { lastName } : {}),
+    })}`,
   },
   operation: {
     create: '/api/operations',

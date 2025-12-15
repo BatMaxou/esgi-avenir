@@ -29,6 +29,10 @@ import { BeneficiaryRepositoryInterface } from "../../../../application/reposito
 import { AccountNotSoldableError } from "../../../../application/errors/account/AccountNotSoldableError";
 import { CreateAccountPayloadInterface, UpdateAccountPayloadInterface } from "../../../../application/services/api/resources/AccountResourceInterface";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
+import { GetAccountListByUserQuery, GetAccountListByUserSearchParams } from "../../../../application/queries/account/GetAccountListByUserQuery";
+import { InvalidGetAccountListByUserQueryError } from "../../../../application/errors/queries/account/InvalidGetAccountListByUserQueryError";
+import { GetAccountListByUserUsecase } from "../../../../application/usecases/account/GetAccountListByUserUsecase";
+
 
 export class AccountController {
   public constructor(
@@ -311,5 +315,41 @@ export class AccountController {
     }
 
     response.status(200).send(operations);
+  }
+
+  public async listByUser(request: FastifyRequest<{Querystring: GetAccountListByUserSearchParams}>, response: FastifyReply) {
+    const maybeQuery = GetAccountListByUserQuery.from(request.query);
+    if (maybeQuery instanceof InvalidGetAccountListByUserQueryError) {
+      return response.status(400).send({
+        error: maybeQuery.message,
+      });
+    }
+
+    const getAccountListUsecase = new GetAccountListByUserUsecase(
+      this.accountRepository,
+      this.operationRepository
+    );
+    const accounts = await getAccountListUsecase.execute(
+      maybeQuery.firstName || '',
+      maybeQuery.lastName || '',
+    );
+
+    const accountsResponse = accounts.map((account) => ({
+      id: account.id,
+      name: account.name,
+      iban: account.iban,
+      isSavings: account.isSavings,
+      amount: account.amount,
+      ...(account.owner ? {
+        owner: {
+          id: account.owner.id,
+          firstName: account.owner.firstName,
+          lastName: account.owner.lastName,
+          email: account.owner.email,
+        }
+      } : {})
+    }));
+
+    response.status(200).send(accountsResponse);
   }
 }

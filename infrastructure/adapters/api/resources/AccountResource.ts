@@ -1,7 +1,7 @@
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { ApiClientInterface, DeleteResponseInterface } from "../../../../application/services/api/ApiClientInterface";
 import { paths } from "../../../../application/services/api/paths";
-import { CreateAccountPayloadInterface, GetAccountListResponseInterface, GetAccountResponseInterface, UpdateAccountPayloadInterface, AccountResourceInterface, GetHydratedAccountResponseInterface } from "../../../../application/services/api/resources/AccountResourceInterface";
+import { CreateAccountPayloadInterface, GetAccountListResponseInterface, GetAccountResponseInterface, UpdateAccountPayloadInterface, AccountResourceInterface, GetHydratedAccountResponseInterface, GetByUserPayloadInterface } from "../../../../application/services/api/resources/AccountResourceInterface";
 import { GetOperationListResponseInterface } from "../../../../application/services/api/resources/OperationResourceInterface";
 
 export class AccountResource implements AccountResourceInterface {
@@ -33,5 +33,9 @@ export class AccountResource implements AccountResourceInterface {
 
   public async getOperations(id: number): Promise<GetOperationListResponseInterface | ApiClientError> {
     return this.apiClient.get<GetOperationListResponseInterface>(paths.account.operations(id));
+  }
+
+  public async getByUser(data: GetByUserPayloadInterface): Promise<GetAccountListResponseInterface | ApiClientError> {
+    return this.apiClient.get<GetAccountListResponseInterface>(paths.account.byUser, data);
   }
 }
