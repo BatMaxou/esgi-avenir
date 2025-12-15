@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/atoms/dropdown-menu";
 import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
+import { LocaleSwitcher } from "../../atoms/locale-switcher";
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -123,6 +124,8 @@ export default function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+
+            <LocaleSwitcher />
           </div>
         </div>
       </div>
