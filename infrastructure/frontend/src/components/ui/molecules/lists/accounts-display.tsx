@@ -153,33 +153,42 @@ const AccountList = ({
       ) : (
         <ul className="flex flex-col space-y-2">
           {accounts.map((account) => (
-            <LoadingLink
-              href={`/accounts/details/${account.id}`}
-              key={account.id}
-            >
-              <Item
-                key={account.id}
-                className="p-4 border border-gray-300 rounded-lg shadow-sm bg-white flex flex-row justify-between items-center hover:bg-gray-50 cursor-pointer"
-              >
-                <div className="">
-                  <h3 className="text-md font-semibold">
-                    {account.isSavings ? "Compte épargne" : "Compte courant"} -{" "}
-                    {account.name}
-                  </h3>
-                  <p className="text-gray-600">{account.iban.value}</p>
-                </div>
-                <p
-                  className={
-                    account.amount < 0
-                      ? "text-red-600 font-extrabold text-base"
-                      : "text-green-600 font-extrabold text-base"
-                  }
+            <>
+              {account.id && (
+                <LoadingLink
+                  href={{
+                    pathname: "/accounts/details/[id]",
+                    params: { id: account.id },
+                  }}
+                  key={account.id}
                 >
-                  {account.amount < 0 ? "" : "+"}
-                  {account.amount.toFixed(2)} €
-                </p>
-              </Item>
-            </LoadingLink>
+                  <Item
+                    key={account.id}
+                    className="p-4 border border-gray-300 rounded-lg shadow-sm bg-white flex flex-row justify-between items-center hover:bg-gray-50 cursor-pointer"
+                  >
+                    <div className="">
+                      <h3 className="text-md font-semibold">
+                        {account.isSavings
+                          ? "Compte épargne"
+                          : "Compte courant"}{" "}
+                        - {account.name}
+                      </h3>
+                      <p className="text-gray-600">{account.iban.value}</p>
+                    </div>
+                    <p
+                      className={
+                        account.amount < 0
+                          ? "text-red-600 font-extrabold text-base"
+                          : "text-green-600 font-extrabold text-base"
+                      }
+                    >
+                      {account.amount < 0 ? "" : "+"}
+                      {account.amount.toFixed(2)} €
+                    </p>
+                  </Item>
+                </LoadingLink>
+              )}
+            </>
           ))}
         </ul>
       )}

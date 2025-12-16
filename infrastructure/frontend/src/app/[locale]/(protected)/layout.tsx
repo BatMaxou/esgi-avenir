@@ -27,6 +27,7 @@ const pageTitles: Record<string, string> = {
   "/actions": "Gestion des actions",
   "/news": "Actualités",
   "/credits": "Gestion des crédits",
+  "/clients": "Gestion des clients",
 };
 
 export default function ProtectedLayout({ children }: Props) {

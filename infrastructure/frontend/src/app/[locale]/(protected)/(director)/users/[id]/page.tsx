@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { notFound, useParams, useRouter } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { useUsers } from "@/contexts/UsersContext";
 import { Button } from "@/components/ui/atoms/button";
 import {
@@ -16,8 +16,10 @@ import { RoleEnum } from "../../../../../../../../../domain/enums/RoleEnum";
 import { UpdateUserDialog } from "@/components/ui/molecules/dialogs/update-user-dialog";
 import { DeleteUserDialog } from "@/components/ui/molecules/dialogs/delete-user-dialog";
 import { BanUnbanUserDialog } from "@/components/ui/molecules/dialogs/ban-unban-user-dialog";
-import { RoleBadge } from "@/components/ui/molecules/badges/role-badge";
 import { useAuth } from "@/contexts/AuthContext";
+import { UserInformationsCard } from "@/components/ui/molecules/cards/user-informations-card";
+import { User } from "../../../../../../../../../domain/entities/User";
+import { useRouter } from "@/i18n/navigation";
 
 export default function UserDetailsPage() {
   const params = useParams();
@@ -108,14 +110,7 @@ export default function UserDetailsPage() {
   }
 
   if (!user) {
-    return (
-      <div className="flex flex-col items-center justify-center h-96 gap-4">
-        <p className="text-lg text-gray-500">Utilisateur introuvable</p>
-        <Button variant="outline" onClick={() => router.back()}>
-          Retour
-        </Button>
-      </div>
-    );
+    return notFound();
   }
 
   const isBanned = user.roles.includes(RoleEnum.BANNED);
@@ -160,31 +155,11 @@ export default function UserDetailsPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow border">
-          <h2 className="text-xl font-semibold mb-4">
-            Informations personnelles
-          </h2>
-          <div className="space-y-3">
-            <div className="grid grid-cols-3 gap-2">
-              <span className="font-medium text-gray-500">Prénom:</span>
-              <span className="col-span-2">{user.firstName}</span>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <span className="font-medium text-gray-500">Nom:</span>
-              <span className="col-span-2">{user.lastName}</span>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <span className="font-medium text-gray-500">Email:</span>
-              <span className="col-span-2">{user.email.value}</span>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <span className="font-medium text-gray-500">Rôle:</span>
-              <div className="col-span-2">
-                <RoleBadge roles={user.roles} />
-              </div>
-            </div>
-          </div>
-        </div>
+        <UserInformationsCard
+          user={
+            user as Pick<User, "firstName" | "lastName" | "email" | "roles">
+          }
+        />
       </div>
 
       <UpdateUserDialog

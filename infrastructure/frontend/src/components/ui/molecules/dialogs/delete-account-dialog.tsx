@@ -10,7 +10,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/molecules/dialogs/alert-dialog";
 import { useAccounts } from "@/contexts/AccountsContext";
-import { useRouter } from "next/navigation";
 import { HydratedAccount } from "../../../../../../../domain/entities/Account";
 import { Beneficiary } from "../../../../../../../domain/entities/Beneficiary";
 import { OperationEnum } from "../../../../../../../domain/enums/OperationEnum";
@@ -20,6 +19,7 @@ import { Item, ItemActions, ItemContent } from "@/components/ui/atoms/item";
 import { Icon } from "@iconify/react";
 import { useOperations } from "@/contexts/OperationsContext";
 import { showErrorToast } from "@/lib/toast";
+import { useRouter } from "@/i18n/navigation";
 
 interface DeleteAccountDialogProps {
   open: boolean;
