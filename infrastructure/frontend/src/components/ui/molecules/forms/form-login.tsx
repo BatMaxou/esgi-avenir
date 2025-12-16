@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // Dependencies
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 

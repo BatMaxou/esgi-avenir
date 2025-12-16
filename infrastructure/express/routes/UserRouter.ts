@@ -31,7 +31,7 @@ export class UserRouter {
       paths.user.detail(),
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
       roleMiddleware({
-        mandatoryRoles: [RoleEnum.DIRECTOR],
+        mandatoryRoles: [RoleEnum.DIRECTOR, RoleEnum.ADVISOR],
         forbiddenRoles: [RoleEnum.BANNED],
       }),
       async (req, res) => {
@@ -43,7 +43,7 @@ export class UserRouter {
       paths.user.list,
       authMiddleware(repositoryResolver.getUserRepository(), tokenManager),
       roleMiddleware({
-        mandatoryRoles: [RoleEnum.DIRECTOR],
+        mandatoryRoles: [RoleEnum.DIRECTOR, RoleEnum.ADVISOR],
         forbiddenRoles: [RoleEnum.BANNED],
       }),
       async (req, res) => {

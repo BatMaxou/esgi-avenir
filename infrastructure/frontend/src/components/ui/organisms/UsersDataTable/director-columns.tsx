@@ -17,10 +17,9 @@ import {
 } from "@/components/ui/atoms/dropdown-menu";
 import { useState } from "react";
 import { useUsers } from "@/contexts/UsersContext";
-import { toast } from "sonner";
 import { User } from "../../../../../../../domain/entities/User";
 import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { DeleteUserDialog } from "@/components/ui/molecules/dialogs/delete-user-dialog";
 import { BanUnbanUserDialog } from "@/components/ui/molecules/dialogs/ban-unban-user-dialog";
 import { UpdateUserDialog } from "@/components/ui/molecules/dialogs/update-user-dialog";
@@ -90,6 +89,12 @@ function UserActionsCell({ user }: { user: User }) {
     }
   };
 
+  const id = user.id;
+
+  if (!id) {
+    return null;
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -101,7 +106,12 @@ function UserActionsCell({ user }: { user: User }) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() => router.push(`/users/${user.id}`)}
+            onClick={() =>
+              router.push({
+                pathname: "/users/[id]",
+                params: { id: id },
+              })
+            }
           >
             <EyeIcon className="mr-2 h-4 w-4" />
             Consulter
@@ -174,7 +184,7 @@ function UserActionsCell({ user }: { user: User }) {
   );
 }
 
-export const columns: ColumnDef<User>[] = [
+export const directorColumns: ColumnDef<User>[] = [
   {
     accessorKey: "firstName",
     header: "Prénom",

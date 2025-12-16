@@ -5,9 +5,10 @@ import { useRouter, usePathname } from "next/navigation";
 import { MouseEvent, ReactNode } from "react";
 import { useNavigation } from "@/contexts/NavigationContext";
 
-type LoadingLinkProps = LinkProps & {
+type LoadingLinkProps = Omit<LinkProps, "href"> & {
   children: ReactNode;
   className?: string;
+  href: string | { pathname: string; params?: Record<string, string | number> };
   onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
 };
 
@@ -22,8 +23,41 @@ export function LoadingLink({
   const pathname = usePathname();
   const { startNavigation } = useNavigation();
 
+  const getHrefString = (
+    href:
+      | string
+      | { pathname: string; params?: Record<string, string | number> }
+  ): string => {
+    if (typeof href === "string") {
+      return href;
+    }
+
+    const { pathname, params } = href;
+
+    if (!params) {
+      return pathname;
+    }
+
+    let path = pathname;
+    Object.entries(params).forEach(([key, value]) => {
+      path = path.replace(`[${key}]`, String(value));
+    });
+
+    return path;
+  };
+
+  const hrefString = getHrefString(href);
+
+  if (!hrefString) {
+    return (
+      <a className={className} {...props}>
+        {children}
+      </a>
+    );
+  }
+
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    if (pathname === href) {
+    if (pathname === hrefString) {
       e.preventDefault();
       return;
     }
@@ -33,12 +67,18 @@ export function LoadingLink({
     if (!e.defaultPrevented) {
       e.preventDefault();
       startNavigation();
-      router.push(href.toString());
+
+      router.push(hrefString);
     }
   };
 
   return (
-    <Link href={href} className={className} onClick={handleClick} {...props}>
+    <Link
+      href={hrefString}
+      className={className}
+      onClick={handleClick}
+      {...props}
+    >
       {children}
     </Link>
   );

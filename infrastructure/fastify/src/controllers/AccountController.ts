@@ -27,12 +27,14 @@ import { InvalidGetAccountOperationsParamsError } from "../../../../application/
 import { GetOperationListUsecase } from "../../../../application/usecases/operation/GetOperationListUsecase";
 import { BeneficiaryRepositoryInterface } from "../../../../application/repositories/BeneficiaryRepositoryInterface";
 import { AccountNotSoldableError } from "../../../../application/errors/account/AccountNotSoldableError";
-import { CreateAccountPayloadInterface, UpdateAccountPayloadInterface } from "../../../../application/services/api/resources/AccountResourceInterface";
+import {
+  CreateAccountPayloadInterface,
+  UpdateAccountPayloadInterface,
+} from "../../../../application/services/api/resources/AccountResourceInterface";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
-import { GetAccountListByUserQuery, GetAccountListByUserSearchParams } from "../../../../application/queries/account/GetAccountListByUserQuery";
-import { InvalidGetAccountListByUserQueryError } from "../../../../application/errors/queries/account/InvalidGetAccountListByUserQueryError";
 import { GetAccountListByUserUsecase } from "../../../../application/usecases/account/GetAccountListByUserUsecase";
-
+import { GetAccountByUserParams } from "../../../../application/params/account/GetAccountByUserParams";
+import { InvalidGetAccountByUserParamsError } from "../../../../application/errors/params/account/InvalidGetAccountByUserParamsError";
 
 export class AccountController {
   public constructor(
@@ -42,7 +44,10 @@ export class AccountController {
     private readonly mailer: MailerInterface
   ) {}
 
-  public async create(request: FastifyRequest<{Body: CreateAccountPayloadInterface}>, response: FastifyReply) {
+  public async create(
+    request: FastifyRequest<{ Body: CreateAccountPayloadInterface }>,
+    response: FastifyReply
+  ) {
     const maybeCommand = CreateAccountCommand.from(request.body);
     if (maybeCommand instanceof InvalidCreateAccountCommandError) {
       return response.status(400).send({
@@ -82,7 +87,10 @@ export class AccountController {
     });
   }
 
-  public async createSavings(request: FastifyRequest<{Body: CreateAccountPayloadInterface}>, response: FastifyReply) {
+  public async createSavings(
+    request: FastifyRequest<{ Body: CreateAccountPayloadInterface }>,
+    response: FastifyReply
+  ) {
     const maybeCommand = CreateAccountCommand.from(request.body);
     if (maybeCommand instanceof InvalidCreateAccountCommandError) {
       return response.status(400).send({
@@ -151,7 +159,10 @@ export class AccountController {
     response.status(200).send(accountsResponse);
   }
 
-  public async get(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async get(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = GetAccountParams.from(request.params);
     if (maybeParams instanceof InvalidGetAccountParamsError) {
       return response.status(400).send({
@@ -188,7 +199,13 @@ export class AccountController {
     });
   }
 
-  public async update(request: FastifyRequest<{Params: RessourceParamsInterface, Body: UpdateAccountPayloadInterface}>, response: FastifyReply) {
+  public async update(
+    request: FastifyRequest<{
+      Params: RessourceParamsInterface;
+      Body: UpdateAccountPayloadInterface;
+    }>,
+    response: FastifyReply
+  ) {
     const maybeParams = UpdateAccountParams.from(request.params);
     if (maybeParams instanceof InvalidUpdateAccountParamsError) {
       return response.status(400).send({
@@ -213,13 +230,10 @@ export class AccountController {
     const updateAccountUsecase = new UpdateAccountUsecase(
       this.accountRepository
     );
-    const maybeAccount = await updateAccountUsecase.execute(
-      owner,
-      {
-        id: maybeParams.id,
-        name: maybeCommand.name,
-      }
-    );
+    const maybeAccount = await updateAccountUsecase.execute(owner, {
+      id: maybeParams.id,
+      name: maybeCommand.name,
+    });
 
     if (maybeAccount instanceof AccountNotFoundError) {
       return response.status(404).send({
@@ -241,7 +255,10 @@ export class AccountController {
     });
   }
 
-  public async delete(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async delete(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = DeleteAccountParams.from(request.params);
     if (maybeParams instanceof InvalidDeleteAccountParamsError) {
       return response.status(400).send({
@@ -259,7 +276,7 @@ export class AccountController {
     const deleteAccountUsecase = new DeleteAccountUsecase(
       this.accountRepository,
       this.beneficiaryRepository,
-      this.operationRepository,
+      this.operationRepository
     );
     const maybeSuccess = await deleteAccountUsecase.execute(
       maybeParams.id,
@@ -286,7 +303,10 @@ export class AccountController {
     });
   }
 
-  public async listOperations(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async listOperations(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = GetAccountOperationsParams.from(request.params);
     if (maybeParams instanceof InvalidGetAccountOperationsParamsError) {
       return response.status(400).send({
@@ -304,7 +324,7 @@ export class AccountController {
     const getListUsecase = new GetOperationListUsecase(
       this.accountRepository,
       this.operationRepository,
-      this.beneficiaryRepository,
+      this.beneficiaryRepository
     );
     const operations = await getListUsecase.execute(maybeParams.id, owner);
 
@@ -317,11 +337,14 @@ export class AccountController {
     response.status(200).send(operations);
   }
 
-  public async listByUser(request: FastifyRequest<{Querystring: GetAccountListByUserSearchParams}>, response: FastifyReply) {
-    const maybeQuery = GetAccountListByUserQuery.from(request.query);
-    if (maybeQuery instanceof InvalidGetAccountListByUserQueryError) {
+  public async listByUser(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
+    const maybeParams = GetAccountByUserParams.from(request.params);
+    if (maybeParams instanceof InvalidGetAccountByUserParamsError) {
       return response.status(400).send({
-        error: maybeQuery.message,
+        error: maybeParams.message,
       });
     }
 
@@ -329,10 +352,7 @@ export class AccountController {
       this.accountRepository,
       this.operationRepository
     );
-    const accounts = await getAccountListUsecase.execute(
-      maybeQuery.firstName || '',
-      maybeQuery.lastName || '',
-    );
+    const accounts = await getAccountListUsecase.execute(maybeParams.id);
 
     const accountsResponse = accounts.map((account) => ({
       id: account.id,
@@ -340,14 +360,16 @@ export class AccountController {
       iban: account.iban,
       isSavings: account.isSavings,
       amount: account.amount,
-      ...(account.owner ? {
-        owner: {
-          id: account.owner.id,
-          firstName: account.owner.firstName,
-          lastName: account.owner.lastName,
-          email: account.owner.email,
-        }
-      } : {})
+      ...(account.owner
+        ? {
+            owner: {
+              id: account.owner.id,
+              firstName: account.owner.firstName,
+              lastName: account.owner.lastName,
+              email: account.owner.email,
+            },
+          }
+        : {}),
     }));
 
     response.status(200).send(accountsResponse);

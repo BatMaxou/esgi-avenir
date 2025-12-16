@@ -1,4 +1,5 @@
 "use client";
 
 export { UsersDataTable } from "./UsersDataTable";
-export { columns } from "./columns";
+export { directorColumns } from "./director-columns";
+export { advisorColumns } from "./advisor-columns";

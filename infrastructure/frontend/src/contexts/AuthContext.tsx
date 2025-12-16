@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";

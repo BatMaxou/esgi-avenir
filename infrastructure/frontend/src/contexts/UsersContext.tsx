@@ -12,7 +12,6 @@ import {
 } from "../../../../application/services/api/resources/UserResourceInterface";
 import { User } from "../../../../domain/entities/User";
 import { RoleEnum } from "../../../../domain/enums/RoleEnum";
-import { toast } from "sonner";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 type Props = {
@@ -26,6 +25,7 @@ type UsersContextType = {
   isUsersLoading: boolean;
   getUser: (id: number) => Promise<void>;
   getUsers: () => Promise<void>;
+  getClients: () => Promise<void>;
   createUser: (
     data: CreateUserPayloadInterface
   ) => Promise<GetUserResponseInterface | null>;
@@ -106,6 +106,49 @@ export const UsersProvider = ({ children }: Props) => {
         };
 
         return getRoleOrder(a.roles) - getRoleOrder(b.roles);
+      });
+
+      setUsers(sortedUserList);
+    }
+
+    setIsUsersLoading(false);
+  };
+
+  const getClients = async () => {
+    setIsUsersLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsUsersLoading(false);
+      return;
+    }
+
+    const response = await apiClient.user.getAll();
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to fetch users:", response.message);
+      setUsers([]);
+    } else {
+      const clientList = response
+        .map(
+          (userData) =>
+            ({
+              id: userData.id,
+              firstName: userData.firstName,
+              lastName: userData.lastName,
+              email: userData.email,
+              roles: userData.roles || [],
+              enabled: false,
+              confirmationToken: null,
+              isDeleted: false,
+            } as User)
+        )
+        .filter(
+          (user) =>
+            user.roles.length === 1 && user.roles.includes(RoleEnum.USER)
+        );
+
+      const sortedUserList = clientList.sort((a, b) => {
+        return a.lastName.localeCompare(b.lastName);
       });
 
       setUsers(sortedUserList);
@@ -254,6 +297,7 @@ export const UsersProvider = ({ children }: Props) => {
         isUsersLoading,
         getUser,
         getUsers,
+        getClients,
         createUser,
         updateUser,
         deleteUser,

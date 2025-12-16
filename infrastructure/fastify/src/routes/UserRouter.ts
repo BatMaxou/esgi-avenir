@@ -42,7 +42,7 @@ export class UserRouter {
           tokenManager
         ),
           await roleMiddleware(req, res, {
-            mandatoryRoles: [RoleEnum.DIRECTOR],
+            mandatoryRoles: [RoleEnum.DIRECTOR, RoleEnum.ADVISOR],
             forbiddenRoles: [RoleEnum.BANNED],
           }),
           await userController.get(req, res);
@@ -57,7 +57,7 @@ export class UserRouter {
         tokenManager
       ),
         await roleMiddleware(req, res, {
-          mandatoryRoles: [RoleEnum.DIRECTOR],
+          mandatoryRoles: [RoleEnum.DIRECTOR, RoleEnum.ADVISOR],
           forbiddenRoles: [RoleEnum.BANNED],
         }),
         await userController.list(req, res);

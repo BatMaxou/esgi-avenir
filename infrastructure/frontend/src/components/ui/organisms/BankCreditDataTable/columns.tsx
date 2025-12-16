@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/atoms/dropdown-menu";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { Icon } from "@iconify/react";
 import { BankCreditRemainingBadge } from "../../molecules/badges/bank-credit-remaining-badge";
 import { HydratedBankCredit } from "../../../../../../../domain/entities/BankCredit";
@@ -19,6 +19,11 @@ function CreditActionsCell({ credit }: { credit: HydratedBankCredit }) {
   const router = useRouter();
   const [isCreateBankCreditDialogOpen, setIsCreateBankCreditDialogOpen] =
     useState(false);
+  const id = credit.id;
+
+  if (!id) {
+    return null;
+  }
 
   return (
     <>
@@ -31,7 +36,12 @@ function CreditActionsCell({ credit }: { credit: HydratedBankCredit }) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() => router.push(`/credits/${credit.id}`)}
+            onClick={() =>
+              router.push({
+                pathname: "/credits/[id]",
+                params: { id: id },
+              })
+            }
           >
             <EyeIcon className="mr-2 h-4 w-4" />
             Consulter
