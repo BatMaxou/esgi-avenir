@@ -13,7 +13,6 @@ import { useAuth } from "./AuthContext";
 import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 import { GetUserResponseInterface } from "../../../../application/services/api/resources/UserResourceInterface";
 import { Operation } from "../../../../domain/entities/Operation";
-import { toast } from "sonner";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 type Props = {
@@ -31,6 +30,7 @@ type AccountsContextType = {
   isAccountsLoading: boolean;
   getAccount: (id: number) => Promise<void>;
   getAccounts: () => Promise<void>;
+  getUserAccounts: (id: number) => Promise<void>;
   refreshAccounts: () => Promise<void>;
   createAccount: (data: {
     name: string;
@@ -152,6 +152,34 @@ export const AccountsProvider = ({ children }: Props) => {
     setIsAccountsLoading(false);
   };
 
+  const getUserAccounts = async (id: number) => {
+    setIsAccountsLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsAccountsLoading(false);
+    }
+
+    if (!id) {
+      setIsAccountsLoading(false);
+      showErrorToast("Utilisateur introuvable");
+    }
+
+    const response: GetAccountListResponseInterface | ApiClientError =
+      await apiClient.account.getByUser(id);
+
+    let userAccounts: HydratedAccount[] = [];
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to fetch accounts:", response.message);
+      userAccounts = [];
+    } else {
+      userAccounts = response;
+    }
+
+    setIsAccountsLoading(false);
+    setAccounts(userAccounts);
+  };
+
   const refreshAccounts = async () => {
     await getAccounts();
   };
@@ -266,6 +294,7 @@ export const AccountsProvider = ({ children }: Props) => {
         isAccountsLoading,
         getAccount,
         getAccounts,
+        getUserAccounts,
         refreshAccounts,
         createAccount,
         updateAccount,

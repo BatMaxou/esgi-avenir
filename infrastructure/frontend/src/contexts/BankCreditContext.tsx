@@ -11,6 +11,8 @@ import {
 } from "../../../../application/services/api/resources/BankCreditResourceInterface";
 import { GetMonthlyPaymentListResponseInterface } from "../../../../application/services/api/resources/MonthlyPaymentResourceInterface";
 import { useAuth } from "./AuthContext";
+import { useAccounts } from "./AccountsContext";
+import { showErrorToast } from "@/lib/toast";
 
 type Props = {
   children: ReactNode;
@@ -21,6 +23,9 @@ type BankCreditsContextType = {
   bankCredits: GetHydratedBankCreditResponseInterface[];
   payments: GetMonthlyPaymentListResponseInterface;
   getAllForAdvisor: () => Promise<void>;
+  createBankCredit: (
+    data: CreateBankCreditPayloadInterface
+  ) => Promise<boolean>;
   isBankCreditLoading: boolean;
   isBankCreditsLoading: boolean;
   isPaymentsLoading: boolean;
@@ -32,6 +37,7 @@ export const BankCreditsContext = createContext<
 
 export const BankCreditsProvider = ({ children }: Props) => {
   const { user } = useAuth();
+  const { getAccount } = useAccounts();
   const [bankCredit, setBankCredit] =
     useState<GetBankCreditResponseInterface | null>(null);
   const [bankCredits, setBankCredits] = useState<
@@ -45,6 +51,27 @@ export const BankCreditsProvider = ({ children }: Props) => {
     useState<boolean>(false);
   const [isPaymentsLoading, setIsPaymentsLoading] = useState<boolean>(false);
   const { apiClient } = useApiClient();
+
+  const createBankCredit = async (data: CreateBankCreditPayloadInterface) => {
+    setIsBankCreditLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsBankCreditLoading(false);
+      return false;
+    }
+
+    const response = await apiClient.bankCredit.create(data);
+    if (!(response instanceof ApiClientError)) {
+      setBankCredit(response);
+      getAccount(data.accountId);
+      setIsBankCreditLoading(false);
+      return true;
+    } else {
+      setIsBankCreditLoading(false);
+      showErrorToast("Erreur lors de la création du crédit bancaire");
+      return false;
+    }
+  };
 
   const getAllForAdvisor = async () => {
     setIsBankCreditsLoading(true);
@@ -67,6 +94,7 @@ export const BankCreditsProvider = ({ children }: Props) => {
         bankCredits,
         payments,
         getAllForAdvisor,
+        createBankCredit,
         isBankCreditLoading,
         isBankCreditsLoading,
         isPaymentsLoading,

@@ -1,47 +1,31 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
-import { useUsers } from "@/contexts/UsersContext";
-import { Button } from "@/components/ui/atoms/button";
-import {
-  LoaderCircleIcon,
-  ArrowLeftIcon,
-  PencilIcon,
-  BanIcon,
-  TrashIcon,
-} from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
-import { RoleEnum } from "../../../../../../../../../domain/enums/RoleEnum";
-import { UpdateUserDialog } from "@/components/ui/molecules/dialogs/update-user-dialog";
-import { DeleteUserDialog } from "@/components/ui/molecules/dialogs/delete-user-dialog";
-import { BanUnbanUserDialog } from "@/components/ui/molecules/dialogs/ban-unban-user-dialog";
-import { RoleBadge } from "@/components/ui/molecules/badges/role-badge";
-import { useAuth } from "@/contexts/AuthContext";
+import { useUsers } from "@/contexts/UsersContext";
+import { useAccounts } from "@/contexts/AccountsContext";
 import { UserInformationsCard } from "@/components/ui/molecules/cards/user-informations-card";
+import { Button } from "@/components/ui/atoms/button";
 import { User } from "../../../../../../../../../domain/entities/User";
+import { LoaderCircleIcon, ArrowLeftIcon } from "lucide-react";
+import { AccountsDisplay } from "@/components/ui/molecules/lists/accounts-display";
+import { Separator } from "@/components/ui/atoms/separator";
 
 export default function UserDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const { user: authUser } = useAuth();
-  const { getUser, user, isUserLoading, updateUser } = useUsers();
+  const { getUser, user, isUserLoading } = useUsers();
+  const { getUserAccounts, accounts, isAccountsLoading } = useAccounts();
 
   const [isUserFetched, setIsUserFetched] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isLoadingAction, setIsLoadingAction] = useState(false);
-  const isBanned = useMemo(
-    () => user?.roles.includes(RoleEnum.BANNED) || false,
-    [user]
-  );
 
   const userId = Number(params.id);
 
   useEffect(() => {
     if (userId) {
       getUser(userId);
+      getUserAccounts(userId);
       setIsUserFetched(true);
     }
   }, [userId]);
@@ -82,6 +66,15 @@ export default function UserDetailsPage() {
             user as Pick<User, "firstName" | "lastName" | "email" | "roles">
           }
         />
+      </div>
+      <Separator orientation="horizontal" />
+      <div className="grid grid-cols-1 gap-6">
+        <h2 className="text-lg font-medium">Comptes du client</h2>
+        {accounts.length > 0 ? (
+          <AccountsDisplay consultation={true} />
+        ) : (
+          <p>Ce client ne possède pas encore de compte.</p>
+        )}
       </div>
     </div>
   );

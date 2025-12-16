@@ -1,8 +1,6 @@
 "use client";
 
-import { BankCreditDataTable } from "@/components/ui/organisms/BankCreditDataTable/BankCreditDataTable";
 import { UsersDataTable } from "@/components/ui/organisms/UsersDataTable";
-import { useBankCredits } from "@/contexts/BankCreditContext";
 import { useNavigation } from "@/contexts/NavigationContext";
 import { useUsers } from "@/contexts/UsersContext";
 import { useEffect } from "react";
