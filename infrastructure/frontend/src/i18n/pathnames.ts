@@ -13,16 +13,20 @@ export const pathnames = {
     en: "/accounts",
   },
   "/accounts/details/[id]": {
-    fr: "/comptes/details/[id]",
-    en: "/accounts/details/[id]",
+    fr: "/compte/detail/[id]",
+    en: "/account/detail/[id]",
   },
   "/clients": {
     fr: "/clients",
     en: "/clients",
   },
   "/clients/[id]": {
-    fr: "/clients/[id]",
-    en: "/clients/[id]",
+    fr: "/client/[id]",
+    en: "/client/[id]",
+  },
+  "/clients/account/[accountId]": {
+    fr: "/client/compte/[accountId]",
+    en: "/client/account/[accountId]",
   },
   "/transfers": {
     fr: "/virements",
@@ -37,8 +41,8 @@ export const pathnames = {
     en: "/credits",
   },
   "/credits/[id]": {
-    fr: "/credits/[id]",
-    en: "/credits/[id]",
+    fr: "/credit/[id]",
+    en: "/credit/[id]",
   },
   "/profile": {
     fr: "/profil",
@@ -49,8 +53,8 @@ export const pathnames = {
     en: "/users",
   },
   "/users/[id]": {
-    fr: "/utilisateurs/[id]",
-    en: "/users/[id]",
+    fr: "/utilisateur/[id]",
+    en: "/user/[id]",
   },
   "/settings": {
     fr: "/parametres",

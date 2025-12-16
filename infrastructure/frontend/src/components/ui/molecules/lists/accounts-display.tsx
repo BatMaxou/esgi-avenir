@@ -13,12 +13,14 @@ type Props = {
   displayLength?: number;
   displayStyle?: "grid" | "list";
   separatedByTypes?: boolean;
+  consultation?: boolean;
 };
 
 export function AccountsDisplay({
   displayLength,
   displayStyle = "list",
   separatedByTypes = false,
+  consultation = false,
 }: Props) {
   const { accounts, isAccountsLoading } = useAccounts();
   const [openAddAccountModal, setOpenAddAccountModal] = useState(false);
@@ -53,11 +55,13 @@ export function AccountsDisplay({
                   <AccountGrid
                     accounts={currentAccounts}
                     isLoading={isAccountsLoading}
+                    consultation={consultation}
                   />
                 ) : (
                   <AccountList
                     accounts={currentAccounts}
                     isLoading={isAccountsLoading}
+                    consultation={consultation}
                   />
                 )}
               </>
@@ -80,11 +84,13 @@ export function AccountsDisplay({
                   <AccountGrid
                     accounts={savingsAccounts}
                     isLoading={isAccountsLoading}
+                    consultation={consultation}
                   />
                 ) : (
                   <AccountList
                     accounts={savingsAccounts}
                     isLoading={isAccountsLoading}
+                    consultation={consultation}
                   />
                 )}
               </>
@@ -110,18 +116,28 @@ export function AccountsDisplay({
     : sortedAccounts;
 
   return displayStyle === "grid" ? (
-    <AccountGrid accounts={displayedAccounts} isLoading={isAccountsLoading} />
+    <AccountGrid
+      accounts={displayedAccounts}
+      isLoading={isAccountsLoading}
+      consultation={consultation}
+    />
   ) : (
-    <AccountList accounts={displayedAccounts} isLoading={isAccountsLoading} />
+    <AccountList
+      accounts={displayedAccounts}
+      isLoading={isAccountsLoading}
+      consultation={consultation}
+    />
   );
 }
 
 const AccountGrid = ({
   accounts,
   isLoading,
+  consultation,
 }: {
   accounts: HydratedAccount[];
   isLoading: boolean;
+  consultation: boolean;
 }) => {
   return <></>;
 };
@@ -129,9 +145,11 @@ const AccountGrid = ({
 const AccountList = ({
   accounts,
   isLoading,
+  consultation,
 }: {
   accounts: HydratedAccount[];
   isLoading: boolean;
+  consultation: boolean;
 }) => {
   return (
     <div className="w-full">
@@ -156,10 +174,17 @@ const AccountList = ({
             <>
               {account.id && (
                 <LoadingLink
-                  href={{
-                    pathname: "/accounts/details/[id]",
-                    params: { id: account.id },
-                  }}
+                  href={
+                    consultation
+                      ? {
+                          pathname: "/clients/account/[id]",
+                          params: { id: account.id },
+                        }
+                      : {
+                          pathname: "/accounts/details/[id]",
+                          params: { id: account.id },
+                        }
+                  }
                   key={account.id}
                 >
                   <Item
