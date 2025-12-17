@@ -27,6 +27,8 @@ export class AccountAmountValue {
           return this.remove(acc, operation.amount);
         case OperationEnum.TO_BANK:
           return this.remove(acc, operation.amount);
+        case OperationEnum.FROM_BANK:
+          return this.add(acc, operation.amount);
         default:
           return acc;
       }
