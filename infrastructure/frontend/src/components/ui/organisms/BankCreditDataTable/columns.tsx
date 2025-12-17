@@ -9,16 +9,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/atoms/dropdown-menu";
-import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { Icon } from "@iconify/react";
 import { BankCreditRemainingBadge } from "../../molecules/badges/bank-credit-remaining-badge";
 import { HydratedBankCredit } from "../../../../../../../domain/entities/BankCredit";
+import { useBankCredits } from "@/contexts/BankCreditContext";
 
 function CreditActionsCell({ credit }: { credit: HydratedBankCredit }) {
   const router = useRouter();
-  const [isCreateBankCreditDialogOpen, setIsCreateBankCreditDialogOpen] =
-    useState(false);
+  const { setBankCredit } = useBankCredits();
   const id = credit.id;
 
   if (!id) {
@@ -36,27 +34,16 @@ function CreditActionsCell({ credit }: { credit: HydratedBankCredit }) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() =>
+            onClick={() => {
+              setBankCredit(credit);
               router.push({
                 pathname: "/credits/[id]",
                 params: { id: id },
-              })
-            }
+              });
+            }}
           >
             <EyeIcon className="mr-2 h-4 w-4" />
             Consulter
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onClick={() => setIsCreateBankCreditDialogOpen(true)}
-          >
-            <Icon
-              icon="ph:hand-coins-light"
-              width="256"
-              height="256"
-              style={{ color: "#000" }}
-            />{" "}
-            Accorder un crédit
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

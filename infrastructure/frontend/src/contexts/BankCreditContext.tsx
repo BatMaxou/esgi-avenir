@@ -20,12 +20,14 @@ type Props = {
 
 type BankCreditsContextType = {
   bankCredit: GetBankCreditResponseInterface | null;
+  setBankCredit: (bankCredit: GetBankCreditResponseInterface | null) => void;
   bankCredits: GetHydratedBankCreditResponseInterface[];
   payments: GetMonthlyPaymentListResponseInterface;
   getAllForAdvisor: () => Promise<void>;
   createBankCredit: (
     data: CreateBankCreditPayloadInterface
   ) => Promise<boolean>;
+  getBankCreditPayments: (id: number) => Promise<void>;
   isBankCreditLoading: boolean;
   isBankCreditsLoading: boolean;
   isPaymentsLoading: boolean;
@@ -87,14 +89,30 @@ export const BankCreditsProvider = ({ children }: Props) => {
     setIsBankCreditsLoading(false);
   };
 
+  const getBankCreditPayments = async (id: number) => {
+    setIsPaymentsLoading(true);
+
+    if (!user) {
+      setIsPaymentsLoading(false);
+      return;
+    }
+    const response = await apiClient.bankCredit.getPayments(id);
+    if (!(response instanceof ApiClientError)) {
+      setPayments(response);
+    }
+    setIsPaymentsLoading(false);
+  };
+
   return (
     <BankCreditsContext.Provider
       value={{
         bankCredit,
+        setBankCredit,
         bankCredits,
         payments,
         getAllForAdvisor,
         createBankCredit,
+        getBankCreditPayments,
         isBankCreditLoading,
         isBankCreditsLoading,
         isPaymentsLoading,
