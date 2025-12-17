@@ -27,6 +27,7 @@ const pageTitles: Record<string, string> = {
   "/actions": "Gestion des actions",
   "/news": "Actualités",
   "/credits": "Gestion des crédits",
+  "/credit": "Crédit",
   "/clients": "Gestion des clients",
 };
 
@@ -42,6 +43,9 @@ export default function ProtectedLayout({ children }: Props) {
   let pageTitle = pageTitles[pathWithoutLocale];
   if (!pageTitle && pathWithoutLocale.startsWith("/accounts/details/")) {
     pageTitle = "Mon compte";
+  }
+  if (!pageTitle && pathWithoutLocale.startsWith("/credit")) {
+    pageTitle = "Crédit";
   }
   pageTitle = pageTitle || "Espace client";
 
