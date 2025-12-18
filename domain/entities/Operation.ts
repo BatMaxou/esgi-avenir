@@ -61,7 +61,7 @@ export class Operation {
 
         break;
       case OperationEnum.WITHDRAWAL:
-        if (!maybeFromId || maybeToId !== undefined) {
+        if (!maybeFromId) {
           return new AccountNotFoundError('Invalid source account for withdrawal operation.');
         };
 
@@ -81,17 +81,23 @@ export class Operation {
           return new AccountNotFoundError('Invalid source account for fee operation.');
         };
 
-        if (maybeToId !== undefined) {
-          return new AccountNotEmptyError('Destination should be empty for fee operation.');
-        };
-
         break;
       case OperationEnum.TO_BANK:
-        if (!maybeFromId || maybeToId !== undefined) {
+        if (!maybeFromId) {
           return new AccountNotFoundError('Invalid source account for to bank operation.');
         };
 
         if (maybeToId !== undefined) {
+          return new AccountNotEmptyError('Destination should be empty for to bank operation.');
+        };
+
+        break;
+      case OperationEnum.FROM_BANK:
+        if (!maybeToId) {
+          return new AccountNotFoundError('Invalid destination account for from bank operation.');
+        };
+
+        if (maybeFromId !== undefined) {
           return new AccountNotEmptyError('Destination should be empty for to bank operation.');
         };
 

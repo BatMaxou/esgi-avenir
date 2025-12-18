@@ -17,6 +17,7 @@ import { InvalidGetBankCreditPaymentsParamsError } from "../../../../application
 import { GetMonthlyPaymentListUsecase } from "../../../../application/usecases/monthly-payment/GetMonthlyPaymentListUsecase";
 import { CreateBankCreditPayloadInterface } from "../../../../application/services/api/resources/BankCreditResourceInterface";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
+import { OperationRepositoryInterface } from "../../../../application/repositories/OperationRepositoryInterface";
 
 export class BankCreditController {
   public constructor(
@@ -24,6 +25,7 @@ export class BankCreditController {
     private readonly accountRepository: AccountRepositoryInterface,
     private readonly bankCreditRepository: BankCreditRepositoryInterface,
     private readonly monthlypaymentRepository: MonthlyPaymentRepositoryInterface,
+    private readonly operationRepository: OperationRepositoryInterface,
     private readonly mailer: MailerInterface
   ) {}
 
@@ -54,7 +56,8 @@ export class BankCreditController {
 
     const createUsecase = new CreateBankCreditUsecase(
       this.accountRepository,
-      this.bankCreditRepository
+      this.bankCreditRepository,
+      this.operationRepository,
     );
     const maybeBankCredit = await createUsecase.execute(
       maybeCommand.amount,

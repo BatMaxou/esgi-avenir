@@ -23,6 +23,7 @@ export class BankCreditRouter {
       repositoryResolver.getAccountRepository(),
       repositoryResolver.getBankCreditRepository(),
       repositoryResolver.getMonthlyPaymentRepository(),
+      repositoryResolver.getOperationRepository(),
       mailer,
     );
 
