@@ -18,6 +18,9 @@ import { SseApiClientProvider } from "@/contexts/SseApiContext";
 import { OperationsProvider } from "@/contexts/OperationsContext";
 import { BankCreditsProvider } from "@/contexts/BankCreditContext";
 import { routing } from "@/i18n/routing";
+import { StockOrdersProvider } from "@/contexts/StockOrdersContext";
+import { StocksProvider } from "@/contexts/StocksContext";
+import { FinancialSecuritiesProvider } from "@/contexts/FinancialSecuritiesContext";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -41,7 +44,13 @@ const Providers = ({ children }: { children: ReactNode }) => {
                   <SettingsProvider>
                     <UsersProvider>
                       <BankCreditsProvider>
-                        {children}
+                        <StocksProvider>
+                          <StockOrdersProvider>
+                            <FinancialSecuritiesProvider>
+                              {children}
+                            </FinancialSecuritiesProvider>
+                          </StockOrdersProvider>
+                        </StocksProvider>
                       </BankCreditsProvider>
                     </UsersProvider>
                   </SettingsProvider>
@@ -60,7 +69,7 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: ReactNode;
-  params: Promise<{locale: string}>
+  params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {

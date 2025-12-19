@@ -73,8 +73,7 @@
       }
     },
     "actions": {
-      "title": "Actions",
-      "comingSoon": "Director actions content to be implemented..."
+      "title": "Actions"
     },
     "settings": {
       "title": "Settings",
@@ -84,6 +83,9 @@
       "purchaseFeeDescription": "Fees applied when purchasing stocks",
       "saleFee": "Sale Fee",
       "saleFeeDescription": "Fees applied when selling stocks"
+    },
+    "stocks": {
+      "search": "Search a stock"
     }
   },
   "components": {
@@ -293,6 +295,15 @@
         "valueError": "Value must be a number with maximum 2 decimal places.",
         "valueInvalid": "Value must be a valid number.",
         "save": "Save"
+      },
+      "stock": {
+        "name": "Name",
+        "nameError": "Name is required",
+        "baseQuantity": "Base Quantity",
+        "baseQuantityError": "Quantity must be positive",
+        "basePrice": "Base Price",
+        "basePriceError": "Price must be positive",
+        "create": "Create"
       }
     },
     "inputs": {
@@ -360,6 +371,14 @@
         "loanAmount": "Loan amount",
         "loanDuration": "Loan duration (months)",
         "remaining": "Remaining balance",
+        "consult": "View"
+      },
+      "stocks": {
+        "name": "Name",
+        "baseQuantity": "Base Quantity",
+        "basePrice": "Base Price",
+        "balance": "Balance",
+        "remainingQuantity": "Remaining Quantity",
         "consult": "View"
       }
     },
@@ -481,6 +500,13 @@
           "cancel": "Cancel",
           "delete": "Delete"
         }
+      },
+      "stock": {
+        "create": {
+          "button": "Create stock",
+          "title": "Create new stock",
+          "description": "Fill in the information to create a new stock"
+        }
       }
     }
   },
@@ -590,6 +616,36 @@
       "accountNotFound": "Account not found.",
       "transferError": "Transfer error.",
       "transferSuccess": "Transfer completed successfully."
+    },
+    "stockOrders": {
+      "mustBeConnectedToView": "You must be logged in to view orders",
+      "mustBeConnectedToCreate": "You must be logged in to create an order",
+      "mustBeConnectedToUpdate": "You must be logged in to update an order",
+      "mustBeConnectedToDelete": "You must be logged in to delete an order",
+      "errorFetching": "Error fetching order",
+      "errorCreating": "Error creating order",
+      "errorUpdating": "Error updating order",
+      "errorDeleting": "Error deleting order",
+      "orderCreated": "Order created successfully",
+      "orderUpdated": "Order updated successfully",
+      "orderDeleted": "Order deleted successfully"
+    },
+    "stocks": {
+      "mustBeConnectedToView": "You must be logged in to view stocks",
+      "mustBeConnectedToCreate": "You must be logged in to create a stock",
+      "mustBeConnectedToUpdate": "You must be logged in to update a stock",
+      "mustBeConnectedToPurchase": "You must be logged in to purchase a stock",
+      "errorFetching": "Error fetching stocks",
+      "errorCreating": "Error creating stock",
+      "errorUpdating": "Error updating stock",
+      "errorPurchasing": "Error purchasing stock",
+      "stockCreated": "Stock created successfully",
+      "stockUpdated": "Stock updated successfully",
+      "stockPurchased": "Stock purchased successfully"
+    },
+    "financialSecurities": {
+      "mustBeConnectedToView": "You must be logged in to view investments",
+      "errorFetching": "Error fetching investments"
     }
   }
 }
