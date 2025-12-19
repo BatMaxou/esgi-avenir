@@ -73,8 +73,7 @@
       }
     },
     "actions": {
-      "title": "Actions",
-      "comingSoon": "Contenu des actions du directeur à implémenter..."
+      "title": "Actions"
     },
     "settings": {
       "title": "Paramètres",
@@ -84,6 +83,9 @@
       "purchaseFeeDescription": "Frais appliqués lors de l'achat d'actions",
       "saleFee": "Frais de vente",
       "saleFeeDescription": "Frais appliqués lors de la vente d'actions"
+    },
+    "stocks": {
+      "search": "Rechercher un stock"
     }
   },
   "components": {
@@ -242,6 +244,13 @@
           "descriptionEnd": "? Cette action est irréversible.",
           "cancel": "Annuler",
           "delete": "Supprimer"
+        }
+      },
+      "stock": {
+        "create": {
+          "button": "Créer un stock",
+          "title": "Créer un nouveau stock",
+          "description": "Remplissez les informations pour créer un nouveau stock"
         }
       },
       "transferFrom": {
@@ -413,6 +422,15 @@
         "valueError": "La valeur doit être un nombre avec maximum 2 décimales.",
         "valueInvalid": "La valeur doit être un nombre valide.",
         "save": "Enregistrer"
+      },
+      "stock": {
+        "name": "Nom",
+        "nameError": "Le nom est requis",
+        "baseQuantity": "Quantité de base",
+        "baseQuantityError": "La quantité doit être positive",
+        "basePrice": "Prix de base",
+        "basePriceError": "Le prix doit être positif",
+        "create": "Créer"
       }
     },
     "inputs": {
@@ -480,6 +498,14 @@
         "loanAmount": "Montant du prêt",
         "loanDuration": "Durée du prêt (mois)",
         "remaining": "Reste à rembourser",
+        "consult": "Consulter"
+      },
+      "stocks": {
+        "name": "Nom",
+        "baseQuantity": "Quantité de base",
+        "basePrice": "Prix de base",
+        "balance": "Balance",
+        "remainingQuantity": "Quantité restante",
         "consult": "Consulter"
       }
     }

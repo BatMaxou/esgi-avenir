@@ -29,6 +29,7 @@ type StocksContextType = {
     baseQuantity?: number
   ) => Promise<Stock | null>;
   purchaseBaseStock: (id: number, accountId: number) => Promise<boolean>;
+  setStock: (stock: Stock | null) => void;
 };
 
 export const StocksContext = createContext<StocksContextType | undefined>(
@@ -91,6 +92,7 @@ export const StocksProvider = ({ children }: Props) => {
       return null;
     }
 
+    getStocks();
     showSuccessToast(t("stockCreated"));
     setIsStockLoading(false);
     return response;
@@ -165,6 +167,7 @@ export const StocksProvider = ({ children }: Props) => {
         createStock,
         updateStock,
         purchaseBaseStock,
+        setStock,
       }}
     >
       {children}

@@ -73,8 +73,7 @@
       }
     },
     "actions": {
-      "title": "Actions",
-      "comingSoon": "Director actions content to be implemented..."
+      "title": "Actions"
     },
     "settings": {
       "title": "Settings",
@@ -84,6 +83,9 @@
       "purchaseFeeDescription": "Fees applied when purchasing stocks",
       "saleFee": "Sale Fee",
       "saleFeeDescription": "Fees applied when selling stocks"
+    },
+    "stocks": {
+      "search": "Search a stock"
     }
   },
   "components": {
@@ -293,6 +295,15 @@
         "valueError": "Value must be a number with maximum 2 decimal places.",
         "valueInvalid": "Value must be a valid number.",
         "save": "Save"
+      },
+      "stock": {
+        "name": "Name",
+        "nameError": "Name is required",
+        "baseQuantity": "Base Quantity",
+        "baseQuantityError": "Quantity must be positive",
+        "basePrice": "Base Price",
+        "basePriceError": "Price must be positive",
+        "create": "Create"
       }
     },
     "inputs": {
@@ -360,6 +371,14 @@
         "loanAmount": "Loan amount",
         "loanDuration": "Loan duration (months)",
         "remaining": "Remaining balance",
+        "consult": "View"
+      },
+      "stocks": {
+        "name": "Name",
+        "baseQuantity": "Base Quantity",
+        "basePrice": "Base Price",
+        "balance": "Balance",
+        "remainingQuantity": "Remaining Quantity",
         "consult": "View"
       }
     },
@@ -480,6 +499,13 @@
           "descriptionEnd": "? This action is irreversible.",
           "cancel": "Cancel",
           "delete": "Delete"
+        }
+      },
+      "stock": {
+        "create": {
+          "button": "Create stock",
+          "title": "Create new stock",
+          "description": "Fill in the information to create a new stock"
         }
       }
     }
