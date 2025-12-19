@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogClose,
@@ -50,6 +51,8 @@ const TransferToAccountDialog = ({
     Beneficiary[]
   >(beneficiaries && beneficiaries.length > 0 ? beneficiaries : []);
 
+  const t = useTranslations("components.dialogs.transferTo");
+
   useEffect(() => {
     setAccounts(newAccountList);
   }, [newAccountList]);
@@ -57,19 +60,19 @@ const TransferToAccountDialog = ({
   // Tab columns
   const tabs = [
     {
-      name: "Mes comptes",
+      name: t("myAccounts"),
       value: "accounts",
       content: (
         <>
           <InputSearchLoader
-            label="Rechercher un compte"
+            label={t("searchAccount")}
             items={userAccounts!}
             filterOnKey="name"
             setNewItems={setNewAccountList}
           />
           <div className="w-full mt-4 overflow-y-auto space-y-4">
             {isLoadingAccounts ? (
-              <p>Chargement des comptes...</p>
+              <p>{t("loadingAccounts")}</p>
             ) : (
               <>
                 {accounts.map((account) => (
@@ -109,18 +112,18 @@ const TransferToAccountDialog = ({
       ),
     },
     {
-      name: "Mes bénéficiaires",
+      name: t("myBeneficiaries"),
       value: "beneficiaries",
       content: (
         <>
           <InputSearchLoader
-            label="Rechercher un bénéficiaire"
+            label={t("searchBeneficiary")}
             items={beneficiaries!}
             filterOnKey={["firstName", "lastName", "name"]}
             setNewItems={setNewBeneficiariesList}
           />
           <FilledButton
-            label="Ajouter un bénéficiaire"
+            label={t("addBeneficiary")}
             icon="mdi:plus"
             iconPosition="start"
             className="w-full mt-4"
@@ -132,7 +135,7 @@ const TransferToAccountDialog = ({
           />
           <div className="w-full mt-4 flex-1 overflow-y-auto space-y-4">
             {isBeneficiariesLoading ? (
-              <p>Chargement des bénéficiaires...</p>
+              <p>{t("loadingBeneficiaries")}</p>
             ) : (
               <BeneficiariesList
                 beneficiaries={newBeneficiariesList}
@@ -150,10 +153,10 @@ const TransferToAccountDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTitle className="hidden">Vers le compte</DialogTitle>
+      <DialogTitle className="hidden">{t("title")}</DialogTitle>
       <DialogContent className="flex flex-col justify-start items-start gap-8 data-[state=open]:!zoom-in-100 data-[state=open]:slide-in-from-right-20 data-[state=open]:duration-600 sm:right-0 sm:left-auto max-h-screen h-screen overflow-y-scroll sm:max-w-[425px] sm:translate-x-0">
         <DialogHeader className="mb-6">
-          <p className="text-lg font-bold">Vers le compte</p>
+          <p className="text-lg font-bold">{t("title")}</p>
         </DialogHeader>
 
         <div className="w-full max-w-md mt-4 h-full">

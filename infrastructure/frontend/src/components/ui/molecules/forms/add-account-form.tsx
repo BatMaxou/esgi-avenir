@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/atoms/input";
 import { Label } from "@/components/ui/atoms/label";
 import { useAccounts } from "@/contexts/AccountsContext";
 import { FilledButton } from "../buttons/filled-button";
+import { useTranslations } from "next-intl";
 
 interface AddAccountFormProps {
   isSavings: boolean;
@@ -18,6 +19,7 @@ export default function AddAccountForm({
   onSuccess,
   onCancel,
 }: AddAccountFormProps) {
+  const t = useTranslations("components.forms.account");
   const [name, setName] = useState("");
   const { createAccount, isAccountsLoading } = useAccounts();
 
@@ -51,11 +53,13 @@ export default function AddAccountForm({
   return (
     <form onSubmit={handleSubmit} className="w-full space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="name">Nom du compte</Label>
+        <Label htmlFor="name">{t("name")}</Label>
         <Input
           id="name"
           type="text"
-          placeholder={isSavings ? "Ex: Livret A" : "Ex: Compte principal"}
+          placeholder={
+            isSavings ? t("placeholderSavings") : t("placeholderCurrent")
+          }
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isAccountsLoading}
@@ -71,13 +75,13 @@ export default function AddAccountForm({
           disabled={isAccountsLoading}
           className="flex-1"
         >
-          Annuler
+          {t("cancel")}
         </Button>
         <FilledButton
           type="submit"
           disabled={isAccountsLoading}
           className="flex-1"
-          label={isAccountsLoading ? "Création en cours..." : "Créer"}
+          label={isAccountsLoading ? t("creating") : t("create")}
         />
       </div>
     </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
@@ -48,6 +49,7 @@ export const AccountsContext = createContext<AccountsContextType | undefined>(
 );
 
 export const AccountsProvider = ({ children }: Props) => {
+  const t = useTranslations("contexts.accounts");
   const [account, setAccount] = useState<HydratedAccountWithOperations | null>(
     null
   );
@@ -161,7 +163,7 @@ export const AccountsProvider = ({ children }: Props) => {
 
     if (!id) {
       setIsAccountsLoading(false);
-      showErrorToast("Utilisateur introuvable");
+      showErrorToast(t("userNotFound"));
     }
 
     const response: GetAccountListResponseInterface | ApiClientError =
@@ -189,7 +191,7 @@ export const AccountsProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsAccountsLoading(false);
-      showErrorToast("Vous devez être connecté pour créer un compte");
+      showErrorToast(t("mustBeConnectedToCreate"));
       return null;
     }
 
@@ -200,15 +202,13 @@ export const AccountsProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to create account:", response.message);
-      showErrorToast("Erreur lors de la création du compte");
+      showErrorToast(t("errorCreating"));
       setIsAccountsLoading(false);
       return null;
     }
 
     showSuccessToast(
-      data.isSavings
-        ? "Compte épargne créé avec succès"
-        : "Compte courant créé avec succès"
+      data.isSavings ? t("savingsAccountCreated") : t("currentAccountCreated")
     );
     await refreshAccounts();
     setIsAccountsLoading(false);
@@ -220,7 +220,7 @@ export const AccountsProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsAccountLoading(false);
-      showErrorToast("Vous devez être connecté pour modifier un compte");
+      showErrorToast(t("mustBeConnectedToUpdate"));
       return null;
     }
 
@@ -228,12 +228,12 @@ export const AccountsProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to update account:", response.message);
-      showErrorToast("Erreur lors de la modification du compte");
+      showErrorToast(t("errorUpdating"));
       setIsAccountLoading(false);
       return null;
     }
 
-    showSuccessToast("Compte modifié avec succès");
+    showSuccessToast(t("accountUpdated"));
     await getAccount(id);
     setIsAccountLoading(false);
     return response;
@@ -244,7 +244,7 @@ export const AccountsProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsAccountLoading(false);
-      showErrorToast("Vous devez être connecté pour supprimer un compte");
+      showErrorToast(t("mustBeConnectedToDelete"));
       return false;
     }
 
@@ -253,9 +253,7 @@ export const AccountsProvider = ({ children }: Props) => {
     if (accountToDelete && !accountToDelete.isSavings) {
       const currentAccounts = accounts.filter((acc) => !acc.isSavings);
       if (currentAccounts.length === 1 && accountToDelete.amount !== 0) {
-        showErrorToast(
-          "Impossible de supprimer votre dernier compte courant s'il contient des fonds. Veuillez d'abord transférer les fonds ou créer un nouveau compte courant."
-        );
+        showErrorToast(t("cannotDeleteLastCurrentWithFunds"));
         setIsAccountLoading(false);
         return false;
       }
@@ -269,17 +267,15 @@ export const AccountsProvider = ({ children }: Props) => {
         response.code === 400 &&
         response.message === "Account is not soldable."
       ) {
-        showErrorToast(
-          "Votre compte ne peut pas être supprimé car le solde n'est pas nul."
-        );
+        showErrorToast(t("accountNotSoldable"));
       } else {
-        showErrorToast("Erreur lors de la suppression du compte");
+        showErrorToast(t("errorDeleting"));
       }
       setIsAccountLoading(false);
       return false;
     }
 
-    showSuccessToast("Compte supprimé avec succès");
+    showSuccessToast(t("accountDeleted"));
     await refreshAccounts();
     setIsAccountLoading(false);
     return true;

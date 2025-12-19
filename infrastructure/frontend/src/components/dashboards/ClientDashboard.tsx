@@ -5,18 +5,21 @@ import { Icon } from "@iconify/react";
 import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 import { TransferCard } from "@/components/ui/molecules/cards/transfer-card";
 import InvestmentCard from "@/components/ui/molecules/cards/investment-card";
+import { useTranslations } from "next-intl";
 
 export default function ClientDashboard() {
+  const t = useTranslations("components.dashboards.client");
+
   return (
     <div className="flex flex-row justify-start gap-8">
       <div className="flex flex-2 flex-col justify-start items-start gap-8">
         <div className="w-full">
-          <h2 className="text-lg mb-2 font-bold">Mes comptes</h2>
+          <h2 className="text-lg mb-2 font-bold">{t("myAccounts")}</h2>
           <AccountsDisplay displayLength={3} displayStyle="list" />
           <div className="flex flex-row justify-end">
             <LoadingLink href="/accounts" className="">
               <p className="text-red-600 font-semibold hover:underline mt-2 inline-block text-end">
-                Voir tous mes comptes
+                {t("seeAllAccounts")}
                 <Icon icon="mdi:arrow-right" className="inline-block ml-1" />
               </p>
             </LoadingLink>
@@ -26,13 +29,13 @@ export default function ClientDashboard() {
       <Separator orientation="vertical" className="h-full border-2" />
       <div className="flex-1 space-y-8">
         <div>
-          <h2 className="text-lg mb-2 font-bold">Virements</h2>
+          <h2 className="text-lg mb-2 font-bold">{t("transfers")}</h2>
           <LoadingLink href="/transfers">
             <TransferCard />
           </LoadingLink>
         </div>
         <div>
-          <h2 className="text-lg mb-2 font-bold">Investissemnts</h2>
+          <h2 className="text-lg mb-2 font-bold">{t("investments")}</h2>
           <LoadingLink href="/investments">
             <InvestmentCard />
           </LoadingLink>

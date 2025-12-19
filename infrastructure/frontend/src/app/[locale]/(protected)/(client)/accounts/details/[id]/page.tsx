@@ -13,6 +13,7 @@ import DeleteAccountDialog from "@/components/ui/molecules/dialogs/delete-accoun
 import { useSettings } from "@/contexts/SettingsContext";
 import { AccountInformationsCard } from "@/components/ui/molecules/cards/account-informations-card";
 import { LoaderCircleIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function AccountDetailsPage() {
   const params = useParams();
@@ -24,6 +25,7 @@ export default function AccountDetailsPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteDisabled, setIsDeleteDisabled] = useState(false);
   const [isAccountFetched, setAccountFetched] = useState(false);
+  const t = useTranslations("page.accounts.details");
 
   useEffect(() => {
     if (accountId) {
@@ -81,10 +83,12 @@ export default function AccountDetailsPage() {
   return (
     <div className="flex flex-row justify-start gap-8">
       <div className="flex flex-2 flex-col justify-start items-start  ">
-        <h1 className="text-2xl font-bold mb-4">Dernières opérations</h1>
+        <h1 className="text-2xl font-bold mb-4">{t("lastOperations")}</h1>
         <div className="bg-white p-6 rounded-lg shadow w-full">
           <div className="flex flex-row justify-between items-center space-y-4">
-            <p className="text-gray-600 mb-0 font-bold text-lg">Solde</p>
+            <p className="text-gray-600 mb-0 font-bold text-lg">
+              {t("balance")}
+            </p>
             <p
               className={`text-2xl font-bold ${
                 account.amount < 0 ? "text-red-600" : "text-green-600"
@@ -104,7 +108,7 @@ export default function AccountDetailsPage() {
       </div>
       <Separator orientation="vertical" />
       <div className="flex-1">
-        <h1 className="text-2xl font-bold mb-4">Informations banquaires</h1>
+        <h1 className="text-2xl font-bold mb-4">{t("bankInformations")}</h1>
         <AccountInformationsCard
           account={account}
           savingsRate={savingsRate}
@@ -115,7 +119,7 @@ export default function AccountDetailsPage() {
           onClick={() => setIsUpdateModalOpen(true)}
         >
           <ItemContent>
-            <span className="font-semibold text-md">Modifier mon compte</span>
+            <span className="font-semibold text-md">{t("updateAccount")}</span>
           </ItemContent>
           <ItemActions>
             <Icon icon="mdi:chevron-right" className="w-5 h-5 text-gray-400" />
@@ -135,7 +139,7 @@ export default function AccountDetailsPage() {
                 isDeleteDisabled ? "text-gray-500" : "text-white"
               }`}
             >
-              Supprimer mon compte
+              {t("deleteAccount")}
             </span>
           </ItemContent>
           <ItemActions>

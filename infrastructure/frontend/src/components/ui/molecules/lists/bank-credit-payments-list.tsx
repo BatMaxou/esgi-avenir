@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { GetMonthlyPaymentListResponseInterface } from "../../../../../../../application/services/api/resources/MonthlyPaymentResourceInterface";
 import { Skeleton } from "../../atoms/skeleton";
 import BankCreditOperationItem from "../item/bank-credit-operation-item";
@@ -13,10 +14,11 @@ export default function BankCreditPaymentsList({
   payments,
   isLoading,
 }: BankCreditPaymentsListProps) {
+  const t = useTranslations("components.lists.bankCredit");
   return (
     <div>
       {payments.length === 0 ? (
-        <p>Aucun prélèvement n'a été effectué.</p>
+        <p>{t("noPayment")}</p>
       ) : (
         <ul className="space-y-2 overflow-scroll min-h-64 max-h-96 pr-3">
           {!isLoading ? (

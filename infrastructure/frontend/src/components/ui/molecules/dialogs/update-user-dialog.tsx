@@ -22,6 +22,7 @@ import {
 import { LoaderCircleIcon } from "lucide-react";
 import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
 import { FilledButton } from "../buttons/filled-button";
+import { useTranslations } from "next-intl";
 
 interface UpdateUserDialogProps {
   open: boolean;
@@ -48,6 +49,7 @@ export function UpdateUserDialog({
   onSubmit,
   isLoading,
 }: UpdateUserDialogProps) {
+  const t = useTranslations("components.dialogs.user.update");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -96,15 +98,13 @@ export function UpdateUserDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Modifier l'utilisateur</DialogTitle>
-          <DialogDescription>
-            Modifiez les informations de l'utilisateur ci-dessous.
-          </DialogDescription>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="firstName" className="text-right">
-              Prénom
+              {t("firstName")}
             </Label>
             <Input
               id="firstName"
@@ -117,7 +117,7 @@ export function UpdateUserDialog({
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="lastName" className="text-right">
-              Nom
+              {t("lastName")}
             </Label>
             <Input
               id="lastName"
@@ -130,7 +130,7 @@ export function UpdateUserDialog({
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="email" className="text-right">
-              Email
+              {t("email")}
             </Label>
             <Input
               id="email"
@@ -142,19 +142,25 @@ export function UpdateUserDialog({
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">Rôle</Label>
+            <Label className="text-right">{t("role")}</Label>
             <div className="col-span-3">
               <Select
                 value={getCurrentRoleValue()}
                 onValueChange={handleRoleChange}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Sélectionner un rôle" />
+                  <SelectValue placeholder={t("rolePlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={RoleEnum.USER}>Client</SelectItem>
-                  <SelectItem value={RoleEnum.ADVISOR}>Conseiller</SelectItem>
-                  <SelectItem value={RoleEnum.DIRECTOR}>Directeur</SelectItem>
+                  <SelectItem value={RoleEnum.USER}>
+                    {t("roleClient")}
+                  </SelectItem>
+                  <SelectItem value={RoleEnum.ADVISOR}>
+                    {t("roleAdvisor")}
+                  </SelectItem>
+                  <SelectItem value={RoleEnum.DIRECTOR}>
+                    {t("roleDirector")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -166,10 +172,10 @@ export function UpdateUserDialog({
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
-            Annuler
+            {t("cancel")}
           </Button>
           <FilledButton
-            label="Enregistrer"
+            label={t("save")}
             onClick={handleSubmit}
             loading={isLoading}
           />

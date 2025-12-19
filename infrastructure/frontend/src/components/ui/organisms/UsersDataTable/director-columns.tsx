@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   MoreHorizontalIcon,
@@ -28,6 +29,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { showErrorToast } from "@/lib/toast";
 
 function UserActionsCell({ user }: { user: User }) {
+  const t = useTranslations("components.dataTable.users");
   const { deleteUser, banUser, unbanUser, updateUser, getUsers } = useUsers();
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -41,7 +43,7 @@ function UserActionsCell({ user }: { user: User }) {
     setIsLoading(true);
     try {
       if (!user.id) {
-        showErrorToast("Utilisateur introuvable");
+        showErrorToast(t("userNotFound"));
         return;
       }
       await deleteUser(user.id);
@@ -55,7 +57,7 @@ function UserActionsCell({ user }: { user: User }) {
     setIsLoading(true);
     try {
       if (!user.id) {
-        showErrorToast("Utilisateur introuvable");
+        showErrorToast(t("userNotFound"));
         return;
       }
       if (isBanned) {
@@ -114,14 +116,14 @@ function UserActionsCell({ user }: { user: User }) {
             }
           >
             <EyeIcon className="mr-2 h-4 w-4" />
-            Consulter
+            {t("consult")}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => setIsEditDialogOpen(true)}
           >
             <PencilIcon className="mr-2 h-4 w-4" />
-            Modifier
+            {t("edit")}
           </DropdownMenuItem>
           {user.id !== authUser?.id && (
             <DropdownMenuItem
@@ -130,7 +132,7 @@ function UserActionsCell({ user }: { user: User }) {
               disabled={user.id === authUser?.id}
             >
               <BanIcon className="mr-2 h-4 w-4 text-red-600" />
-              {isBanned ? "Débannir" : "Bannir"}
+              {isBanned ? t("unban") : t("ban")}
             </DropdownMenuItem>
           )}
           {user.id !== authUser?.id && (
@@ -139,7 +141,7 @@ function UserActionsCell({ user }: { user: User }) {
               className="cursor-pointer text-red-600"
             >
               <TrashIcon className="mr-2 h-4 w-4 text-red-600" />
-              Supprimer
+              {t("delete")}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -184,18 +186,20 @@ function UserActionsCell({ user }: { user: User }) {
   );
 }
 
-export const directorColumns: ColumnDef<User>[] = [
+export const directorColumns = (
+  t: (key: string) => string
+): ColumnDef<User>[] => [
   {
     accessorKey: "firstName",
-    header: "Prénom",
+    header: () => t("firstName"),
   },
   {
     accessorKey: "lastName",
-    header: "Nom",
+    header: () => t("lastName"),
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: () => t("email"),
     cell: ({ row }) => {
       const email = row.original.email.value;
       return email?.toString() || "-";
@@ -203,7 +207,7 @@ export const directorColumns: ColumnDef<User>[] = [
   },
   {
     id: "role",
-    header: "Rôle",
+    header: () => t("role"),
     cell: ({ row }) => {
       const roles = row.original.roles || [];
       return <RoleBadge roles={roles} />;

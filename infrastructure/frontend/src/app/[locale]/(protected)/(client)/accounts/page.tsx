@@ -6,12 +6,14 @@ import { AccountsDisplay } from "@/components/ui/molecules/lists/accounts-displa
 import AddAccountDialog from "@/components/ui/molecules/dialogs/add-account-dialog";
 import { Item, ItemContent } from "@/components/ui/atoms/item";
 import { useAccounts } from "@/contexts/AccountsContext";
+import { useTranslations } from "next-intl";
 
 export default function AccountsPage() {
   const { endNavigation } = useNavigation();
   const { accounts } = useAccounts();
   const [openAddAccountModal, setOpenAddAccountModal] = useState(false);
   const [isSavingsAccount, setIsSavingsAccount] = useState(false);
+  const t = useTranslations("page.accounts");
 
   const hasSavingsAccount = accounts.some((account) => account.isSavings);
 
@@ -40,7 +42,7 @@ export default function AccountsPage() {
             onClick={() => handleOpenAccountModal(false)}
           >
             <ItemContent>
-              <h2 className="text-lg font-bold">Créer un compte courant</h2>
+              <h2 className="text-lg font-bold">{t("createCurrent")}</h2>
             </ItemContent>
           </Item>
 
@@ -53,10 +55,10 @@ export default function AccountsPage() {
             onClick={() => !hasSavingsAccount && handleOpenAccountModal(true)}
           >
             <ItemContent>
-              <h2 className="text-lg font-bold">Créer un compte épargne</h2>
+              <h2 className="text-lg font-bold">{t("createSavings")}</h2>
               {hasSavingsAccount && (
                 <p className="text-sm text-black mt-1">
-                  Vous avez déjà un compte épargne
+                  {t("alreadyHasSavings")}
                 </p>
               )}
             </ItemContent>

@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import {
   Form,
   FormControl,
@@ -15,17 +16,6 @@ import { Input } from "@/components/ui/atoms/input";
 import { FilledButton } from "../buttons/filled-button";
 import { SettingEnum } from "../../../../../../../domain/enums/SettingEnum";
 import { useSettings } from "@/contexts/SettingsContext";
-
-const formSchema = z.object({
-  value: z
-    .string()
-    .regex(/^\d+\.?\d{0,2}$/, {
-      message: "La valeur doit être un nombre avec maximum 2 décimales.",
-    })
-    .refine((val) => !isNaN(parseFloat(val)), {
-      message: "La valeur doit être un nombre valide.",
-    }),
-});
 
 interface UpdateSettingFormProps {
   code: SettingEnum;
@@ -40,6 +30,19 @@ export function UpdateSettingForm({
   currentValue,
   onSuccess,
 }: UpdateSettingFormProps) {
+  const t = useTranslations("components.forms.setting");
+
+  const formSchema = z.object({
+    value: z
+      .string()
+      .regex(/^\d+\.?\d{0,2}$/, {
+        message: t("valueError"),
+      })
+      .refine((val) => !isNaN(parseFloat(val)), {
+        message: t("valueInvalid"),
+      }),
+  });
+
   const { update, isSettingsLoading } = useSettings();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -92,7 +95,7 @@ export function UpdateSettingForm({
         <FilledButton
           type="submit"
           loading={isSettingsLoading}
-          label="Enregistrer"
+          label={t("save")}
           className="w-full"
         />
       </form>

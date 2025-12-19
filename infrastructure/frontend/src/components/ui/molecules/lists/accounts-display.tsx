@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useAccounts } from "@/contexts/AccountsContext";
 import { Item } from "@/components/ui/atoms/item";
 import { Skeleton } from "@/components/ui/atoms/skeleton";
@@ -22,6 +23,7 @@ export function AccountsDisplay({
   separatedByTypes = false,
   consultation = false,
 }: Props) {
+  const t = useTranslations("components.lists.accounts");
   const { accounts, isAccountsLoading } = useAccounts();
   const [openAddAccountModal, setOpenAddAccountModal] = useState(false);
   const [isSavingsAccount, setIsSavingsAccount] = useState(false);
@@ -39,12 +41,12 @@ export function AccountsDisplay({
       <>
         <div className="space-y-8">
           <div>
-            <h2 className="text-lg font-bold mb-4">Comptes courants</h2>
+            <h2 className="text-lg font-bold mb-4">{t("currentAccounts")}</h2>
             {currentAccounts.length === 0 ? (
               <div>
-                <p>Vous n'avez pas encore de compte courant.</p>
+                <p>{t("noCurrentAccount")}</p>
                 <FilledButton
-                  label="Ajouter un compte courant"
+                  label={t("addCurrentAccount")}
                   onClick={() => handleOpenAccountModal(false)}
                   className="mt-4"
                 />
@@ -68,12 +70,12 @@ export function AccountsDisplay({
             )}
           </div>
           <div>
-            <h2 className="text-lg font-bold mb-4">Comptes épargne</h2>
+            <h2 className="text-lg font-bold mb-4">{t("savingsAccounts")}</h2>
             {savingsAccounts.length === 0 ? (
               <div>
-                <p>Vous n'avez pas encore de compte épargne.</p>
+                <p>{t("noSavingsAccount")}</p>
                 <FilledButton
-                  label="Ajouter un compte épargne"
+                  label={t("addSavingsAccount")}
                   onClick={() => handleOpenAccountModal(true)}
                   className="mt-4"
                 />
@@ -151,6 +153,7 @@ const AccountList = ({
   isLoading: boolean;
   consultation: boolean;
 }) => {
+  const t = useTranslations("components.lists.accounts");
   return (
     <div className="w-full">
       {isLoading ? (
@@ -194,8 +197,8 @@ const AccountList = ({
                     <div className="">
                       <h3 className="text-md font-semibold">
                         {account.isSavings
-                          ? "Compte épargne"
-                          : "Compte courant"}{" "}
+                          ? t("savingsAccount")
+                          : t("currentAccount")}{" "}
                         - {account.name}
                       </h3>
                       <p className="text-gray-600">{account.iban.value}</p>

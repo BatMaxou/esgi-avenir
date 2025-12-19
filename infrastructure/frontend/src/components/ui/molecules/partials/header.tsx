@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
 import { RoleEnum } from "@/../../../domain/enums/RoleEnum";
@@ -16,6 +17,7 @@ import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 import { LocaleSwitcher } from "../../atoms/locale-switcher";
 
 export default function Header() {
+  const t = useTranslations("components.partials.header");
   const { user, logout } = useAuth();
   const pathname = usePathname();
 
@@ -24,22 +26,22 @@ export default function Header() {
 
   const navLinks = isDirector
     ? [
-        { href: "/home", label: "Accueil" },
-        { href: "/users", label: "Utilisateurs" },
-        { href: "/settings", label: "Paramètres" },
-        { href: "/actions", label: "Actions" },
+        { href: "/home", label: t("home") },
+        { href: "/users", label: t("users") },
+        { href: "/settings", label: t("settings") },
+        { href: "/actions", label: t("actions") },
       ]
     : isAdvisor
     ? [
-        { href: "/home", label: "Accueil" },
-        { href: "/credits", label: "Crédits" },
-        { href: "/clients", label: "Clients" },
+        { href: "/home", label: t("home") },
+        { href: "/credits", label: t("credits") },
+        { href: "/clients", label: t("clients") },
       ]
     : [
-        { href: "/home", label: "Accueil" },
-        { href: "/accounts", label: "Comptes" },
-        { href: "/transfers", label: "Virements" },
-        { href: "/investments", label: "Investissements" },
+        { href: "/home", label: t("home") },
+        { href: "/accounts", label: t("accounts") },
+        { href: "/transfers", label: t("transfers") },
+        { href: "/investments", label: t("investments") },
       ];
 
   const isActive = (path: string) => pathname === path;
@@ -93,14 +95,14 @@ export default function Header() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="start">
                   <DropdownMenuLabel className="font-semibold">
-                    Mon compte
+                    {t("myAccount")}
                   </DropdownMenuLabel>
                   <DropdownMenuGroup>
                     <DropdownMenuItem className="cursor-pointer">
-                      Profil
+                      {t("profile")}
                     </DropdownMenuItem>
                     <DropdownMenuItem className="cursor-pointer">
-                      Paramètres
+                      {t("settings")}
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
@@ -120,7 +122,7 @@ export default function Header() {
                     className="cursor-pointer"
                     onClick={() => logout()}
                   >
-                    Déconnexion
+                    {t("logout")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

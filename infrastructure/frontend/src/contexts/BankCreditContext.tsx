@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
@@ -38,6 +39,7 @@ export const BankCreditsContext = createContext<
 >(undefined);
 
 export const BankCreditsProvider = ({ children }: Props) => {
+  const t = useTranslations("contexts.bankCredits");
   const { user } = useAuth();
   const { getAccount } = useAccounts();
   const [bankCredit, setBankCredit] =
@@ -70,7 +72,7 @@ export const BankCreditsProvider = ({ children }: Props) => {
       return true;
     } else {
       setIsBankCreditLoading(false);
-      showErrorToast("Erreur lors de la création du crédit bancaire");
+      showErrorToast(t("errorCreating"));
       return false;
     }
   };

@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
@@ -40,6 +41,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthProvider = ({ children }: Props) => {
+  const t = useTranslations("contexts.auth");
   const [user, setUser] = useState<Pick<
     User,
     "id" | "firstName" | "lastName" | "email" | "roles"
@@ -80,12 +82,12 @@ export const AuthProvider = ({ children }: Props) => {
     if (response instanceof ApiClientError) {
       const errorMessage =
         String(response.message) === "Unauthorized"
-          ? "Email ou mot de passe incorrect."
+          ? t("unauthorized")
           : String(response.message) === "User account is not enabled yet."
-          ? "Veuillez d'abord activer votre compte."
+          ? t("accountNotEnabled")
           : String(response.message) === "Invalid credentials."
-          ? "Email ou mot de passe incorrect."
-          : "Erreur de connexion";
+          ? t("invalidCredentials")
+          : t("connectionError");
       showErrorToast(errorMessage);
       setIsLoading(false);
     } else {
@@ -111,8 +113,8 @@ export const AuthProvider = ({ children }: Props) => {
     if (response instanceof ApiClientError) {
       const errorMessage =
         String(response.message) === "Given email already exists."
-          ? "Cet email est déjà utilisé."
-          : "Erreur lors de l'inscription.";
+          ? t("emailAlreadyExists")
+          : t("registrationError");
       showErrorToast(errorMessage);
       setIsLoading(false);
       return false;
@@ -126,7 +128,7 @@ export const AuthProvider = ({ children }: Props) => {
     setIsLoading(true);
     const response = await apiClient.confirm(token);
     if (response instanceof ApiClientError) {
-      showErrorToast("Erreur lors de la confirmation de l'inscription.");
+      showErrorToast(t("confirmationError"));
       setTimeout(() => {
         router.push("/");
       }, 3000);
@@ -142,7 +144,7 @@ export const AuthProvider = ({ children }: Props) => {
   const logout = async () => {
     apiClient.logout();
     setUser(null);
-    showSuccessToast("Vous êtes déconnecté.");
+    showSuccessToast(t("loggedOut"));
     router.push("/");
   };
 

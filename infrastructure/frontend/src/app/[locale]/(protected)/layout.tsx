@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { RoleEnum } from "../../../../../../domain/enums/RoleEnum";
 import Header from "@/components/ui/molecules/partials/header";
@@ -15,23 +16,8 @@ type Props = {
   children: ReactNode;
 };
 
-// Nommage des routes statiques
-const pageTitles: Record<string, string> = {
-  "/home": "Tableau de bord",
-  "/accounts": "Mes comptes",
-  "/transfers": "Virements",
-  "/investments": "Mes investissements",
-  "/profile": "Mon profil",
-  "/users": "Gestion des utilisateurs",
-  "/settings": "Paramètres de la banque",
-  "/actions": "Gestion des actions",
-  "/news": "Actualités",
-  "/credits": "Gestion des crédits",
-  "/credit": "Crédit",
-  "/clients": "Gestion des clients",
-};
-
 export default function ProtectedLayout({ children }: Props) {
+  const t = useTranslations("layout.protected");
   const pathname = usePathname();
   const { getAccounts } = useAccounts();
   const { getBeneficiaries } = useBeneficiaries();
@@ -39,15 +25,30 @@ export default function ProtectedLayout({ children }: Props) {
 
   const pathWithoutLocale = pathname.replace(/^\/(en|fr)/, "") || "/home";
 
-  // Nommage des routes dynamiques
+  // Nommage des routes statiques et dynamiques
+  const pageTitles: Record<string, string> = {
+    "/home": t("home"),
+    "/accounts": t("accounts"),
+    "/transfers": t("transfers"),
+    "/investments": t("investments"),
+    "/profile": t("profile"),
+    "/users": t("users"),
+    "/settings": t("settings"),
+    "/actions": t("actions"),
+    "/news": t("news"),
+    "/credits": t("credits"),
+    "/credit": t("credit"),
+    "/clients": t("clients"),
+  };
+
   let pageTitle = pageTitles[pathWithoutLocale];
   if (!pageTitle && pathWithoutLocale.startsWith("/accounts/details/")) {
-    pageTitle = "Mon compte";
+    pageTitle = t("accountDetails");
   }
   if (!pageTitle && pathWithoutLocale.startsWith("/credit")) {
-    pageTitle = "Crédit";
+    pageTitle = t("credit");
   }
-  pageTitle = pageTitle || "Espace client";
+  pageTitle = pageTitle || t("clientArea");
 
   useEffect(() => {
     if (isAuthenticated && !isLoading) {

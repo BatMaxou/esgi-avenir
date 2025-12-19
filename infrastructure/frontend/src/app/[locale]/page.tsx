@@ -7,6 +7,7 @@ import { useState } from "react";
 import { LoginForm } from "@/components/ui/molecules/forms/form-login";
 import { RegisterForm } from "@/components/ui/molecules/forms/form-register";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 // Images
 import bgImage from "../../../public/assets/home-card.jpg";
@@ -14,6 +15,8 @@ import logo from "../../../public/assets/logo/logo-avenir.png";
 
 export default function Landing() {
   const [formType, setFormType] = useState<"login" | "register">("login");
+  const tLogin = useTranslations("auth.login");
+  const tRegister = useTranslations("auth.register");
 
   function showRegisterForm() {
     setFormType("register");
@@ -48,21 +51,21 @@ export default function Landing() {
 
           {formType === "login" ? (
             <>
-              <h1 className="text-3xl font-bold mb-8">Connexion</h1>
+              <h1 className="text-3xl font-bold mb-8">{tLogin("title")}</h1>
               <LoginForm />
               <p
                 style={{ cursor: "pointer" }}
                 onClick={() => showRegisterForm()}
               >
-                Je veux ouvrir un compte !
+                {tLogin("switchToRegister")}
               </p>
             </>
           ) : (
             <>
-              <h1 className="text-3xl font-bold mb-8">Ouvrir un compte</h1>
+              <h1 className="text-3xl font-bold mb-8">{tRegister("title")}</h1>
               <RegisterForm setFormType={setFormType} />
               <p style={{ cursor: "pointer" }} onClick={() => showLoginForm()}>
-                J'ai déjà un compte !
+                {tRegister("switchToLogin")}
               </p>
             </>
           )}

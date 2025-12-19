@@ -3,29 +3,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/atoms/button";
 import { Input } from "@/components/ui/atoms/input";
 import { Label } from "@/components/ui/atoms/label";
 import { FilledButton } from "../buttons/filled-button";
 import { useBankCredits } from "@/contexts/BankCreditContext";
-
-const createBankCreditSchema = z.object({
-  amount: z.number().positive("Le montant doit être un nombre positif"),
-  interestPercentage: z
-    .number()
-    .min(0, "Le taux d'intérêt doit être entre 0 et 100")
-    .max(100, "Le taux d'intérêt doit être entre 0 et 100"),
-  insurancePercentage: z
-    .number()
-    .min(0, "Le taux d'assurance doit être entre 0 et 100")
-    .max(100, "Le taux d'assurance doit être entre 0 et 100"),
-  durationInMonths: z
-    .number()
-    .int("La durée doit être un nombre entier")
-    .positive("La durée doit être un nombre entier positif"),
-});
-
-type CreateBankCreditFormData = z.infer<typeof createBankCreditSchema>;
 
 interface CreateBankCreditFormProps {
   accountId: number;
@@ -40,6 +23,26 @@ export default function CreateBankCreditForm({
   onSuccess,
   onCancel,
 }: CreateBankCreditFormProps) {
+  const t = useTranslations("components.forms.bankCredit");
+
+  const createBankCreditSchema = z.object({
+    amount: z.number().positive({ message: t("amountError") }),
+    interestPercentage: z
+      .number()
+      .min(0, { message: t("interestRateError") })
+      .max(100, { message: t("interestRateError") }),
+    insurancePercentage: z
+      .number()
+      .min(0, { message: t("insuranceRateError") })
+      .max(100, { message: t("insuranceRateError") }),
+    durationInMonths: z
+      .number()
+      .int({ message: t("durationErrorInt") })
+      .positive({ message: t("durationErrorPositive") }),
+  });
+
+  type CreateBankCreditFormData = z.infer<typeof createBankCreditSchema>;
+
   const {
     register,
     handleSubmit,
@@ -82,12 +85,12 @@ export default function CreateBankCreditForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="amount">Montant (€)</Label>
+        <Label htmlFor="amount">{t("amount")}</Label>
         <Input
           id="amount"
           type="number"
           step="0.01"
-          placeholder="Ex: 50000"
+          placeholder={t("amountPlaceholder")}
           {...register("amount", { valueAsNumber: true })}
           disabled={isSubmitting || isBankCreditsLoading}
           className="w-full"
@@ -98,14 +101,14 @@ export default function CreateBankCreditForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="interestPercentage">Taux d'intérêt (%)</Label>
+        <Label htmlFor="interestPercentage">{t("interestRate")}</Label>
         <Input
           id="interestPercentage"
           type="number"
           step="0.01"
           min="0"
           max="100"
-          placeholder="Ex: 0.5"
+          placeholder={t("interestRatePlaceholder")}
           {...register("interestPercentage", { valueAsNumber: true })}
           disabled={isSubmitting || isBankCreditsLoading}
           className="w-full"
@@ -118,14 +121,14 @@ export default function CreateBankCreditForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="insurancePercentage">Taux d'assurance (%)</Label>
+        <Label htmlFor="insurancePercentage">{t("insuranceRate")}</Label>
         <Input
           id="insurancePercentage"
           type="number"
           step="0.01"
           min="0"
           max="100"
-          placeholder="Ex: 0.1"
+          placeholder={t("insuranceRatePlaceholder")}
           {...register("insurancePercentage", { valueAsNumber: true })}
           disabled={isSubmitting || isBankCreditsLoading}
           className="w-full"
@@ -138,13 +141,13 @@ export default function CreateBankCreditForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="durationInMonths">Durée (mois)</Label>
+        <Label htmlFor="durationInMonths">{t("duration")}</Label>
         <Input
           id="durationInMonths"
           type="number"
           step="1"
           min="1"
-          placeholder="Ex: 120"
+          placeholder={t("durationPlaceholder")}
           {...register("durationInMonths", { valueAsNumber: true })}
           disabled={isSubmitting || isBankCreditsLoading}
           className="w-full"
@@ -164,16 +167,14 @@ export default function CreateBankCreditForm({
           disabled={isSubmitting || isBankCreditsLoading}
           className="flex-1"
         >
-          Annuler
+          {t("cancel")}
         </Button>
         <FilledButton
           type="submit"
           disabled={isSubmitting || isBankCreditsLoading}
           className="flex-1"
           label={
-            isSubmitting || isBankCreditsLoading
-              ? "Création en cours..."
-              : "Créer"
+            isSubmitting || isBankCreditsLoading ? t("creating") : t("create")
           }
         />
       </div>

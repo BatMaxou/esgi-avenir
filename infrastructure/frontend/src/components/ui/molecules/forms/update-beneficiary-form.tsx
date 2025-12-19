@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/atoms/button";
 import { Input } from "@/components/ui/atoms/input";
 import { Label } from "@/components/ui/atoms/label";
@@ -24,6 +25,7 @@ export default function UpdateBeneficiaryForm({
   onUpdateCancel,
   onDeleteSuccess,
 }: UpdateBeneficiaryFormProps) {
+  const t = useTranslations("components.forms.updateBeneficiary");
   const [name, setName] = useState("");
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const { updateBeneficiary, deleteBeneficiary, isBeneficiaryLoading } =
@@ -43,12 +45,12 @@ export default function UpdateBeneficiaryForm({
     e.preventDefault();
 
     if (!name.trim()) {
-      showErrorToast("Le nom du bénéficiaire est requis");
+      showErrorToast(t("nameRequired"));
       return;
     }
 
     if (!beneficiary.id) {
-      showErrorToast("Identifiant du bénéficiaire manquant");
+      showErrorToast(t("idMissing"));
       return;
     }
 
@@ -58,10 +60,10 @@ export default function UpdateBeneficiaryForm({
     });
 
     if (updatedBeneficiary) {
-      showSuccessToast("Bénéficiaire modifié avec succès");
+      showSuccessToast(t("successUpdate"));
       onUpdateSuccess?.();
     } else {
-      showErrorToast("Erreur lors de la modification du bénéficiaire");
+      showErrorToast(t("errorUpdate"));
     }
   };
 
@@ -72,16 +74,16 @@ export default function UpdateBeneficiaryForm({
 
   const handleDelete = async () => {
     if (!beneficiary.id) {
-      showErrorToast("Bénéficiaire non trouvé");
+      showErrorToast(t("notFound"));
       return;
     }
     const deleteBeneficiaryResult = await deleteBeneficiary(beneficiary.id);
     if (deleteBeneficiaryResult) {
-      showSuccessToast("Bénéficiaire supprimé avec succès");
+      showSuccessToast(t("successDelete"));
       onDeleteSuccess?.();
       setOpenDeleteDialog(false);
     } else {
-      showErrorToast("Erreur lors de la suppression du bénéficiaire");
+      showErrorToast(t("errorDelete"));
     }
   };
 
@@ -89,11 +91,11 @@ export default function UpdateBeneficiaryForm({
     <>
       <form onSubmit={handleSubmit} className="w-full space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="name">Nom du bénéficiaire</Label>
+          <Label htmlFor="name">{t("name")}</Label>
           <Input
             id="name"
             type="text"
-            placeholder="Ex: Jean Dupont"
+            placeholder={t("namePlaceholder")}
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={isBeneficiaryLoading}
@@ -102,7 +104,7 @@ export default function UpdateBeneficiaryForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="iban">IBAN</Label>
+          <Label htmlFor="iban">{t("iban")}</Label>
           <Input
             id="iban"
             type="text"
@@ -110,9 +112,7 @@ export default function UpdateBeneficiaryForm({
             disabled
             className="w-full bg-gray-100"
           />
-          <p className="text-sm text-gray-500">
-            L'IBAN ne peut pas être modifié
-          </p>
+          <p className="text-sm text-gray-500">{t("ibanNotEditable")}</p>
         </div>
 
         <div className="flex flex-col gap-4 pt-4">
@@ -124,15 +124,13 @@ export default function UpdateBeneficiaryForm({
               disabled={isBeneficiaryLoading}
               className="flex-1"
             >
-              Annuler
+              {t("cancel")}
             </Button>
             <FilledButton
               type="submit"
               disabled={isBeneficiaryLoading}
               className="flex-1"
-              label={
-                isBeneficiaryLoading ? "Modification en cours..." : "Modifier"
-              }
+              label={isBeneficiaryLoading ? t("updating") : t("update")}
             />
           </div>
           <div className="w-full">
@@ -142,7 +140,7 @@ export default function UpdateBeneficiaryForm({
               icon="fluent:delete-20-regular"
               iconPosition="start"
               className="w-full"
-              label="Supprimer définitivement"
+              label={t("delete")}
               onClick={() => setOpenDeleteDialog(true)}
             />
           </div>

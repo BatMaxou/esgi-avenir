@@ -20,6 +20,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { UserInformationsCard } from "@/components/ui/molecules/cards/user-informations-card";
 import { User } from "../../../../../../../../../domain/entities/User";
 import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export default function UserDetailsPage() {
   const params = useParams();
@@ -34,6 +35,8 @@ export default function UserDetailsPage() {
     unbanUser,
     updateUser,
   } = useUsers();
+  const t = useTranslations("page.users.details");
+  const tButton = useTranslations("buttons");
 
   const [isUserFetched, setIsUserFetched] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -120,15 +123,15 @@ export default function UserDetailsPage() {
       <div className="flex items-center gap-4">
         <Button variant="ghost" onClick={() => router.back()}>
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
-          Retour
+          {tButton("back")}
         </Button>
       </div>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Détails de l'utilisateur</h1>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setIsEditDialogOpen(true)}>
             <PencilIcon className="h-4 w-4 mr-2" />
-            Modifier
+            {t("edit")}
           </Button>
           <Button
             variant="outline"
@@ -141,7 +144,7 @@ export default function UserDetailsPage() {
             disabled={userId === authUser?.id}
           >
             <BanIcon className="h-4 w-4 mr-2" />
-            {isBanned ? "Débannir" : "Bannir"}
+            {isBanned ? t("unban") : t("ban")}
           </Button>
           <Button
             variant="destructive"
@@ -149,7 +152,7 @@ export default function UserDetailsPage() {
             disabled={userId === authUser?.id}
           >
             <TrashIcon className="h-4 w-4 mr-2" />
-            Supprimer
+            {t("delete")}
           </Button>
         </div>
       </div>

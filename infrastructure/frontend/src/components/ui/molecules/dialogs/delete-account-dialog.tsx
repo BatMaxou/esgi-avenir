@@ -20,6 +20,7 @@ import { Icon } from "@iconify/react";
 import { useOperations } from "@/contexts/OperationsContext";
 import { showErrorToast } from "@/lib/toast";
 import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 interface DeleteAccountDialogProps {
   open: boolean;
@@ -32,6 +33,7 @@ export default function DeleteAccountDialog({
   onOpenChange,
   account,
 }: DeleteAccountDialogProps) {
+  const t = useTranslations("components.dialogs.account.delete");
   const {
     deleteAccount,
     isAccountLoading,
@@ -139,39 +141,37 @@ export default function DeleteAccountDialog({
           <AlertDialogHeader>
             <AlertDialogTitle>
               {showTransferConfirmation
-                ? "Confirmer le virement et la suppression"
+                ? t("titleConfirm")
                 : hasFunds
-                ? "Solde restant sur le compte"
-                : "Êtes-vous absolument sûr ?"}
+                ? t("titleBalance")
+                : t("titleSure")}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {showTransferConfirmation && selectedToAccount ? (
                 <>
-                  Vous allez transférer la totalité du solde (
+                  {t("descriptionTransfer")}
                   <span className="font-bold text-black">
                     {account.amount.toFixed(2)} €
                   </span>
-                  ) vers le compte{" "}
+                  {t("descriptionToAccount")}{" "}
                   <span className="font-bold text-black">
                     {getToAccountName(selectedToAccount)}
                   </span>{" "}
-                  et supprimer définitivement le compte <b>{account.name}</b>.
+                  {t("descriptionDeleteAccount")} <b>{account.name}</b>.
                 </>
               ) : hasFunds ? (
                 <>
-                  Il reste{" "}
+                  {t("descriptionBalance")}{" "}
                   <span className="font-bold text-black">
                     {account.amount.toFixed(2)} €
                   </span>{" "}
-                  sur ce compte.
+                  {t("descriptionBalanceEnd")}
                   <br />
-                  Vous devez transférer la totalité des fonds vers un autre
-                  compte avant de pouvoir le supprimer.
+                  {t("descriptionTransferRequired")}
                 </>
               ) : (
                 <>
-                  Cette action est irréversible. Cela supprimera définitivement
-                  le compte <b>{account.name}</b>.
+                  {t("descriptionIrreversible")} <b>{account.name}</b>.
                 </>
               )}
             </AlertDialogDescription>
@@ -185,7 +185,7 @@ export default function DeleteAccountDialog({
               >
                 <ItemContent>
                   <span className="font-semibold text-md">
-                    Virer les fonds vers un autre compte
+                    {t("transferFunds")}
                   </span>
                 </ItemContent>
                 <ItemActions>
@@ -213,7 +213,7 @@ export default function DeleteAccountDialog({
                 }
               }}
             >
-              Annuler
+              {t("cancel")}
             </AlertDialogCancel>
             {showTransferConfirmation ? (
               <AlertDialogAction
@@ -224,9 +224,7 @@ export default function DeleteAccountDialog({
                 disabled={isTransferring}
                 className="bg-primary-red hover:bg-secondary-red focus:ring-secondary-red cursor-pointer text-white hover:text-white"
               >
-                {isTransferring
-                  ? "Traitement en cours..."
-                  : "Transférer et supprimer"}
+                {isTransferring ? t("processing") : t("transferAndDelete")}
               </AlertDialogAction>
             ) : (
               <AlertDialogAction
@@ -238,7 +236,7 @@ export default function DeleteAccountDialog({
                     : "bg-red-600 hover:bg-red-700 focus:ring-red-600 hover:text-white"
                 }`}
               >
-                {isAccountLoading ? "Suppression..." : "Supprimer"}
+                {isAccountLoading ? t("deleting") : t("delete")}
               </AlertDialogAction>
             )}
           </AlertDialogFooter>

@@ -23,18 +23,20 @@ import { Input } from "@/components/ui/atoms/input";
 import { useApiClient } from "@/contexts/ApiContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { ApiClientError } from "../../../../../../../application/services/api/ApiClientError";
-
-const formSchema = z.object({
-  email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
-    message: "L'email doit être une adresse valide.",
-  }),
-  password: z.string().min(1, {
-    message: "Le mot de passe ne peut pas être vide.",
-  }),
-});
+import { useTranslations } from "next-intl";
 
 export function LoginForm() {
   const { login, isLoading } = useAuth();
+  const t = useTranslations("components.forms.login");
+
+  const formSchema = z.object({
+    email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+      message: t("emailError"),
+    }),
+    password: z.string().min(1, {
+      message: t("passwordError"),
+    }),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,7 +61,7 @@ export function LoginForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t("email")}</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -72,7 +74,7 @@ export function LoginForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Mot de passe</FormLabel>
+                <FormLabel>{t("password")}</FormLabel>
                 <FormControl>
                   <Input type="password" {...field} />
                 </FormControl>
@@ -80,11 +82,7 @@ export function LoginForm() {
               </FormItem>
             )}
           />
-          <FilledButton
-            type="submit"
-            loading={isLoading}
-            label="Se connecter"
-          />
+          <FilledButton type="submit" loading={isLoading} label={t("submit")} />
         </form>
       </Form>
     </>

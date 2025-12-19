@@ -10,6 +10,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import {
   Table,
@@ -18,7 +19,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/atoms/table";
 import { Button } from "@/components/ui/atoms/button";
 import {
   ChevronLeftIcon,
@@ -41,6 +42,7 @@ export function DataTable<TData, TValue>({
   pageSize = 10,
   isLoading = false,
 }: DataTableProps<TData, TValue>) {
+  const t = useTranslations("components.dataTable");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -121,7 +123,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  Aucun résultat.
+                  {t("noResults")}
                 </TableCell>
               </TableRow>
             )}
@@ -131,12 +133,14 @@ export function DataTable<TData, TValue>({
 
       <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0 sm:space-x-2 px-2 sm:py-4">
         <div className="block sm:hidden text-sm text-muted-foreground">
-          {table.getRowModel().rows.length} résultats affichés
+          {t("resultsDisplayed", { count: table.getRowModel().rows.length })}
         </div>
 
         <div className="text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} sur{" "}
-          {table.getPageCount()}
+          {t("pageInfo", {
+            current: table.getState().pagination.pageIndex + 1,
+            total: table.getPageCount(),
+          })}
         </div>
 
         <div className="flex items-center space-x-2">
@@ -175,7 +179,7 @@ export function DataTable<TData, TValue>({
         </div>
 
         <div className="hidden sm:block text-sm text-muted-foreground">
-          {table.getRowModel().rows.length} résultats affichés
+          {t("resultsDisplayed", { count: table.getRowModel().rows.length })}
         </div>
       </div>
     </div>

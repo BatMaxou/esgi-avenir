@@ -28,26 +28,28 @@ import {
 import { useUsers } from "@/contexts/UsersContext";
 import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
 import { CreateUserPayloadInterface } from "../../../../../../../application/services/api/resources/UserResourceInterface";
-
-const formSchema = z.object({
-  firstName: z.string().min(1, {
-    message: "Le prénom ne peut pas être vide.",
-  }),
-  lastName: z.string().min(1, {
-    message: "Le nom ne peut pas être vide.",
-  }),
-  email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
-    message: "L'email doit être une adresse valide.",
-  }),
-  password: z.string().min(8, {
-    message: "Le mot de passe doit contenir au moins 8 caractères.",
-  }),
-  roles: z.array(z.enum(RoleEnum)).optional(),
-});
+import { useTranslations } from "next-intl";
 
 export function CreateUserForm({ onSuccess }: { onSuccess?: () => void }) {
   const { createUser } = useUsers();
+  const t = useTranslations("components.forms.user");
   const [loading, setLoading] = useState(false);
+
+  const formSchema = z.object({
+    firstName: z.string().min(1, {
+      message: t("firstNameError"),
+    }),
+    lastName: z.string().min(1, {
+      message: t("lastNameError"),
+    }),
+    email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+      message: t("emailError"),
+    }),
+    password: z.string().min(8, {
+      message: t("passwordError"),
+    }),
+    roles: z.array(z.enum(RoleEnum)).optional(),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -95,7 +97,7 @@ export function CreateUserForm({ onSuccess }: { onSuccess?: () => void }) {
           name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Prénom</FormLabel>
+              <FormLabel>{t("firstName")}</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -108,7 +110,7 @@ export function CreateUserForm({ onSuccess }: { onSuccess?: () => void }) {
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom</FormLabel>
+              <FormLabel>{t("lastName")}</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -121,7 +123,7 @@ export function CreateUserForm({ onSuccess }: { onSuccess?: () => void }) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("email")}</FormLabel>
               <FormControl>
                 <Input type="email" {...field} />
               </FormControl>
@@ -134,7 +136,7 @@ export function CreateUserForm({ onSuccess }: { onSuccess?: () => void }) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mot de passe</FormLabel>
+              <FormLabel>{t("password")}</FormLabel>
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
@@ -147,31 +149,33 @@ export function CreateUserForm({ onSuccess }: { onSuccess?: () => void }) {
           name="roles"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Rôle</FormLabel>
+              <FormLabel>{t("role")}</FormLabel>
               <Select
                 onValueChange={(value) => field.onChange([value as RoleEnum])}
                 defaultValue={field.value?.[0]}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner un rôle" />
+                    <SelectValue placeholder={t("rolePlaceholder")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value={RoleEnum.USER}>Client</SelectItem>
-                  <SelectItem value={RoleEnum.ADVISOR}>Conseiller</SelectItem>
-                  <SelectItem value={RoleEnum.DIRECTOR}>Directeur</SelectItem>
+                  <SelectItem value={RoleEnum.USER}>
+                    {t("roleClient")}
+                  </SelectItem>
+                  <SelectItem value={RoleEnum.ADVISOR}>
+                    {t("roleAdvisor")}
+                  </SelectItem>
+                  <SelectItem value={RoleEnum.DIRECTOR}>
+                    {t("roleDirector")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FilledButton
-          type="submit"
-          loading={loading}
-          label="Créer l'utilisateur"
-        />
+        <FilledButton type="submit" loading={loading} label={t("create")} />
       </form>
     </Form>
   );

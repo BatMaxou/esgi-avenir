@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { Spinner } from "@/components/ui/atoms/spinner";
+import { useTranslations } from "next-intl";
 
 // Images
 import bgImage from "../../../../public/assets/home-card.jpg";
@@ -25,6 +26,7 @@ export default function ConfirmRegister() {
   const { confirmRegistration: confirm } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const t = useTranslations("auth.confirm");
 
   useEffect(() => {
     setLoading(true);
@@ -80,7 +82,7 @@ export default function ConfirmRegister() {
                 <Spinner className="size-12!" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-8">
-                Confirmation de votre votre inscription...
+                {t("loading")}
               </h2>
             </div>
           )}
@@ -96,11 +98,10 @@ export default function ConfirmRegister() {
                 />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-8">
-                Inscription validée !
+                {t("success.title")}
               </h2>
               <p className="text-small text-gray-900 mb-8">
-                Vous allez être redirigé vers la page de connexion dans quelques
-                instants.
+                {t("success.message")}
               </p>
             </div>
           )}
@@ -115,14 +116,13 @@ export default function ConfirmRegister() {
                 />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Inscription échouée !
+                {t("error.title")}
               </h2>
               <p className="text-small text-gray-900 mb-8">
-                Veuillez contacter un administrateur si l'erreur persiste.
+                {t("error.message")}
               </p>
               <p className="text-small text-gray-900 mb-8">
-                Vous allez être redirigé vers la page de connexion dans quelques
-                instants.
+                {t("error.redirect")}
               </p>
             </div>
           )}

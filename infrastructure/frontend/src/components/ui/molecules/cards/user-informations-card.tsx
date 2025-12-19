@@ -7,6 +7,7 @@ import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
 import { RoleBadge } from "../badges/role-badge";
 import { is } from "zod/v4/locales";
 import { Separator } from "../../atoms/separator";
+import { useTranslations } from "next-intl";
 
 interface UserInformationsCardProps {
   user: Pick<User, "firstName" | "lastName" | "email" | "roles">;
@@ -17,14 +18,15 @@ export function UserInformationsCard({
   user,
   isUserLoading,
 }: UserInformationsCardProps) {
+  const t = useTranslations("components.cards.userInformations");
   const { user: authUser } = useAuth();
   return (
     <div className="bg-white p-6 rounded-lg shadow border">
-      <h2 className="text-xl font-semibold mb-4">Informations personnelles</h2>
+      <h2 className="text-xl font-semibold mb-4">{t("title")}</h2>
       <Separator orientation="horizontal" className="my-4" />
       <div className="space-y-3">
         <div className="grid grid-cols-3 gap-2">
-          <span className="font-medium text-gray-500">Prénom:</span>
+          <span className="font-medium text-gray-500">{t("firstName")}:</span>
           {isUserLoading ? (
             <Skeleton className="h-4 w-24 mb-1" />
           ) : (
@@ -32,7 +34,7 @@ export function UserInformationsCard({
           )}
         </div>
         <div className="grid grid-cols-3 gap-2">
-          <span className="font-medium text-gray-500">Nom:</span>
+          <span className="font-medium text-gray-500">{t("lastName")}:</span>
           {isUserLoading ? (
             <Skeleton className="h-4 w-24 mb-1" />
           ) : (
@@ -40,7 +42,7 @@ export function UserInformationsCard({
           )}
         </div>
         <div className="grid grid-cols-3 gap-2">
-          <span className="font-medium text-gray-500">Email:</span>
+          <span className="font-medium text-gray-500">{t("email")}:</span>
           {isUserLoading ? (
             <Skeleton className="h-4 w-24 mb-1" />
           ) : (
@@ -49,7 +51,7 @@ export function UserInformationsCard({
         </div>
         {authUser && authUser.roles.includes(RoleEnum.DIRECTOR) && (
           <div className="grid grid-cols-3 gap-2">
-            <span className="font-medium text-gray-500">Rôle:</span>
+            <span className="font-medium text-gray-500">{t("role")}:</span>
             {isUserLoading ? (
               <div className="flex flex-row justify-start gap-2 col-span-2">
                 <Skeleton className="h-4 w-8 mb-1" />

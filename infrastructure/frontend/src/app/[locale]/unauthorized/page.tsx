@@ -2,8 +2,12 @@
 
 import Image from "next/image";
 import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
+import { useTranslations } from "next-intl";
 
 export default function UnauthorizedPage() {
+  const t = useTranslations("errors.401");
+  const tButton = useTranslations("buttons");
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="flex md:flex-row flex-col justify-center items-center md:space-x-8 space-y-4 text-center">
@@ -19,18 +23,15 @@ export default function UnauthorizedPage() {
         <div className="text-center">
           <h1 className="text-9xl font-bold text-light-orange">401</h1>
           <h2 className="text-3xl font-semibold text-gray-800 mt-4">
-            Accès refusé
+            {t("title")}
           </h2>
-          <p className="text-gray-600 mt-2 mb-8">
-            Vous n'avez pas les permissions nécessaires pour accéder à cette
-            page.
-          </p>
+          <p className="text-gray-600 mt-2 mb-8">{t("message")}</p>
           <div className="flex flex-col gap-3">
             <LoadingLink
               href="/home"
               className="inline-block px-6 py-3 bg-light-orange text-white font-semibold rounded-lg hover:bg-dark-orange transition-colors"
             >
-              Retour à l'accueil
+              {tButton("backToHome")}
             </LoadingLink>
           </div>
         </div>

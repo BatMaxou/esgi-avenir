@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/atoms/dialog";
+import { useTranslations } from "next-intl";
 import CreateBankCreditForm from "../forms/create-bank-credit-form";
 import { Item, ItemActions, ItemContent } from "../../atoms/item";
 import { Icon } from "@iconify/react";
@@ -22,6 +23,7 @@ export default function CreateBankCreditDialog({
   accountId,
   ownerId,
 }: CreateBankCreditDialogProps) {
+  const t = useTranslations("components.dialogs.createBankCredit");
   const [isOpen, setIsOpen] = useState(false);
   const handleSuccess = () => {
     setIsOpen(false);
@@ -48,7 +50,7 @@ export default function CreateBankCreditDialog({
               className="text-white"
             />
             <span className={"font-semibold text-md text-white"}>
-              Accorder un crédit
+              {t("grantCredit")}
             </span>
           </ItemContent>
           <ItemActions>

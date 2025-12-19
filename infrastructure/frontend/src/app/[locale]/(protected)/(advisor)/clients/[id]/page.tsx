@@ -11,12 +11,15 @@ import { User } from "../../../../../../../../../domain/entities/User";
 import { LoaderCircleIcon, ArrowLeftIcon } from "lucide-react";
 import { AccountsDisplay } from "@/components/ui/molecules/lists/accounts-display";
 import { Separator } from "@/components/ui/atoms/separator";
+import { useTranslations } from "next-intl";
 
 export default function UserDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const { getUser, user, isUserLoading } = useUsers();
   const { getUserAccounts, accounts, isAccountsLoading } = useAccounts();
+  const t = useTranslations("page.clients.details");
+  const tButton = useTranslations("buttons");
 
   const [isUserFetched, setIsUserFetched] = useState(false);
 
@@ -57,7 +60,7 @@ export default function UserDetailsPage() {
       <div className="flex items-center gap-4">
         <Button variant="ghost" onClick={() => router.back()}>
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
-          Retour
+          {tButton("back")}
         </Button>
       </div>
       <div className="grid grid-cols-1 gap-6">
@@ -69,11 +72,11 @@ export default function UserDetailsPage() {
       </div>
       <Separator orientation="horizontal" />
       <div className="grid grid-cols-1 gap-6">
-        <h2 className="text-lg font-medium">Comptes du client</h2>
+        <h2 className="text-lg font-medium">{t("accountsTitle")}</h2>
         {accounts.length > 0 ? (
           <AccountsDisplay consultation={true} />
         ) : (
-          <p>Ce client ne possède pas encore de compte.</p>
+          <p>{t("noAccount")}</p>
         )}
       </div>
     </div>

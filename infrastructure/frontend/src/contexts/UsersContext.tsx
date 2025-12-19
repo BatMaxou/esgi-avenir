@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
 import { useAuth } from "./AuthContext";
@@ -42,6 +43,7 @@ export const UsersContext = createContext<UsersContextType | undefined>(
 );
 
 export const UsersProvider = ({ children }: Props) => {
+  const t = useTranslations("contexts.users");
   const [user, setUser] = useState<GetUserResponseInterface | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(false);
@@ -164,7 +166,7 @@ export const UsersProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsUsersLoading(false);
-      showErrorToast("Vous devez être connecté pour créer un utilisateur");
+      showErrorToast(t("mustBeConnectedToCreate"));
       return null;
     }
 
@@ -172,12 +174,12 @@ export const UsersProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to create user:", response.message);
-      showErrorToast("Erreur lors de la création de l'utilisateur");
+      showErrorToast(t("errorCreating"));
       setIsUsersLoading(false);
       return null;
     }
 
-    showSuccessToast("Utilisateur créé avec succès");
+    showSuccessToast(t("userCreated"));
     await getUsers();
     setIsUsersLoading(false);
     return response;
@@ -190,7 +192,7 @@ export const UsersProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsUserLoading(false);
-      showErrorToast("Vous devez être connecté pour modifier un utilisateur");
+      showErrorToast(t("mustBeConnectedToUpdate"));
       return null;
     }
 
@@ -198,12 +200,12 @@ export const UsersProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to update user:", response.message);
-      showErrorToast("Erreur lors de la modification de l'utilisateur");
+      showErrorToast(t("errorUpdating"));
       setIsUserLoading(false);
       return null;
     }
 
-    showSuccessToast("Utilisateur modifié avec succès");
+    showSuccessToast(t("userUpdated"));
     await getUser(data.id);
     if (authUser?.id === data.id) {
       await me();
@@ -217,7 +219,7 @@ export const UsersProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsUserLoading(false);
-      showErrorToast("Vous devez être connecté pour supprimer un utilisateur");
+      showErrorToast(t("mustBeConnectedToDelete"));
       return false;
     }
 
@@ -225,12 +227,12 @@ export const UsersProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to delete user:", response.message);
-      showErrorToast("Erreur lors de la suppression de l'utilisateur");
+      showErrorToast(t("errorDeleting"));
       setIsUserLoading(false);
       return false;
     }
 
-    showSuccessToast("Utilisateur supprimé avec succès");
+    showSuccessToast(t("userDeleted"));
     await getUsers();
     setIsUserLoading(false);
     return true;
@@ -243,7 +245,7 @@ export const UsersProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsUserLoading(false);
-      showErrorToast("Vous devez être connecté pour bannir un utilisateur");
+      showErrorToast(t("mustBeConnectedToBan"));
       return null;
     }
 
@@ -251,12 +253,12 @@ export const UsersProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to ban user:", response.message);
-      showErrorToast("Erreur lors du bannissement de l'utilisateur");
+      showErrorToast(t("errorBanning"));
       setIsUserLoading(false);
       return null;
     }
 
-    showSuccessToast("Utilisateur banni avec succès");
+    showSuccessToast(t("userBanned"));
     await getUser(id);
     setIsUserLoading(false);
     return response;
@@ -269,7 +271,7 @@ export const UsersProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsUserLoading(false);
-      showErrorToast("Vous devez être connecté pour débannir un utilisateur");
+      showErrorToast(t("mustBeConnectedToUnban"));
       return null;
     }
 
@@ -277,12 +279,12 @@ export const UsersProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to unban user:", response.message);
-      showErrorToast("Erreur lors du débannissement de l'utilisateur");
+      showErrorToast(t("errorUnbanning"));
       setIsUserLoading(false);
       return null;
     }
 
-    showSuccessToast("Utilisateur débanni avec succès");
+    showSuccessToast(t("userUnbanned"));
     await getUser(id);
     setIsUserLoading(false);
     return response;

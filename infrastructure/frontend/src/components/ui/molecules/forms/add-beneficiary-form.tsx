@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/atoms/label";
 import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
 import { toast } from "sonner";
 import { FilledButton } from "../buttons/filled-button";
+import { useTranslations } from "next-intl";
 
 interface AddBeneficiaryFormProps {
   onSuccess?: () => void;
@@ -17,6 +18,7 @@ export default function AddBeneficiaryForm({
   onSuccess,
   onCancel,
 }: AddBeneficiaryFormProps) {
+  const t = useTranslations("components.forms.beneficiary");
   const [name, setName] = useState("");
   const [iban, setIban] = useState("");
   const { createBeneficiary, isBeneficiaryLoading } = useBeneficiaries();
@@ -56,11 +58,11 @@ export default function AddBeneficiaryForm({
   return (
     <form onSubmit={handleSubmit} className="w-full space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="name">Nom du bénéficiaire</Label>
+        <Label htmlFor="name">{t("name")}</Label>
         <Input
           id="name"
           type="text"
-          placeholder="Ex: Jean Dupont"
+          placeholder={t("namePlaceholder")}
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isBeneficiaryLoading}
@@ -69,11 +71,11 @@ export default function AddBeneficiaryForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="iban">IBAN</Label>
+        <Label htmlFor="iban">{t("iban")}</Label>
         <Input
           id="iban"
           type="text"
-          placeholder="Ex: FR76 1234 5678 9012 3456 7890 123"
+          placeholder={t("ibanPlaceholder")}
           value={iban}
           onChange={(e) => setIban(e.target.value.toUpperCase())}
           disabled={isBeneficiaryLoading}
@@ -89,13 +91,13 @@ export default function AddBeneficiaryForm({
           disabled={isBeneficiaryLoading}
           className="flex-1"
         >
-          Annuler
+          {t("cancel")}
         </Button>
         <FilledButton
           type="submit"
           disabled={isBeneficiaryLoading}
           className="flex-1"
-          label={isBeneficiaryLoading ? "Ajout en cours..." : "Ajouter"}
+          label={isBeneficiaryLoading ? t("adding") : t("add")}
         />
       </div>
     </form>

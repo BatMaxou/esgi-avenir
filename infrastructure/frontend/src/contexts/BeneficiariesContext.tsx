@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
@@ -38,6 +39,7 @@ export const BeneficiariesContext = createContext<
 >(undefined);
 
 export const BeneficiariesProvider = ({ children }: Props) => {
+  const t = useTranslations("contexts.beneficiaries");
   const [beneficiary, setBeneficiary] = useState<Beneficiary | null>(null);
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
   const [isBeneficiariesLoading, setIsBeneficiariesLoading] =
@@ -83,8 +85,8 @@ export const BeneficiariesProvider = ({ children }: Props) => {
     if (response instanceof ApiClientError) {
       const errorResponse =
         String(response.message) === "Account not found."
-          ? "Aucun compte associé trouvé."
-          : "Erreur lors de la mise à jour du bénéficiaire.";
+          ? t("accountNotFound")
+          : t("errorUpdating");
       showErrorToast(errorResponse);
       console.error("Failed to create beneficiary:", response.message);
       setIsBeneficiaryLoading(false);
