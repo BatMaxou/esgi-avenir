@@ -303,7 +303,8 @@
         "baseQuantityError": "Quantity must be positive",
         "basePrice": "Base Price",
         "basePriceError": "Price must be positive",
-        "create": "Create"
+        "create": "Create",
+        "update": "Update"
       }
     },
     "inputs": {
@@ -379,7 +380,8 @@
         "basePrice": "Base Price",
         "balance": "Balance",
         "remainingQuantity": "Remaining Quantity",
-        "consult": "View"
+        "consult": "View",
+        "edit": "Edit"
       }
     },
     "dialogs": {
@@ -506,6 +508,11 @@
           "button": "Create stock",
           "title": "Create new stock",
           "description": "Fill in the information to create a new stock"
+        },
+        "update": {
+          "button": "Edit",
+          "title": "Update stock",
+          "description": "Modify the stock information"
         }
       }
     }

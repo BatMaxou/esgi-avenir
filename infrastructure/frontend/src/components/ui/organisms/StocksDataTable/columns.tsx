@@ -13,11 +13,15 @@ import {
 import { useRouter } from "@/i18n/navigation";
 import { HydratedStock } from "../../../../../../../domain/entities/Stock";
 import { useStocks } from "@/contexts/StocksContext";
+import { UpdateStockDialog } from "../../molecules/dialogs/update-stock-dialog";
+import { Icon } from "@iconify/react";
+import { useState } from "react";
 
 function CreditActionsCell({ credit }: { credit: HydratedStock }) {
   const t = useTranslations("components.dataTable.stocks");
   const router = useRouter();
   const { setStock } = useStocks();
+  const [openUpdate, setOpenUpdate] = useState(false);
   const id = credit.id;
 
   if (!id) {
@@ -46,8 +50,23 @@ function CreditActionsCell({ credit }: { credit: HydratedStock }) {
             <EyeIcon className="mr-2 h-4 w-4" />
             {t("consult")}
           </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => {
+              setStock(credit);
+              setOpenUpdate(true);
+            }}
+          >
+            <Icon icon="mdi:pencil" className="mr-2 h-4 w-4" />
+            {t("edit")}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <UpdateStockDialog
+        stock={credit}
+        setOpen={setOpenUpdate}
+        open={openUpdate}
+      />
     </>
   );
 }

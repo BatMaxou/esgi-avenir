@@ -251,6 +251,10 @@
           "button": "Créer un stock",
           "title": "Créer un nouveau stock",
           "description": "Remplissez les informations pour créer un nouveau stock"
+        },
+        "update": {
+          "title": "Modifier le stock",
+          "description": "Modifiez les informations du stock"
         }
       },
       "transferFrom": {
@@ -430,7 +434,8 @@
         "baseQuantityError": "La quantité doit être positive",
         "basePrice": "Prix de base",
         "basePriceError": "Le prix doit être positif",
-        "create": "Créer"
+        "create": "Créer",
+        "update": "Modifier"
       }
     },
     "inputs": {
@@ -506,7 +511,8 @@
         "basePrice": "Prix de base",
         "balance": "Balance",
         "remainingQuantity": "Quantité restante",
-        "consult": "Consulter"
+        "consult": "Consulter",
+        "edit": "Modifier"
       }
     }
   },
