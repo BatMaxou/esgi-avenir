@@ -590,6 +590,36 @@
       "accountNotFound": "Compte introuvable.",
       "transferError": "Erreur lors du transfert.",
       "transferSuccess": "Transfert effectué avec succès."
+    },
+    "stockOrders": {
+      "mustBeConnectedToView": "Vous devez être connecté pour consulter les actions",
+      "mustBeConnectedToCreate": "Vous devez être connecté pour créer une action",
+      "mustBeConnectedToUpdate": "Vous devez être connecté pour mettre à jour une action",
+      "mustBeConnectedToDelete": "Vous devez être connecté pour supprimer une action",
+      "errorFetching": "Erreur lors de la récupération de l'action",
+      "errorCreating": "Erreur lors de la création de l'action",
+      "errorUpdating": "Erreur lors de la mise à jour de l'action",
+      "errorDeleting": "Erreur lors de la suppression de l'action",
+      "orderCreated": "Action créée avec succès",
+      "orderUpdated": "Action mise à jour avec succès",
+      "orderDeleted": "Action supprimée avec succès"
+    },
+    "stocks": {
+      "mustBeConnectedToView": "Vous devez être connecté pour consulter les stocks",
+      "mustBeConnectedToCreate": "Vous devez être connecté pour créer un stock",
+      "mustBeConnectedToUpdate": "Vous devez être connecté pour mettre à jour un stock",
+      "mustBeConnectedToPurchase": "Vous devez être connecté pour acheter un stock",
+      "errorFetching": "Erreur lors de la récupération des stocks",
+      "errorCreating": "Erreur lors de la création du stock",
+      "errorUpdating": "Erreur lors de la mise à jour du stock",
+      "errorPurchasing": "Erreur lors de l'achat du stock",
+      "stockCreated": "Stock créé avec succès",
+      "stockUpdated": "Stock mis à jour avec succès",
+      "stockPurchased": "Stock acheté avec succès"
+    },
+    "financialSecurities": {
+      "mustBeConnectedToView": "Vous devez être connecté pour consulter vos investissements",
+      "errorFetching": "Erreur lors de la récupération de vos investissements"
     }
   }
 }
