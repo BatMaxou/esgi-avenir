@@ -1,8 +1,595 @@
 {
+  "layout": {
+    "protected": {
+      "home": "Dashboard",
+      "accounts": "My accounts",
+      "transfers": "Transfers",
+      "investments": "My investments",
+      "profile": "My profile",
+      "users": "User management",
+      "settings": "Bank settings",
+      "actions": "Actions management",
+      "news": "News",
+      "credits": "Credits management",
+      "credit": "Credit",
+      "clients": "Client management",
+      "accountDetails": "My account",
+      "clientArea": "Client area"
+    }
+  },
   "page": {
+    "home": {
+      "loading": "Loading..."
+    },
     "news": {
       "title": "Latest News",
       "no-results": "No news found."
+    },
+    "accounts": {
+      "title": "My accounts",
+      "createCurrent": "Create a checking account",
+      "createSavings": "Create a savings account",
+      "alreadyHasSavings": "You already have a savings account",
+      "details": {
+        "lastOperations": "Recent transactions",
+        "balance": "Balance",
+        "bankInformations": "Bank information",
+        "updateAccount": "Update my account",
+        "deleteAccount": "Delete my account"
+      }
+    },
+    "transfers": {
+      "title": "Transfers"
+    },
+    "investments": {
+      "title": "My investments",
+      "comingSoon": "Investments page to be implemented..."
+    },
+    "clients": {
+      "title": "Clients",
+      "search": "Search a client",
+      "details": {
+        "accountsTitle": "Client Accounts",
+        "noAccount": "This client does not have an account yet."
+      }
+    },
+    "credits": {
+      "title": "Credits",
+      "search": "Search a credit",
+      "details": {
+        "title": "Credit Details",
+        "paymentsTitle": "Payment History"
+      }
+    },
+    "users": {
+      "title": "Users",
+      "search": "Search a user",
+      "details": {
+        "title": "User Details",
+        "edit": "Edit",
+        "ban": "Ban",
+        "unban": "Unban",
+        "delete": "Delete"
+      }
+    },
+    "actions": {
+      "title": "Actions",
+      "comingSoon": "Director actions content to be implemented..."
+    },
+    "settings": {
+      "title": "Settings",
+      "savingsRate": "Savings Rate",
+      "savingsRateDescription": "Interest rate applied to savings accounts",
+      "purchaseFee": "Purchase Fee",
+      "purchaseFeeDescription": "Fees applied when purchasing stocks",
+      "saleFee": "Sale Fee",
+      "saleFeeDescription": "Fees applied when selling stocks"
+    }
+  },
+  "components": {
+    "cards": {
+      "users": {
+        "title": "Users"
+      },
+      "actions": {
+        "title": "Actions"
+      },
+      "savings": {
+        "title": "Settings",
+        "savingsRate": "Savings rate",
+        "buying": "Buying",
+        "selling": "Selling"
+      },
+      "bankCredit": {
+        "title": "View",
+        "subtitle": "credits"
+      },
+      "transfer": {
+        "title": "Transfer",
+        "subtitle": "money"
+      },
+      "investment": {
+        "title": "View your",
+        "subtitle": "investments"
+      },
+      "accountInformations": {
+        "accountName": "Account name",
+        "iban": "IBAN",
+        "owner": "Owner",
+        "savingsRate": "Savings rate"
+      },
+      "userInformations": {
+        "title": "Personal information",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "role": "Role"
+      },
+      "accounts": {
+        "title": "Client Accounts"
+      },
+      "bankCreditInformations": {
+        "title": "Credit information",
+        "amount": "Amount",
+        "interestRate": "Interest rate",
+        "insuranceRate": "Insurance rate",
+        "duration": "Duration",
+        "months": "months"
+      }
+    },
+    "dashboards": {
+      "client": {
+        "myAccounts": "My Accounts",
+        "seeAllAccounts": "See all my accounts",
+        "transfers": "Transfers",
+        "investments": "Investments"
+      }
+    },
+    "badges": {
+      "role": {
+        "banned": "Banned",
+        "director": "Director",
+        "advisor": "Advisor",
+        "client": "Client",
+        "unknown": "Unknown"
+      },
+      "bankCredit": {
+        "repaid": "Repaid"
+      }
+    },
+    "items": {
+      "bankCreditOperation": {
+        "creditRepayment": "Credit repayment"
+      },
+      "operations": {
+        "deposit": "Deposit",
+        "withdrawal": "Withdrawal",
+        "incomingTransfer": "Incoming transfer",
+        "outgoingTransfer": "Outgoing transfer",
+        "savingsInterest": "Savings interest",
+        "bankFee": "Bank fee",
+        "transferToBank": "Transfer to bank",
+        "transferFromBank": "Transfer from bank"
+      }
+    },
+    "forms": {
+      "login": {
+        "email": "Email",
+        "emailError": "Email must be a valid address.",
+        "password": "Password",
+        "passwordError": "Password cannot be empty.",
+        "submit": "Sign in"
+      },
+      "register": {
+        "gender": "Gender",
+        "mr": "Mr.",
+        "mrs": "Mrs.",
+        "firstName": "First name",
+        "firstNameError": "Your first name is required.",
+        "lastName": "Last name",
+        "lastNameError": "Your last name is required.",
+        "email": "Email",
+        "emailError": "Email must be a valid email address.",
+        "password": "Password",
+        "passwordError": "Password must be at least 12 characters.",
+        "passwordConfirm": "Confirm password",
+        "passwordMismatch": "Passwords do not match.",
+        "streetNumber": "Street number",
+        "streetNumberError": "Street number is required.",
+        "street": "Street",
+        "streetError": "Street name is required.",
+        "postalCode": "Postal code",
+        "postalCodeError": "Postal code is required.",
+        "city": "City",
+        "cityError": "City is required.",
+        "country": "Country",
+        "countryError": "Country is required.",
+        "submit": "Open an account"
+      },
+      "account": {
+        "name": "Account name",
+        "placeholderCurrent": "Ex: Main account",
+        "placeholderSavings": "Ex: Savings book",
+        "cancel": "Cancel",
+        "create": "Create",
+        "creating": "Creating...",
+        "update": "Update",
+        "updating": "Updating..."
+      },
+      "beneficiary": {
+        "name": "Beneficiary name",
+        "namePlaceholder": "Ex: John Doe",
+        "iban": "IBAN",
+        "ibanPlaceholder": "Ex: FR76 1234 5678 9012 3456 7890 123",
+        "cancel": "Cancel",
+        "add": "Add",
+        "adding": "Adding...",
+        "update": "Update",
+        "updating": "Updating..."
+      },
+      "user": {
+        "firstName": "First name",
+        "firstNameError": "First name cannot be empty.",
+        "lastName": "Last name",
+        "lastNameError": "Last name cannot be empty.",
+        "email": "Email",
+        "emailError": "Email must be a valid address.",
+        "password": "Password",
+        "passwordError": "Password must contain at least 8 characters.",
+        "role": "Role",
+        "rolePlaceholder": "Select a role",
+        "roleClient": "Client",
+        "roleAdvisor": "Advisor",
+        "roleDirector": "Director",
+        "create": "Create user"
+      },
+      "updateBeneficiary": {
+        "name": "Beneficiary name",
+        "namePlaceholder": "Ex: John Doe",
+        "iban": "IBAN",
+        "ibanNotEditable": "IBAN cannot be modified",
+        "nameRequired": "Beneficiary name is required",
+        "idMissing": "Beneficiary ID missing",
+        "successUpdate": "Beneficiary updated successfully",
+        "errorUpdate": "Error updating beneficiary",
+        "notFound": "Beneficiary not found",
+        "successDelete": "Beneficiary deleted successfully",
+        "errorDelete": "Error deleting beneficiary",
+        "cancel": "Cancel",
+        "update": "Update",
+        "updating": "Updating...",
+        "delete": "Delete permanently"
+      },
+      "transfer": {
+        "successTitle": "Transfer successful!",
+        "successDescription": "Your transfer of",
+        "successDescriptionEnd": "has been completed successfully.",
+        "newTransfer": "New transfer",
+        "fromAccount": "From account",
+        "toAccount": "To account",
+        "nameOperation": "Name the operation",
+        "operationPlaceholder": "My transfer",
+        "transfer": "Transfer"
+      },
+      "bankCredit": {
+        "amount": "Amount (€)",
+        "amountPlaceholder": "Ex: 50000",
+        "amountError": "Amount must be a positive number",
+        "interestRate": "Interest rate (%)",
+        "interestRatePlaceholder": "Ex: 0.5",
+        "interestRateError": "Interest rate must be between 0 and 100",
+        "insuranceRate": "Insurance rate (%)",
+        "insuranceRatePlaceholder": "Ex: 0.1",
+        "insuranceRateError": "Insurance rate must be between 0 and 100",
+        "duration": "Duration (months)",
+        "durationPlaceholder": "Ex: 120",
+        "durationErrorInt": "Duration must be an integer",
+        "durationErrorPositive": "Duration must be a positive integer",
+        "cancel": "Cancel",
+        "create": "Create",
+        "creating": "Creating..."
+      },
+      "setting": {
+        "valueError": "Value must be a number with maximum 2 decimal places.",
+        "valueInvalid": "Value must be a valid number.",
+        "save": "Save"
+      }
+    },
+    "inputs": {
+      "search": {
+        "placeholder": "Search...",
+        "searching": "Search",
+        "loading": "Loading..."
+      }
+    },
+    "lists": {
+      "accounts": {
+        "currentAccounts": "Current accounts",
+        "savingsAccounts": "Savings accounts",
+        "noCurrentAccount": "You don't have a current account yet.",
+        "noSavingsAccount": "You don't have a savings account yet.",
+        "addCurrentAccount": "Add current account",
+        "addSavingsAccount": "Add savings account",
+        "currentAccount": "Current account",
+        "savingsAccount": "Savings account"
+      },
+      "beneficiaries": {
+        "noBeneficiary": "No beneficiary found"
+      },
+      "bankCredit": {
+        "noPayment": "No payment has been made."
+      }
+    },
+    "partials": {
+      "header": {
+        "home": "Home",
+        "users": "Users",
+        "settings": "Settings",
+        "actions": "Actions",
+        "credits": "Credits",
+        "clients": "Clients",
+        "accounts": "Accounts",
+        "transfers": "Transfers",
+        "investments": "Investments",
+        "myAccount": "My account",
+        "profile": "Profile",
+        "logout": "Logout"
+      }
+    },
+    "dataTable": {
+      "noResults": "No results.",
+      "resultsDisplayed": "{count} results displayed",
+      "pageInfo": "Page {current} of {total}",
+      "users": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "role": "Role",
+        "consult": "View",
+        "edit": "Edit",
+        "ban": "Ban",
+        "unban": "Unban",
+        "delete": "Delete",
+        "userNotFound": "User not found"
+      },
+      "bankCredits": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "iban": "IBAN",
+        "loanAmount": "Loan amount",
+        "loanDuration": "Loan duration (months)",
+        "remaining": "Remaining balance",
+        "consult": "View"
+      }
+    },
+    "dialogs": {
+      "transferFrom": {
+        "title": "From account",
+        "searchAccount": "Search for an account"
+      },
+      "transferTo": {
+        "title": "To account",
+        "myAccounts": "My accounts",
+        "myBeneficiaries": "My beneficiaries",
+        "searchAccount": "Search for an account",
+        "searchBeneficiary": "Search for a beneficiary",
+        "loadingAccounts": "Loading accounts...",
+        "loadingBeneficiaries": "Loading beneficiaries...",
+        "addBeneficiary": "Add a beneficiary"
+      },
+      "userBeneficiaries": {
+        "title": "My beneficiaries",
+        "addBeneficiary": "Add a beneficiary"
+      },
+      "checkMail": {
+        "title": "An email has been sent to you",
+        "instruction": "Please confirm your registration by clicking on the link in the email.",
+        "accountCreation": "A current account will be immediately created upon validation of your account.",
+        "close": "Close",
+        "understood": "I understand"
+      },
+      "createBankCredit": {
+        "grantCredit": "Grant a credit"
+      },
+      "updateSetting": {
+        "modify": "Modify",
+        "instruction": "Enter the new value for this setting"
+      },
+      "beneficiary": {
+        "add": {
+          "title": "Add a beneficiary"
+        },
+        "update": {
+          "title": "Update beneficiary"
+        },
+        "delete": {
+          "title": "Confirm deletion",
+          "description": "Are you sure you want to permanently delete the beneficiary",
+          "descriptionIrreversible": "This action is",
+          "irreversible": "irreversible",
+          "descriptionEnd": "and will delete all information associated with this beneficiary.",
+          "cancel": "Cancel",
+          "confirm": "Delete permanently"
+        }
+      },
+      "account": {
+        "add": {
+          "titleCurrent": "Create a checking account",
+          "titleSavings": "Create a savings account",
+          "descriptionCurrent": "Add a new checking account to your account list.",
+          "descriptionSavings": "Add a new savings account to your account list.",
+          "savingsRateLabel": "The current savings rate is:",
+          "loading": "Loading..."
+        },
+        "update": {
+          "title": "Update account",
+          "description": "Modify your account name."
+        },
+        "delete": {
+          "titleConfirm": "Confirm transfer and deletion",
+          "titleBalance": "Remaining balance on account",
+          "titleSure": "Are you absolutely sure?",
+          "descriptionTransfer": "You will transfer the entire balance (",
+          "descriptionToAccount": ") to the account",
+          "descriptionDeleteAccount": "and permanently delete the account",
+          "descriptionBalance": "There is",
+          "descriptionBalanceEnd": "remaining on this account.",
+          "descriptionTransferRequired": "You must transfer all funds to another account before you can delete it.",
+          "descriptionIrreversible": "This action is irreversible. This will permanently delete the account",
+          "transferFunds": "Transfer funds to another account",
+          "cancel": "Cancel",
+          "transferAndDelete": "Transfer and delete",
+          "processing": "Processing...",
+          "delete": "Delete",
+          "deleting": "Deleting..."
+        }
+      },
+      "user": {
+        "create": {
+          "title": "Create a new user",
+          "description": "Fill in the information below to create a new user.",
+          "button": "Add a user"
+        },
+        "update": {
+          "title": "Update user",
+          "description": "Modify the user information below.",
+          "firstName": "First name",
+          "lastName": "Last name",
+          "email": "Email",
+          "role": "Role",
+          "rolePlaceholder": "Select a role",
+          "roleClient": "Client",
+          "roleAdvisor": "Advisor",
+          "roleDirector": "Director",
+          "cancel": "Cancel",
+          "save": "Save"
+        },
+        "ban": {
+          "titleBan": "Ban user",
+          "titleUnban": "Unban user",
+          "descriptionBan": "Are you sure you want to ban",
+          "descriptionUnban": "Are you sure you want to unban",
+          "cancel": "Cancel",
+          "ban": "Ban",
+          "unban": "Unban"
+        },
+        "delete": {
+          "title": "Delete user",
+          "description": "Are you sure you want to delete",
+          "descriptionEnd": "? This action is irreversible.",
+          "cancel": "Cancel",
+          "delete": "Delete"
+        }
+      }
+    }
+  },
+  "buttons": {
+    "back": "Back",
+    "backToHome": "Back to home"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "switchToRegister": "I want to open an account!"
+    },
+    "register": {
+      "title": "Open an account",
+      "switchToLogin": "I already have an account!"
+    },
+    "confirm": {
+      "loading": "Confirming your registration...",
+      "success": {
+        "title": "Registration validated!",
+        "message": "You will be redirected to the login page in a few moments."
+      },
+      "error": {
+        "title": "Registration failed!",
+        "message": "Please contact an administrator if the error persists.",
+        "redirect": "You will be redirected to the login page in a few moments."
+      }
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Page not found",
+      "message": "The page you are looking for does not exist or has been moved."
+    },
+    "401": {
+      "title": "Access denied",
+      "message": "You do not have the necessary permissions to access this page."
+    },
+    "403": {
+      "title": "Access denied",
+      "message": "You do not have the necessary permissions to access this page."
+    },
+    "500": {
+      "title": "Server error",
+      "message": "An error occurred on our servers. Please try again later."
+    }
+  },
+  "contexts": {
+    "accounts": {
+      "userNotFound": "User not found",
+      "mustBeConnectedToCreate": "You must be logged in to create an account",
+      "errorCreating": "Error creating account",
+      "savingsAccountCreated": "Savings account created successfully",
+      "currentAccountCreated": "Current account created successfully",
+      "mustBeConnectedToUpdate": "You must be logged in to update an account",
+      "errorUpdating": "Error updating account",
+      "accountUpdated": "Account updated successfully",
+      "mustBeConnectedToDelete": "You must be logged in to delete an account",
+      "cannotDeleteLastCurrentWithFunds": "Cannot delete the only current account containing funds. Please empty the account first or create a new current account.",
+      "accountNotSoldable": "The account cannot be closed as it still contains funds.",
+      "errorDeleting": "Error deleting account",
+      "accountDeleted": "Account deleted successfully"
+    },
+    "auth": {
+      "unauthorized": "Invalid credentials",
+      "accountNotEnabled": "Your account is not yet activated.",
+      "invalidCredentials": "Invalid credentials",
+      "connectionError": "Connection error",
+      "emailAlreadyExists": "This email is already in use",
+      "registrationError": "Registration error",
+      "confirmationError": "Confirmation error",
+      "loggedOut": "Successfully logged out"
+    },
+    "users": {
+      "mustBeConnectedToCreate": "You must be logged in to create a user",
+      "errorCreating": "Error creating user",
+      "userCreated": "User created successfully",
+      "mustBeConnectedToUpdate": "You must be logged in to update a user",
+      "errorUpdating": "Error updating user",
+      "userUpdated": "User updated successfully",
+      "mustBeConnectedToDelete": "You must be logged in to delete a user",
+      "errorDeleting": "Error deleting user",
+      "userDeleted": "User deleted successfully",
+      "mustBeConnectedToBan": "You must be logged in to ban a user",
+      "errorBanning": "Error banning user",
+      "userBanned": "User banned successfully",
+      "mustBeConnectedToUnban": "You must be logged in to unban a user",
+      "errorUnbanning": "Error unbanning user",
+      "userUnbanned": "User unbanned successfully"
+    },
+    "bankCredits": {
+      "errorCreating": "Error creating bank credit"
+    },
+    "settings": {
+      "errorUpdating": "Error updating setting.",
+      "savingsRateUpdated": "Savings rate updated successfully",
+      "purchaseFeeUpdated": "Purchase fee updated successfully",
+      "saleFeeUpdated": "Sale fee updated successfully"
+    },
+    "beneficiaries": {
+      "accountNotFound": "No associated account found.",
+      "errorUpdating": "Error updating beneficiary."
+    },
+    "operations": {
+      "mustBeConnectedToTransfer": "You must be logged in to make a transfer",
+      "insufficientFunds": "Insufficient funds to complete the transfer.",
+      "accountNotFound": "Account not found.",
+      "transferError": "Transfer error.",
+      "transferSuccess": "Transfer completed successfully."
     }
   }
 }

@@ -11,6 +11,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/atoms/avatar";
+import { useTranslations } from "next-intl";
 import {
   HydratedAccountWithOperations,
   useAccounts,
@@ -50,6 +51,7 @@ const OperationAccountItem = ({ operation }: OperationAccountItemProps) => {
 const DepositOperationAccountItem = ({
   operation,
 }: OperationAccountItemProps) => {
+  const t = useTranslations("components.items.operations");
   return (
     <Item
       className="p-4 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
@@ -67,7 +69,7 @@ const DepositOperationAccountItem = ({
         </ItemMedia>
         <ItemContent>
           <span className="font-semibold text-md">
-            {operation?.name ? operation.name : "Dépot"}
+            {operation?.name ? operation.name : t("deposit")}
           </span>
         </ItemContent>
         <ItemActions>
@@ -82,6 +84,7 @@ const DepositOperationAccountItem = ({
 const WithdrawalOperationAccountItem = ({
   operation,
 }: OperationAccountItemProps) => {
+  const t = useTranslations("components.items.operations");
   return (
     <Item
       className="p-4 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
@@ -99,7 +102,7 @@ const WithdrawalOperationAccountItem = ({
         </ItemMedia>
         <ItemContent>
           <span className="font-semibold text-md">
-            {operation?.name ? operation.name : "Retrait"}
+            {operation?.name ? operation.name : t("withdrawal")}
           </span>
         </ItemContent>
         <ItemActions>
@@ -115,6 +118,7 @@ const TransferOperationAccountItem = ({
   operation,
   account,
 }: OperationAccountItemProps) => {
+  const t = useTranslations("components.items.operations");
   return (
     <Item
       className="p-4 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
@@ -139,8 +143,8 @@ const TransferOperationAccountItem = ({
             {operation?.name
               ? operation.name
               : operation.toId === account?.id
-              ? "Virement entrant"
-              : "Virement sortant"}
+              ? t("incomingTransfer")
+              : t("outgoingTransfer")}
           </span>
         </ItemContent>
         <ItemActions>
@@ -161,6 +165,7 @@ const TransferOperationAccountItem = ({
 const InterestOperationAccountItem = ({
   operation,
 }: OperationAccountItemProps) => {
+  const t = useTranslations("components.items.operations");
   return (
     <Item
       className="p-4 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
@@ -178,7 +183,7 @@ const InterestOperationAccountItem = ({
         </ItemMedia>
         <ItemContent>
           <span className="font-semibold text-md">
-            {operation?.name ? operation.name : "Intérêts épargne"}
+            {operation?.name ? operation.name : t("savingsInterest")}
           </span>
         </ItemContent>
         <ItemActions>
@@ -191,6 +196,7 @@ const InterestOperationAccountItem = ({
   );
 };
 const FeeOperationAccountItem = ({ operation }: OperationAccountItemProps) => {
+  const t = useTranslations("components.items.operations");
   return (
     <Item
       className="p-4 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
@@ -208,7 +214,7 @@ const FeeOperationAccountItem = ({ operation }: OperationAccountItemProps) => {
         </ItemMedia>
         <ItemContent>
           <span className="font-semibold text-md">
-            {operation?.name ? operation.name : "Frais banquaire"}
+            {operation?.name ? operation.name : t("bankFee")}
           </span>
         </ItemContent>
         <ItemActions>
@@ -223,6 +229,7 @@ const FeeOperationAccountItem = ({ operation }: OperationAccountItemProps) => {
 const ToBankOperationAccountItem = ({
   operation,
 }: OperationAccountItemProps) => {
+  const t = useTranslations("components.items.operations");
   return (
     <Item
       className="p-4 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
@@ -240,7 +247,7 @@ const ToBankOperationAccountItem = ({
         </ItemMedia>
         <ItemContent>
           <span className="font-semibold text-md">
-            {operation?.name ? operation.name : "Virement vers la banque"}
+            {operation?.name ? operation.name : t("transferToBank")}
           </span>
         </ItemContent>
         <ItemActions>
@@ -255,6 +262,7 @@ const ToBankOperationAccountItem = ({
 const FromBankOperationAccountItem = ({
   operation,
 }: OperationAccountItemProps) => {
+  const t = useTranslations("components.items.operations");
   return (
     <Item
       className="p-4 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
@@ -272,7 +280,7 @@ const FromBankOperationAccountItem = ({
         </ItemMedia>
         <ItemContent>
           <span className="font-semibold text-md">
-            {operation?.name ? operation.name : "Virement depuis la banque"}
+            {operation?.name ? operation.name : t("transferFromBank")}
           </span>
         </ItemContent>
         <ItemActions>

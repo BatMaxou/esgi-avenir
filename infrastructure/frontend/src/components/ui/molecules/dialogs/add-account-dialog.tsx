@@ -10,6 +10,7 @@ import {
 import AddAccountForm from "../forms/add-account-form";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 interface AddAccountDialogProps {
   open: boolean;
@@ -22,6 +23,8 @@ export default function AddAccountDialog({
   onOpenChange,
   isSavings,
 }: AddAccountDialogProps) {
+  const t = useTranslations("components.dialogs.account.add");
+
   const handleSuccess = () => {
     onOpenChange(false);
   };
@@ -44,26 +47,20 @@ export default function AddAccountDialog({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {isSavings ? "Créer un compte épargne" : "Créer un compte courant"}
+            {isSavings ? t("titleSavings") : t("titleCurrent")}
           </DialogTitle>
           <DialogDescription>
             {isSavings ? (
               <>
-                <span>
-                  Ajoutez un nouveau compte épargne à votre liste de comptes.
-                </span>
+                <span>{t("descriptionSavings")}</span>
                 <br />
                 <span>
-                  Le taux d'épargne actuel est de :{" "}
-                  <b>
-                    {isSettingsLoading ? "Chargement..." : `${savingsRate}%`}
-                  </b>
+                  {t("savingsRateLabel")}{" "}
+                  <b>{isSettingsLoading ? t("loading") : `${savingsRate}%`}</b>
                 </span>
               </>
             ) : (
-              <span>
-                Ajoutez un nouveau compte courant à votre liste de comptes.
-              </span>
+              <span>{t("descriptionCurrent")}</span>
             )}
           </DialogDescription>
         </DialogHeader>

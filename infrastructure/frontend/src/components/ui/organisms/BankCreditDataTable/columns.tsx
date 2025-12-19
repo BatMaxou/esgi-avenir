@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon, EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/atoms/button";
@@ -15,6 +16,7 @@ import { HydratedBankCredit } from "../../../../../../../domain/entities/BankCre
 import { useBankCredits } from "@/contexts/BankCreditContext";
 
 function CreditActionsCell({ credit }: { credit: HydratedBankCredit }) {
+  const t = useTranslations("components.dataTable.bankCredits");
   const router = useRouter();
   const { setBankCredit } = useBankCredits();
   const id = credit.id;
@@ -43,7 +45,7 @@ function CreditActionsCell({ credit }: { credit: HydratedBankCredit }) {
             }}
           >
             <EyeIcon className="mr-2 h-4 w-4" />
-            Consulter
+            {t("consult")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -51,18 +53,20 @@ function CreditActionsCell({ credit }: { credit: HydratedBankCredit }) {
   );
 }
 
-export const columns: ColumnDef<HydratedBankCredit>[] = [
+export const columns = (
+  t: (key: string) => string
+): ColumnDef<HydratedBankCredit>[] => [
   {
     accessorKey: "owner.firstName",
-    header: "Prénom",
+    header: () => t("firstName"),
   },
   {
     accessorKey: "owner.lastName",
-    header: "Nom",
+    header: () => t("lastName"),
   },
   {
     accessorKey: "owner.email",
-    header: "Email",
+    header: () => t("email"),
     cell: ({ row }) => {
       const email = row.original?.owner?.email;
       return email?.toString() || "-";
@@ -70,7 +74,7 @@ export const columns: ColumnDef<HydratedBankCredit>[] = [
   },
   {
     id: "account.iban",
-    header: "IBAN",
+    header: () => t("iban"),
     cell: ({ row }) => {
       const iban = row.original?.account?.iban || "-";
       return iban;
@@ -78,7 +82,7 @@ export const columns: ColumnDef<HydratedBankCredit>[] = [
   },
   {
     id: "amount",
-    header: "Montant du prêt",
+    header: () => t("loanAmount"),
     cell: ({ row }) => {
       const amount = row.original.amount || "-";
       return amount;
@@ -86,7 +90,7 @@ export const columns: ColumnDef<HydratedBankCredit>[] = [
   },
   {
     id: "durationInMonths",
-    header: "Durée du prêt (mois)",
+    header: () => t("loanDuration"),
     cell: ({ row }) => {
       const durationInMonths = row.original.durationInMonths || "-";
       return durationInMonths;
@@ -94,7 +98,7 @@ export const columns: ColumnDef<HydratedBankCredit>[] = [
   },
   {
     id: "remains",
-    header: "Reste à rembourser",
+    header: () => t("remaining"),
     cell: ({ row }) => {
       const remains = row.original.remains ?? 0;
       const status = row.original.status;

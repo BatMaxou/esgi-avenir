@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +25,7 @@ export function UpdateSettingDialog({
   title,
   currentValue,
 }: UpdateSettingDialogProps) {
+  const t = useTranslations("components.dialogs.updateSetting");
   const [open, setOpen] = useState(false);
 
   const handleSuccess = () => {
@@ -39,9 +41,11 @@ export function UpdateSettingDialog({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Modifier {title}</DialogTitle>
+          <DialogTitle>
+            {t("modify")} {title}
+          </DialogTitle>
           <DialogDescription>
-            Entrez la nouvelle valeur pour ce paramètre <b>(format: 1.25)</b>
+            {t("instruction")} <b>(format: 1.25)</b>
           </DialogDescription>
         </DialogHeader>
         <UpdateSettingForm

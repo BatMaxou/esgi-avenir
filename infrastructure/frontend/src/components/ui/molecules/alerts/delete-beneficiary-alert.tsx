@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/molecules/dialogs/alert-dialog";
 import { Beneficiary } from "../../../../../../../domain/entities/Beneficiary";
+import { useTranslations } from "next-intl";
 
 interface DeleteBeneficiaryAlertProps {
   open: boolean;
@@ -25,32 +26,33 @@ export function DeleteBeneficiaryAlert({
   beneficiary,
   onConfirm,
 }: DeleteBeneficiaryAlertProps) {
+  const t = useTranslations("components.dialogs.beneficiary.delete");
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+          <AlertDialogTitle>{t("title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Êtes-vous sûr de vouloir supprimer définitivement le bénéficiaire{" "}
+            {t("description")}{" "}
             <span className="font-semibold text-gray-900">
               {beneficiary.name}
             </span>{" "}
             ?
             <br />
             <br />
-            Cette action est <span className="font-semibold">
-              irréversible
-            </span>{" "}
-            et supprimera toutes les informations associées à ce bénéficiaire.
+            {t("descriptionIrreversible")}{" "}
+            <span className="font-semibold">{t("irreversible")}</span>{" "}
+            {t("descriptionEnd")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Annuler</AlertDialogCancel>
+          <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
           >
-            Supprimer définitivement
+            {t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
@@ -32,6 +33,7 @@ export const SettingsContext = createContext<SettingsContextType | undefined>(
 );
 
 export const SettingsProvider = ({ children }: Props) => {
+  const t = useTranslations("contexts.settings");
   const [savingsRate, setSavingsRate] = useState<
     string | number | boolean | undefined
   >(undefined);
@@ -146,22 +148,22 @@ export const SettingsProvider = ({ children }: Props) => {
       await apiClient.setting.upsert({ code, value });
 
     if (response instanceof ApiClientError) {
-      showErrorToast("Erreur lors de la mise à jour du paramètre.");
+      showErrorToast(t("errorUpdating"));
       setIsSettingsLoading(false);
       return;
     }
 
     if (code === SettingEnum.SAVINGS_RATE) {
       setSavingsRate(response.value);
-      showSuccessToast("Taux d'épargne mis à jour avec succès");
+      showSuccessToast(t("savingsRateUpdated"));
     }
     if (code === SettingEnum.STOCK_ORDER_PURCHASE_FEE) {
       setPurchaseFee(response.value);
-      showSuccessToast("Frais d'achat mis à jour avec succès");
+      showSuccessToast(t("purchaseFeeUpdated"));
     }
     if (code === SettingEnum.STOCK_ORDER_SALE_FEE) {
       setSaleFee(response.value);
-      showSuccessToast("Frais de vente mis à jour avec succès");
+      showSuccessToast(t("saleFeeUpdated"));
     }
     getAllSettings();
     setIsSettingsLoading(false);

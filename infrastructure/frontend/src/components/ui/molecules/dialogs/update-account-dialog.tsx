@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/atoms/dialog";
 import UpdateAccountForm from "../forms/update-account-form";
 import { HydratedAccount } from "../../../../../../../domain/entities/Account";
+import { useTranslations } from "next-intl";
 
 interface UpdateAccountDialogProps {
   open: boolean;
@@ -21,6 +22,8 @@ export default function UpdateAccountDialog({
   onOpenChange,
   account,
 }: UpdateAccountDialogProps) {
+  const t = useTranslations("components.dialogs.account.update");
+
   const handleSuccess = () => {
     onOpenChange(false);
   };
@@ -35,10 +38,8 @@ export default function UpdateAccountDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Modifier le compte</DialogTitle>
-          <DialogDescription>
-            Modifiez le nom de votre compte.
-          </DialogDescription>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
         <UpdateAccountForm
           account={account}

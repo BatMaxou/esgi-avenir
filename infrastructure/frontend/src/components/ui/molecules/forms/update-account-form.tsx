@@ -9,6 +9,7 @@ import { FilledButton } from "../buttons/filled-button";
 import { HydratedAccount } from "../../../../../../../domain/entities/Account";
 import { toast } from "sonner";
 import { showErrorToast } from "@/lib/toast";
+import { useTranslations } from "next-intl";
 
 interface UpdateAccountFormProps {
   account: HydratedAccount;
@@ -21,6 +22,7 @@ export default function UpdateAccountForm({
   onSuccess,
   onCancel,
 }: UpdateAccountFormProps) {
+  const t = useTranslations("components.forms.account");
   const [name, setName] = useState(account.name);
   const { updateAccount, isAccountLoading } = useAccounts();
 
@@ -49,11 +51,11 @@ export default function UpdateAccountForm({
   return (
     <form onSubmit={handleSubmit} className="w-full space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="name">Nom du compte</Label>
+        <Label htmlFor="name">{t("name")}</Label>
         <Input
           id="name"
           type="text"
-          placeholder="Ex: Compte principal"
+          placeholder={t("placeholderCurrent")}
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isAccountLoading}
@@ -69,13 +71,13 @@ export default function UpdateAccountForm({
           disabled={isAccountLoading}
           className="flex-1"
         >
-          Annuler
+          {t("cancel")}
         </Button>
         <FilledButton
           type="submit"
           disabled={isAccountLoading}
           className="flex-1"
-          label={isAccountLoading ? "Modification en cours..." : "Modifier"}
+          label={isAccountLoading ? t("updating") : t("update")}
         />
       </div>
     </form>

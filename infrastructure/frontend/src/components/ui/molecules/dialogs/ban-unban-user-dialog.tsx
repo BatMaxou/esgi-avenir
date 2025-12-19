@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/molecules/dialogs/alert-dialog";
 import { LoaderCircleIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface BanUnbanUserDialogProps {
   open: boolean;
@@ -32,21 +33,25 @@ export function BanUnbanUserDialog({
   user,
   isBanned,
 }: BanUnbanUserDialogProps) {
+  const t = useTranslations("components.dialogs.user.ban");
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {isBanned ? "Débannir" : "Bannir"} l&apos;utilisateur
+            {isBanned ? t("titleUnban") : t("titleBan")}
           </AlertDialogTitle>
           <AlertDialogDescription>
             {isBanned
-              ? `Êtes-vous sûr de vouloir débannir ${user.firstName} ${user.lastName}?`
-              : `Êtes-vous sûr de vouloir bannir ${user.firstName} ${user.lastName}?`}
+              ? `${t("descriptionUnban")} ${user.firstName} ${user.lastName}?`
+              : `${t("descriptionBan")} ${user.firstName} ${user.lastName}?`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Annuler</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>
+            {t("cancel")}
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isLoading}
@@ -59,7 +64,7 @@ export function BanUnbanUserDialog({
             {isLoading && (
               <LoaderCircleIcon className="mr-2 h-4 w-4 animate-spin" />
             )}
-            {isBanned ? "Débannir" : "Bannir"}
+            {isBanned ? t("unban") : t("ban")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

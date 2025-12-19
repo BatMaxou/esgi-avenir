@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/atoms/badge";
 import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
+import { useTranslations } from "next-intl";
 
 interface RoleBadgeProps {
   roles: RoleEnum[];
@@ -9,6 +10,8 @@ interface RoleBadgeProps {
 }
 
 export function RoleBadge({ roles, className }: RoleBadgeProps) {
+  const t = useTranslations("components.badges.role");
+
   const rolePriority = {
     [RoleEnum.BANNED]: 0,
     [RoleEnum.DIRECTOR]: 1,
@@ -24,15 +27,15 @@ export function RoleBadge({ roles, className }: RoleBadgeProps) {
   const getRoleLabel = (role: RoleEnum): string => {
     switch (role) {
       case RoleEnum.BANNED:
-        return "Banni";
+        return t("banned");
       case RoleEnum.DIRECTOR:
-        return "Directeur";
+        return t("director");
       case RoleEnum.ADVISOR:
-        return "Conseiller";
+        return t("advisor");
       case RoleEnum.USER:
-        return "Client";
+        return t("client");
       default:
-        return "Inconnu";
+        return t("unknown");
     }
   };
 

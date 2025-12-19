@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon, EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/atoms/button";
@@ -15,6 +16,7 @@ import { useRouter } from "@/i18n/navigation";
 import { RoleBadge } from "@/components/ui/molecules/badges/role-badge";
 
 function UserActionsCell({ user }: { user: User }) {
+  const t = useTranslations("components.dataTable.users");
   const router = useRouter();
   const id = user.id;
 
@@ -41,7 +43,7 @@ function UserActionsCell({ user }: { user: User }) {
             }
           >
             <EyeIcon className="mr-2 h-4 w-4" />
-            Consulter
+            {t("consult")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -49,18 +51,20 @@ function UserActionsCell({ user }: { user: User }) {
   );
 }
 
-export const advisorColumns: ColumnDef<User>[] = [
+export const advisorColumns = (
+  t: (key: string) => string
+): ColumnDef<User>[] => [
   {
     accessorKey: "firstName",
-    header: "Prénom",
+    header: () => t("firstName"),
   },
   {
     accessorKey: "lastName",
-    header: "Nom",
+    header: () => t("lastName"),
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: () => t("email"),
     cell: ({ row }) => {
       const email = row.original.email.value;
       return email?.toString() || "-";

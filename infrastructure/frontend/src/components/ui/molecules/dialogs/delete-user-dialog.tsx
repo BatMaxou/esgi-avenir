@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/molecules/dialogs/alert-dialog";
 import { LoaderCircleIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DeleteUserDialogProps {
   open: boolean;
@@ -30,18 +31,22 @@ export function DeleteUserDialog({
   isLoading,
   user,
 }: DeleteUserDialogProps) {
+  const t = useTranslations("components.dialogs.user.delete");
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Supprimer l&apos;utilisateur</AlertDialogTitle>
+          <AlertDialogTitle>{t("title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Êtes-vous sûr de vouloir supprimer {user.firstName} {user.lastName}
-            &nbsp;? Cette action est irréversible.
+            {t("description")} {user.firstName} {user.lastName}
+            &nbsp;{t("descriptionEnd")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Annuler</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>
+            {t("cancel")}
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isLoading}
@@ -50,7 +55,7 @@ export function DeleteUserDialog({
             {isLoading && (
               <LoaderCircleIcon className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Supprimer
+            {t("delete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

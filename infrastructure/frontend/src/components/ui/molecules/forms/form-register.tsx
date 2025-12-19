@@ -27,42 +27,7 @@ import { FieldSeparator } from "@/components/ui/atoms/field";
 import { useState } from "react";
 import CheckMailDialog from "@/components/ui/molecules/dialogs/check-mail-dialog";
 import { useAuth } from "@/contexts/AuthContext";
-
-const formSchema = z
-  .object({
-    firstName: z.string().min(2, {
-      message: "Votre prénom est requis.",
-    }),
-    lastName: z.string().min(2, {
-      message: "Votre nom est requis.",
-    }),
-    email: z.email({
-      message: "L'email doit être une adresse email valide.",
-    }),
-    password: z.string().min(12, {
-      message: "Le mot de passe doit comporter au moins 12 caractères.",
-    }),
-    passwordConfirm: z.string(),
-    streetNumber: z.string().min(1, {
-      message: "Le numéro de rue est requis.",
-    }),
-    street: z.string().min(2, {
-      message: "Le nom de rue est requis.",
-    }),
-    postalCode: z.string().min(2, {
-      message: "Le code postal est requis.",
-    }),
-    city: z.string().min(2, {
-      message: "La ville est requise.",
-    }),
-    country: z.string().min(2, {
-      message: "Le pays est requis.",
-    }),
-  })
-  .refine((data) => data.password === data.passwordConfirm, {
-    message: "Les mots de passes ne correspondent pas.",
-    path: ["passwordConfirm"],
-  });
+import { useTranslations } from "next-intl";
 
 interface RegisterFormProps {
   setFormType: (formType: "login" | "register") => void;
@@ -70,7 +35,44 @@ interface RegisterFormProps {
 
 export function RegisterForm({ setFormType }: RegisterFormProps) {
   const { register, isLoading } = useAuth();
+  const t = useTranslations("components.forms.register");
   const [open, setOpen] = useState(false);
+
+  const formSchema = z
+    .object({
+      firstName: z.string().min(2, {
+        message: t("firstNameError"),
+      }),
+      lastName: z.string().min(2, {
+        message: t("lastNameError"),
+      }),
+      email: z.email({
+        message: t("emailError"),
+      }),
+      password: z.string().min(12, {
+        message: t("passwordError"),
+      }),
+      passwordConfirm: z.string(),
+      streetNumber: z.string().min(1, {
+        message: t("streetNumberError"),
+      }),
+      street: z.string().min(2, {
+        message: t("streetError"),
+      }),
+      postalCode: z.string().min(2, {
+        message: t("postalCodeError"),
+      }),
+      city: z.string().min(2, {
+        message: t("cityError"),
+      }),
+      country: z.string().min(2, {
+        message: t("countryError"),
+      }),
+    })
+    .refine((data) => data.password === data.passwordConfirm, {
+      message: t("passwordMismatch"),
+      path: ["passwordConfirm"],
+    });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -120,15 +122,15 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                   <FormItem
                     className={form.formState.errors.lastName ? "mb-8" : ""}
                   >
-                    <FormLabel>Genre</FormLabel>
+                    <FormLabel>{t("gender")}</FormLabel>
                     <FormControl>
                       <Select>
                         <SelectTrigger className="w-full p-2">
                           <SelectValue className="p-2" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="light">M.</SelectItem>
-                          <SelectItem value="dark">Mme.</SelectItem>
+                          <SelectItem value="light">{t("mr")}</SelectItem>
+                          <SelectItem value="dark">{t("mrs")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -146,7 +148,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                   <FormItem
                     className={form.formState.errors.lastName ? "mb-8" : ""}
                   >
-                    <FormLabel>Prénom</FormLabel>
+                    <FormLabel>{t("firstName")}</FormLabel>
                     <FormControl>
                       <Input {...field} className="p-2" />
                     </FormControl>
@@ -164,7 +166,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                   <FormItem
                     className={form.formState.errors.firstName ? "mb-12" : ""}
                   >
-                    <FormLabel>Nom de famille</FormLabel>
+                    <FormLabel>{t("lastName")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -180,7 +182,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t("email")}</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -198,7 +200,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                     form.formState.errors.passwordConfirm ? "mb-12" : ""
                   }
                 >
-                  <FormLabel>Mot de passe</FormLabel>
+                  <FormLabel>{t("password")}</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -213,7 +215,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                 <FormItem
                   className={form.formState.errors.password ? "mb-12" : ""}
                 >
-                  <FormLabel>Confirmez le mot de passe</FormLabel>
+                  <FormLabel>{t("passwordConfirm")}</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -231,7 +233,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                 name="streetNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>N° de rue</FormLabel>
+                    <FormLabel>{t("streetNumber")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -247,7 +249,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                 name="street"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Rue</FormLabel>
+                    <FormLabel>{t("street")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -264,7 +266,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                 name="postalCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Code postal</FormLabel>
+                    <FormLabel>{t("postalCode")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -280,7 +282,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                 name="city"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ville</FormLabel>
+                    <FormLabel>{t("city")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -296,7 +298,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
                 name="country"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Pays</FormLabel>
+                    <FormLabel>{t("country")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -306,11 +308,7 @@ export function RegisterForm({ setFormType }: RegisterFormProps) {
               />
             </div>
           </div>
-          <FilledButton
-            type="submit"
-            loading={isLoading}
-            label="Ouvrir un compte"
-          />
+          <FilledButton type="submit" loading={isLoading} label={t("submit")} />
         </form>
       </Form>
     </>

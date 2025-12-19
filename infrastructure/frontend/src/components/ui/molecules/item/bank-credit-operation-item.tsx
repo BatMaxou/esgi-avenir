@@ -11,6 +11,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/atoms/avatar";
+import { useTranslations } from "next-intl";
 import { HydratedAccountWithOperations } from "@/contexts/AccountsContext";
 import { MonthlyPayment } from "../../../../../../../domain/entities/MonthlyPayment";
 
@@ -22,6 +23,7 @@ type BankCreditOperationItemProps = {
 export default function BankCreditOperationItem({
   payment,
 }: BankCreditOperationItemProps) {
+  const t = useTranslations("components.items.bankCreditOperation");
   return (
     <Item
       className="p-4 mb-4 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
@@ -38,9 +40,7 @@ export default function BankCreditOperationItem({
           </Avatar>
         </ItemMedia>
         <ItemContent>
-          <span className="font-semibold text-md">
-            {`Remboursement du crédit`}
-          </span>
+          <span className="font-semibold text-md">{t("creditRepayment")}</span>
         </ItemContent>
         <ItemActions>
           <span className="font-medium text-lg text-red-600">

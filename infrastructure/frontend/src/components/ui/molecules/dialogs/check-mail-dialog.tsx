@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/atoms/dialog";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/atoms/button";
 import { Icon } from "@iconify/react";
 
@@ -21,6 +22,7 @@ const CheckMailDialog = ({
   setOpen,
   setFormType,
 }: CheckMailDialogProps) => {
+  const t = useTranslations("components.dialogs.checkMail");
   const handleClose = () => {
     setOpen(false);
     setFormType("login");
@@ -37,19 +39,11 @@ const CheckMailDialog = ({
           />
         </div>
         <DialogHeader>
-          <DialogTitle className="text-center -mt-4">
-            Un mail vous à été envoyé
-          </DialogTitle>
+          <DialogTitle className="text-center -mt-4">{t("title")}</DialogTitle>
           <DialogDescription>
-            <span>
-              Veuillez confirmer l'inscription en cliquant sur le lien dans
-              l'email.
-            </span>
+            <span>{t("instruction")}</span>
             <br />
-            <span>
-              Un compte courant vous sera immédiatement crée à la validation de
-              votre compte.
-            </span>
+            <span>{t("accountCreation")}</span>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="sm:justify-center">
@@ -60,7 +54,7 @@ const CheckMailDialog = ({
               className="cursor-pointer hover:bg-gray-900 hover:text-white"
               onClick={() => handleClose()}
             >
-              J'ai compris
+              {t("understood")}
             </Button>
           </DialogClose>
         </DialogFooter>

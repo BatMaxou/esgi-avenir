@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/atoms/dialog";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { HydratedAccount } from "../../../../../../../domain/entities/Account";
 import { Beneficiary } from "../../../../../../../domain/entities/Beneficiary";
 import InputSearchLoader from "../inputs/input-search-loader";
@@ -44,18 +45,19 @@ const TransferFromAccountDialog = ({
     setAccounts(newAccountList);
   }, [newAccountList]);
 
+  const t = useTranslations("components.dialogs.transferFrom");
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTitle className="hidden">Depuis le compte</DialogTitle>
+      <DialogTitle className="hidden">{t("title")}</DialogTitle>
       <DialogContent className="flex flex-col justify-start items-start gap-8 data-[state=open]:!zoom-in-100 data-[state=open]:slide-in-from-right-20 data-[state=open]:duration-600 sm:right-0 sm:left-auto h-screen sm:max-w-[425px] sm:translate-x-0">
         <DialogHeader className="mb-6">
-          <p className="text-lg font-bold">Depuis le compte</p>
+          <p className="text-lg font-bold">{t("title")}</p>
         </DialogHeader>
 
         {userAccounts && userAccounts.length > 0 ? (
           <>
             <InputSearchLoader
-              label="Rechercher un compte"
+              label={t("searchAccount")}
               items={userAccounts}
               filterOnKey="name"
               setNewItems={setNewAccountList}

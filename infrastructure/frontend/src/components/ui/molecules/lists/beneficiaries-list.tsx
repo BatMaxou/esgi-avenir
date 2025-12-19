@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Beneficiary } from "../../../../../../../domain/entities/Beneficiary";
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
 };
 
 export const BeneficiariesList = ({ beneficiaries, onClick }: Props) => {
+  const t = useTranslations("components.lists.beneficiaries");
   const handleClick = (beneficiary: Beneficiary) => {
     onClick?.(beneficiary);
     return;
@@ -41,7 +43,7 @@ export const BeneficiariesList = ({ beneficiaries, onClick }: Props) => {
           ))}
         </>
       ) : (
-        <p>Aucun bénéficiaire trouvé</p>
+        <p>{t("noBeneficiary")}</p>
       )}
     </>
   );

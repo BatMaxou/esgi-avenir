@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 // Contexts
 import { useAccounts } from "@/contexts/AccountsContext";
@@ -29,6 +30,7 @@ interface TransferFormProps {
 export default function TransferForm({
   onOpenAddBeneficiary,
 }: TransferFormProps) {
+  const t = useTranslations("components.forms.transfer");
   const { accounts, isAccountsLoading, refreshAccounts } = useAccounts();
   const { create } = useOperations();
 
@@ -137,17 +139,17 @@ export default function TransferForm({
                 className="text-green-600 w-16 h-16"
               />
               <h2 className="text-2xl font-bold text-gray-800">
-                Transfert réussi!
+                {t("successTitle")}
               </h2>
               <p className="text-gray-600 text-center">
-                Votre virement de{" "}
-                <span className="font-semibold">{amount} €</span> a été effectué
-                avec succès.
+                {t("successDescription")}{" "}
+                <span className="font-semibold">{amount} €</span>{" "}
+                {t("successDescriptionEnd")}
               </p>
             </div>
 
             <FilledButton
-              label="Nouveau virement"
+              label={t("newTransfer")}
               onClick={() => handleNewTransfer()}
               icon="mdi:arrow-left"
               iconPosition="start"
@@ -175,7 +177,7 @@ export default function TransferForm({
                       </p>
                     </>
                   ) : (
-                    "Depuis le compte"
+                    t("fromAccount")
                   )}
                 </ItemContent>
                 <ItemActions>
@@ -217,7 +219,7 @@ export default function TransferForm({
                       )}
                     </>
                   ) : (
-                    "Vers le compte"
+                    t("toAccount")
                   )}
                 </ItemContent>
                 <ItemActions>
@@ -247,14 +249,14 @@ export default function TransferForm({
               <Item className="bg-white p-4 rounded-lg shadow cursor-pointer hover:bg-gray-50 transition-all">
                 <InputStartIcon
                   icon="solar:pen-outline"
-                  placeholder="Mon virement"
-                  label="Nommer l'opération"
+                  placeholder={t("operationPlaceholder")}
+                  label={t("nameOperation")}
                   inputClass="!border-0 !shadow-none !ring-none !border-b !border-gray-50 !rounded-none !w-full"
                   onChange={(e) => setCustomTransferName(e)}
                 />
               </Item>
               <FilledButton
-                label="Transférer"
+                label={t("transfer")}
                 onClick={() => handleSubmitTransfer()}
                 icon="mdi:arrow-right"
               />

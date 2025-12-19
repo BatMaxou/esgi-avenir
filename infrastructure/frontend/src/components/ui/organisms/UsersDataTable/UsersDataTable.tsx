@@ -10,6 +10,7 @@ import { CreateUserDialog } from "../../molecules/dialogs/create-user-dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
 import { ColumnDef } from "@tanstack/table-core";
+import { useTranslations } from "next-intl";
 
 interface UsersDataTableProps {
   data: User[];
@@ -22,6 +23,8 @@ export function UsersDataTable({ data, isLoading }: UsersDataTableProps) {
     []
   );
   const { user: authUser } = useAuth();
+  const t = useTranslations("page.users");
+  const tColumns = useTranslations("components.dataTable.users");
 
   useEffect(() => {
     setFilteredData(data);
@@ -29,11 +32,11 @@ export function UsersDataTable({ data, isLoading }: UsersDataTableProps) {
 
   useEffect(() => {
     if (authUser && authUser.roles.includes(RoleEnum.DIRECTOR)) {
-      setDisplayedColumns(directorColumns);
+      setDisplayedColumns(directorColumns(tColumns));
     } else if (authUser && authUser.roles.includes(RoleEnum.ADVISOR)) {
-      setDisplayedColumns(advisorColumns);
+      setDisplayedColumns(advisorColumns(tColumns));
     }
-  }, [authUser]);
+  }, [authUser, tColumns]);
 
   return (
     <div className="space-y-4">
@@ -46,7 +49,7 @@ export function UsersDataTable({ data, isLoading }: UsersDataTableProps) {
         {authUser?.roles.includes(RoleEnum.DIRECTOR) && <CreateUserDialog />}
         <div className="self-end">
           <InputSearchLoader
-            label="Rechercher un utilisateur"
+            label={t("search")}
             items={data}
             filterOnKey={["firstName", "lastName"]}
             setNewItems={(items) => setFilteredData(items as User[])}

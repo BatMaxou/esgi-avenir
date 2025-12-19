@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { LoaderCircleIcon, SearchIcon } from "lucide-react";
 
@@ -20,6 +21,7 @@ const InputSearchLoader = ({
   filterOnKey,
   setNewItems,
 }: InputSearchLoaderProps) => {
+  const t = useTranslations("components.inputs.search");
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,12 +61,12 @@ const InputSearchLoader = ({
       <div className="relative">
         <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50">
           <SearchIcon className="size-4" />
-          <span className="sr-only">Rechercher</span>
+          <span className="sr-only">{t("searching")}</span>
         </div>
         <Input
           id={id}
           type="search"
-          placeholder="Rechercher..."
+          placeholder={t("placeholder")}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           className="peer px-9 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-results-button]:appearance-none [&::-webkit-search-results-decoration]:appearance-none"
@@ -72,7 +74,7 @@ const InputSearchLoader = ({
         {isLoading && (
           <div className="text-muted-foreground pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center pr-3 peer-disabled:opacity-50">
             <LoaderCircleIcon className="size-4 animate-spin" />
-            <span className="sr-only">Chargement...</span>
+            <span className="sr-only">{t("loading")}</span>
           </div>
         )}
       </div>

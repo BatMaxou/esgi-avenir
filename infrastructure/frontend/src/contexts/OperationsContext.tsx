@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
@@ -21,6 +22,7 @@ export const OperationsContext = createContext<
 >(undefined);
 
 export const OperationsProvider = ({ children }: Props) => {
+  const t = useTranslations("contexts.operations");
   const { apiClient } = useApiClient();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -31,7 +33,7 @@ export const OperationsProvider = ({ children }: Props) => {
     const token = getCookie("token");
     if (!token) {
       setIsLoading(false);
-      showErrorToast("Vous devez être connecté pour effectuer un transfert");
+      showErrorToast(t("mustBeConnectedToTransfer"));
       return false;
     }
 
@@ -40,15 +42,15 @@ export const OperationsProvider = ({ children }: Props) => {
     if (response instanceof ApiClientError) {
       const errorResponse =
         String(response.message) === "Insufficient funds."
-          ? "Fonds insuffisants pour effectuer le transfert."
+          ? t("insufficientFunds")
           : String(response.message) === "Account not found."
-          ? "Compte introuvable."
-          : "Erreur lors du transfert.";
+          ? t("accountNotFound")
+          : t("transferError");
       showErrorToast(errorResponse);
       setIsLoading(false);
       return false;
     } else {
-      showSuccessToast("Transfert effectué avec succès.");
+      showSuccessToast(t("transferSuccess"));
       setIsLoading(false);
       return true;
     }

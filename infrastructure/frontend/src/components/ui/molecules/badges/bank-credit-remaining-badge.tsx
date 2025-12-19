@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/atoms/badge";
 import { BankCreditStatusEnum } from "../../../../../../../domain/enums/BankCreditStatusEnum";
+import { useTranslations } from "next-intl";
 
 interface BankCreditRemainingBadgeProps {
   status: BankCreditStatusEnum;
@@ -14,13 +15,15 @@ export function BankCreditRemainingBadge({
   remains,
   className,
 }: BankCreditRemainingBadgeProps) {
+  const t = useTranslations("components.badges.bankCredit");
+
   const getRemainingLabel = (
     status: BankCreditStatusEnum,
     remains: number | string
   ): string => {
     return status === BankCreditStatusEnum.COMPLETED &&
       (remains === 0 || remains === "0")
-      ? "Remboursé"
+      ? t("repaid")
       : `${remains}€`;
   };
 

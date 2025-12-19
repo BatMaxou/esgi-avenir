@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/atoms/dialog";
 import { FilledButton } from "../buttons/filled-button";
 import { CreateUserForm } from "../forms/create-user-form";
+import { useTranslations } from "next-intl";
 
 export function CreateUserDialog() {
+  const t = useTranslations("components.dialogs.user.create");
   const [open, setOpen] = useState(false);
 
   const handleSuccess = () => {
@@ -23,18 +25,15 @@ export function CreateUserDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <FilledButton
-          label="Ajouter un utilisateur"
+          label={t("button")}
           icon="mdi:plus"
           iconPosition="start"
         />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Créer un nouvel utilisateur</DialogTitle>
-          <DialogDescription>
-            Remplissez les informations ci-dessous pour créer un nouvel
-            utilisateur.
-          </DialogDescription>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
         <CreateUserForm onSuccess={handleSuccess} />
       </DialogContent>

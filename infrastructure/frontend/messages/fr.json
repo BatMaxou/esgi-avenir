@@ -1,8 +1,595 @@
 {
+  "layout": {
+    "protected": {
+      "home": "Tableau de bord",
+      "accounts": "Mes comptes",
+      "transfers": "Virements",
+      "investments": "Mes investissements",
+      "profile": "Mon profil",
+      "users": "Gestion des utilisateurs",
+      "settings": "Paramètres de la banque",
+      "actions": "Gestion des actions",
+      "news": "Actualités",
+      "credits": "Gestion des crédits",
+      "credit": "Crédit",
+      "clients": "Gestion des clients",
+      "accountDetails": "Mon compte",
+      "clientArea": "Espace client"
+    }
+  },
   "page": {
+    "home": {
+      "loading": "Chargement..."
+    },
     "news": {
       "title": "Dernières Nouvelles",
       "no-results": "Aucunes actualitées trouvées."
+    },
+    "accounts": {
+      "title": "Mes comptes",
+      "createCurrent": "Créer un compte courant",
+      "createSavings": "Créer un compte épargne",
+      "alreadyHasSavings": "Vous avez déjà un compte épargne",
+      "details": {
+        "lastOperations": "Dernières opérations",
+        "balance": "Solde",
+        "bankInformations": "Informations banquaires",
+        "updateAccount": "Modifier mon compte",
+        "deleteAccount": "Supprimer mon compte"
+      }
+    },
+    "transfers": {
+      "title": "Virements"
+    },
+    "investments": {
+      "title": "Mes investissements",
+      "comingSoon": "Page d'investissements à implémenter..."
+    },
+    "clients": {
+      "title": "Clients",
+      "search": "Rechercher un client",
+      "details": {
+        "accountsTitle": "Comptes du client",
+        "noAccount": "Ce client ne possède pas encore de compte."
+      }
+    },
+    "credits": {
+      "title": "Crédits",
+      "search": "Rechercher un crédit",
+      "details": {
+        "title": "Détails du crédit",
+        "paymentsTitle": "Historique de remboursement"
+      }
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "search": "Rechercher un utilisateur",
+      "details": {
+        "title": "Détails de l'utilisateur",
+        "edit": "Modifier",
+        "ban": "Bannir",
+        "unban": "Débannir",
+        "delete": "Supprimer"
+      }
+    },
+    "actions": {
+      "title": "Actions",
+      "comingSoon": "Contenu des actions du directeur à implémenter..."
+    },
+    "settings": {
+      "title": "Paramètres",
+      "savingsRate": "Taux d'épargne",
+      "savingsRateDescription": "Taux d'intérêt appliqué sur les comptes d'épargne",
+      "purchaseFee": "Frais d'achat",
+      "purchaseFeeDescription": "Frais appliqués lors de l'achat d'actions",
+      "saleFee": "Frais de vente",
+      "saleFeeDescription": "Frais appliqués lors de la vente d'actions"
+    }
+  },
+  "components": {
+    "cards": {
+      "users": {
+        "title": "Utilisateurs"
+      },
+      "actions": {
+        "title": "Actions"
+      },
+      "savings": {
+        "title": "Paramètres",
+        "savingsRate": "Taux épargne",
+        "buying": "Achat",
+        "selling": "Vente"
+      },
+      "bankCredit": {
+        "title": "Consuler les",
+        "subtitle": "crédits"
+      },
+      "transfer": {
+        "title": "Transférer de",
+        "subtitle": "l'argent"
+      },
+      "investment": {
+        "title": "Consulter vos",
+        "subtitle": "investissements"
+      },
+      "accountInformations": {
+        "accountName": "Nom du compte",
+        "iban": "IBAN",
+        "owner": "Titulaire",
+        "savingsRate": "Taux d'épargne"
+      },
+      "userInformations": {
+        "title": "Informations personnelles",
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Email",
+        "role": "Rôle"
+      },
+      "accounts": {
+        "title": "Comptes Clients"
+      },
+      "bankCreditInformations": {
+        "title": "Informations du crédit",
+        "amount": "Montant",
+        "interestRate": "Taux d'intérêt",
+        "insuranceRate": "Taux d'assurance",
+        "duration": "Durée",
+        "months": "mois"
+      }
+    },
+    "dashboards": {
+      "client": {
+        "myAccounts": "Mes comptes",
+        "seeAllAccounts": "Voir tous mes comptes",
+        "transfers": "Virements",
+        "investments": "Investissements"
+      }
+    },
+    "badges": {
+      "role": {
+        "banned": "Banni",
+        "director": "Directeur",
+        "advisor": "Conseiller",
+        "client": "Client",
+        "unknown": "Inconnu"
+      },
+      "bankCredit": {
+        "repaid": "Remboursé"
+      }
+    },
+    "dialogs": {
+      "beneficiary": {
+        "add": {
+          "title": "Ajouter un bénéficiaire"
+        },
+        "update": {
+          "title": "Modifier un bénéficiaire"
+        },
+        "delete": {
+          "title": "Confirmer la suppression",
+          "description": "Êtes-vous sûr de vouloir supprimer définitivement le bénéficiaire",
+          "descriptionIrreversible": "Cette action est",
+          "irreversible": "irréversible",
+          "descriptionEnd": "et supprimera toutes les informations associées à ce bénéficiaire.",
+          "cancel": "Annuler",
+          "confirm": "Supprimer définitivement"
+        }
+      },
+      "account": {
+        "add": {
+          "titleCurrent": "Créer un compte courant",
+          "titleSavings": "Créer un compte épargne",
+          "descriptionCurrent": "Ajoutez un nouveau compte courant à votre liste de comptes.",
+          "descriptionSavings": "Ajoutez un nouveau compte épargne à votre liste de comptes.",
+          "savingsRateLabel": "Le taux d'épargne actuel est de :",
+          "loading": "Chargement..."
+        },
+        "update": {
+          "title": "Modifier le compte",
+          "description": "Modifiez le nom de votre compte."
+        },
+        "delete": {
+          "titleConfirm": "Confirmer le virement et la suppression",
+          "titleBalance": "Solde restant sur le compte",
+          "titleSure": "Êtes-vous absolument sûr ?",
+          "descriptionTransfer": "Vous allez transférer la totalité du solde (",
+          "descriptionToAccount": ") vers le compte",
+          "descriptionDeleteAccount": "et supprimer définitivement le compte",
+          "descriptionBalance": "Il reste",
+          "descriptionBalanceEnd": "sur ce compte.",
+          "descriptionTransferRequired": "Vous devez transférer la totalité des fonds vers un autre compte avant de pouvoir le supprimer.",
+          "descriptionIrreversible": "Cette action est irréversible. Cela supprimera définitivement le compte",
+          "transferFunds": "Virer les fonds vers un autre compte",
+          "cancel": "Annuler",
+          "transferAndDelete": "Transférer et supprimer",
+          "processing": "Traitement en cours...",
+          "delete": "Supprimer",
+          "deleting": "Suppression..."
+        }
+      },
+      "user": {
+        "create": {
+          "title": "Créer un nouvel utilisateur",
+          "description": "Remplissez les informations ci-dessous pour créer un nouvel utilisateur.",
+          "button": "Ajouter un utilisateur"
+        },
+        "update": {
+          "title": "Modifier l'utilisateur",
+          "description": "Modifiez les informations de l'utilisateur ci-dessous.",
+          "firstName": "Prénom",
+          "lastName": "Nom",
+          "email": "Email",
+          "role": "Rôle",
+          "rolePlaceholder": "Sélectionner un rôle",
+          "roleClient": "Client",
+          "roleAdvisor": "Conseiller",
+          "roleDirector": "Directeur",
+          "cancel": "Annuler",
+          "save": "Enregistrer"
+        },
+        "ban": {
+          "titleBan": "Bannir l'utilisateur",
+          "titleUnban": "Débannir l'utilisateur",
+          "descriptionBan": "Êtes-vous sûr de vouloir bannir",
+          "descriptionUnban": "Êtes-vous sûr de vouloir débannir",
+          "cancel": "Annuler",
+          "ban": "Bannir",
+          "unban": "Débannir"
+        },
+        "delete": {
+          "title": "Supprimer l'utilisateur",
+          "description": "Êtes-vous sûr de vouloir supprimer",
+          "descriptionEnd": "? Cette action est irréversible.",
+          "cancel": "Annuler",
+          "delete": "Supprimer"
+        }
+      },
+      "transferFrom": {
+        "title": "Depuis le compte",
+        "searchAccount": "Rechercher un compte"
+      },
+      "transferTo": {
+        "title": "Vers le compte",
+        "myAccounts": "Mes comptes",
+        "myBeneficiaries": "Mes bénéficiaires",
+        "searchAccount": "Rechercher un compte",
+        "searchBeneficiary": "Rechercher un bénéficiaire",
+        "loadingAccounts": "Chargement des comptes...",
+        "loadingBeneficiaries": "Chargement des bénéficiaires...",
+        "addBeneficiary": "Ajouter un bénéficiaire"
+      },
+      "userBeneficiaries": {
+        "title": "Mes bénéficiaires",
+        "addBeneficiary": "Ajouter un bénéficiaire"
+      },
+      "checkMail": {
+        "title": "Un mail vous à été envoyé",
+        "instruction": "Veuillez confirmer l'inscription en cliquant sur le lien dans l'email.",
+        "accountCreation": "Un compte courant vous sera immédiatement crée à la validation de votre compte.",
+        "close": "Fermer",
+        "understood": "J'ai compris"
+      },
+      "createBankCredit": {
+        "grantCredit": "Accorder un crédit"
+      },
+      "updateSetting": {
+        "modify": "Modifier",
+        "instruction": "Entrez la nouvelle valeur pour ce paramètre"
+      }
+    },
+    "items": {
+      "bankCreditOperation": {
+        "creditRepayment": "Remboursement du crédit"
+      },
+      "operations": {
+        "deposit": "Dépot",
+        "withdrawal": "Retrait",
+        "incomingTransfer": "Virement entrant",
+        "outgoingTransfer": "Virement sortant",
+        "savingsInterest": "Intérêts épargne",
+        "bankFee": "Frais banquaire",
+        "transferToBank": "Virement vers la banque",
+        "transferFromBank": "Virement depuis la banque"
+      }
+    },
+    "forms": {
+      "login": {
+        "email": "Email",
+        "emailError": "L'email doit être une adresse valide.",
+        "password": "Mot de passe",
+        "passwordError": "Le mot de passe ne peut pas être vide.",
+        "submit": "Se connecter"
+      },
+      "register": {
+        "gender": "Genre",
+        "mr": "M.",
+        "mrs": "Mme.",
+        "firstName": "Prénom",
+        "firstNameError": "Votre prénom est requis.",
+        "lastName": "Nom de famille",
+        "lastNameError": "Votre nom est requis.",
+        "email": "Email",
+        "emailError": "L'email doit être une adresse email valide.",
+        "password": "Mot de passe",
+        "passwordError": "Le mot de passe doit comporter au moins 12 caractères.",
+        "passwordConfirm": "Confirmez le mot de passe",
+        "passwordMismatch": "Les mots de passes ne correspondent pas.",
+        "streetNumber": "N° de rue",
+        "streetNumberError": "Le numéro de rue est requis.",
+        "street": "Rue",
+        "streetError": "Le nom de rue est requis.",
+        "postalCode": "Code postal",
+        "postalCodeError": "Le code postal est requis.",
+        "city": "Ville",
+        "cityError": "La ville est requise.",
+        "country": "Pays",
+        "countryError": "Le pays est requis.",
+        "submit": "Ouvrir un compte"
+      },
+      "account": {
+        "name": "Nom du compte",
+        "placeholderCurrent": "Ex: Compte principal",
+        "placeholderSavings": "Ex: Livret A",
+        "cancel": "Annuler",
+        "create": "Créer",
+        "creating": "Création en cours...",
+        "update": "Modifier",
+        "updating": "Modification en cours..."
+      },
+      "beneficiary": {
+        "name": "Nom du bénéficiaire",
+        "namePlaceholder": "Ex: Jean Dupont",
+        "iban": "IBAN",
+        "ibanPlaceholder": "Ex: FR76 1234 5678 9012 3456 7890 123",
+        "cancel": "Annuler",
+        "add": "Ajouter",
+        "adding": "Ajout en cours...",
+        "update": "Modifier",
+        "updating": "Modification en cours..."
+      },
+      "user": {
+        "firstName": "Prénom",
+        "firstNameError": "Le prénom ne peut pas être vide.",
+        "lastName": "Nom",
+        "lastNameError": "Le nom ne peut pas être vide.",
+        "email": "Email",
+        "emailError": "L'email doit être une adresse valide.",
+        "password": "Mot de passe",
+        "passwordError": "Le mot de passe doit contenir au moins 8 caractères.",
+        "role": "Rôle",
+        "rolePlaceholder": "Sélectionner un rôle",
+        "roleClient": "Client",
+        "roleAdvisor": "Conseiller",
+        "roleDirector": "Directeur",
+        "create": "Créer l'utilisateur"
+      },
+      "updateBeneficiary": {
+        "name": "Nom du bénéficiaire",
+        "namePlaceholder": "Ex: Jean Dupont",
+        "iban": "IBAN",
+        "ibanNotEditable": "L'IBAN ne peut pas être modifié",
+        "nameRequired": "Le nom du bénéficiaire est requis",
+        "idMissing": "Identifiant du bénéficiaire manquant",
+        "successUpdate": "Bénéficiaire modifié avec succès",
+        "errorUpdate": "Erreur lors de la modification du bénéficiaire",
+        "notFound": "Bénéficiaire non trouvé",
+        "successDelete": "Bénéficiaire supprimé avec succès",
+        "errorDelete": "Erreur lors de la suppression du bénéficiaire",
+        "cancel": "Annuler",
+        "update": "Modifier",
+        "updating": "Modification en cours...",
+        "delete": "Supprimer définitivement"
+      },
+      "transfer": {
+        "successTitle": "Transfert réussi!",
+        "successDescription": "Votre virement de",
+        "successDescriptionEnd": "a été effectué avec succès.",
+        "newTransfer": "Nouveau virement",
+        "fromAccount": "Depuis le compte",
+        "toAccount": "Vers le compte",
+        "nameOperation": "Nommer l'opération",
+        "operationPlaceholder": "Mon virement",
+        "transfer": "Transférer"
+      },
+      "bankCredit": {
+        "amount": "Montant (€)",
+        "amountPlaceholder": "Ex: 50000",
+        "amountError": "Le montant doit être un nombre positif",
+        "interestRate": "Taux d'intérêt (%)",
+        "interestRatePlaceholder": "Ex: 0.5",
+        "interestRateError": "Le taux d'intérêt doit être entre 0 et 100",
+        "insuranceRate": "Taux d'assurance (%)",
+        "insuranceRatePlaceholder": "Ex: 0.1",
+        "insuranceRateError": "Le taux d'assurance doit être entre 0 et 100",
+        "duration": "Durée (mois)",
+        "durationPlaceholder": "Ex: 120",
+        "durationErrorInt": "La durée doit être un nombre entier",
+        "durationErrorPositive": "La durée doit être un nombre entier positif",
+        "cancel": "Annuler",
+        "create": "Créer",
+        "creating": "Création en cours..."
+      },
+      "setting": {
+        "valueError": "La valeur doit être un nombre avec maximum 2 décimales.",
+        "valueInvalid": "La valeur doit être un nombre valide.",
+        "save": "Enregistrer"
+      }
+    },
+    "inputs": {
+      "search": {
+        "placeholder": "Rechercher...",
+        "searching": "Rechercher",
+        "loading": "Chargement..."
+      }
+    },
+    "lists": {
+      "accounts": {
+        "currentAccounts": "Comptes courants",
+        "savingsAccounts": "Comptes épargne",
+        "noCurrentAccount": "Vous n'avez pas encore de compte courant.",
+        "noSavingsAccount": "Vous n'avez pas encore de compte épargne.",
+        "addCurrentAccount": "Ajouter un compte courant",
+        "addSavingsAccount": "Ajouter un compte épargne",
+        "currentAccount": "Compte courant",
+        "savingsAccount": "Compte épargne"
+      },
+      "beneficiaries": {
+        "noBeneficiary": "Aucun bénéficiaire trouvé"
+      },
+      "bankCredit": {
+        "noPayment": "Aucun prélèvement n'a été effectué."
+      }
+    },
+    "partials": {
+      "header": {
+        "home": "Accueil",
+        "users": "Utilisateurs",
+        "settings": "Paramètres",
+        "actions": "Actions",
+        "credits": "Crédits",
+        "clients": "Clients",
+        "accounts": "Comptes",
+        "transfers": "Virements",
+        "investments": "Investissements",
+        "myAccount": "Mon compte",
+        "profile": "Profil",
+        "logout": "Déconnexion"
+      }
+    },
+    "dataTable": {
+      "noResults": "Aucun résultat.",
+      "resultsDisplayed": "{count} résultats affichés",
+      "pageInfo": "Page {current} sur {total}",
+      "users": {
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Email",
+        "role": "Rôle",
+        "consult": "Consulter",
+        "edit": "Modifier",
+        "ban": "Bannir",
+        "unban": "Débannir",
+        "delete": "Supprimer",
+        "userNotFound": "Utilisateur introuvable"
+      },
+      "bankCredits": {
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Email",
+        "iban": "IBAN",
+        "loanAmount": "Montant du prêt",
+        "loanDuration": "Durée du prêt (mois)",
+        "remaining": "Reste à rembourser",
+        "consult": "Consulter"
+      }
+    }
+  },
+  "buttons": {
+    "back": "Retour",
+    "backToHome": "Retour à l'accueil"
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "switchToRegister": "Je veux ouvrir un compte !"
+    },
+    "register": {
+      "title": "Ouvrir un compte",
+      "switchToLogin": "J'ai déjà un compte !"
+    },
+    "confirm": {
+      "loading": "Confirmation de votre votre inscription...",
+      "success": {
+        "title": "Inscription validée !",
+        "message": "Vous allez être redirigé vers la page de connexion dans quelques instants."
+      },
+      "error": {
+        "title": "Inscription échouée !",
+        "message": "Veuillez contacter un administrateur si l'erreur persiste.",
+        "redirect": "Vous allez être redirigé vers la page de connexion dans quelques instants."
+      }
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Page introuvable",
+      "message": "La page que vous recherchez n'existe pas ou a été déplacée."
+    },
+    "401": {
+      "title": "Accès refusé",
+      "message": "Vous n'avez pas les permissions nécessaires pour accéder à cette page."
+    },
+    "403": {
+      "title": "Accès refusé",
+      "message": "Vous n'avez pas les permissions nécessaires pour accéder à cette page."
+    },
+    "500": {
+      "title": "Erreur serveur",
+      "message": "Une erreur s'est produite sur nos serveurs. Veuillez réessayer plus tard."
+    }
+  },
+  "contexts": {
+    "accounts": {
+      "userNotFound": "Utilisateur introuvable",
+      "mustBeConnectedToCreate": "Vous devez être connecté pour créer un compte",
+      "errorCreating": "Erreur lors de la création du compte",
+      "savingsAccountCreated": "Compte épargne créé avec succès",
+      "currentAccountCreated": "Compte courant créé avec succès",
+      "mustBeConnectedToUpdate": "Vous devez être connecté pour mettre à jour un compte",
+      "errorUpdating": "Erreur lors de la mise à jour du compte",
+      "accountUpdated": "Compte mis à jour avec succès",
+      "mustBeConnectedToDelete": "Vous devez être connecté pour supprimer un compte",
+      "cannotDeleteLastCurrentWithFunds": "Impossible de supprimer l'unique compte courant contenant des fonds. Veuillez d'abord vider le compte ou créer un nouveau compte courant.",
+      "accountNotSoldable": "Le compte ne peut pas être soldé car il contient encore des fonds.",
+      "errorDeleting": "Erreur lors de la suppression du compte",
+      "accountDeleted": "Compte supprimé avec succès"
+    },
+    "auth": {
+      "unauthorized": "Identifiants incorrects",
+      "accountNotEnabled": "Votre compte n'est pas encore activé.",
+      "invalidCredentials": "Identifiants invalides",
+      "connectionError": "Erreur de connexion",
+      "emailAlreadyExists": "Cet email est déjà utilisé",
+      "registrationError": "Erreur lors de l'inscription",
+      "confirmationError": "Erreur lors de la confirmation",
+      "loggedOut": "Déconnexion réussie"
+    },
+    "users": {
+      "mustBeConnectedToCreate": "Vous devez être connecté pour créer un utilisateur",
+      "errorCreating": "Erreur lors de la création de l'utilisateur",
+      "userCreated": "Utilisateur créé avec succès",
+      "mustBeConnectedToUpdate": "Vous devez être connecté pour mettre à jour un utilisateur",
+      "errorUpdating": "Erreur lors de la mise à jour de l'utilisateur",
+      "userUpdated": "Utilisateur mis à jour avec succès",
+      "mustBeConnectedToDelete": "Vous devez être connecté pour supprimer un utilisateur",
+      "errorDeleting": "Erreur lors de la suppression de l'utilisateur",
+      "userDeleted": "Utilisateur supprimé avec succès",
+      "mustBeConnectedToBan": "Vous devez être connecté pour bannir un utilisateur",
+      "errorBanning": "Erreur lors du bannissement de l'utilisateur",
+      "userBanned": "Utilisateur banni avec succès",
+      "mustBeConnectedToUnban": "Vous devez être connecté pour débannir un utilisateur",
+      "errorUnbanning": "Erreur lors du débannissement de l'utilisateur",
+      "userUnbanned": "Utilisateur débanni avec succès"
+    },
+    "bankCredits": {
+      "errorCreating": "Erreur lors de la création du crédit bancaire"
+    },
+    "settings": {
+      "errorUpdating": "Erreur lors de la mise à jour du paramètre.",
+      "savingsRateUpdated": "Taux d'épargne mis à jour avec succès",
+      "purchaseFeeUpdated": "Frais d'achat mis à jour avec succès",
+      "saleFeeUpdated": "Frais de vente mis à jour avec succès"
+    },
+    "beneficiaries": {
+      "accountNotFound": "Aucun compte associé trouvé.",
+      "errorUpdating": "Erreur lors de la mise à jour du bénéficiaire."
+    },
+    "operations": {
+      "mustBeConnectedToTransfer": "Vous devez être connecté pour effectuer un transfert",
+      "insufficientFunds": "Fonds insuffisants pour effectuer le transfert.",
+      "accountNotFound": "Compte introuvable.",
+      "transferError": "Erreur lors du transfert.",
+      "transferSuccess": "Transfert effectué avec succès."
     }
   }
 }

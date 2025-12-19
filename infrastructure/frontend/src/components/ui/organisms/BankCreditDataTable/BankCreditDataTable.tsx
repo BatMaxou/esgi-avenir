@@ -5,6 +5,7 @@ import { DataTable } from "../DataTable";
 import { columns } from "./columns";
 import InputSearchLoader from "../../molecules/inputs/input-search-loader";
 import { HydratedBankCredit } from "../../../../../../../domain/entities/BankCredit";
+import { useTranslations } from "next-intl";
 
 interface BankCreditDataTableProps {
   data: HydratedBankCredit[];
@@ -16,6 +17,9 @@ export function BankCreditDataTable({
   isLoading,
 }: BankCreditDataTableProps) {
   const [filteredData, setFilteredData] = useState<HydratedBankCredit[]>(data);
+  const t = useTranslations("page.credits");
+  const tColumns = useTranslations("components.dataTable.bankCredits");
+
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
@@ -24,7 +28,7 @@ export function BankCreditDataTable({
     <div className="space-y-4">
       <div className="w-full flex justify-end items-center">
         <InputSearchLoader
-          label="Rechercher un crédit"
+          label={t("search")}
           items={data}
           filterOnKey={[
             "owner.firstName",
@@ -40,7 +44,7 @@ export function BankCreditDataTable({
         />
       </div>
       <DataTable
-        columns={columns}
+        columns={columns(tColumns)}
         data={filteredData}
         pageSize={10}
         isLoading={isLoading}
