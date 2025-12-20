@@ -8,16 +8,19 @@ import { SavingsCard } from "@/components/ui/molecules/cards/savings-card";
 import { useUsers } from "@/contexts/UsersContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { useStocks } from "@/contexts/StocksContext";
 
 export default function DirectorDashboard() {
   const { users, getUsers } = useUsers();
   const { savingsRate, getSavingsRate } = useSettings();
+  const { stocks, getStocks } = useStocks();
   const { endNavigation } = useNavigation();
 
   useEffect(() => {
     endNavigation();
     getUsers();
     getSavingsRate();
+    getStocks();
   }, []);
 
   return (
@@ -27,7 +30,7 @@ export default function DirectorDashboard() {
           <UsersCard count={users.length} />
         </LoadingLink>
         <LoadingLink href="/actions">
-          <ActionsCard count={0} />
+          <ActionsCard count={stocks.length} />
         </LoadingLink>
       </div>
 

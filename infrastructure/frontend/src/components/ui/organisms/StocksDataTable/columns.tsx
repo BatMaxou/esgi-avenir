@@ -16,13 +16,15 @@ import { useStocks } from "@/contexts/StocksContext";
 import { UpdateStockDialog } from "../../molecules/dialogs/update-stock-dialog";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { RefillStockDialog } from "../../molecules/dialogs/refill-stock-dialog";
 
-function CreditActionsCell({ credit }: { credit: HydratedStock }) {
+function StockActionsCell({ stock }: { stock: HydratedStock }) {
   const t = useTranslations("components.dataTable.stocks");
   const router = useRouter();
   const { setStock } = useStocks();
   const [openUpdate, setOpenUpdate] = useState(false);
-  const id = credit.id;
+  const [openRefill, setOpenRefill] = useState(false);
+  const id = stock.id;
 
   if (!id) {
     return null;
@@ -40,7 +42,7 @@ function CreditActionsCell({ credit }: { credit: HydratedStock }) {
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => {
-              setStock(credit);
+              setStock(stock);
               router.push({
                 pathname: "/credits/[id]",
                 params: { id: id },
@@ -52,20 +54,35 @@ function CreditActionsCell({ credit }: { credit: HydratedStock }) {
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() => {
-              setStock(credit);
+            onClick={(e) => {
+              e.preventDefault();
               setOpenUpdate(true);
             }}
           >
             <Icon icon="mdi:pencil" className="mr-2 h-4 w-4" />
             {t("edit")}
           </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              setOpenRefill(true);
+            }}
+          >
+            <Icon icon="circum:boxes" className="mr-2 h-4 w-4" />
+            {t("refill")}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <UpdateStockDialog
-        stock={credit}
+        stock={stock}
         setOpen={setOpenUpdate}
         open={openUpdate}
+      />
+      <RefillStockDialog
+        stock={stock}
+        setOpen={setOpenRefill}
+        open={openRefill}
       />
     </>
   );
@@ -116,6 +133,6 @@ export const columns = (
   },
   {
     id: "actions",
-    cell: ({ row }) => <CreditActionsCell credit={row.original} />,
+    cell: ({ row }) => <StockActionsCell stock={row.original} />,
   },
 ];
