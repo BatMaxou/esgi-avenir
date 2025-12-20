@@ -28,6 +28,10 @@ type StocksContextType = {
     name?: string,
     baseQuantity?: number
   ) => Promise<Stock | null>;
+  refillStock: (
+    id: number,
+    additionalQuantity: number
+  ) => Promise<Stock | null>;
   purchaseBaseStock: (id: number, accountId: number) => Promise<boolean>;
   setStock: (stock: Stock | null) => void;
 };
@@ -125,7 +129,46 @@ export const StocksProvider = ({ children }: Props) => {
     }
 
     showSuccessToast(t("stockUpdated"));
-    setStocks(stocks.map((s) => (s.id === id ? { ...s, ...response } : s)));
+    getStocks();
+    setIsStockLoading(false);
+    return response;
+  };
+
+  const refillStock = async (
+    id: number,
+    additionalQuantity: number
+  ): Promise<Stock | null> => {
+    setIsStockLoading(true);
+    const token = getCookie("token");
+    if (!token) {
+      setIsStockLoading(false);
+      showErrorToast(t("mustBeConnectedToUpdate"));
+      return null;
+    }
+
+    const currentStock = stocks.find((s) => s.id === id);
+    if (!currentStock) {
+      setIsStockLoading(false);
+      showErrorToast(t("errorUpdating"));
+      return null;
+    }
+
+    const newBaseQuantity = currentStock.baseQuantity + additionalQuantity;
+
+    const response = await apiClient.stock.update({
+      id,
+      baseQuantity: newBaseQuantity,
+    });
+
+    if (response instanceof ApiClientError) {
+      console.error("Failed to refill stock:", response.message);
+      showErrorToast(t("errorRefilling"));
+      setIsStockLoading(false);
+      return null;
+    }
+
+    showSuccessToast(t("stockRefilled"));
+    getStocks();
     setIsStockLoading(false);
     return response;
   };
@@ -166,6 +209,7 @@ export const StocksProvider = ({ children }: Props) => {
         getStocks,
         createStock,
         updateStock,
+        refillStock,
         purchaseBaseStock,
         setStock,
       }}

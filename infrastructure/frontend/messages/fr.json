@@ -434,8 +434,11 @@
         "baseQuantityError": "La quantité doit être positive",
         "basePrice": "Prix de base",
         "basePriceError": "Le prix doit être positif",
+        "additionalQuantity": "Quantité à ajouter",
+        "additionalQuantityError": "La quantité doit être supérieure à 0",
         "create": "Créer",
-        "update": "Modifier"
+        "update": "Modifier",
+        "refill": "Recharger"
       }
     },
     "inputs": {
@@ -512,7 +515,8 @@
         "balance": "Balance",
         "remainingQuantity": "Quantité restante",
         "consult": "Consulter",
-        "edit": "Modifier"
+        "edit": "Modifier",
+        "refill": "Recharger"
       }
     }
   },
@@ -644,9 +648,11 @@
       "errorFetching": "Erreur lors de la récupération des stocks",
       "errorCreating": "Erreur lors de la création du stock",
       "errorUpdating": "Erreur lors de la mise à jour du stock",
+      "errorRefilling": "Erreur lors du rechargement du stock",
       "errorPurchasing": "Erreur lors de l'achat du stock",
       "stockCreated": "Stock créé avec succès",
       "stockUpdated": "Stock mis à jour avec succès",
+      "stockRefilled": "Stock rechargé avec succès",
       "stockPurchased": "Stock acheté avec succès"
     },
     "financialSecurities": {

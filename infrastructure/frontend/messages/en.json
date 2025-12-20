@@ -303,8 +303,11 @@
         "baseQuantityError": "Quantity must be positive",
         "basePrice": "Base Price",
         "basePriceError": "Price must be positive",
+        "additionalQuantity": "Quantity to add",
+        "additionalQuantityError": "Quantity must be greater than 0",
         "create": "Create",
-        "update": "Update"
+        "update": "Update",
+        "refill": "Refill"
       }
     },
     "inputs": {
@@ -381,7 +384,8 @@
         "balance": "Balance",
         "remainingQuantity": "Remaining Quantity",
         "consult": "View",
-        "edit": "Edit"
+        "edit": "Edit",
+        "refill": "Refill"
       }
     },
     "dialogs": {
@@ -513,6 +517,11 @@
           "button": "Edit",
           "title": "Update stock",
           "description": "Modify the stock information"
+        },
+        "refill": {
+          "button": "Refill",
+          "title": "Refill stock",
+          "description": "Add units to the existing stock"
         }
       }
     }
@@ -645,9 +654,11 @@
       "errorFetching": "Error fetching stocks",
       "errorCreating": "Error creating stock",
       "errorUpdating": "Error updating stock",
+      "errorRefilling": "Error refilling stock",
       "errorPurchasing": "Error purchasing stock",
       "stockCreated": "Stock created successfully",
       "stockUpdated": "Stock updated successfully",
+      "stockRefilled": "Stock refilled successfully",
       "stockPurchased": "Stock purchased successfully"
     },
     "financialSecurities": {
