@@ -3,6 +3,20 @@ import { UserNotFoundError } from "../errors/entities/user/UserNotFoundError";
 import { ChannelInterface } from "../entities/interfaces/ChannelInterface";
 import { ChannelNotFoundError } from "../errors/entities/channel/ChannelNotFoundError";
 
+export type WebsocketMessage = {
+  id?: number;
+  content: string;
+  user: {
+    id: number;
+    firstName?: string;
+    lastName?: string;
+  };
+  channel: {
+    id: number;
+    title?: string;
+  };
+};
+
 export class Message {
   public id?: number;
 

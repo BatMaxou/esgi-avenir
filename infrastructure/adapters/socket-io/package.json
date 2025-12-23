@@ -1,0 +1,14 @@
+{
+  "name": "@avenir/socket-io",
+  "version": "1.0.0",
+  "description": "Socket io infrastructure for ESGI Avenir project",
+  "dependencies": {
+    "socket.io": "^4.8.2",
+    "socket.io-client": "^4.8.2"
+  },
+  "devDependencies": {
+    "@types/socket.io": "^3.0.1",
+    "@types/socket.io-client": "^1.4.36",
+    "@types/ws": "^8.18.1"
+  }
+}

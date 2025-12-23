@@ -20,11 +20,13 @@ import { WriteCompanyMessageParams } from "../../../application/params/company-c
 import { InvalidWriteCompanyMessageParamsError } from "../../../application/errors/params/company-channel/InvalidWriteCompanyMessageParamsError";
 import { WriteCompanyMessageCommand } from "../../../application/commands/company-channel/WriteCompanyMessageCommand";
 import { InvalidWriteCompanyMessageCommandError } from "../../../application/errors/commands/company-channel/InvalidWriteCompanyMessageCommandError";
+import { WebsocketServerInterface } from "../../../application/services/websocket/WebsocketServerInterface";
 
 export class CompanyChannelController {
   public constructor(
     private readonly messageRepository: MessageRepositoryInterface,
     private readonly companyChannelRepository: CompanyChannelRepositoryInterface,
+    private readonly websocketServer: WebsocketServerInterface,
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -153,7 +155,8 @@ export class CompanyChannelController {
 
     const writeMessageUsecase = new WriteCompanyMessageUsecase(
       this.companyChannelRepository,
-      this.messageRepository
+      this.messageRepository,
+      this.websocketServer,
     );
     const maybeMessage = await writeMessageUsecase.execute(
       maybeCommand.content,

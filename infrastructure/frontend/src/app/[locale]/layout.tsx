@@ -21,6 +21,7 @@ import { routing } from "@/i18n/routing";
 import { StockOrdersProvider } from "@/contexts/StockOrdersContext";
 import { StocksProvider } from "@/contexts/StocksContext";
 import { FinancialSecuritiesProvider } from "@/contexts/FinancialSecuritiesContext";
+import { WebsocketClientProvider } from "@/contexts/WebsocketContext";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -38,23 +39,25 @@ const Providers = ({ children }: { children: ReactNode }) => {
       <ApiClientProvider>
         <AuthProvider>
           <SseApiClientProvider>
-            <AccountsProvider>
-              <OperationsProvider>
-                <BeneficiariesProvider>
-                  <SettingsProvider>
-                    <UsersProvider>
-                      <BankCreditsProvider>
-                        <StockOrdersProvider>
-                          <FinancialSecuritiesProvider>
-                            <StocksProvider>{children}</StocksProvider>
-                          </FinancialSecuritiesProvider>
-                        </StockOrdersProvider>
-                      </BankCreditsProvider>
-                    </UsersProvider>
-                  </SettingsProvider>
-                </BeneficiariesProvider>
-              </OperationsProvider>
-            </AccountsProvider>
+            <WebsocketClientProvider>
+              <AccountsProvider>
+                <OperationsProvider>
+                  <BeneficiariesProvider>
+                    <SettingsProvider>
+                      <UsersProvider>
+                        <BankCreditsProvider>
+                            <StockOrdersProvider>
+                            <FinancialSecuritiesProvider>
+                              <StocksProvider>{children}</StocksProvider>
+                            </FinancialSecuritiesProvider>
+                          </StockOrdersProvider>
+                          </BankCreditsProvider>
+                      </UsersProvider>
+                    </SettingsProvider>
+                  </BeneficiariesProvider>
+                </OperationsProvider>
+              </AccountsProvider>
+            </WebsocketClientProvider>
           </SseApiClientProvider>
         </AuthProvider>
       </ApiClientProvider>

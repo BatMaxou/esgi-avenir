@@ -29,7 +29,7 @@ export class MariadbMessageRepository implements MessageRepositoryInterface {
         channelId: message.channelId,
       });
 
-      const maybeMessage = Message.from(createdMessage);
+      const maybeMessage = Message.from({ ...message, ...createdMessage.dataValues});
       if (maybeMessage instanceof Error) {
         throw maybeMessage;
       }
@@ -56,7 +56,7 @@ export class MariadbMessageRepository implements MessageRepositoryInterface {
         channelId: message.channelId,
       });
 
-      const maybeMessage = Message.from(createdMessage);
+      const maybeMessage = Message.from({ ...message, ...createdMessage.dataValues});
       if (maybeMessage instanceof Error) {
         throw maybeMessage;
       }

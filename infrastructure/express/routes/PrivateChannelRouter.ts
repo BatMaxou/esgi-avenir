@@ -7,16 +7,19 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 import { roleMiddleware } from "../middlewares/roleMiddleware";
 import { RoleEnum } from "../../../domain/enums/RoleEnum";
 import { PrivateChannelController } from "../controllers/PrivateChannelController";
+import { WebsocketServerInterface } from "../../../application/services/websocket/WebsocketServerInterface";
 
 export class PrivateChannelRouter {
   public register(
     app: Express,
     repositoryResolver: RepositoryResolverInterface,
     tokenManager: TokenManagerInterface,
+    websocketServer: WebsocketServerInterface,
   ) {
     const privateChannelController = new PrivateChannelController(
       repositoryResolver.getMessageRepository(),
       repositoryResolver.getPrivateChannelRepository(),
+      websocketServer,
     );
 
     app.post(

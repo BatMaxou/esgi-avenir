@@ -4,11 +4,14 @@ import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotF
 import { ChannelNotFoundError } from '../../../domain/errors/entities/channel/ChannelNotFoundError';
 import { MessageRepositoryInterface } from '../../repositories/MessageRepositoryInterface';
 import { PrivateChannelRepositoryInterface } from '../../repositories/PrivateChannelRepositoryInterface';
+import { WebsocketServerInterface } from '../../services/websocket/WebsocketServerInterface';
+import { WebsocketRessourceEnum } from '../../services/websocket/WebsocketRessourceEnum';
 
 export class WritePrivateMessageUsecase {
   public constructor(
     private readonly privateChannelRepository: PrivateChannelRepositoryInterface,
     private readonly messageRepository: MessageRepositoryInterface,
+    private readonly websocketServer: WebsocketServerInterface,
   ) {}
 
   public async execute(
@@ -37,7 +40,29 @@ export class WritePrivateMessageUsecase {
       return maybeMessage;
     }
 
-    return this.messageRepository.createPrivate(maybeMessage);
+    const maybeNewMessage = await this.messageRepository.createPrivate(maybeMessage);
+    if (
+      maybeNewMessage instanceof ChannelNotFoundError
+      || maybeNewMessage instanceof UserNotFoundError
+    ) {
+      return maybeNewMessage;
+    }
+
+    this.websocketServer.emitMessage({
+      id: maybeNewMessage.id,
+      content: maybeNewMessage.content,
+      user: {
+        id: maybeNewMessage.userId,
+        firstName: maybeNewMessage.user?.firstName,
+        lastName: maybeNewMessage.user?.lastName,
+      },
+      channel: {
+        id: channelId,
+        title: maybeNewMessage.channel?.title,
+      }
+    }, WebsocketRessourceEnum.PRIVATE_MESSAGE, channelId)
+
+    return maybeNewMessage;
   }
 }
 

@@ -7,16 +7,19 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 import { roleMiddleware } from "../middlewares/roleMiddleware";
 import { RoleEnum } from "../../../domain/enums/RoleEnum";
 import { CompanyChannelController } from "../controllers/CompanyChannelController";
+import { WebsocketServerInterface } from "../../../application/services/websocket/WebsocketServerInterface";
 
 export class CompanyChannelRouter {
   public register(
     app: Express,
     repositoryResolver: RepositoryResolverInterface,
     tokenManager: TokenManagerInterface,
+    websocketServer: WebsocketServerInterface,
   ) {
     const companyChannelController = new CompanyChannelController(
       repositoryResolver.getMessageRepository(),
       repositoryResolver.getCompanyChannelRepository(),
+      websocketServer,
     );
 
     app.post(
