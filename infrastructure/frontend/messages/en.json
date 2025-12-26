@@ -14,7 +14,8 @@
       "credit": "Credit",
       "clients": "Client management",
       "accountDetails": "My account",
-      "clientArea": "Client area"
+      "clientArea": "Client area",
+      "investmentsOwned": "My owned stocks"
     }
   },
   "page": {
@@ -43,7 +44,15 @@
     },
     "investments": {
       "title": "My investments",
-      "comingSoon": "Investments page to be implemented..."
+      "comingSoon": "Investments page to be implemented...",
+      "owned": {
+        "unknownStock": "Unknown stock owner",
+        "companies": "Companies",
+        "transactionHistory": "Transaction History",
+        "selectCompanyDetails": "Select a company to see details",
+        "noStocks": "You do not own any stocks at the moment.",
+        "backToInvestments": "Back to investments"
+      }
     },
     "clients": {
       "title": "Clients",
@@ -210,6 +219,9 @@
         "bankFee": "Bank fee",
         "transferToBank": "Transfer to bank",
         "transferFromBank": "Transfer from bank"
+      },
+      "companyStocks": {
+        "stocks": "stocks"
       }
     },
     "forms": {

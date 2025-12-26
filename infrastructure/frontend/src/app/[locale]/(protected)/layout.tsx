@@ -28,25 +28,40 @@ export default function ProtectedLayout({ children }: Props) {
   // Nommage des routes statiques et dynamiques
   const pageTitles: Record<string, string> = {
     "/home": t("home"),
+    "/accueil": t("home"),
     "/accounts": t("accounts"),
+    "/comptes": t("accounts"),
     "/transfers": t("transfers"),
+    "/virements": t("transfers"),
     "/investments": t("investments"),
+    "/investissements": t("investments"),
     "/profile": t("profile"),
+    "/profil": t("profile"),
     "/users": t("users"),
+    "/utilisateurs": t("users"),
     "/settings": t("settings"),
+    "/parametres": t("settings"),
     "/actions": t("actions"),
     "/news": t("news"),
+    "/actualites": t("news"),
     "/credits": t("credits"),
     "/credit": t("credit"),
     "/clients": t("clients"),
   };
 
   let pageTitle = pageTitles[pathWithoutLocale];
-  if (!pageTitle && pathWithoutLocale.startsWith("/accounts/details/")) {
+  if (!pageTitle && (pathWithoutLocale.startsWith("/accounts/details/") || pathWithoutLocale.startsWith("/comptes/details/"))) {
     pageTitle = t("accountDetails");
   }
   if (!pageTitle && pathWithoutLocale.startsWith("/credit")) {
     pageTitle = t("credit");
+  }
+  if (
+    (!pageTitle && pathWithoutLocale.startsWith("/investissement/possedes")) ||
+    pathWithoutLocale.startsWith("/investments/owned") ||
+    pathWithoutLocale.startsWith("/investissements/possedes")
+  ) {
+    pageTitle = t("investmentsOwned");
   }
   pageTitle = pageTitle || t("clientArea");
 
@@ -63,7 +78,9 @@ export default function ProtectedLayout({ children }: Props) {
         <div className="min-h-screen overflow-y-hidden bg-white">
           <Header />
           <Banner title={pageTitle} />
-          <main className="container mx-auto px-4 py-8">{children}</main>
+          <main className="container mx-auto px-4 py-8 h-[calc(100vh-224px)] overflow-y-auto">
+            {children}
+          </main>
         </div>
       </NotifierProvider>
     </ProtectedRoute>
