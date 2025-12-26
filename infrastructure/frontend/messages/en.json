@@ -137,6 +137,44 @@
         "insuranceRate": "Insurance rate",
         "duration": "Duration",
         "months": "months"
+      },
+      "marketStocks": {
+        "title": "Stock Market",
+        "seeAll": "Go to market",
+        "availableSoon": "Available soon",
+        "noStocks": "No stocks available on the market.",
+        "noAvailableStocks": "No stocks available for purchase at the moment.",
+        "price": "Price",
+        "available": "Available",
+        "value": "Value",
+        "buy": "Buy",
+        "showingLatest": "Showing the {count} most recent stocks"
+      },
+      "userStocks": {
+        "title": "My Stocks",
+        "seeAll": "See all my stocks",
+        "noStocks": "You don't own any stocks at the moment.",
+        "unknownStock": "Unknown Stock",
+        "stockName": "Stock",
+        "quantity": "Quantity",
+        "averagePrice": "Average Price",
+        "currentPrice": "Current Price",
+        "totalValue": "Total Value",
+        "profitLoss": "Profit/Loss",
+        "totalPortfolio": "Total Portfolio Value"
+      },
+      "recentCompanies": {
+        "title": "Latest Available Companies",
+        "seeAll": "See all companies",
+        "noCompanies": "No companies available at the moment.",
+        "available": " stock(s) available for purchase"
+      },
+      "myCompanies": {
+        "title": "My Companies",
+        "seeAll": "See all my companies",
+        "noCompanies": "You haven't invested in any companies yet.",
+        "stock": "stock",
+        "stocks": "stocks"
       }
     },
     "dashboards": {
@@ -662,8 +700,8 @@
       "stockPurchased": "Stock purchased successfully"
     },
     "financialSecurities": {
-      "mustBeConnectedToView": "You must be logged in to view investments",
-      "errorFetching": "Error fetching investments"
+      "mustBeConnectedToView": "You must be connected to view your investments",
+      "errorFetching": "Error fetching your investments"
     }
   }
 }

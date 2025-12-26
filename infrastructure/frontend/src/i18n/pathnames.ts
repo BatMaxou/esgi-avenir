@@ -36,6 +36,14 @@ export const pathnames = {
     fr: "/investissements",
     en: "/investments",
   },
+  "/investments/available-companies": {
+    fr: "/investissement/entreprises-disponibles",
+    en: "/investments/available-companies",
+  },
+  "/investments/my-companies": {
+    fr: "/investissement/mes-entreprises",
+    en: "/investments/my-companies",
+  },
   "/credits": {
     fr: "/credits",
     en: "/credits",

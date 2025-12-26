@@ -137,6 +137,44 @@
         "insuranceRate": "Taux d'assurance",
         "duration": "Durée",
         "months": "mois"
+      },
+      "marketStocks": {
+        "title": "Marché des actions",
+        "seeAll": "Aller au marché",
+        "availableSoon": "Disponible bientôt",
+        "noStocks": "Aucune action disponible sur le marché.",
+        "noAvailableStocks": "Aucune action disponible à l'achat pour le moment.",
+        "price": "Prix",
+        "available": "Disponible",
+        "value": "Valeur",
+        "buy": "Acheter",
+        "showingLatest": "Affichage des {count} actions les plus récentes"
+      },
+      "userStocks": {
+        "title": "Mes actions",
+        "seeAll": "Toutes mes actions",
+        "noStocks": "Vous ne possédez aucune action pour le moment.",
+        "unknownStock": "Action inconnue",
+        "stockName": "Action",
+        "quantity": "Quantité",
+        "averagePrice": "Prix moyen",
+        "currentPrice": "Prix actuel",
+        "totalValue": "Valeur totale",
+        "profitLoss": "Plus/Moins-value",
+        "totalPortfolio": "Valeur totale du portefeuille"
+      },
+      "recentCompanies": {
+        "title": "Dernières entreprises disponibles",
+        "seeAll": "Voir les entreprises",
+        "noCompanies": "Aucune entreprise disponible pour le moment.",
+        "available": "action(s) disponible(s) à l'achat"
+      },
+      "myCompanies": {
+        "title": "Mes entreprises",
+        "seeAll": "Voir mes entreprises",
+        "noCompanies": "Vous n'avez pas encore investi dans des entreprises.",
+        "stock": "action",
+        "stocks": "actions"
       }
     },
     "dashboards": {

@@ -1,15 +1,30 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { StockMarketCard } from "@/components/ui/molecules/cards/market-stocks-card";
+import { UserStocksCard } from "@/components/ui/molecules/cards/user-stocks-card";
+import { RecentCompaniesCard } from "@/components/ui/molecules/cards/recent-companies-card";
+import { UserCompaniesCard } from "@/components/ui/molecules/cards/user-companies-card";
+import { useNavigation } from "@/contexts/NavigationContext";
+import { useEffect } from "react";
 
 export default function InvestmentsPage() {
-  const t = useTranslations("page.investments");
+  const { endNavigation } = useNavigation();
+
+  useEffect(() => {
+    endNavigation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        <h1 className="text-2xl font-bold mb-4">{t("title")}</h1>
-        <p className="text-gray-600">{t("comingSoon")}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <UserStocksCard />
+        <StockMarketCard />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <UserCompaniesCard />
+        <RecentCompaniesCard />
       </div>
     </div>
   );
