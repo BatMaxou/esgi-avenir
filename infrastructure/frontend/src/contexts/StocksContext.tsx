@@ -18,6 +18,7 @@ type StocksContextType = {
   isStockLoading: boolean;
   isStocksLoading: boolean;
   getStocks: (term?: string) => Promise<void>;
+  getAvailableCompanies: () => string[];
   createStock: (
     name: string,
     baseQuantity: number,
@@ -68,6 +69,15 @@ export const StocksProvider = ({ children }: Props) => {
     }
 
     setIsStocksLoading(false);
+  };
+
+  const getAvailableCompanies = (): string[] => {
+    const availableStocks = stocks.filter(
+      (stock) => stock.remainingQuantity > 0
+    );
+    const companyNames = availableStocks.map((stock) => stock.name);
+    const uniqueCompanies = [...new Set(companyNames)];
+    return uniqueCompanies.sort();
   };
 
   const createStock = async (
@@ -207,6 +217,7 @@ export const StocksProvider = ({ children }: Props) => {
         isStockLoading,
         isStocksLoading,
         getStocks,
+        getAvailableCompanies,
         createStock,
         updateStock,
         refillStock,

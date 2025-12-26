@@ -14,7 +14,8 @@
       "credit": "Credit",
       "clients": "Client management",
       "accountDetails": "My account",
-      "clientArea": "Client area"
+      "clientArea": "Client area",
+      "investmentsOwned": "My owned stocks"
     }
   },
   "page": {
@@ -43,7 +44,15 @@
     },
     "investments": {
       "title": "My investments",
-      "comingSoon": "Investments page to be implemented..."
+      "comingSoon": "Investments page to be implemented...",
+      "owned": {
+        "unknownStock": "Unknown stock owner",
+        "companies": "Companies",
+        "transactionHistory": "Transaction History",
+        "selectCompanyDetails": "Select a company to see details",
+        "noStocks": "You do not own any stocks at the moment.",
+        "backToInvestments": "Back to investments"
+      }
     },
     "clients": {
       "title": "Clients",
@@ -137,6 +146,44 @@
         "insuranceRate": "Insurance rate",
         "duration": "Duration",
         "months": "months"
+      },
+      "marketStocks": {
+        "title": "Stock Market",
+        "seeAll": "Go to market",
+        "availableSoon": "Available soon",
+        "noStocks": "No stocks available on the market.",
+        "noAvailableStocks": "No stocks available for purchase at the moment.",
+        "price": "Price",
+        "available": "Available",
+        "value": "Value",
+        "buy": "Buy",
+        "showingLatest": "Showing the {count} most recent stocks"
+      },
+      "userStocks": {
+        "title": "My Stocks",
+        "seeAll": "See all my stocks",
+        "noStocks": "You don't own any stocks at the moment.",
+        "unknownStock": "Unknown Stock",
+        "stockName": "Stock",
+        "quantity": "Quantity",
+        "averagePrice": "Average Price",
+        "currentPrice": "Current Price",
+        "totalValue": "Total Value",
+        "profitLoss": "Profit/Loss",
+        "totalPortfolio": "Total Portfolio Value"
+      },
+      "recentCompanies": {
+        "title": "Latest Available Companies",
+        "seeAll": "See all companies",
+        "noCompanies": "No companies available at the moment.",
+        "available": " stock(s) available for purchase"
+      },
+      "myCompanies": {
+        "title": "My Companies",
+        "seeAll": "See all my companies",
+        "noCompanies": "You haven't invested in any companies yet.",
+        "stock": "stock",
+        "stocks": "stocks"
       }
     },
     "dashboards": {
@@ -172,6 +219,9 @@
         "bankFee": "Bank fee",
         "transferToBank": "Transfer to bank",
         "transferFromBank": "Transfer from bank"
+      },
+      "companyStocks": {
+        "stocks": "stocks"
       }
     },
     "forms": {
@@ -662,8 +712,8 @@
       "stockPurchased": "Stock purchased successfully"
     },
     "financialSecurities": {
-      "mustBeConnectedToView": "You must be logged in to view investments",
-      "errorFetching": "Error fetching investments"
+      "mustBeConnectedToView": "You must be connected to view your investments",
+      "errorFetching": "Error fetching your investments"
     }
   }
 }

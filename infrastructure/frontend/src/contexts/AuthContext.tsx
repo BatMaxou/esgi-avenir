@@ -14,6 +14,7 @@ import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
 import { User } from "../../../../domain/entities/User";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import { useNavigation } from "./NavigationContext";
 
 type Props = {
   children: ReactNode;
@@ -48,9 +49,11 @@ export const AuthProvider = ({ children }: Props) => {
   > | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { apiClient } = useApiClient();
+  const { startNavigation } = useNavigation();
   const router = useRouter();
 
   const me = async () => {
+    setIsLoading(true);
     try {
       const token = getCookie("token");
       if (!token) {
@@ -91,6 +94,7 @@ export const AuthProvider = ({ children }: Props) => {
       showErrorToast(errorMessage);
       setIsLoading(false);
     } else {
+      startNavigation();
       await me();
       router.push("/home");
       setIsLoading(false);
