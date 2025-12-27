@@ -7,6 +7,7 @@ import { LoaderCircleIcon } from "lucide-react";
 import { UserStocksDataTable } from "../../organisms/UserStocksDataTable/UserStocksDataTable";
 import { LoadingLink } from "../links/loading-link";
 import { Icon } from "@iconify/react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../atoms/tooltip";
 
 export function UserStocksCard() {
   const t = useTranslations("components.cards.userStocks");
@@ -32,8 +33,7 @@ export function UserStocksCard() {
         name: stockName,
         quantity: 0,
         totalValue: 0,
-        averagePrice: 0,
-        currentPrice: security.stock?.basePrice || 0,
+        marketPrice: security.stock?.balance || 0,
       };
     }
 
@@ -41,16 +41,9 @@ export function UserStocksCard() {
     acc[stockId].totalValue += security.purchasePrice;
 
     return acc;
-  }, {} as Record<number, { name: string; quantity: number; totalValue: number; averagePrice: number; currentPrice: number }>);
-
-  Object.keys(groupedStocks).forEach((key) => {
-    const stockId = Number(key);
-    groupedStocks[stockId].averagePrice =
-      groupedStocks[stockId].totalValue / groupedStocks[stockId].quantity;
-  });
+  }, {} as Record<number, { name: string; quantity: number; totalValue: number; marketPrice: number }>);
 
   const stocks = Object.values(groupedStocks);
-
   if (isFinancialSecuritiesLoading) {
     return (
       <div className="bg-white rounded-lg shadow p-6 h-[500px] flex flex-col">
@@ -100,11 +93,26 @@ export function UserStocksCard() {
             <div className="text-lg font-bold text-gray-900">
               {stocks
                 .reduce(
-                  (sum, stock) => sum + stock.averagePrice * stock.quantity,
+                  (sum, stock) => sum + stock.marketPrice * stock.quantity,
                   0
                 )
                 .toFixed(2)}{" "}
-              €
+              €{" "}
+              <Tooltip>
+                <TooltipTrigger>
+                  (
+                  {stocks
+                    .reduce(
+                      (sum, stock) => sum + stock.marketPrice * stock.quantity,
+                      0
+                    )
+                    .toFixed(2)}{" "}
+                  € )
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{t("currentMarketValue")}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>

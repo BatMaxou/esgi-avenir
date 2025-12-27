@@ -12,10 +12,11 @@ export class FinancialSecurityRouter {
   public register(
     app: Express,
     repositoryResolver: RepositoryResolverInterface,
-    tokenManager: TokenManagerInterface,
+    tokenManager: TokenManagerInterface
   ) {
     const financialSecurityController = new FinancialSecurityController(
       repositoryResolver.getFinancialSecurityRepository(),
+      repositoryResolver.getStockOrderRepository()
     );
 
     app.get(
@@ -28,4 +29,3 @@ export class FinancialSecurityRouter {
     );
   }
 }
-

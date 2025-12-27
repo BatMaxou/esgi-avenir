@@ -14,7 +14,6 @@ export function UserStocksDataTable({
   isLoading,
 }: UserStocksDataTableProps) {
   const t = useTranslations("components.cards.userStocks");
-  console.log(data);
   return (
     <DataTable
       columns={columns(t)}

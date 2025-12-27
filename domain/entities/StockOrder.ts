@@ -16,6 +16,7 @@ export class StockOrder {
     amount,
     type,
     status,
+    purchasePrice,
     ownerId,
     owner,
     stockId,
@@ -23,34 +24,48 @@ export class StockOrder {
     accountId,
     account,
   }: {
-    id?: number,
-    amount: number,
-    type: StockOrderTypeEnum
-    status: StockOrderStatusEnum,
-    ownerId?: number,
-    owner?: User,
-    stockId?: number,
-    stock?: Stock,
-    accountId?: number,
-    account?: Account,
-  }): StockOrder | InvalidAmountError | UserNotFoundError | StockNotFoundError | AccountNotFoundError {
+    id?: number;
+    amount: number;
+    type: StockOrderTypeEnum;
+    status: StockOrderStatusEnum;
+    purchasePrice?: number;
+    ownerId?: number;
+    owner?: User;
+    stockId?: number;
+    stock?: Stock;
+    accountId?: number;
+    account?: Account;
+  }):
+    | StockOrder
+    | InvalidAmountError
+    | UserNotFoundError
+    | StockNotFoundError
+    | AccountNotFoundError {
     const maybeOwnerId = ownerId ?? owner?.id;
     if (!maybeOwnerId) {
-      return new UserNotFoundError('StockOrder must have a valid ownerId or owner.');
+      return new UserNotFoundError(
+        "StockOrder must have a valid ownerId or owner."
+      );
     }
 
     const maybeStockId = stockId ?? stock?.id;
     if (!maybeStockId) {
-      return new StockNotFoundError('StockOrder must have a valid stockId or stock.');
+      return new StockNotFoundError(
+        "StockOrder must have a valid stockId or stock."
+      );
     }
 
     const maybeAccountId = accountId ?? account?.id;
     if (!maybeAccountId) {
-      return new AccountNotFoundError('StockOrder must have a valid accountId or account.');
+      return new AccountNotFoundError(
+        "StockOrder must have a valid accountId or account."
+      );
     }
 
     if (amount < 0) {
-      return new InvalidAmountError('StockOrder must have a non-negative purchase price.');
+      return new InvalidAmountError(
+        "StockOrder must have a non-negative purchase price."
+      );
     }
 
     const stockOrder = new this(
@@ -62,11 +77,15 @@ export class StockOrder {
       maybeAccountId,
       owner ?? undefined,
       stock ?? undefined,
-      account ?? undefined,
+      account ?? undefined
     );
 
     if (id) {
       stockOrder.id = id;
+    }
+
+    if (purchasePrice !== undefined) {
+      stockOrder.purchasePrice = Math.round(purchasePrice * 100) / 100;
     }
 
     return stockOrder;
@@ -82,6 +101,6 @@ export class StockOrder {
     public owner?: User,
     public stock?: Stock,
     public account?: Account,
-  ) {
-  }
+    public purchasePrice?: number
+  ) {}
 }

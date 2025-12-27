@@ -46,9 +46,14 @@
       "title": "My investments",
       "comingSoon": "Investments page to be implemented...",
       "owned": {
+        "stocks": "owned stocks",
+        "sellStocks": "Sell stocks",
+        "purchaseValue": "Purchase value",
+        "currentMarketValue": "Current market value",
         "unknownStock": "Unknown stock owner",
         "companies": "Companies",
         "transactionHistory": "Transaction History",
+        "stockOrderRequest": "Requested orders",
         "selectCompanyDetails": "Select a company to see details",
         "noStocks": "You do not own any stocks at the moment.",
         "backToInvestments": "Back to investments"
@@ -166,7 +171,8 @@
         "unknownStock": "Unknown Stock",
         "stockName": "Stock",
         "quantity": "Quantity",
-        "averagePrice": "Average Price",
+        "marketPrice": "Market price",
+        "currentMarketValue": "Current market value",
         "currentPrice": "Current Price",
         "totalValue": "Total Value",
         "profitLoss": "Profit/Loss",
@@ -222,6 +228,24 @@
       },
       "companyStocks": {
         "stocks": "stocks"
+      },
+      "stockOrder": {
+        "requestedPrice": "Asked price",
+        "viewOffers": "View offers",
+        "deleteStockOrder": "Delete order",
+        "type": {
+          "sell": "Sale",
+          "buy": "Purchase"
+        },
+        "status": {
+          "pending": "Pending",
+          "completed": "Completed",
+          "rejected": "Rejected"
+        }
+      },
+      "stockTransactionItem": {
+        "buy": "Buy",
+        "sell": "Sell"
       }
     },
     "forms": {
@@ -572,6 +596,26 @@
           "button": "Refill",
           "title": "Refill stock",
           "description": "Add units to the existing stock"
+        },
+        "sell": {
+          "title": "Sell stocks",
+          "description": "Confirm the sale of your stocks",
+          "company": "Company",
+          "purchasePrice": "Purchase price",
+          "currentPrice": "Current price",
+          "profitLoss": "Profit/Loss",
+          "sellPrice": "Sale price",
+          "currentPriceInfo": "Current market price",
+          "quantity": "Quantity to sell",
+          "maxQuantity": "Maximum quantity",
+          "targetAccount": "Target account",
+          "selectAccount": "Select an account",
+          "loadingAccounts": "Loading accounts...",
+          "noAccountAvailable": "No account available",
+          "saleFeeInfo": "A fee of {fee}€ is to be expected when selling a stock",
+          "cancel": "Cancel",
+          "confirm": "Confirm sale",
+          "selling": "Selling..."
         }
       }
     }

@@ -46,9 +46,14 @@
       "title": "Mes investissements",
       "comingSoon": "Page d'investissements à implémenter...",
       "owned": {
+        "stocks": "actions possédées",
+        "sellStock": "Vendre une action",
+        "purchaseValue": "Valeur d'achat",
+        "currentMarketValue": "Valeur marchande actuelle",
         "unknownStock": "Action inconnue",
         "companies": "Entreprises",
         "transactionHistory": "Historique des transactions",
+        "stockOrderRequest": "Demandes soumises",
         "selectCompanyDetails": "Sélectionnez une entreprise pour voir les détails",
         "noStocks": "Vous ne possédez aucune action pour le moment.",
         "backToInvestments": "Retour aux investissements"
@@ -166,7 +171,8 @@
         "unknownStock": "Action inconnue",
         "stockName": "Action",
         "quantity": "Quantité",
-        "averagePrice": "Prix moyen",
+        "marketPrice": "Prix du marché",
+        "currentMarketValue": "Valeur marchande actuelle",
         "currentPrice": "Prix actuel",
         "totalValue": "Valeur totale",
         "profitLoss": "Plus/Moins-value",
@@ -302,6 +308,30 @@
         "update": {
           "title": "Modifier le stock",
           "description": "Modifiez les informations du stock"
+        },
+        "refill": {
+          "title": "Recharger le stock",
+          "description": "Ajoutez des actions au stock"
+        },
+        "sell": {
+          "title": "Vendre des actions",
+          "description": "Confirmez la vente de vos actions",
+          "company": "Entreprise",
+          "purchasePrice": "Prix d'achat",
+          "currentPrice": "Prix actuel",
+          "profitLoss": "Plus/Moins-value",
+          "sellPrice": "Prix de vente",
+          "currentPriceInfo": "Prix actuel du marché",
+          "quantity": "Quantité à vendre",
+          "maxQuantity": "Quantité maximale",
+          "targetAccount": "Compte de destination",
+          "selectAccount": "Sélectionner un compte",
+          "loadingAccounts": "Chargement des comptes...",
+          "noAccountAvailable": "Aucun compte disponible",
+          "saleFeeInfo": "Des frais de {fee}€ sont à prévoir lors de la vente d'une action",
+          "cancel": "Annuler",
+          "confirm": "Confirmer la vente",
+          "selling": "Vente en cours..."
         }
       },
       "transferFrom": {
@@ -353,6 +383,24 @@
       },
       "companyStocks": {
         "stocks": "actions"
+      },
+      "stockOrder": {
+        "requestedPrice": "Prix demandé",
+        "viewOffers": "Consulter les offres",
+        "deleteStockOrder": "Supprimer la demande",
+        "type": {
+          "sell": "Vente",
+          "buy": "Achat"
+        },
+        "status": {
+          "pending": "En attente",
+          "completed": "Complété",
+          "rejected": "Rejeté"
+        }
+      },
+      "stockTransactionItem": {
+        "buy": "Achat",
+        "sell": "Vente"
       }
     },
     "forms": {
