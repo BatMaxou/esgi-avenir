@@ -16,8 +16,10 @@ type Props = {
 type StockOrdersContextType = {
   stockOrder: StockOrder | null;
   stockOrders: StockOrder[];
+  matchedStockOrders: StockOrder[];
   isStockOrderLoading: boolean;
   isStockOrdersLoading: boolean;
+  isMatchedStockOrdersLoading: boolean;
   getStockOrders: () => Promise<void>;
   getAllMatch: (id: number) => Promise<void>;
   deleteStockOrder: (id: number) => Promise<boolean>;
@@ -42,7 +44,12 @@ export const StockOrdersProvider = ({ children }: Props) => {
   const t = useTranslations("contexts.stockOrders");
   const [stockOrder, setStockOrder] = useState<StockOrder | null>(null);
   const [stockOrders, setStockOrders] = useState<StockOrder[]>([]);
+  const [matchedStockOrders, setMatchedStockOrders] = useState<StockOrder[]>(
+    []
+  );
   const [isStockOrdersLoading, setIsStockOrdersLoading] =
+    useState<boolean>(false);
+  const [isMatchedStockOrdersLoading, setIsMatchedStockOrdersLoading] =
     useState<boolean>(false);
   const [isStockOrderLoading, setIsStockOrderLoading] =
     useState<boolean>(false);
@@ -71,10 +78,10 @@ export const StockOrdersProvider = ({ children }: Props) => {
   };
 
   const getAllMatch = async (id: number) => {
-    setIsStockOrdersLoading(true);
+    setIsMatchedStockOrdersLoading(true);
     const token = getCookie("token");
     if (!token) {
-      setIsStockOrdersLoading(false);
+      setIsMatchedStockOrdersLoading(false);
       showErrorToast(t("mustBeConnectedToView"));
       return;
     }
@@ -84,12 +91,12 @@ export const StockOrdersProvider = ({ children }: Props) => {
     if (response instanceof ApiClientError) {
       console.error("Failed to fetch matching stock orders:", response.message);
       showErrorToast(t("errorFetching"));
-      setStockOrders([]);
+      setMatchedStockOrders([]);
     } else {
-      setStockOrders(response);
+      setMatchedStockOrders(response);
     }
 
-    setIsStockOrdersLoading(false);
+    setIsMatchedStockOrdersLoading(false);
   };
 
   const deleteStockOrder = async (id: number): Promise<boolean> => {
@@ -198,13 +205,47 @@ export const StockOrdersProvider = ({ children }: Props) => {
 
     if (response instanceof ApiClientError) {
       console.error("Failed to accept stock order:", response.message);
-      showErrorToast(t("errorUpdating"));
+
+      let errorMessage = t("errorUpdating");
+
+      switch (response.message) {
+        case "StockOrder not found.":
+          errorMessage = t("errors.stockOrderNotFound");
+          break;
+        case "Stock orders must be for the same stock.":
+          errorMessage = t("errors.stockMismatch");
+          break;
+        case "Only pending stock orders can be accepted.":
+          errorMessage = t("errors.invalidStatus");
+          break;
+        case "Stock orders must be of different types (one BUY, one SELL).":
+          errorMessage = t("errors.invalidType");
+          break;
+        case "Seller owner not found.":
+          errorMessage = t("errors.sellerNotFound");
+          break;
+        case "Financial security not found for the given stock and seller owner.":
+          errorMessage = t("errors.financialSecurityNotFound");
+          break;
+        case "Insufficient funds for buyer account.":
+          errorMessage = t("errors.insufficientFundsBuyer");
+          break;
+        case "Insufficient funds for seller account.":
+          errorMessage = t("errors.insufficientFundsSeller");
+          break;
+      }
+
+      if (response.message.includes("Account not found")) {
+        errorMessage = t("errors.accountNotFound");
+      }
+
+      showErrorToast(errorMessage);
       setIsStockOrderLoading(false);
       return false;
     }
-
     showSuccessToast(t("orderUpdated"));
     setIsStockOrderLoading(false);
+    getStockOrders();
     return true;
   };
 
@@ -213,8 +254,10 @@ export const StockOrdersProvider = ({ children }: Props) => {
       value={{
         stockOrder,
         stockOrders,
+        matchedStockOrders,
         isStockOrderLoading,
         isStockOrdersLoading,
+        isMatchedStockOrdersLoading,
         getStockOrders,
         getAllMatch,
         deleteStockOrder,
