@@ -145,7 +145,7 @@ export function SellStockDialog({
                   <SelectValue placeholder={t("selectStockPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {stocks.map((stock) => (
+                  {stocks.filter((stock) => stock.securities.length > 0).map((stock) => (
                     <SelectItem key={stock.id} value={stock.id.toString()}>
                       <div className="flex items-center justify-between gap-4 w-full">
                         <span>{stock.name}</span>

@@ -98,18 +98,39 @@ export class AcceptStockOrderUsecase {
     }
 
     // -----------
+    // Check types
+    if (maybeFromStockOrder.type === maybeToStockOrder.type) {
+      return new InvalidTypeError(
+        "Stock orders must be of different types (one BUY, one SELL)."
+      );
+    }
+
+    // -----------
     // Check financial security existence
+    // The seller must own the stock, determine who is the seller
+    let sellerStockOrder: StockOrder;
+
+    if (maybeFromStockOrder.type === StockOrderTypeEnum.SELL) {
+      sellerStockOrder = maybeFromStockOrder;
+    } else {
+      sellerStockOrder = maybeToStockOrder;
+    }
+
+    if (!sellerStockOrder.ownerId) {
+      return new UserNotFoundError("Seller owner not found.");
+    }
+
     const maybeFinancialSecurity =
       await this.financialSecurityRepository.findOneByStockAndOwner(
-        maybeToStockOrder.stockId,
-        maybeToStockOrder.ownerId
+        sellerStockOrder.stockId,
+        sellerStockOrder.ownerId
       );
     if (
       maybeFinancialSecurity instanceof FinancialSecurityNotFoundError ||
       !maybeFinancialSecurity.id
     ) {
       return new FinancialSecurityNotFoundError(
-        "Financial security not found for the given stock and to owner."
+        "Financial security not found for the given stock and seller owner."
       );
     }
 
@@ -195,9 +216,15 @@ export class AcceptStockOrderUsecase {
 
     // -----------
     // Generate financial security to create
+    // The buyer receives the stock, determine who is the buyer
+    const buyerStockOrder =
+      maybeFromStockOrder.type === StockOrderTypeEnum.BUY
+        ? maybeFromStockOrder
+        : maybeToStockOrder;
+
     const maybeNewFinancialSecurity = FinancialSecurity.from({
-      ownerId: maybeFromStockOrder.ownerId,
-      stockId: maybeFromStockOrder.stockId,
+      ownerId: buyerStockOrder.ownerId,
+      stockId: buyerStockOrder.stockId,
       purchasePrice: maybeTransaction.amount,
     });
     if (

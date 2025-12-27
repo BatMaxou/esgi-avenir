@@ -32,7 +32,7 @@ export default function OwnedStocksPage() {
     isFinancialSecuritiesLoading,
     getFinancialSecurities,
   } = useFinancialSecurities();
-  const { stockOrders, getStockOrders } = useStockOrders();
+  const { stockOrders, getStockOrders, isStockOrdersLoading } = useStockOrders();
   const { endNavigation } = useNavigation();
   const [selectedStockId, setSelectedStockId] = useState<number | null>(null);
   const [isCompanyDeficit, setIsCompanyDeficit] = useState<boolean>(false);
@@ -64,31 +64,37 @@ export default function OwnedStocksPage() {
 
     acc[stockId].quantity += 1;
     acc[stockId].securities.push(security);
+    acc[stockId].totalValue += security.purchasePrice;
 
     return acc;
   }, {} as Record<number, { id: number; name: string; quantity: number; totalValue: number; marketPrice: number; securities: FinancialSecurity[] }>);
 
-  Object.keys(groupedStocks).forEach((key) => {
-    const stockId = Number(key);
+  // Add stock orders even if no financial securities exist
+  stockOrders.forEach((order) => {
+    const stockId = order.stock?.id;
+    const stockName = order.stock?.name;
 
-    const stockOrdersForStock = stockOrders.filter(
-      (order) => order.stock?.id === stockId && order.status === "completed"
-    );
+    if (!stockId || !stockName) return;
 
-    const totalBuy = stockOrdersForStock
-      .filter((order) => order.type === "buy")
-      .reduce((sum, order) => sum + order.amount, 0);
-
-    const totalSell = stockOrdersForStock
-      .filter((order) => order.type === "sell")
-      .reduce((sum, order) => sum + order.amount, 0);
-
-    groupedStocks[stockId].totalValue = totalBuy - totalSell;
+    if (!groupedStocks[stockId]) {
+      groupedStocks[stockId] = {
+        id: stockId,
+        name: stockName,
+        quantity: 0,
+        totalValue: 0,
+        marketPrice: 0,
+        securities: [],
+      };
+    }
   });
 
-  const stocks = Object.values(groupedStocks).sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
+  // Sort by quantity (descending) then by name (ascending)
+  const stocks = Object.values(groupedStocks).sort((a, b) => {
+    if (b.quantity !== a.quantity) {
+      return b.quantity - a.quantity;
+    }
+    return a.name.localeCompare(b.name);
+  });
 
   useEffect(() => {
     if (stocks.length > 0 && !selectedStockId) {
@@ -114,7 +120,7 @@ export default function OwnedStocksPage() {
       name: t("transactionHistory"),
       value: "history",
       content: (
-        <div className="space-y-3">
+        <div className="space-y-3 pe-2 pb-24">
           {stockOrders.filter((order) => order.stock?.id === selectedStockId)
             .length === 0 && (
             <p className="text-gray-500">{t("noStockOrders")}</p>
@@ -142,7 +148,7 @@ export default function OwnedStocksPage() {
       name: t("stockOrderRequest"),
       value: "requests",
       content: (
-        <div className="space-y-3">
+        <div className="space-y-3 pe-2 pb-24">
           {stockOrders.filter((order) => order.stock?.id === selectedStockId)
             .length === 0 && (
             <p className="text-gray-500">{t("noStockOrders")}</p>
@@ -158,6 +164,7 @@ export default function OwnedStocksPage() {
                   status={stockOrder.status}
                   type={stockOrder.type}
                   amount={stockOrder.amount}
+                  purchasedPrice={stockOrder.purchasePrice}
                   stock={stockOrder.stock || { id: 0, name: "" }}
                 />
               );
@@ -171,7 +178,7 @@ export default function OwnedStocksPage() {
     getStockOrders();
   };
 
-  if (isFinancialSecuritiesLoading) {
+  if (isFinancialSecuritiesLoading || isStockOrdersLoading) {
     return (
       <div className="flex items-center justify-center h-full">
         <LoaderCircleIcon className="mr-2 h-8 w-8 animate-spin" />
@@ -179,7 +186,7 @@ export default function OwnedStocksPage() {
     );
   }
 
-  if (financialSecurities.length === 0) {
+  if (stocks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
         <p className="text-gray-500 text-lg">{t("noStocks")}</p>
@@ -248,17 +255,21 @@ export default function OwnedStocksPage() {
                     </div>
                     <div className="text-md text-gray-600">
                       {t("currentMarketValue")} :{" "}
-                      {isCompanyDeficit ? (
-                        <Icon
+                      {selectedStock.marketPrice * selectedStock.quantity !== selectedStock.totalValue && (
+                        <>
+                        {isCompanyDeficit ? (
+                          <Icon
                           icon="mdi:trending-down"
                           className="inline-block mr-1 text-red-600"
-                        />
-                      ) : (
-                        <TrendingUpIcon className="inline-block mr-1 text-green-600" />
+                          />
+                        ) : (
+                          <TrendingUpIcon className="inline-block mr-1 text-green-600" />
+                        )}
+                        </>
                       )}
                       <span
                         className={`${
-                          isCompanyDeficit ? "text-red-600" : "text-green-600"
+                          selectedStock.marketPrice * selectedStock.quantity !== selectedStock.totalValue ? isCompanyDeficit ? "text-red-600" : "text-green-600" : "text-gray-600"
                         } font-semibold`}
                       >
                         {(
@@ -291,7 +302,7 @@ export default function OwnedStocksPage() {
                       className="h-full"
                       key={tab.value}
                     >
-                      <div className="text-muted-foreground text-sm h-full">
+                      <div className="text-muted-foreground text-sm h-full overflow-y-auto">
                         {tab.content}
                       </div>
                     </TabsContent>

@@ -309,6 +309,28 @@
           "cancel": "Annuler",
           "confirm": "Supprimer",
           "deleting": "Suppression en cours..."
+        },
+        "match": {
+          "title": "Offres correspondantes",
+          "description": "Voici les offres disponibles pour",
+          "loading": "Chargement des offres...",
+          "noMatches": "Aucune offre correspondante trouvée",
+          "price": "Prix",
+          "selectOffer": "Sélectionner cette offre",
+          "confirmTitle": "Confirmer la transaction",
+          "confirmDescription": "Vérifiez les détails de la transaction avant de confirmer",
+          "stockName": "Action",
+          "transactionType": "Type de transaction",
+          "purchaseFee": "Taxe d'achat",
+          "total": "Total",
+          "feeNotice": "Une taxe d'achat de {fee}€ sera ajoutée au prix de l'action",
+          "back": "Retour",
+          "confirm": "Confirmer la transaction",
+          "confirming": "Confirmation en cours...",
+          "type": {
+            "sell": "Vente",
+            "buy": "Achat"
+          }
         }
       },
       "stock": {
@@ -400,6 +422,8 @@
       },
       "stockOrder": {
         "requestedPrice": "Prix demandé",
+        "purchasedPrice": "Prix acheté",
+        "soldPrice": "Prix vendue",
         "viewOffers": "Consulter les offres",
         "deleteStockOrder": "Supprimer la demande",
         "type": {
@@ -750,7 +774,18 @@
       "errorDeleting": "Erreur lors de la suppression de l'action",
       "orderCreated": "Action créée avec succès",
       "orderUpdated": "Action mise à jour avec succès",
-      "orderDeleted": "Action supprimée avec succès"
+      "orderDeleted": "Action supprimée avec succès",
+      "errors": {
+        "stockOrderNotFound": "Ordre de bourse introuvable.",
+        "stockMismatch": "Les ordres doivent concerner la même action.",
+        "invalidStatus": "Seuls les ordres en attente peuvent être acceptés.",
+        "invalidType": "Les ordres doivent être de types différents (un ACHAT, une VENTE).",
+        "sellerNotFound": "Vendeur introuvable.",
+        "financialSecurityNotFound": "Titre financier introuvable pour le vendeur.",
+        "insufficientFundsBuyer": "Fonds insuffisants sur le compte de l'acheteur.",
+        "insufficientFundsSeller": "Fonds insuffisants sur le compte du vendeur.",
+        "accountNotFound": "Compte introuvable."
+      }
     },
     "stocks": {
       "mustBeConnectedToView": "Vous devez être connecté pour consulter les stocks",

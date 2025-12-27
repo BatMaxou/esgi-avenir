@@ -7,12 +7,14 @@ import { SearchIcon, TrashIcon } from "lucide-react";
 import { StockOrderStatusEnum } from "../../../../../../../domain/enums/StockOrderStatusEnum";
 import { useStockOrders } from "@/contexts/StockOrdersContext";
 import { DeleteStockOrderAlert } from "../alerts/delete-stock-order-alert";
+import { MatchStockOrdersDialog } from "../dialogs/match-stock-orders-dialog";
 
 interface StockOrderItemProps {
   id: number;
   type: string;
   status: string;
   amount: number;
+  purchasedPrice?: number;
   stock: Stock | undefined;
 }
 
@@ -21,11 +23,13 @@ export function StockOrderItem({
   type,
   status,
   amount,
+  purchasedPrice,
   stock,
 }: StockOrderItemProps) {
   const t = useTranslations("components.items.stockOrder");
-  const { deleteStockOrder } = useStockOrders();
+  const { deleteStockOrder, getAllMatch } = useStockOrders();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openMatchDialog, setOpenMatchDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDeleteStockOrder = async () => {
@@ -33,6 +37,11 @@ export function StockOrderItem({
     await deleteStockOrder(id);
     setIsDeleting(false);
     setOpenDeleteDialog(false);
+  };
+
+  const handleViewMatches = async () => {
+    setOpenMatchDialog(true);
+    await getAllMatch(id);
   };
 
   const getStatusColor = (status: string) => {
@@ -85,6 +94,20 @@ export function StockOrderItem({
             <span className="text-gray-600">
               {t("requestedPrice")} : {amount} €
             </span>
+            {status === StockOrderStatusEnum.COMPLETED && purchasedPrice !== undefined && (
+              <>
+                {console.log("purchasedPrice", purchasedPrice)}
+                {type === "buy" ? (
+                  <span className="text-gray-600 ms-4">
+                    {t("purchasedPrice")} : {purchasedPrice} €
+                  </span>
+                ) : (
+                  <span className="text-gray-600 ms-4">
+                    {t("soldPrice")} : {purchasedPrice} €
+                  </span>
+                )}
+              </>
+            )}
           </div>
         </div>
         {status === StockOrderStatusEnum.PENDING && (
@@ -102,7 +125,10 @@ export function StockOrderItem({
             </Tooltip>
             <Tooltip>
               <TooltipTrigger>
-                <SearchIcon className="h-5 w-5 text-red-600 hover:text-red-700 cursor-pointer" />
+                <SearchIcon
+                  className="h-5 w-5 text-red-600 hover:text-red-700 cursor-pointer"
+                  onClick={handleViewMatches}
+                />
               </TooltipTrigger>
               <TooltipContent>
                 <p>{t("viewOffers")}</p>
@@ -111,6 +137,13 @@ export function StockOrderItem({
           </div>
         )}
       </div>
+
+      <MatchStockOrdersDialog
+        open={openMatchDialog}
+        onOpenChange={setOpenMatchDialog}
+        stockName={stock?.name || ""}
+        stockOrderId={id}
+      />
 
       <DeleteStockOrderAlert
         open={openDeleteDialog}

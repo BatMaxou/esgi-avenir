@@ -232,6 +232,8 @@
       },
       "stockOrder": {
         "requestedPrice": "Asked price",
+        "purchasedPrice": "Purchased price",
+        "soldPrice": "Sold price",
         "viewOffers": "View offers",
         "deleteStockOrder": "Delete order",
         "type": {
@@ -591,6 +593,28 @@
           "cancel": "Cancel",
           "confirm": "Delete",
           "deleting": "Deleting..."
+        },
+        "match": {
+          "title": "Matching offers",
+          "description": "Here are the available offers for",
+          "loading": "Loading offers...",
+          "noMatches": "No matching offers found",
+          "price": "Price",
+          "selectOffer": "Select this offer",
+          "confirmTitle": "Confirm transaction",
+          "confirmDescription": "Review transaction details before confirming",
+          "stockName": "Stock",
+          "transactionType": "Transaction type",
+          "purchaseFee": "Purchase fee",
+          "total": "Total",
+          "feeNotice": "A purchase fee of {fee}€ will be added to the stock price",
+          "back": "Back",
+          "confirm": "Confirm transaction",
+          "confirming": "Confirming...",
+          "type": {
+            "sell": "Sale",
+            "buy": "Purchase"
+          }
         }
       },
       "stock": {
@@ -752,7 +776,18 @@
       "errorDeleting": "Error deleting order",
       "orderCreated": "Order created successfully",
       "orderUpdated": "Order updated successfully",
-      "orderDeleted": "Order deleted successfully"
+      "orderDeleted": "Order deleted successfully",
+      "errors": {
+        "stockOrderNotFound": "Stock order not found.",
+        "stockMismatch": "Stock orders must be for the same stock.",
+        "invalidStatus": "Only pending stock orders can be accepted.",
+        "invalidType": "Stock orders must be of different types (one BUY, one SELL).",
+        "sellerNotFound": "Seller not found.",
+        "financialSecurityNotFound": "Financial security not found for the seller.",
+        "insufficientFundsBuyer": "Insufficient funds for buyer account.",
+        "insufficientFundsSeller": "Insufficient funds for seller account.",
+        "accountNotFound": "Account not found."
+      }
     },
     "stocks": {
       "mustBeConnectedToView": "You must be logged in to view stocks",
