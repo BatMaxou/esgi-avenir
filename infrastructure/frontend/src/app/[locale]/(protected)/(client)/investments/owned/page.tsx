@@ -36,6 +36,8 @@ export default function OwnedStocksPage() {
   const { endNavigation } = useNavigation();
   const [selectedStockId, setSelectedStockId] = useState<number | null>(null);
   const [isCompanyDeficit, setIsCompanyDeficit] = useState<boolean>(false);
+  const [openSellDialog, setOpenSellDialog] = useState(false);
+
   useEffect(() => {
     getFinancialSecurities();
     getStockOrders();
@@ -165,6 +167,10 @@ export default function OwnedStocksPage() {
     },
   ];
 
+  const handleReloadStockOrders = () => {
+    getStockOrders();
+  };
+
   if (isFinancialSecuritiesLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -186,7 +192,7 @@ export default function OwnedStocksPage() {
 
   return (
     <div className="space-y-6 h-full flex flex-col">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between gap-4">
         <Button
           variant="ghost"
           onClick={() => router.push("/investments")}
@@ -195,11 +201,12 @@ export default function OwnedStocksPage() {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           {tButton("back")}
         </Button>
-        {/* <SellStockDialog
+        <SellStockDialog
           open={openSellDialog}
           setOpen={setOpenSellDialog}
-          // stock={selectedStock}
-        /> */}
+          stocks={stocks}
+          onUpdate={handleReloadStockOrders}
+        />
       </div>
       <div className="flex flex-1 gap-6 overflow-hidden">
         <div className="w-1/3 bg-white rounded-lg shadow flex flex-col overflow-hidden">
