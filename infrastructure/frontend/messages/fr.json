@@ -300,6 +300,17 @@
           "delete": "Supprimer"
         }
       },
+      "stockOrder": {
+        "delete": {
+          "title": "Supprimer la demande",
+          "description": "Êtes-vous sûr de vouloir supprimer votre demande pour",
+          "descriptionAmount": "au prix de",
+          "warning": "Cette action est irréversible.",
+          "cancel": "Annuler",
+          "confirm": "Supprimer",
+          "deleting": "Suppression en cours..."
+        }
+      },
       "stock": {
         "create": {
           "button": "Créer un stock",

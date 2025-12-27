@@ -1,11 +1,15 @@
 "use client";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Stock } from "../../../../../../../domain/entities/Stock";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../atoms/tooltip";
 import { SearchIcon, TrashIcon } from "lucide-react";
 import { StockOrderStatusEnum } from "../../../../../../../domain/enums/StockOrderStatusEnum";
+import { useStockOrders } from "@/contexts/StockOrdersContext";
+import { DeleteStockOrderAlert } from "../alerts/delete-stock-order-alert";
 
 interface StockOrderItemProps {
+  id: number;
   type: string;
   status: string;
   amount: number;
@@ -13,12 +17,23 @@ interface StockOrderItemProps {
 }
 
 export function StockOrderItem({
+  id,
   type,
   status,
   amount,
   stock,
 }: StockOrderItemProps) {
   const t = useTranslations("components.items.stockOrder");
+  const { deleteStockOrder } = useStockOrders();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteStockOrder = async () => {
+    setIsDeleting(true);
+    await deleteStockOrder(id);
+    setIsDeleting(false);
+    setOpenDeleteDialog(false);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -76,7 +91,10 @@ export function StockOrderItem({
           <div className="flex-1 space-x-2 text-right">
             <Tooltip>
               <TooltipTrigger>
-                <TrashIcon className="h-5 w-5 text-red-600 hover:text-red-700 cursor-pointer" />
+                <TrashIcon
+                  className="h-5 w-5 text-red-600 hover:text-red-700 cursor-pointer"
+                  onClick={() => setOpenDeleteDialog(true)}
+                />
               </TooltipTrigger>
               <TooltipContent>
                 <p>{t("deleteStockOrder")}</p>
@@ -93,6 +111,15 @@ export function StockOrderItem({
           </div>
         )}
       </div>
+
+      <DeleteStockOrderAlert
+        open={openDeleteDialog}
+        onOpenChange={setOpenDeleteDialog}
+        onConfirm={handleDeleteStockOrder}
+        stock={stock}
+        amount={amount}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }
