@@ -582,6 +582,17 @@
           "delete": "Delete"
         }
       },
+      "stockOrder": {
+        "delete": {
+          "title": "Delete request",
+          "description": "Are you sure you want to delete your request for",
+          "descriptionAmount": "at the price of",
+          "warning": "This action is irreversible.",
+          "cancel": "Cancel",
+          "confirm": "Delete",
+          "deleting": "Deleting..."
+        }
+      },
       "stock": {
         "create": {
           "button": "Create stock",
