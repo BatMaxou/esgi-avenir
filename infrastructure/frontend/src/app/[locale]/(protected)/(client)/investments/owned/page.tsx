@@ -6,11 +6,22 @@ import { useTranslations } from "next-intl";
 import { useFinancialSecurities } from "@/contexts/FinancialSecuritiesContext";
 import { useRouter } from "@/i18n/navigation";
 import { useNavigation } from "@/contexts/NavigationContext";
-import { ArrowLeftIcon, LoaderCircleIcon } from "lucide-react";
+import { ArrowLeftIcon, LoaderCircleIcon, TrendingUpIcon } from "lucide-react";
 import { Button } from "@/components/ui/atoms/button";
 import { FinancialSecurity } from "../../../../../../../../../domain/entities/FinancialSecurity";
 import { CompanyStockItem } from "@/components/ui/molecules/items/company-stock-item";
-import { StockPurchaseItem } from "@/components/ui/molecules/items/stock-purchase-item";
+import { StockTransactionItem } from "@/components/ui/molecules/items/stock-transaction-item";
+import { Icon } from "@iconify/react";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/atoms/tabs";
+import { useStockOrders } from "@/contexts/StockOrdersContext";
+import { StockOrderItem } from "@/components/ui/molecules/items/stock-order-item";
+import { StockOrderStatusEnum } from "../../../../../../../../../domain/enums/StockOrderStatusEnum";
+import { SellStockDialog } from "@/components/ui/molecules/dialogs/sell-stock-dialog";
 
 export default function OwnedStocksPage() {
   const router = useRouter();
@@ -21,11 +32,15 @@ export default function OwnedStocksPage() {
     isFinancialSecuritiesLoading,
     getFinancialSecurities,
   } = useFinancialSecurities();
+  const { stockOrders, getStockOrders } = useStockOrders();
   const { endNavigation } = useNavigation();
   const [selectedStockId, setSelectedStockId] = useState<number | null>(null);
+  const [isCompanyDeficit, setIsCompanyDeficit] = useState<boolean>(false);
+  const [openSellDialog, setOpenSellDialog] = useState(false);
 
   useEffect(() => {
     getFinancialSecurities();
+    getStockOrders();
     endNavigation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -42,23 +57,33 @@ export default function OwnedStocksPage() {
         name: stockName,
         quantity: 0,
         totalValue: 0,
-        averagePrice: 0,
-        currentPrice: security.stock?.basePrice || 0,
+        marketPrice: security.stock?.balance || 0,
         securities: [] as FinancialSecurity[],
       };
     }
 
     acc[stockId].quantity += 1;
-    acc[stockId].totalValue += security.purchasePrice;
     acc[stockId].securities.push(security);
 
     return acc;
-  }, {} as Record<number, { id: number; name: string; quantity: number; totalValue: number; averagePrice: number; currentPrice: number; securities: FinancialSecurity[] }>);
+  }, {} as Record<number, { id: number; name: string; quantity: number; totalValue: number; marketPrice: number; securities: FinancialSecurity[] }>);
 
   Object.keys(groupedStocks).forEach((key) => {
     const stockId = Number(key);
-    groupedStocks[stockId].averagePrice =
-      groupedStocks[stockId].totalValue / groupedStocks[stockId].quantity;
+
+    const stockOrdersForStock = stockOrders.filter(
+      (order) => order.stock?.id === stockId && order.status === "completed"
+    );
+
+    const totalBuy = stockOrdersForStock
+      .filter((order) => order.type === "buy")
+      .reduce((sum, order) => sum + order.amount, 0);
+
+    const totalSell = stockOrdersForStock
+      .filter((order) => order.type === "sell")
+      .reduce((sum, order) => sum + order.amount, 0);
+
+    groupedStocks[stockId].totalValue = totalBuy - totalSell;
   });
 
   const stocks = Object.values(groupedStocks).sort((a, b) =>
@@ -70,6 +95,81 @@ export default function OwnedStocksPage() {
       setSelectedStockId(stocks[0].id);
     }
   }, [stocks, selectedStockId]);
+
+  const selectedStock = stocks.find((s) => s.id === selectedStockId);
+
+  useEffect(() => {
+    if (!selectedStock) {
+      return;
+    }
+
+    setIsCompanyDeficit(
+      selectedStock.marketPrice * selectedStock.quantity <
+        selectedStock.totalValue
+    );
+  }, [selectedStock]);
+
+  const tabs = [
+    {
+      name: t("transactionHistory"),
+      value: "history",
+      content: (
+        <div className="space-y-3">
+          {stockOrders.filter((order) => order.stock?.id === selectedStockId)
+            .length === 0 && (
+            <p className="text-gray-500">{t("noStockOrders")}</p>
+          )}
+          {stockOrders
+            .filter(
+              (order) =>
+                order.stock?.id === selectedStockId &&
+                order.status === StockOrderStatusEnum.COMPLETED
+            )
+            .sort((a, b) => b.id - a.id)
+            .map((stockOrder, index) => {
+              return (
+                <StockTransactionItem
+                  key={index}
+                  stockOrder={stockOrder}
+                  index={index}
+                />
+              );
+            })}
+        </div>
+      ),
+    },
+    {
+      name: t("stockOrderRequest"),
+      value: "requests",
+      content: (
+        <div className="space-y-3">
+          {stockOrders.filter((order) => order.stock?.id === selectedStockId)
+            .length === 0 && (
+            <p className="text-gray-500">{t("noStockOrders")}</p>
+          )}
+          {stockOrders
+            .filter((order) => order.stock?.id === selectedStockId)
+            .sort((a, b) => b.id - a.id)
+            .map((stockOrder, index) => {
+              return (
+                <StockOrderItem
+                  key={index}
+                  id={stockOrder.id || 0}
+                  status={stockOrder.status}
+                  type={stockOrder.type}
+                  amount={stockOrder.amount}
+                  stock={stockOrder.stock || { id: 0, name: "" }}
+                />
+              );
+            })}
+        </div>
+      ),
+    },
+  ];
+
+  const handleReloadStockOrders = () => {
+    getStockOrders();
+  };
 
   if (isFinancialSecuritiesLoading) {
     return (
@@ -90,11 +190,9 @@ export default function OwnedStocksPage() {
     );
   }
 
-  const selectedStock = stocks.find((s) => s.id === selectedStockId);
-
   return (
     <div className="space-y-6 h-full flex flex-col">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between gap-4">
         <Button
           variant="ghost"
           onClick={() => router.push("/investments")}
@@ -103,6 +201,12 @@ export default function OwnedStocksPage() {
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           {tButton("back")}
         </Button>
+        <SellStockDialog
+          open={openSellDialog}
+          setOpen={setOpenSellDialog}
+          stocks={stocks}
+          onUpdate={handleReloadStockOrders}
+        />
       </div>
       <div className="flex flex-1 gap-6 overflow-hidden">
         <div className="w-1/3 bg-white rounded-lg shadow flex flex-col overflow-hidden">
@@ -127,35 +231,73 @@ export default function OwnedStocksPage() {
             <>
               <div className="p-6 border-b bg-gray-50">
                 <div className="flex justify-between items-start">
-                  <div>
+                  <div className="flex flex-col items-start justify-start">
                     <h2 className="text-2xl font-bold text-gray-900 mb-1">
                       {selectedStock.name}
                     </h2>
+                    <span className="text-xs font-medium bg-gray-100 px-2 py-1 rounded-full text-gray-600">
+                      {selectedStock.quantity} {t("stocks")}
+                    </span>
                   </div>
-                  <div className="text-right">
-                    <div className="text-3xl font-bold text-gray-900">
-                      {selectedStock.totalValue}€
+                  <div className="text-right flex flex-col items-end justify-start">
+                    <div className="text-gray-900 mb-1">
+                      <span className="text-md">{t("purchaseValue")} :</span>{" "}
+                      <span className="text-xl font-semibold">
+                        {selectedStock.totalValue}€
+                      </span>
+                    </div>
+                    <div className="text-md text-gray-600">
+                      {t("currentMarketValue")} :{" "}
+                      {isCompanyDeficit ? (
+                        <Icon
+                          icon="mdi:trending-down"
+                          className="inline-block mr-1 text-red-600"
+                        />
+                      ) : (
+                        <TrendingUpIcon className="inline-block mr-1 text-green-600" />
+                      )}
+                      <span
+                        className={`${
+                          isCompanyDeficit ? "text-red-600" : "text-green-600"
+                        } font-semibold`}
+                      >
+                        {(
+                          selectedStock.marketPrice * selectedStock.quantity
+                        ).toFixed(2)}
+                        €
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6">
-                <h3 className="text-lg font-semibold mb-4">
-                  {t("transactionHistory")}
-                </h3>
-                <div className="space-y-3">
-                  {selectedStock.securities.map((security, index) => (
-                    <StockPurchaseItem
-                      key={index}
-                      companyName={security.stock?.name || t("unknownStock")}
-                      index={index}
-                      purchasePrice={security.purchasePrice}
-                      currentPrice={selectedStock.currentPrice}
-                    />
+              <Tabs defaultValue="history" className="gap-4 h-full w-full">
+                <TabsList className="bg-background rounded-none border-b p-0 w-full">
+                  {tabs.map((tab) => (
+                    <TabsTrigger
+                      key={tab.value}
+                      value={tab.value}
+                      className="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none cursor-pointer"
+                    >
+                      {tab.name}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+
+                <div className="flex-1 overflow-y-auto p-6">
+                  {tabs.map((tab) => (
+                    <TabsContent
+                      value={tab.value}
+                      className="h-full"
+                      key={tab.value}
+                    >
+                      <div className="text-muted-foreground text-sm h-full">
+                        {tab.content}
+                      </div>
+                    </TabsContent>
                   ))}
                 </div>
-              </div>
+              </Tabs>
             </>
           ) : (
             <div className="flex items-center justify-center h-full text-gray-500">

@@ -1,4 +1,7 @@
-import { StockOrderRepositoryInterface, UpdateStockOrderPayload } from "../../../../application/repositories/StockOrderRepositoryInterface";
+import {
+  StockOrderRepositoryInterface,
+  UpdateStockOrderPayload,
+} from "../../../../application/repositories/StockOrderRepositoryInterface";
 import { StockOrder } from "../../../../domain/entities/StockOrder";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
 import { MariadbConnection } from "../config/MariadbConnection";
@@ -12,23 +15,36 @@ import { StockOrderNotFoundError } from "../../../../domain/errors/entities/stoc
 import { StockOrderStatusEnum } from "../../../../domain/enums/StockOrderStatusEnum";
 import { StockOrderTypeEnum } from "../../../../domain/enums/StockOrderTypeEnum";
 
-export class MariadbStockOrderRepository implements StockOrderRepositoryInterface {
+export class MariadbStockOrderRepository
+  implements StockOrderRepositoryInterface
+{
   private stockOrderModel: StockOrderModel;
+  private stockModel: StockModel;
 
   public constructor(databaseDsn: string) {
     const connection = new MariadbConnection(databaseDsn).getConnection();
     const userModel = new UserModel(connection);
-    const stockModel = new StockModel(connection);
     const accountModel = new AccountModel(connection, userModel);
-    this.stockOrderModel = new StockOrderModel(connection, userModel, stockModel, accountModel);
+    this.stockModel = new StockModel(connection);
+    this.stockOrderModel = new StockOrderModel(
+      connection,
+      userModel,
+      this.stockModel,
+      accountModel
+    );
   }
 
-  public async create(stockOrder: StockOrder): Promise<StockOrder | StockNotFoundError | UserNotFoundError | AccountNotFoundError> {
+  public async create(
+    stockOrder: StockOrder
+  ): Promise<
+    StockOrder | StockNotFoundError | UserNotFoundError | AccountNotFoundError
+  > {
     try {
       const createdStockOrder = await this.stockOrderModel.model.create({
         amount: stockOrder.amount,
         type: stockOrder.type,
         status: stockOrder.status,
+        purchasePrice: stockOrder.purchasePrice,
         ownerId: stockOrder.ownerId,
         stockId: stockOrder.stockId,
         accountId: stockOrder.accountId,
@@ -41,25 +57,30 @@ export class MariadbStockOrderRepository implements StockOrderRepositoryInterfac
 
       return maybeStockOrder;
     } catch (error) {
-      if (error instanceof Error && error.name === 'SequelizeForeignKeyConstraintError') {
-        if (error.message.includes('ownerId')) {
-          return new UserNotFoundError('User not found.');
-        } else if (error.message.includes('stockId')) {
-          return new StockNotFoundError('Stock not found.');
-        } else if (error.message.includes('accountId')) {
-          return new AccountNotFoundError('Account not found.');
+      if (
+        error instanceof Error &&
+        error.name === "SequelizeForeignKeyConstraintError"
+      ) {
+        if (error.message.includes("ownerId")) {
+          return new UserNotFoundError("User not found.");
+        } else if (error.message.includes("stockId")) {
+          return new StockNotFoundError("Stock not found.");
+        } else if (error.message.includes("accountId")) {
+          return new AccountNotFoundError("Account not found.");
         }
       }
 
-      return new UserNotFoundError('User not found.');
+      return new UserNotFoundError("User not found.");
     }
   }
 
-  public async findById(id: number): Promise<StockOrder | StockOrderNotFoundError> {
+  public async findById(
+    id: number
+  ): Promise<StockOrder | StockOrderNotFoundError> {
     try {
       const foundStockOrder = await this.stockOrderModel.model.findByPk(id);
       if (!foundStockOrder) {
-        return new StockOrderNotFoundError('StockOrder not found.');
+        return new StockOrderNotFoundError("StockOrder not found.");
       }
 
       const maybeStockOrder = StockOrder.from(foundStockOrder);
@@ -69,7 +90,7 @@ export class MariadbStockOrderRepository implements StockOrderRepositoryInterfac
 
       return maybeStockOrder;
     } catch (error) {
-      return new StockOrderNotFoundError('StockOrder not found');
+      return new StockOrderNotFoundError("StockOrder not found");
     }
   }
 
@@ -79,6 +100,7 @@ export class MariadbStockOrderRepository implements StockOrderRepositoryInterfac
         where: {
           ownerId,
         },
+        include: [{ model: this.stockModel.model }],
       });
 
       const stockOrders: StockOrder[] = [];
@@ -98,7 +120,10 @@ export class MariadbStockOrderRepository implements StockOrderRepositoryInterfac
     }
   }
 
-  public async findMatchByStock(stockId: number, type: StockOrderTypeEnum): Promise<StockOrder[]> {
+  public async findMatchByStock(
+    stockId: number,
+    type: StockOrderTypeEnum
+  ): Promise<StockOrder[]> {
     try {
       const foundStockOrders = await this.stockOrderModel.model.findAll({
         where: {
@@ -151,32 +176,39 @@ export class MariadbStockOrderRepository implements StockOrderRepositoryInterfac
     }
   }
 
-  public async update(stockOrder: UpdateStockOrderPayload): Promise<StockOrder | StockOrderNotFoundError> {
+  public async update(
+    stockOrder: UpdateStockOrderPayload
+  ): Promise<StockOrder | StockOrderNotFoundError> {
     try {
       const { id, ...toUpdate } = stockOrder;
 
-      await this.stockOrderModel.model.update({
-        ...toUpdate,
-      }, {
-        where: { id },
-      });
+      await this.stockOrderModel.model.update(
+        {
+          ...toUpdate,
+        },
+        {
+          where: { id },
+        }
+      );
 
       return await this.findById(id);
     } catch (error) {
-      return new StockOrderNotFoundError('StockOrder not found.');
+      return new StockOrderNotFoundError("StockOrder not found.");
     }
   }
 
   public async delete(id: number): Promise<boolean | StockOrderNotFoundError> {
     try {
-      const deletedCount = await this.stockOrderModel.model.destroy({ where: { id } });
+      const deletedCount = await this.stockOrderModel.model.destroy({
+        where: { id },
+      });
       if (deletedCount === 0) {
-        return new StockOrderNotFoundError('StockOrder not found.');
+        return new StockOrderNotFoundError("StockOrder not found.");
       }
 
       return true;
     } catch (error) {
-      return new StockOrderNotFoundError('StockOrder not found.');
+      return new StockOrderNotFoundError("StockOrder not found.");
     }
   }
 }

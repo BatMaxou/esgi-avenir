@@ -1,0 +1,98 @@
+"use client";
+import { useTranslations } from "next-intl";
+import { Stock } from "../../../../../../../domain/entities/Stock";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../atoms/tooltip";
+import { SearchIcon, TrashIcon } from "lucide-react";
+import { StockOrderStatusEnum } from "../../../../../../../domain/enums/StockOrderStatusEnum";
+
+interface StockOrderItemProps {
+  type: string;
+  status: string;
+  amount: number;
+  stock: Stock | undefined;
+}
+
+export function StockOrderItem({
+  type,
+  status,
+  amount,
+  stock,
+}: StockOrderItemProps) {
+  const t = useTranslations("components.items.stockOrder");
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "completed":
+        return "bg-green-100 text-green-800";
+      case "rejected":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case "sell":
+        return "bg-red-100 text-red-600";
+      case "buy":
+        return "bg-green-100 text-green-600";
+      default:
+        return "bg-gray-100 text-gray-600";
+    }
+  };
+
+  return (
+    <div className="p-4 rounded-lg transition-colors border bg-white border-gray-100 hover:bg-gray-50">
+      <div className="flex justify-between items-center gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-medium text-gray-900">{stock?.name}</span>
+            <span
+              className={`text-xs font-medium px-2 py-1 rounded-full ${getTypeColor(
+                type
+              )}`}
+            >
+              {t(`type.${type}`)}
+            </span>
+            <span
+              className={`text-xs font-medium px-2 py-1 rounded-full ${getStatusColor(
+                status
+              )}`}
+            >
+              {t(`status.${status}`)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-gray-600">
+              {t("requestedPrice")} : {amount} €
+            </span>
+          </div>
+        </div>
+        {status === StockOrderStatusEnum.PENDING && (
+          <div className="flex-1 space-x-2 text-right">
+            <Tooltip>
+              <TooltipTrigger>
+                <TrashIcon className="h-5 w-5 text-red-600 hover:text-red-700 cursor-pointer" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t("deleteStockOrder")}</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <SearchIcon className="h-5 w-5 text-red-600 hover:text-red-700 cursor-pointer" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t("viewOffers")}</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

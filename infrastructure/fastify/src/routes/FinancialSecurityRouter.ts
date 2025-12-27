@@ -12,20 +12,25 @@ export class FinancialSecurityRouter {
   public register(
     app: FastifyInstance,
     repositoryResolver: RepositoryResolverInterface,
-    tokenManager: TokenManagerInterface,
+    tokenManager: TokenManagerInterface
   ) {
     const financialSecurityController = new FinancialSecurityController(
       repositoryResolver.getFinancialSecurityRepository(),
+      repositoryResolver.getStockOrderRepository()
     );
 
-    app.get(
-      paths.financialSecurity.list,
-      async (req, res) => {
-        await authMiddleware(req, res, repositoryResolver.getUserRepository(), tokenManager);
-        await roleMiddleware(req, res, { mandatoryRoles: [], forbiddenRoles: [RoleEnum.BANNED] });
-        await financialSecurityController.list(req, res);
-      }
-    );
+    app.get(paths.financialSecurity.list, async (req, res) => {
+      await authMiddleware(
+        req,
+        res,
+        repositoryResolver.getUserRepository(),
+        tokenManager
+      );
+      await roleMiddleware(req, res, {
+        mandatoryRoles: [],
+        forbiddenRoles: [RoleEnum.BANNED],
+      });
+      await financialSecurityController.list(req, res);
+    });
   }
 }
-

@@ -8,7 +8,7 @@ import { StockNotFoundError } from "../../../domain/errors/entities/stock/StockN
 import { UpdateStockCommand } from "../../../application/commands/stock/UpdateStockCommand";
 import { UpdateStockParams } from "../../../application/params/stock/UpdateStockParams";
 import { InvalidUpdateStockParamsError } from "../../../application/errors/params/stock/InvalidUpdateStockParamsError";
-import { CreateStockUsecase } from "../../../application/usecases/stock/CreateStockUsecase"
+import { CreateStockUsecase } from "../../../application/usecases/stock/CreateStockUsecase";
 import { UpdateStockUsecase } from "../../../application/usecases/stock/UpdateStockUsecase";
 import { GetStockListQuery } from "../../../application/queries/stock/GetStockListQuery";
 import { InvalidGetListStockQueryError } from "../../../application/errors/queries/stock/InvalidGetListStockQueryError";
@@ -34,7 +34,7 @@ export class StockController {
     private readonly operationRepository: OperationRepositoryInterface,
     private readonly settingRepository: SettingRepositoryInterface,
     private readonly accountRepository: AccountRepositoryInterface,
-    private readonly mailer: MailerInterface,
+    private readonly mailer: MailerInterface
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -48,7 +48,7 @@ export class StockController {
     const owner = request.user;
     if (!owner) {
       return response.status(401).json({
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
 
@@ -56,7 +56,7 @@ export class StockController {
     const maybeStock = await createUsecase.execute(
       maybeCommand.name,
       maybeCommand.baseQuantity,
-      maybeCommand.basePrice,
+      maybeCommand.basePrice
     );
 
     if (maybeStock instanceof Error) {
@@ -89,13 +89,11 @@ export class StockController {
     }
 
     const updateStockUsecase = new UpdateStockUsecase(this.stockRepository);
-    const maybeStock = await updateStockUsecase.execute(
-      {
-        id: maybeParams.id,
-        name: maybeCommand.name,
-        baseQuantity: maybeCommand.baseQuantity,
-      }
-    );
+    const maybeStock = await updateStockUsecase.execute({
+      id: maybeParams.id,
+      name: maybeCommand.name,
+      baseQuantity: maybeCommand.baseQuantity,
+    });
 
     if (maybeStock instanceof StockNotFoundError) {
       return response.status(404).json({
@@ -114,7 +112,7 @@ export class StockController {
       name: maybeStock.name,
       baseQuantity: maybeStock.baseQuantity,
       basePrice: maybeStock.basePrice,
-    }); 
+    });
   }
 
   public async list(request: Request, response: Response) {
@@ -130,16 +128,18 @@ export class StockController {
       this.stockOrderRepository,
       this.financialSecurityRepository
     );
-    const stocks = await getListUsecase.execute(maybeQuery.term || '');
+    const stocks = await getListUsecase.execute(maybeQuery.term || "");
 
-    response.status(200).json(stocks.map((stock) => ({
-      id: stock.id,
-      name: stock.name,
-      baseQuantity: stock.baseQuantity,
-      basePrice: stock.basePrice,
-      balance: stock.balance,
-      remainingQuantity: stock.remainingQuantity,
-    })));
+    response.status(200).json(
+      stocks.map((stock) => ({
+        id: stock.id,
+        name: stock.name,
+        baseQuantity: stock.baseQuantity,
+        basePrice: stock.basePrice,
+        balance: stock.balance,
+        remainingQuantity: stock.remainingQuantity,
+      }))
+    );
   }
 
   public async purchaseBaseStock(request: Request, response: Response) {
@@ -160,7 +160,7 @@ export class StockController {
     const owner = request.user;
     if (!owner) {
       return response.status(401).json({
-        error: 'Unauthorized',
+        error: "Unauthorized",
       });
     }
 
@@ -170,11 +170,12 @@ export class StockController {
       this.operationRepository,
       this.settingRepository,
       this.accountRepository,
+      this.stockOrderRepository
     );
     const maybeFinancialSecurity = await purchaseBaseStockUsecase.execute(
       owner,
       maybeParams.id,
-      maybeCommand.accountId,
+      maybeCommand.accountId
     );
 
     if (maybeFinancialSecurity instanceof Error) {
@@ -183,22 +184,26 @@ export class StockController {
       });
     }
 
-    const sendPurchaseEmailUsecase = new SendStockPurchaseSucceedEmailUsecase(this.mailer);
+    const sendPurchaseEmailUsecase = new SendStockPurchaseSucceedEmailUsecase(
+      this.mailer
+    );
     await sendPurchaseEmailUsecase.execute(
       owner.email,
-      maybeFinancialSecurity.stock?.name || '',
-      maybeFinancialSecurity.purchasePrice,
+      maybeFinancialSecurity.stock?.name || "",
+      maybeFinancialSecurity.purchasePrice
     );
 
     response.status(201).json({
       id: maybeFinancialSecurity.id,
       purchasePrice: maybeFinancialSecurity.purchasePrice,
-      ...(maybeFinancialSecurity.stock ? {
-        stock: {
-          id: maybeFinancialSecurity.stock.id,
-          name: maybeFinancialSecurity.stock.name,
-        }
-      } : {})
+      ...(maybeFinancialSecurity.stock
+        ? {
+            stock: {
+              id: maybeFinancialSecurity.stock.id,
+              name: maybeFinancialSecurity.stock.name,
+            },
+          }
+        : {}),
     });
   }
 }
