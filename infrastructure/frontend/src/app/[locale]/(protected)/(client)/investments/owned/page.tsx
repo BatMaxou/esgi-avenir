@@ -69,7 +69,6 @@ export default function OwnedStocksPage() {
     return acc;
   }, {} as Record<number, { id: number; name: string; quantity: number; totalValue: number; marketPrice: number; securities: FinancialSecurity[] }>);
 
-  // Add stock orders even if no financial securities exist
   stockOrders.forEach((order) => {
     const stockId = order.stock?.id;
     const stockName = order.stock?.name;
@@ -88,7 +87,6 @@ export default function OwnedStocksPage() {
     }
   });
 
-  // Sort by quantity (descending) then by name (ascending)
   const stocks = Object.values(groupedStocks).sort((a, b) => {
     if (b.quantity !== a.quantity) {
       return b.quantity - a.quantity;

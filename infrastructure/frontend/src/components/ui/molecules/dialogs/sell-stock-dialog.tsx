@@ -26,6 +26,7 @@ import { useAccounts } from "@/contexts/AccountsContext";
 import { Icon } from "@iconify/react";
 import { FilledButton } from "../buttons/filled-button";
 import { useStockOrders } from "@/contexts/StockOrdersContext";
+import { HydratedStock } from "../../../../domain/entities/Stock";
 
 interface OwnedStock {
   id: number;
@@ -37,7 +38,9 @@ interface OwnedStock {
 interface SellStockDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  stocks: OwnedStock[];
+  stocks: OwnedStock[] | HydratedStock[];
+  defaultStock?: HydratedStock;
+  disabled: boolean;
   onUpdate: () => void;
 }
 
@@ -45,16 +48,20 @@ export function SellStockDialog({
   open,
   setOpen,
   stocks,
+  defaultStock,
+  disabled,
   onUpdate,
 }: SellStockDialogProps) {
   const t = useTranslations("components.dialogs.stock.sell");
   const { saleFee, getSaleFee } = useSettings();
   const { accounts, getAccounts, isAccountsLoading } = useAccounts();
   const { createSellStockOrder } = useStockOrders();
-  const [selectedStockId, setSelectedStockId] = useState<string>("");
-  const [sellPrice, setSellPrice] = useState(0);
+  const [selectedStockId, setSelectedStockId] = useState<string>(defaultStock?.id.toString() || "0");
+  const [sellPrice, setSellPrice] = useState(defaultStock?.balance || 0);
   const [selectedAccountId, setSelectedAccountId] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feeAmount, setFeeAmount] = useState(0)
+  const [totalAmount, setTotalAmount] = useState(0)
 
   useEffect(() => {
     if (open && !saleFee) {
@@ -79,20 +86,27 @@ export function SellStockDialog({
 
   useEffect(() => {
     if (stocks.length > 0 && !selectedStockId) {
-      setSelectedStockId(stocks[0].id.toString());
-      setSellPrice(stocks[0].marketPrice);
-    }
-  }, [stocks, selectedStockId]);
 
+        setSelectedStockId(stocks[selectedStockId].id.toString());
+        setSellPrice(stocks[selectedStockId].marketPrice);
+    }
+  }, [stocks, open, selectedStockId]);
+
+  useEffect(() => {
+    if (defaultStock) {
+      setSelectedStockId(defaultStock.id.toString());
+      setSellPrice((defaultStock as any).marketPrice || defaultStock.balance || 0);
+    }
+  }, [defaultStock]);
   const selectedStock = stocks.find(
-    (stock) => stock.id.toString() === selectedStockId
+    (stock) => defaultStock ? stock.id.toString() === defaultStock.id : stock.id.toString() === selectedStockId
   );
 
   const handleStockChange = (value: string) => {
     setSelectedStockId(value);
     const stock = stocks.find((s) => s.id.toString() === value);
     if (stock) {
-      setSellPrice(stock.marketPrice);
+      setSellPrice(stock?.marketPrice || defaultStock?.balance || 0);
     }
   };
 
@@ -113,17 +127,20 @@ export function SellStockDialog({
     setOpen(false);
   };
 
-  const feeAmount = saleFee ? parseFloat(saleFee as string) : 0;
-  const totalAmount = sellPrice - feeAmount;
+  useEffect(() => {
+    setFeeAmount(parseFloat(saleFee as string) || 0)
+    setTotalAmount(saleFee ? sellPrice - parseFloat(saleFee as string) : sellPrice)
+  }, [saleFee, sellPrice]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <FilledButton
-          icon="streamline-ultimate:begging-hand-coin-2"
+          icon="hugeicons:shopping-basket-check-in-01"
           iconPosition="start"
           iconSize={20}
           label={t("sellStock")}
+          disabled={disabled}
         />
       </DialogTrigger>
       <DialogContent>
@@ -140,21 +157,36 @@ export function SellStockDialog({
                 {t("noStocksAvailable")}
               </div>
             ) : (
-              <Select value={selectedStockId} onValueChange={handleStockChange}>
+              <Select value={defaultStock ? defaultStock.id.toString() : selectedStockId} onValueChange={handleStockChange} disabled={!!defaultStock}>
                 <SelectTrigger id="stock" className="w-full">
                   <SelectValue placeholder={t("selectStockPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {stocks.filter((stock) => stock.securities.length > 0).map((stock) => (
-                    <SelectItem key={stock.id} value={stock.id.toString()}>
-                      <div className="flex items-center justify-between gap-4 w-full">
-                        <span>{stock.name}</span>
-                        <span className="text-sm text-gray-600">
-                          {stock.quantity} {t("stocks")}
-                        </span>
-                      </div>
-                    </SelectItem>
-                  ))}
+                  {defaultStock ? (
+                    <>
+                      <SelectItem key={defaultStock.id} value={defaultStock.id.toString()}>
+                        <div className="flex items-center justify-between gap-4 w-full">
+                          <span>{defaultStock.name}</span>
+                          <span className="text-sm text-gray-600">
+                            {defaultStock.securities.length} {t("stocks")}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    </>
+                  ) : (
+                    <>
+                    {stocks.filter((stock) => stock.securities.length > 0).map((stock) => (
+                      <SelectItem key={stock.id} value={stock.id.toString()}>
+                        <div className="flex items-center justify-between gap-4 w-full">
+                          <span>{stock.name}</span>
+                          <span className="text-sm text-gray-600">
+                            {stock.quantity} {t("stocks")}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                    </>
+                  )}
                 </SelectContent>
               </Select>
             )}
@@ -170,9 +202,9 @@ export function SellStockDialog({
               value={sellPrice}
               onChange={(e) => setSellPrice(parseFloat(e.target.value) || 0)}
             />
-            {selectedStock && (
+            {(selectedStock || defaultStock) && (
               <p className="text-xs text-gray-500">
-                {t("currentPriceInfo")}: {selectedStock.marketPrice.toFixed(2)}{" "}
+                {t("currentPriceInfo")}: {defaultStock ? defaultStock?.balance.toFixed(2) : selectedStock.marketPrice.toFixed(2)}{" "}
                 €
               </p>
             )}
@@ -222,11 +254,11 @@ export function SellStockDialog({
             )}
           </div>
 
-          {selectedStock && sellPrice > 0 && (
+          {(selectedStock || defaultStock) && sellPrice > 0 && (
             <div className="bg-gray-50 p-4 rounded-lg space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">{t("company")}:</span>
-                <span className="font-medium">{selectedStock.name}</span>
+                <span className="font-medium">{selectedStock?.name || defaultStock?.name}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">{t("sellPrice")}:</span>

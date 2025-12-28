@@ -15,7 +15,8 @@
       "clients": "Client management",
       "accountDetails": "My account",
       "clientArea": "Client area",
-      "investmentsOwned": "My owned stocks"
+      "investmentsOwned": "My owned stocks",
+      "investmentsStocks": "Stocks available"
     }
   },
   "page": {
@@ -58,6 +59,17 @@
         "selectCompanyDetails": "Select a company to see details",
         "noStocks": "You do not own any stocks at the moment.",
         "backToInvestments": "Back to investments"
+      },
+      "stocks": {
+        "stockDetails": "Stock details",
+        "companies": "Stocks",
+        "marketPrice": "Market price",
+        "basePricePerShare": "Unit base price",
+        "ownedQuantity": "Stocks owned",
+        "remainingQuantity": "Remaining bank stock quantity",
+        "buyStock": "Buy stock",
+        "createBuyStock": "Create a buy stock order",
+        "createSellStock": "Create a sell stock order"
       }
     },
     "clients": {

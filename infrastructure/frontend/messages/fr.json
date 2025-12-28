@@ -15,7 +15,8 @@
       "clients": "Gestion des clients",
       "accountDetails": "Mon compte",
       "clientArea": "Espace client",
-      "investmentsOwned": "Mes actions possédées"
+      "investmentsOwned": "Mes actions possédées",
+      "investmentsStocks": "Actions disponibles"
     }
   },
   "page": {
@@ -58,6 +59,17 @@
         "selectCompanyDetails": "Sélectionnez une entreprise pour voir les détails",
         "noStocks": "Vous ne possédez aucune action pour le moment.",
         "backToInvestments": "Retour aux investissements"
+      },
+      "stocks": {
+        "stockDetails": "Détails du stock",
+        "companies": "Entreprises",
+        "marketPrice": "Prix du marché",
+        "basePricePerShare": "Prix de base unitaire",
+        "ownedQuantity": "Actions possédées",
+        "remainingQuantity": "Actions de banque restantes",
+        "buyStock": "Acheter une action",
+        "createBuyStock": "Creér une demande d'achat",
+        "createSellStock": "Creér une vente"
       }
     },
     "clients": {

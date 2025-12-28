@@ -111,7 +111,7 @@ export function MatchStockOrdersDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-4 h-full overflow-scroll">
+        <div className={`mt-4 h-full ${selectedOrder ? "selectedOrder" : ""}`}>
           {selectedOrder ? (
             <div className="space-y-4">
               <div className="bg-gray-50 rounded-lg p-4 space-y-3">
