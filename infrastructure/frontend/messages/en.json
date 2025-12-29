@@ -666,6 +666,30 @@
           "cancel": "Cancel",
           "confirm": "Confirm sale",
           "selling": "Selling..."
+        },
+        "buyBaseStock": {
+          "buyStock": "Buy a stock",
+          "title": "Buy stocks",
+          "description": "Select a stock and set the purchase price",
+          "selectStock": "Stock to buy",
+          "selectStockPlaceholder": "Select a stock",
+          "noStocksAvailable": "No stocks available for purchase",
+          "stocks": "stock(s)",
+          "company": "Company",
+          "buyPrice": "Purchase price",
+          "currentPriceInfo": "Current market price",
+          "paymentAccount": "Payment account",
+          "selectAccount": "Select an account",
+          "loadingAccounts": "Loading accounts...",
+          "noAccountAvailable": "No account available",
+          "purchaseFee": "Purchase fee",
+          "totalAmount": "Total amount to pay",
+          "purchaseFeeNotice": "A purchase tax of {fee}€ will be added to the purchase price",
+          "cancel": "Cancel",
+          "confirm": "Confirm purchase",
+          "buying": "Buying...",
+          "stockNotAvailable": "The stock was not found",
+          "insufficientFunds": "Insufficient funds in the selected account"
         }
       }
     }

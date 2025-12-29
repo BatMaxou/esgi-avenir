@@ -44,13 +44,11 @@ const Providers = ({ children }: { children: ReactNode }) => {
                   <SettingsProvider>
                     <UsersProvider>
                       <BankCreditsProvider>
-                        <StocksProvider>
-                          <StockOrdersProvider>
-                            <FinancialSecuritiesProvider>
-                              {children}
-                            </FinancialSecuritiesProvider>
-                          </StockOrdersProvider>
-                        </StocksProvider>
+                        <StockOrdersProvider>
+                          <FinancialSecuritiesProvider>
+                            <StocksProvider>{children}</StocksProvider>
+                          </FinancialSecuritiesProvider>
+                        </StockOrdersProvider>
                       </BankCreditsProvider>
                     </UsersProvider>
                   </SettingsProvider>

@@ -7,6 +7,7 @@ import { useApiClient } from "./ApiContext";
 import { getCookie } from "../../../utils/frontend/cookies";
 import { Stock, HydratedStock } from "../../../../domain/entities/Stock";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import { useFinancialSecurities } from "./FinancialSecuritiesContext";
 
 type Props = {
   children: ReactNode;
@@ -48,6 +49,7 @@ export const StocksProvider = ({ children }: Props) => {
   const [isStocksLoading, setIsStocksLoading] = useState<boolean>(false);
   const [isStockLoading, setIsStockLoading] = useState<boolean>(false);
   const { apiClient } = useApiClient();
+  const { getFinancialSecurities } = useFinancialSecurities();
 
   const getStocks = async (term?: string) => {
     setIsStocksLoading(true);
@@ -204,6 +206,8 @@ export const StocksProvider = ({ children }: Props) => {
       return false;
     }
 
+    getFinancialSecurities();
+    getStocks();
     showSuccessToast(t("stockPurchased"));
     setIsStockLoading(false);
     return true;

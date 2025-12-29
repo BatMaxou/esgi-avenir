@@ -13,6 +13,7 @@ import { useStockOrders } from "@/contexts/StockOrdersContext";
 import { useStocks } from "@/contexts/StocksContext";
 import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
 import { SellStockDialog } from "@/components/ui/molecules/dialogs/sell-stock-dialog";
+import { BuyStockDialog } from "@/components/ui/molecules/dialogs/buy-stock-dialog";
 
 export default function StocksPage() {
   const router = useRouter();
@@ -143,15 +144,8 @@ export default function StocksPage() {
                         {groupedStocks[selectedStockId as number]?.name}
                       </p>
                       <div className="flex flex-col items-start space-y-2">
-                        <FilledButton
-                          icon="fluent-mdl2:bank"
-                          iconPosition="start"
-                          iconSize={20}
-                          label={t("buyStock")}
-                          disabled={
-                            stocks.find((s) => s.id === selectedStockId)
-                              ?.remainingQuantity === 0
-                          }
+                        <BuyStockDialog
+                          stock={stocks.find((s) => s.id === selectedStockId)}
                         />
                         <div className="flex flex-row items-center gap-2">
                           <FilledButton

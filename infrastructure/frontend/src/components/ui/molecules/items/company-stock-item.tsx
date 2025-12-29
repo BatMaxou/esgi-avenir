@@ -26,7 +26,7 @@ export function CompanyStockItem({
     >
       <div className="flex justify-between items-start">
         <span className="font-medium text-gray-900">{name}</span>
-        {quantity && quantity > 0 && (
+        {typeof quantity === "number" && quantity > 0 && (
           <span className="text-xs font-medium bg-gray-100 px-2 py-1 rounded-full text-gray-600">
             {quantity} {t("stocks")}
           </span>

@@ -380,6 +380,30 @@
           "cancel": "Annuler",
           "confirm": "Confirmer la vente",
           "selling": "Vente en cours..."
+        },
+        "buyBaseStock": {
+          "buyStock": "Acheter une action",
+          "title": "Acheter des actions",
+          "description": "Sélectionnez une action et définissez le prix d'achat",
+          "selectStock": "Action à acheter",
+          "selectStockPlaceholder": "Sélectionner une action",
+          "noStocksAvailable": "Aucune action disponible à l'achat",
+          "stocks": "action(s)",
+          "company": "Entreprise",
+          "buyPrice": "Prix d'achat",
+          "currentPriceInfo": "Prix actuel du marché",
+          "paymentAccount": "Compte de paiement",
+          "selectAccount": "Sélectionner un compte",
+          "loadingAccounts": "Chargement des comptes...",
+          "noAccountAvailable": "Aucun compte disponible",
+          "purchaseFee": "Frais d'achat",
+          "totalAmount": "Montant total à payer",
+          "purchaseFeeNotice": "Une taxe d'achat de {fee}€ sera ajoutée au prix d'achat",
+          "cancel": "Annuler",
+          "confirm": "Confirmer l'achat",
+          "buying": "Achat en cours...",
+          "stockNotAvailable": "Le fournisseur n'a pas été trouvé",
+          "insufficientFunds": "Fonds insuffisants sur le compte sélectionné"
         }
       },
       "transferFrom": {
