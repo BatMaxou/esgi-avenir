@@ -3,7 +3,11 @@
 import { useEffect } from "react";
 import { useFinancialSecurities } from "@/contexts/FinancialSecuritiesContext";
 import { useTranslations } from "next-intl";
-import { LoaderCircleIcon } from "lucide-react";
+import {
+  LoaderCircleIcon,
+  TrendingUpIcon,
+  TrendingDownIcon,
+} from "lucide-react";
 import { UserStocksDataTable } from "../../organisms/UserStocksDataTable/UserStocksDataTable";
 import { LoadingLink } from "../links/loading-link";
 import { Icon } from "@iconify/react";
@@ -90,29 +94,39 @@ export function UserStocksCard() {
             {t("totalPortfolio")}
           </span>
           <div className="text-right">
-            <div className="text-lg font-bold text-gray-900">
-              {stocks
-                .reduce(
+            <div className="text-lg font-bold text-gray-900 flex items-center justify-end gap-2">
+              {(() => {
+                const totalPurchaseValue = stocks.reduce(
+                  (sum, stock) => sum + stock.totalValue,
+                  0
+                );
+                const totalMarketValue = stocks.reduce(
                   (sum, stock) => sum + stock.marketPrice * stock.quantity,
                   0
-                )
-                .toFixed(2)}{" "}
-              €{" "}
-              <Tooltip>
-                <TooltipTrigger>
-                  (
-                  {stocks
-                    .reduce(
-                      (sum, stock) => sum + stock.marketPrice * stock.quantity,
-                      0
-                    )
-                    .toFixed(2)}{" "}
-                  € )
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{t("currentMarketValue")}</p>
-                </TooltipContent>
-              </Tooltip>
+                );
+                const difference = totalMarketValue - totalPurchaseValue;
+
+                return (
+                  <>
+                    {totalPurchaseValue.toFixed(2)} €{" "}
+                    <Tooltip>
+                      <TooltipTrigger className="flex items-center gap-1">
+                        (
+                        {difference > 0 && (
+                          <TrendingUpIcon className="h-4 w-4 text-green-600" />
+                        )}
+                        {difference < 0 && (
+                          <TrendingDownIcon className="h-4 w-4 text-red-600" />
+                        )}
+                        {totalMarketValue.toFixed(2)} € )
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("currentMarketValue")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </>
+                );
+              })()}
             </div>
           </div>
         </div>

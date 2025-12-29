@@ -50,7 +50,11 @@ export default function ProtectedLayout({ children }: Props) {
   };
 
   let pageTitle = pageTitles[pathWithoutLocale];
-  if (!pageTitle && (pathWithoutLocale.startsWith("/accounts/details/") || pathWithoutLocale.startsWith("/comptes/details/"))) {
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/accounts/details/") ||
+      pathWithoutLocale.startsWith("/comptes/details/"))
+  ) {
     pageTitle = t("accountDetails");
   }
   if (!pageTitle && pathWithoutLocale.startsWith("/credit")) {
@@ -62,6 +66,16 @@ export default function ProtectedLayout({ children }: Props) {
     pathWithoutLocale.startsWith("/investissements/possedes")
   ) {
     pageTitle = t("investmentsOwned");
+  }
+  if (
+    (!pageTitle &&
+      pathWithoutLocale.startsWith(
+        "/investissement/entreprises-disponibles"
+      )) ||
+    pathWithoutLocale.startsWith("/investments/stocks") ||
+    pathWithoutLocale.startsWith("/investissements/entreprises-disponibles")
+  ) {
+    pageTitle = t("investmentsStocks");
   }
   pageTitle = pageTitle || t("clientArea");
 

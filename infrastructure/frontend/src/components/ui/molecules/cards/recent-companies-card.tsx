@@ -17,9 +17,7 @@ export function RecentCompaniesCard() {
   }, []);
 
   const recentCompanies = stocks
-    .filter((stock) => stock.remainingQuantity > 0)
-    .sort((a, b) => (b.id || 0) - (a.id || 0))
-    .slice(0, 5)
+    .sort((a, b) => (b.remainingQuantity || 0) - (a.remainingQuantity || 0))
     .map((stock) => stock);
 
   if (isStocksLoading) {
@@ -45,13 +43,10 @@ export function RecentCompaniesCard() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-6 h-[400px] flex flex-col">
+    <div className="bg-white rounded-lg shadow p-6 h-full flex flex-col">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold">{t("title")}</h2>
-        <LoadingLink
-          href="/investments/available-companies"
-          className="flex items-center"
-        >
+        <LoadingLink href="/investments/stocks" className="flex items-center">
           <p className="hover:underline inline-block text-end">
             {t("seeAll")}
             <Icon icon="mdi:arrow-right" className="inline-block ml-1" />
@@ -69,9 +64,6 @@ export function RecentCompaniesCard() {
             </div>
             <div className="flex-1">
               <p className="font-medium text-gray-900">{stock.name}</p>
-              <p className="text-xs text-gray-500">
-                {stock.remainingQuantity} {t("available")}
-              </p>
             </div>
           </div>
         ))}

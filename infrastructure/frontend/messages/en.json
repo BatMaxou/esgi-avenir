@@ -15,7 +15,8 @@
       "clients": "Client management",
       "accountDetails": "My account",
       "clientArea": "Client area",
-      "investmentsOwned": "My owned stocks"
+      "investmentsOwned": "My owned stocks",
+      "investmentsStocks": "Stocks available"
     }
   },
   "page": {
@@ -58,6 +59,25 @@
         "selectCompanyDetails": "Select a company to see details",
         "noStocks": "You do not own any stocks at the moment.",
         "backToInvestments": "Back to investments"
+      },
+      "stocks": {
+        "stockDetails": "Stock details",
+        "companies": "Stocks",
+        "marketPrice": "Market price",
+        "basePricePerShare": "Unit base price",
+        "ownedQuantity": "Stocks owned",
+        "remainingQuantity": "Remaining bank stock quantity",
+        "buyStock": "Buy stock",
+        "createBuyStock": "Create a buy stock order",
+        "createSellStock": "Create a sell stock order",
+        "stockOrders": "Stock orders",
+        "details": "Details",
+        "all": "All",
+        "buy": "Buy",
+        "sell": "Sell",
+        "noOrders": "No pending orders for this stock",
+        "noBuyOrders": "No pending buy orders",
+        "noSellOrders": "No pending sell orders"
       }
     },
     "clients": {
@@ -654,6 +674,50 @@
           "cancel": "Cancel",
           "confirm": "Confirm sale",
           "selling": "Selling..."
+        },
+        "buyBaseStock": {
+          "buyStock": "Buy a stock",
+          "title": "Buy stocks",
+          "description": "Select a stock and set the purchase price",
+          "selectStock": "Stock to buy",
+          "selectStockPlaceholder": "Select a stock",
+          "noStocksAvailable": "No stocks available for purchase",
+          "stocks": "stock(s)",
+          "company": "Company",
+          "buyPrice": "Purchase price",
+          "currentPriceInfo": "Current market price",
+          "paymentAccount": "Payment account",
+          "selectAccount": "Select an account",
+          "loadingAccounts": "Loading accounts...",
+          "noAccountAvailable": "No account available",
+          "purchaseFee": "Purchase fee",
+          "totalAmount": "Total amount to pay",
+          "purchaseFeeNotice": "A purchase tax of {fee}€ will be added to the purchase price",
+          "cancel": "Cancel",
+          "confirm": "Confirm purchase",
+          "buying": "Buying...",
+          "stockNotAvailable": "The stock was not found",
+          "insufficientFunds": "Insufficient funds in the selected account"
+        },
+        "buyStockOrder": {
+          "createBuyOrder": "Create buy order",
+          "title": "Create a stock buy order",
+          "description": "Set your desired purchase price for your order",
+          "company": "Company",
+          "buyPrice": "Desired purchase price",
+          "currentPriceInfo": "Current market price",
+          "paymentAccount": "Payment account",
+          "selectAccount": "Select an account",
+          "loadingAccounts": "Loading accounts...",
+          "noAccountAvailable": "No account available",
+          "purchaseFee": "Purchase fee",
+          "totalAmount": "Total amount to pay",
+          "purchaseFeeNotice": "A purchase tax of {fee}€ will be added to the purchase price during the transaction",
+          "cancel": "Cancel",
+          "confirm": "Create order",
+          "creating": "Creating...",
+          "stockNotAvailable": "Stock not available",
+          "insufficientFunds": "Insufficient funds in the selected account"
         }
       }
     }

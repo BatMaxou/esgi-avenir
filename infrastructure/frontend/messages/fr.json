@@ -15,7 +15,8 @@
       "clients": "Gestion des clients",
       "accountDetails": "Mon compte",
       "clientArea": "Espace client",
-      "investmentsOwned": "Mes actions possédées"
+      "investmentsOwned": "Mes actions possédées",
+      "investmentsStocks": "Actions disponibles"
     }
   },
   "page": {
@@ -58,6 +59,25 @@
         "selectCompanyDetails": "Sélectionnez une entreprise pour voir les détails",
         "noStocks": "Vous ne possédez aucune action pour le moment.",
         "backToInvestments": "Retour aux investissements"
+      },
+      "stocks": {
+        "stockDetails": "Détails du stock",
+        "companies": "Entreprises",
+        "marketPrice": "Prix du marché",
+        "basePricePerShare": "Prix de base unitaire",
+        "ownedQuantity": "Actions possédées",
+        "remainingQuantity": "Actions de banque restantes",
+        "buyStock": "Acheter une action",
+        "createBuyStock": "Creér une demande d'achat",
+        "createSellStock": "Creér une vente",
+        "stockOrders": "Demandes soumises",
+        "details": "Détails",
+        "all": "Toutes",
+        "buy": "Achats",
+        "sell": "Ventes",
+        "noOrders": "Aucune demande en cours pour cette action",
+        "noBuyOrders": "Aucune demande d'achat en cours",
+        "noSellOrders": "Aucune demande de vente en cours"
       }
     },
     "clients": {
@@ -368,6 +388,50 @@
           "cancel": "Annuler",
           "confirm": "Confirmer la vente",
           "selling": "Vente en cours..."
+        },
+        "buyBaseStock": {
+          "buyStock": "Acheter une action",
+          "title": "Acheter des actions",
+          "description": "Sélectionnez une action et définissez le prix d'achat",
+          "selectStock": "Action à acheter",
+          "selectStockPlaceholder": "Sélectionner une action",
+          "noStocksAvailable": "Aucune action disponible à l'achat",
+          "stocks": "action(s)",
+          "company": "Entreprise",
+          "buyPrice": "Prix d'achat",
+          "currentPriceInfo": "Prix actuel du marché",
+          "paymentAccount": "Compte de paiement",
+          "selectAccount": "Sélectionner un compte",
+          "loadingAccounts": "Chargement des comptes...",
+          "noAccountAvailable": "Aucun compte disponible",
+          "purchaseFee": "Frais d'achat",
+          "totalAmount": "Montant total à payer",
+          "purchaseFeeNotice": "Une taxe d'achat de {fee}€ sera ajoutée au prix d'achat",
+          "cancel": "Annuler",
+          "confirm": "Confirmer l'achat",
+          "buying": "Achat en cours...",
+          "stockNotAvailable": "Le fournisseur n'a pas été trouvé",
+          "insufficientFunds": "Fonds insuffisants sur le compte sélectionné"
+        },
+        "buyStockOrder": {
+          "createBuyOrder": "Créer une offre d'achat",
+          "title": "Créer une offre d'achat d'action",
+          "description": "Définissez le prix d'achat souhaité pour votre offre",
+          "company": "Entreprise",
+          "buyPrice": "Prix d'achat souhaité",
+          "currentPriceInfo": "Prix actuel du marché",
+          "paymentAccount": "Compte de paiement",
+          "selectAccount": "Sélectionner un compte",
+          "loadingAccounts": "Chargement des comptes...",
+          "noAccountAvailable": "Aucun compte disponible",
+          "purchaseFee": "Frais d'achat",
+          "totalAmount": "Montant total à payer",
+          "purchaseFeeNotice": "Une taxe d'achat de {fee}€ sera ajoutée au prix d'achat lors de la transaction",
+          "cancel": "Annuler",
+          "confirm": "Créer l'offre",
+          "creating": "Création en cours...",
+          "stockNotAvailable": "Action non disponible",
+          "insufficientFunds": "Fonds insuffisants sur le compte sélectionné"
         }
       },
       "transferFrom": {
