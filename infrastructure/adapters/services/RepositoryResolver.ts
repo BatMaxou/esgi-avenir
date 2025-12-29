@@ -30,44 +30,79 @@ import { CompanyChannelRepositoryInterface } from "../../../application/reposito
 import { PrivateChannelRepositoryInterface } from "../../../application/repositories/PrivateChannelRepositoryInterface";
 import { MessageRepositoryInterface } from "../../../application/repositories/MessageRepositoryInterface";
 import { NotificationRepositoryInterface } from "../../../application/repositories/NotificationRepositoryInterface";
+import { MongodbUserRepository } from "../mongodb/repositories/MongodbUserRepository";
+import { MongodbAccountRepository } from "../mongodb/repositories/MongodbAccountRepository";
+import { MongodbOperationRepository } from "../mongodb/repositories/MongodbOperationRepository";
+import { MongodbSettingRepository } from "../mongodb/repositories/MongodbSettingRepository";
+import { MongodbStockRepository } from "../mongodb/repositories/MongodbStockRepository";
+import { MongodbBeneficiaryRepository } from "../mongodb/repositories/MongodbBeneficiaryRepository";
+import { MongodbStockOrderRepository } from "../mongodb/repositories/MongodbStockOrderRepository";
+import { MongodbFinancialSecurityRepository } from "../mongodb/repositories/MongodbFinancialSecurityRepository";
+import { MongodbBankCreditRepository } from "../mongodb/repositories/MongodbBankCreditRepository";
+import { MongodbMonthlyPaymentRepository } from "../mongodb/repositories/MongodbMonthlyPaymentRepository";
+import { MongodbNewsRepository } from "../mongodb/repositories/MongodbNewsRepository";
+import { MongodbCompanyChannelRepository } from "../mongodb/repositories/MongodbCompanyChannelRepository";
+import { MongodbPrivateChannelRepository } from "../mongodb/repositories/MongodbPrivateChannelRepository";
+import { MongodbMessageRepository } from "../mongodb/repositories/MongodbMessageRepository";
+import { MongodbNotificationRepository } from "../mongodb/repositories/MongodbNotificationRepository";
 
-type RepositoryFactory<T extends RepositoryInterface> = (databaseDsn: string) => T;
+type RepositoryFactory<T extends RepositoryInterface> = (
+  databaseDsn: string
+) => T;
 
-const repositoryFactories: Record<string, Record<string, RepositoryFactory<RepositoryInterface>>> = {
+const repositoryFactories: Record<
+  string,
+  Record<string, RepositoryFactory<RepositoryInterface>>
+> = {
   mysql: {
-    UserRepository: (databaseDsn: string) => new MariadbUserRepository(databaseDsn),
-    AccountRepository: (databaseDsn: string) => new MariadbAccountRepository(databaseDsn),
-    OperationRepository: (databaseDsn: string) => new MariadbOperationRepository(databaseDsn),
-    SettingRepository: (databaseDsn: string) => new MariadbSettingRepository(databaseDsn),
-    StockRepository: (databaseDsn: string) => new MariadbStockRepository(databaseDsn),
-    StockOrderRepository: (databaseDsn: string) => new MariadbStockOrderRepository(databaseDsn),
-    FinancialSecurityRepository: (databaseDsn: string) => new MariadbFinancialSecurityRepository(databaseDsn),
-    BeneficiaryRepository: (databaseDsn: string) => new MariadbBeneficiaryRepository(databaseDsn),
-    BankCreditRepository: (databaseDsn: string) => new MariadbBankCreditRepository(databaseDsn),
-    MonthlyPaymentRepository: (databaseDsn: string) => new MariadbMonthlyPaymentRepository(databaseDsn),
-    NewsRepository: (databaseDsn: string) => new MariadbNewsRepository(databaseDsn),
-    CompanyChannelRepository: (databaseDsn: string) => new MariadbCompanyChannelRepository(databaseDsn),
-    PrivateChannelRepository: (databaseDsn: string) => new MariadbPrivateChannelRepository(databaseDsn),
-    MessageRepository: (databaseDsn: string) => new MariadbMessageRepository(databaseDsn),
-    NotificationRepository: (databaseDsn: string) => new MariadbNotificationRepository(databaseDsn),
+    UserRepository: (databaseDsn: string) =>
+      new MariadbUserRepository(databaseDsn),
+    AccountRepository: (databaseDsn: string) =>
+      new MariadbAccountRepository(databaseDsn),
+    OperationRepository: (databaseDsn: string) =>
+      new MariadbOperationRepository(databaseDsn),
+    SettingRepository: (databaseDsn: string) =>
+      new MariadbSettingRepository(databaseDsn),
+    StockRepository: (databaseDsn: string) =>
+      new MariadbStockRepository(databaseDsn),
+    StockOrderRepository: (databaseDsn: string) =>
+      new MariadbStockOrderRepository(databaseDsn),
+    FinancialSecurityRepository: (databaseDsn: string) =>
+      new MariadbFinancialSecurityRepository(databaseDsn),
+    BeneficiaryRepository: (databaseDsn: string) =>
+      new MariadbBeneficiaryRepository(databaseDsn),
+    BankCreditRepository: (databaseDsn: string) =>
+      new MariadbBankCreditRepository(databaseDsn),
+    MonthlyPaymentRepository: (databaseDsn: string) =>
+      new MariadbMonthlyPaymentRepository(databaseDsn),
+    NewsRepository: (databaseDsn: string) =>
+      new MariadbNewsRepository(databaseDsn),
+    CompanyChannelRepository: (databaseDsn: string) =>
+      new MariadbCompanyChannelRepository(databaseDsn),
+    PrivateChannelRepository: (databaseDsn: string) =>
+      new MariadbPrivateChannelRepository(databaseDsn),
+    MessageRepository: (databaseDsn: string) =>
+      new MariadbMessageRepository(databaseDsn),
+    NotificationRepository: (databaseDsn: string) =>
+      new MariadbNotificationRepository(databaseDsn),
   },
-  // mongodb: {
-  //   UserRepository: (databaseDsn: string) => new MongodbUserRepository(databaseDsn),
-  //   AccountRepository: (databaseDsn: string) => new MongodbAccountRepository(databaseDsn),
-  //   OperationRepository: (databaseDsn: string) => new MongodbOperationRepository(databaseDsn),
-  //   SettingRepository: (databaseDsn: string) => new MongodbSettingRepository(databaseDsn),
-  //   StockRepository: (databaseDsn: string) => new MongodbStockRepository(databaseDsn),
-  //   StockOrderRepository: (databaseDsn: string) => new MongodbStockOrderRepository(databaseDsn),
-  //   FinancialSecurityRepository: (databaseDsn: string) => new MongodbFinancialSecurityRepository(databaseDsn),
-  //   BeneficiaryRepository: (databaseDsn: string) => new MongodbBeneficiaryRepository(databaseDsn),
-  //   BankCreditRepository: (databaseDsn: string) => new MongodbBankCreditRepository(databaseDsn),
-  //   MonthlyPaymentRepository: (databaseDsn: string) => new MongodbMonthlyPaymentRepository(databaseDsn),
-  //   NewsRepository: (databaseDsn: string) => new MongodbNewsRepository(databaseDsn),
-  //   CompanyChannelRepository: (databaseDsn: string) => new MongodbCompanyChannelRepository(databaseDsn),
-  //   PrivateChannelRepository: (databaseDsn: string) => new MongodbPrivateChannelRepository(databaseDsn),
-  //   MessageRepository: (databaseDsn: string) => new MongodbMessageRepository(databaseDsn),
-  //   NotificationRepository: (databaseDsn: string) => new MongodbNotificationRepository(databaseDsn),
-  // },
+  mongodb: {
+    UserRepository: () => new MongodbUserRepository(),
+    AccountRepository: () => new MongodbAccountRepository(),
+    OperationRepository: () => new MongodbOperationRepository(),
+    SettingRepository: () => new MongodbSettingRepository(),
+    StockRepository: () => new MongodbStockRepository(),
+    StockOrderRepository: () => new MongodbStockOrderRepository(),
+    FinancialSecurityRepository: () => new MongodbFinancialSecurityRepository(),
+    BeneficiaryRepository: () => new MongodbBeneficiaryRepository(),
+    BankCreditRepository: () => new MongodbBankCreditRepository(),
+    MonthlyPaymentRepository: () => new MongodbMonthlyPaymentRepository(),
+    NewsRepository: () => new MongodbNewsRepository(),
+    CompanyChannelRepository: () => new MongodbCompanyChannelRepository(),
+    PrivateChannelRepository: () => new MongodbPrivateChannelRepository(),
+    MessageRepository: () => new MongodbMessageRepository(),
+    NotificationRepository: () => new MongodbNotificationRepository(),
+  },
 };
 
 export class RepositoryResolver implements RepositoryResolverInterface {
@@ -75,7 +110,7 @@ export class RepositoryResolver implements RepositoryResolverInterface {
 
   public constructor(
     private readonly source: string,
-    private readonly databaseDsn: string,
+    private readonly databaseDsn: string
   ) {
     if (!repositoryFactories[this.source]) {
       throw new Error(`Unsupported database source: ${this.source}`);
@@ -83,63 +118,81 @@ export class RepositoryResolver implements RepositoryResolverInterface {
   }
 
   public getUserRepository(): UserRepositoryInterface {
-    return this.getRepository<UserRepositoryInterface>('UserRepository');
+    return this.getRepository<UserRepositoryInterface>("UserRepository");
   }
 
   public getAccountRepository(): AccountRepositoryInterface {
-    return this.getRepository<AccountRepositoryInterface>('AccountRepository');
+    return this.getRepository<AccountRepositoryInterface>("AccountRepository");
   }
 
   public getOperationRepository(): OperationRepositoryInterface {
-    return this.getRepository<OperationRepositoryInterface>('OperationRepository');
+    return this.getRepository<OperationRepositoryInterface>(
+      "OperationRepository"
+    );
   }
 
   public getSettingRepository(): SettingRepositoryInterface {
-    return this.getRepository<MariadbSettingRepository>('SettingRepository');
+    return this.getRepository<MariadbSettingRepository>("SettingRepository");
   }
 
   public getStockRepository(): StockRepositoryInterface {
-    return this.getRepository<MariadbStockRepository>('StockRepository');
+    return this.getRepository<MariadbStockRepository>("StockRepository");
   }
 
   public getStockOrderRepository(): StockOrderRepositoryInterface {
-    return this.getRepository<MariadbStockOrderRepository>('StockOrderRepository');
+    return this.getRepository<MariadbStockOrderRepository>(
+      "StockOrderRepository"
+    );
   }
 
   public getFinancialSecurityRepository(): FinancialSecurityRepositoryInterface {
-    return this.getRepository<MariadbFinancialSecurityRepository>('FinancialSecurityRepository');
+    return this.getRepository<MariadbFinancialSecurityRepository>(
+      "FinancialSecurityRepository"
+    );
   }
 
   public getBeneficiaryRepository(): BeneficiaryRepositoryInterface {
-    return this.getRepository<MariadbBeneficiaryRepository>('BeneficiaryRepository');
+    return this.getRepository<MariadbBeneficiaryRepository>(
+      "BeneficiaryRepository"
+    );
   }
 
   public getBankCreditRepository(): BankCreditRepositoryInterface {
-    return this.getRepository<MariadbBankCreditRepository>('BankCreditRepository');
+    return this.getRepository<MariadbBankCreditRepository>(
+      "BankCreditRepository"
+    );
   }
 
   public getMonthlyPaymentRepository(): MonthlyPaymentRepositoryInterface {
-    return this.getRepository<MariadbMonthlyPaymentRepository>('MonthlyPaymentRepository');
+    return this.getRepository<MariadbMonthlyPaymentRepository>(
+      "MonthlyPaymentRepository"
+    );
   }
 
   public getNewsRepository(): NewsRepositoryInterface {
-    return this.getRepository<MariadbNewsRepository>('NewsRepository');
+    return this.getRepository<MariadbNewsRepository>("NewsRepository");
   }
 
   public getCompanyChannelRepository(): CompanyChannelRepositoryInterface {
-    return this.getRepository<MariadbCompanyChannelRepository>('CompanyChannelRepository');
+    return this.getRepository<MariadbCompanyChannelRepository>(
+      "CompanyChannelRepository"
+    );
   }
 
   public getPrivateChannelRepository(): PrivateChannelRepositoryInterface {
-    return this.getRepository<MariadbPrivateChannelRepository>('PrivateChannelRepository');
+    return this.getRepository<MariadbPrivateChannelRepository>(
+      "PrivateChannelRepository"
+    );
   }
 
   public getMessageRepository(): MessageRepositoryInterface {
-    return this.getRepository<MariadbMessageRepository>('MessageRepository');
+    return this.getRepository<MariadbMessageRepository>("MessageRepository");
   }
 
   public getNotificationRepository(): NotificationRepositoryInterface {
-    return this.getRepository<MariadbNotificationRepository>('NotificationRepository');
+    return this.getRepository<MariadbNotificationRepository>(
+      "NotificationRepository"
+    );
   }
 
   private getRepository<T extends RepositoryInterface>(name: string): T {
@@ -150,7 +203,9 @@ export class RepositoryResolver implements RepositoryResolverInterface {
 
     const factory = repositoryFactories[this.source]?.[name];
     if (!factory) {
-      throw new Error(`Repository "${name}" not available for source "${this.source}"`);
+      throw new Error(
+        `Repository "${name}" not available for source "${this.source}"`
+      );
     }
 
     const instance = factory(this.databaseDsn);
