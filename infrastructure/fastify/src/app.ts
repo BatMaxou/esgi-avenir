@@ -1,4 +1,5 @@
-import Fastify from 'fastify';
+import fastify from 'fastify';
+import fastifyIO from 'fastify-socket.io';
 
 import { RepositoryResolver } from "../../adapters/services/RepositoryResolver";
 import { Mailer } from "../../adapters/nodemailer/services/Mailer";
@@ -27,6 +28,8 @@ import { CompanyChannelRouter } from "./routes/CompanyChannelRouter";
 import { User } from "../../../domain/entities/User";
 import { SseFastifyResponseAssistant } from './services/sse/SseFastifyResponseAssistant';
 import { SseFastifyServerClient } from './services/sse/SseFastifyServerClient';
+import { SocketIoServer } from "../../adapters/socket-io/SocketIoServer"
+import { SocketIoChannelIdentifierBuilder } from "../../adapters/socket-io/SocketIoChannelIdentifierBuilder";
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -35,16 +38,29 @@ declare module 'fastify' {
 }
 
 const startServer = async () => {
-  const app = Fastify({
+  const app = fastify({
     logger: true,
   });
 
+  app.register(fastifyIO);
+
   const repositoryResolver = new RepositoryResolver(databaseSource, databaseDsn);
+  const tokenManager = new TokenManager(jwtSecret);
   const mailer = new Mailer(mailerHost, mailerPort, mailerFrom);
   const passwordHasher = new PasswordHasher();
   const uniqueIdGenerator = new UniqueIdGenerator();
-  const tokenManager = new TokenManager(jwtSecret);
   const scheduler = new Scheduler();
+
+  const channelIdentifierBuilder = new SocketIoChannelIdentifierBuilder();
+  const websocketServer = new SocketIoServer(
+    app.server,
+    channelIdentifierBuilder,
+    tokenManager,
+    repositoryResolver.getUserRepository(),
+    repositoryResolver.getPrivateChannelRepository(),
+    repositoryResolver.getCompanyChannelRepository(),
+    repositoryResolver.getMessageRepository(),
+  );
 
   const sseAssistant = new SseFastifyResponseAssistant();
   const sseServerClient = new SseFastifyServerClient(sseAssistant);

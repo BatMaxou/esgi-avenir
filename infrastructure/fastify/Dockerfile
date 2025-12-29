@@ -11,6 +11,7 @@ COPY ./infrastructure/adapters/bcrypt/package*.json ./infrastructure/adapters/bc
 COPY ./infrastructure/adapters/uuid/package*.json ./infrastructure/adapters/uuid/
 COPY ./infrastructure/adapters/jwt/package*.json ./infrastructure/adapters/jwt/
 COPY ./infrastructure/adapters/nodecron/package*.json ./infrastructure/adapters/nodecron/
+COPY ./infrastructure/adapters/socket-io/package*.json ./infrastructure/adapters/socket-io/
 COPY ./infrastructure/fastify/package*.json ./infrastructure/fastify/
 
 RUN npm -w domain install
@@ -21,6 +22,7 @@ RUN npm -w infrastructure/adapters/bcrypt install
 RUN npm -w infrastructure/adapters/uuid install
 RUN npm -w infrastructure/adapters/jwt install
 RUN npm -w infrastructure/adapters/nodecron install
+RUN npm -w infrastructure/adapters/socket-io install
 RUN npm -w infrastructure/fastify install
 
 COPY ./domain ./domain

@@ -1,6 +1,5 @@
 import { Server as HttpServer } from 'http';
-import { Server } from 'socket.io';
-import { Socket } from "socket.io";
+import { Server, Socket } from 'socket.io';
 
 import { WebsocketServerInterface } from "../../../application/services/websocket/WebsocketServerInterface";
 import { WebsocketRessourceEnum } from "../../../application/services/websocket/WebsocketRessourceEnum";
