@@ -27,6 +27,10 @@
       "title": "Dernières Nouvelles",
       "no-results": "Aucunes actualitées trouvées."
     },
+    "privateMessage": {
+      "title": "Messages Privés",
+      "no-results": "Aucun message trouvé."
+    },
     "accounts": {
       "title": "Mes comptes",
       "createCurrent": "Créer un compte courant",
@@ -121,6 +125,10 @@
     },
     "stocks": {
       "search": "Rechercher un stock"
+    },
+    "privateMessages": {
+      "title": "Messages privés",
+      "no-results": "Aucun message privé trouvé."
     }
   },
   "components": {
@@ -639,6 +647,10 @@
         "create": "Créer",
         "update": "Modifier",
         "refill": "Recharger"
+      },
+      "sendMessage": {
+        "messageError": "Votre message est vide",
+        "submit": "Envoyer"
       }
     },
     "inputs": {

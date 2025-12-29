@@ -10,6 +10,7 @@
     "infrastructure/adapters/jwt",
     "infrastructure/adapters/nodecron",
     "infrastructure/adapters/sse",
+    "infrastructure/adapters/socket-io",
     "infrastructure/express",
     "infrastructure/fastify",
     "infrastructure/frontend"

@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import { createServer } from "http";
 
 import { RepositoryResolver } from "../adapters/services/RepositoryResolver";
 import { Mailer } from "../adapters/nodemailer/services/Mailer";
@@ -29,6 +30,8 @@ import { CompanyChannelRouter } from "./routes/CompanyChannelRouter";
 import { User } from "../../domain/entities/User";
 import { SseExpressResponseAssistant } from "./services/sse/SseExpressResponseAssistant";
 import { SseExpressServerClient } from "./services/sse/SseExpressServerClient";
+import { SocketIoServer } from "../adapters/socket-io/SocketIoServer"
+import { SocketIoChannelIdentifierBuilder } from "../adapters/socket-io/SocketIoChannelIdentifierBuilder";
 
 declare module 'express' {
   interface Request {
@@ -40,13 +43,25 @@ const startServer = async () => {
   const app = express();
   app.use(bodyParser.json());
   app.use(cors());
+  const server = createServer(app);
 
   const repositoryResolver = new RepositoryResolver(databaseSource, databaseDsn);
+  const tokenManager = new TokenManager(jwtSecret);
   const mailer = new Mailer(mailerHost, mailerPort, mailerFrom);
   const passwordHasher = new PasswordHasher();
   const uniqueIdGenerator = new UniqueIdGenerator();
-  const tokenManager = new TokenManager(jwtSecret);
   const scheduler = new Scheduler();
+
+  const channelIdentifierBuilder = new SocketIoChannelIdentifierBuilder();
+  const websocketServer = new SocketIoServer(
+    server,
+    channelIdentifierBuilder,
+    tokenManager,
+    repositoryResolver.getUserRepository(),
+    repositoryResolver.getPrivateChannelRepository(),
+    repositoryResolver.getCompanyChannelRepository(),
+    repositoryResolver.getMessageRepository(),
+  );
 
   const sseAssistant = new SseExpressResponseAssistant();
   const sseServerClient = new SseExpressServerClient(sseAssistant);
@@ -157,6 +172,7 @@ const startServer = async () => {
     app,
     repositoryResolver,
     tokenManager,
+    websocketServer,
   );
 
   (new CompanyChannelRouter()).register(
@@ -167,7 +183,7 @@ const startServer = async () => {
 
   new Calendar(repositoryResolver, scheduler);
 
-  app.listen(3000, () => console.log(`Listening on port 3000`));
+  server.listen(3000, () => console.log(`Listening on port 3000`));
 };
 
 startServer().catch(console.error);

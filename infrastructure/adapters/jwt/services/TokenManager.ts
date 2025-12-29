@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { TokenPayload, TokenPayloadValue } from '../../../../domain/values/TokenPayloadValue';
+import { TokenManagerInterface } from '../../../../application/services/token/TokenManagerInterface';
 
-export class TokenManager {
+export class TokenManager implements TokenManagerInterface {
   public constructor(
     private readonly jwtSecret: string
   ) {}

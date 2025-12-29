@@ -27,6 +27,10 @@
       "title": "Latest News",
       "no-results": "No news found."
     },
+    "privateMessage": {
+      "title": "Private Messages",
+      "no-results": "No message found."
+    },
     "accounts": {
       "title": "My accounts",
       "createCurrent": "Create a checking account",
@@ -121,6 +125,10 @@
     },
     "stocks": {
       "search": "Search a stock"
+    },
+    "privateMessages": {
+      "title": "Private Messages",
+      "no-results": "No message found."
     }
   },
   "components": {
@@ -405,6 +413,10 @@
         "create": "Create",
         "update": "Update",
         "refill": "Refill"
+      },
+      "sendMessage": {
+        "messageError": "Your message is empty",
+        "submit": "Send"
       }
     },
     "inputs": {

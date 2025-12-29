@@ -19,11 +19,13 @@ import { WritePrivateMessageCommand } from "../../../application/commands/privat
 import { InvalidWritePrivateMessageCommandError } from "../../../application/errors/commands/private-channel/InvalidWritePrivateMessageCommandError";
 import { AttributePrivateChannelToParams } from "../../../application/params/private-channel/AttributePrivateChannelToParams";
 import { InvalidAttributePrivateChannelToParamsError } from "../../../application/errors/params/private-channel/InvalidAttributePrivateChannelToParamsError";
+import { WebsocketServerInterface } from "../../../application/services/websocket/WebsocketServerInterface";
 
 export class PrivateChannelController {
   public constructor(
     private readonly messageRepository: MessageRepositoryInterface,
     private readonly privateChannelRepository: PrivateChannelRepositoryInterface,
+    private readonly websocketServer: WebsocketServerInterface,
   ) {}
 
   public async list(request: Request, response: Response) {
@@ -154,7 +156,8 @@ export class PrivateChannelController {
 
     const writeMessageUsecase = new WritePrivateMessageUsecase(
       this.privateChannelRepository,
-      this.messageRepository
+      this.messageRepository,
+      this.websocketServer,
     );
     const maybeMessage = await writeMessageUsecase.execute(
       maybeCommand.content,

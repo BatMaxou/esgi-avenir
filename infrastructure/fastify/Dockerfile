@@ -30,4 +30,4 @@ COPY ./infrastructure/fastify ./infrastructure/fastify
 
 EXPOSE 3000
 
-CMD ["npm", "-w", "infrastructure/express", "run", "dev"]
+CMD ["npm", "-w", "infrastructure/fastify", "run", "dev"]
