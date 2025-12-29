@@ -404,6 +404,26 @@
           "buying": "Achat en cours...",
           "stockNotAvailable": "Le fournisseur n'a pas été trouvé",
           "insufficientFunds": "Fonds insuffisants sur le compte sélectionné"
+        },
+        "buyStockOrder": {
+          "createBuyOrder": "Créer une offre d'achat",
+          "title": "Créer une offre d'achat d'action",
+          "description": "Définissez le prix d'achat souhaité pour votre offre",
+          "company": "Entreprise",
+          "buyPrice": "Prix d'achat souhaité",
+          "currentPriceInfo": "Prix actuel du marché",
+          "paymentAccount": "Compte de paiement",
+          "selectAccount": "Sélectionner un compte",
+          "loadingAccounts": "Chargement des comptes...",
+          "noAccountAvailable": "Aucun compte disponible",
+          "purchaseFee": "Frais d'achat",
+          "totalAmount": "Montant total à payer",
+          "purchaseFeeNotice": "Une taxe d'achat de {fee}€ sera ajoutée au prix d'achat lors de la transaction",
+          "cancel": "Annuler",
+          "confirm": "Créer l'offre",
+          "creating": "Création en cours...",
+          "stockNotAvailable": "Action non disponible",
+          "insufficientFunds": "Fonds insuffisants sur le compte sélectionné"
         }
       },
       "transferFrom": {

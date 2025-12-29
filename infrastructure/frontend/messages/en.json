@@ -690,6 +690,26 @@
           "buying": "Buying...",
           "stockNotAvailable": "The stock was not found",
           "insufficientFunds": "Insufficient funds in the selected account"
+        },
+        "buyStockOrder": {
+          "createBuyOrder": "Create buy order",
+          "title": "Create a stock buy order",
+          "description": "Set your desired purchase price for your order",
+          "company": "Company",
+          "buyPrice": "Desired purchase price",
+          "currentPriceInfo": "Current market price",
+          "paymentAccount": "Payment account",
+          "selectAccount": "Select an account",
+          "loadingAccounts": "Loading accounts...",
+          "noAccountAvailable": "No account available",
+          "purchaseFee": "Purchase fee",
+          "totalAmount": "Total amount to pay",
+          "purchaseFeeNotice": "A purchase tax of {fee}€ will be added to the purchase price during the transaction",
+          "cancel": "Cancel",
+          "confirm": "Create order",
+          "creating": "Creating...",
+          "stockNotAvailable": "Stock not available",
+          "insufficientFunds": "Insufficient funds in the selected account"
         }
       }
     }

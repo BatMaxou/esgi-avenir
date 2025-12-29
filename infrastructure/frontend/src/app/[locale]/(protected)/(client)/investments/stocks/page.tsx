@@ -11,9 +11,9 @@ import { FinancialSecurity } from "../../../../../../../../../domain/entities/Fi
 import { CompanyStockItem } from "@/components/ui/molecules/items/company-stock-item";
 import { useStockOrders } from "@/contexts/StockOrdersContext";
 import { useStocks } from "@/contexts/StocksContext";
-import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
 import { SellStockDialog } from "@/components/ui/molecules/dialogs/sell-stock-dialog";
 import { BuyStockDialog } from "@/components/ui/molecules/dialogs/buy-stock-dialog";
+import { BuyStockOrderDialog } from "@/components/ui/molecules/dialogs/buy-stock-order-dialog";
 
 export default function StocksPage() {
   const router = useRouter();
@@ -148,11 +148,8 @@ export default function StocksPage() {
                           stock={stocks.find((s) => s.id === selectedStockId)}
                         />
                         <div className="flex flex-row items-center gap-2">
-                          <FilledButton
-                            icon="hugeicons:shopping-basket-check-out-01"
-                            iconPosition="start"
-                            iconSize={20}
-                            label={t("createBuyStock")}
+                          <BuyStockOrderDialog
+                            stock={stocks.find((s) => s.id === selectedStockId)}
                           />
                           {selectedStockId &&
                             enrichedStocks.find(
