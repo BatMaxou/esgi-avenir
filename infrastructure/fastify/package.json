@@ -15,8 +15,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fastify": "^5.0.0",
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "fastify": "^4.0.0",
+    "fastify-socket.io": "^5.1.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.8",
