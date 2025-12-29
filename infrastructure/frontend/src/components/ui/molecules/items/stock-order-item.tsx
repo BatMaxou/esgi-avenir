@@ -94,20 +94,20 @@ export function StockOrderItem({
             <span className="text-gray-600">
               {t("requestedPrice")} : {amount} €
             </span>
-            {status === StockOrderStatusEnum.COMPLETED && purchasedPrice !== undefined && (
-              <>
-                {console.log("purchasedPrice", purchasedPrice)}
-                {type === "buy" ? (
-                  <span className="text-gray-600 ms-4">
-                    {t("purchasedPrice")} : {purchasedPrice} €
-                  </span>
-                ) : (
-                  <span className="text-gray-600 ms-4">
-                    {t("soldPrice")} : {purchasedPrice} €
-                  </span>
-                )}
-              </>
-            )}
+            {status === StockOrderStatusEnum.COMPLETED &&
+              purchasedPrice !== undefined && (
+                <>
+                  {type === "buy" ? (
+                    <span className="text-gray-600 ms-4">
+                      {t("purchasedPrice")} : {purchasedPrice} €
+                    </span>
+                  ) : (
+                    <span className="text-gray-600 ms-4">
+                      {t("soldPrice")} : {purchasedPrice} €
+                    </span>
+                  )}
+                </>
+              )}
           </div>
         </div>
         {status === StockOrderStatusEnum.PENDING && (

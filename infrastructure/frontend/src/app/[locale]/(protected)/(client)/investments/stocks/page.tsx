@@ -7,8 +7,15 @@ import { useRouter } from "@/i18n/navigation";
 import { useNavigation } from "@/contexts/NavigationContext";
 import { ArrowLeftIcon, LoaderCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/atoms/button";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/atoms/tabs";
 import { FinancialSecurity } from "../../../../../../../../../domain/entities/FinancialSecurity";
 import { CompanyStockItem } from "@/components/ui/molecules/items/company-stock-item";
+import { StockOrderItem } from "@/components/ui/molecules/items/stock-order-item";
 import { useStockOrders } from "@/contexts/StockOrdersContext";
 import { useStocks } from "@/contexts/StocksContext";
 import { SellStockDialog } from "@/components/ui/molecules/dialogs/sell-stock-dialog";
@@ -30,6 +37,8 @@ export default function StocksPage() {
   const { endNavigation } = useNavigation();
   const [selectedStockId, setSelectedStockId] = useState<number | null>(null);
   const [openSellDialog, setOpenSellDialog] = useState(false);
+  const [activeTab, setActiveTab] = useState("details");
+  const [orderFilter, setOrderFilter] = useState<"all" | "buy" | "sell">("all");
 
   useEffect(() => {
     getFinancialSecurities();
@@ -131,94 +140,263 @@ export default function StocksPage() {
           </div>
         </div>
         <div className="w-2/3 bg-white rounded-lg shadow flex flex-col overflow-hidden">
-          <div className="p-4 border-b bg-gray-50">
-            <h2 className="font-semibold text-gray-700">{t("stockDetails")}</h2>
+          <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
+              <div className="flex items-center justify-between">
+                <TabsList className="bg-gray-50">
+                  <TabsTrigger
+                    value="details"
+                    className="font-semibold! text-md text-gray-700! hover:bg-gray-100 data-[state=active]:bg-gray-50! data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none cursor-pointer"
+                  >
+                    {t("details")}
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="orders"
+                    className="font-semibold! text-md text-gray-700! hover:bg-gray-100 data-[state=active]:bg-gray-50! data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none cursor-pointer"
+                  >
+                    {t("stockOrders")}
+                  </TabsTrigger>
+                </TabsList>
+                {activeTab === "orders" &&
+                  selectedStockId &&
+                  (() => {
+                    const filteredOrders = stockOrders
+                      .filter((order) => order.stock?.id === selectedStockId)
+                      .filter((order) => order.status !== "completed");
+
+                    const allCount = filteredOrders.length;
+                    const buyCount = filteredOrders.filter(
+                      (order) => order.type === "buy"
+                    ).length;
+                    const sellCount = filteredOrders.filter(
+                      (order) => order.type === "sell"
+                    ).length;
+
+                    return (
+                      <div className="flex gap-0 bg-gray-50 p-[3px] rounded-lg">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setOrderFilter("all")}
+                          className={`font-semibold text-sm rounded-none border-0 border-b-2 cursor-pointer ${
+                            orderFilter === "all"
+                              ? "text-gray-700 bg-gray-50 border-primary"
+                              : "text-gray-700 border-transparent hover:bg-gray-100"
+                          }`}
+                        >
+                          {t("all")} {allCount > 0 && `(${allCount})`}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setOrderFilter("buy")}
+                          className={`font-semibold text-sm rounded-none border-0 border-b-2 cursor-pointer ${
+                            orderFilter === "buy"
+                              ? "text-gray-700 bg-gray-50 border-primary shadow-sm"
+                              : "text-gray-700 border-transparent hover:bg-gray-100"
+                          }`}
+                        >
+                          {t("buy")} {buyCount > 0 && `(${buyCount})`}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setOrderFilter("sell")}
+                          className={`font-semibold text-sm rounded-none border-0 border-b-2 cursor-pointer ${
+                            orderFilter === "sell"
+                              ? "text-gray-700 bg-gray-50 border-primary shadow-sm"
+                              : "text-gray-700 border-transparent hover:bg-gray-100"
+                          }`}
+                        >
+                          {t("sell")} {sellCount > 0 && `(${sellCount})`}
+                        </Button>
+                      </div>
+                    );
+                  })()}
+              </div>
+            </Tabs>
           </div>
           <div className="overflow-y-auto flex-1 p-4">
-            {selectedStockId && (
-              <div className="space-y-6">
-                <div className="border-b pb-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-3xl font-bold text-gray-900 mb-2">
-                        {groupedStocks[selectedStockId as number]?.name}
-                      </p>
-                      <div className="flex flex-col items-start space-y-2">
-                        <BuyStockDialog
-                          stock={stocks.find((s) => s.id === selectedStockId)}
-                        />
-                        <div className="flex flex-row items-center gap-2">
-                          <BuyStockOrderDialog
-                            stock={stocks.find((s) => s.id === selectedStockId)}
-                          />
-                          {selectedStockId &&
-                            enrichedStocks.find(
-                              (s) => s.id === selectedStockId
-                            ) && (
-                              <SellStockDialog
-                                stocks={enrichedStocks}
-                                defaultStock={
-                                  enrichedStocks.find(
-                                    (s) => s.id === selectedStockId
-                                  ) || undefined
-                                }
-                                open={openSellDialog}
-                                setOpen={setOpenSellDialog}
-                                onUpdate={() => setOpenSellDialog(false)}
-                                disabled={
-                                  groupedStocks[selectedStockId as number]
-                                    ?.quantity === 0
-                                }
+            {selectedStockId &&
+              (() => {
+                return (
+                  <Tabs
+                    value={activeTab}
+                    onValueChange={setActiveTab}
+                    className="h-full"
+                  >
+                    <TabsContent value="details" className="mt-0 h-full">
+                      <div className="space-y-4">
+                        <div className="flex items-start justify-between pb-4 border-b">
+                          <div>
+                            <p className="text-3xl font-bold text-gray-900 mb-2">
+                              {groupedStocks[selectedStockId as number]?.name}
+                            </p>
+                            <div className="flex flex-row items-center gap-2 mt-2">
+                              <BuyStockDialog
+                                stock={stocks.find(
+                                  (s) => s.id === selectedStockId
+                                )}
                               />
-                            )}
+                              <BuyStockOrderDialog
+                                stock={stocks.find(
+                                  (s) => s.id === selectedStockId
+                                )}
+                              />
+                              {selectedStockId &&
+                                enrichedStocks.find(
+                                  (s) => s.id === selectedStockId
+                                ) && (
+                                  <SellStockDialog
+                                    stocks={enrichedStocks}
+                                    defaultStock={
+                                      enrichedStocks.find(
+                                        (s) => s.id === selectedStockId
+                                      ) || undefined
+                                    }
+                                    open={openSellDialog}
+                                    setOpen={setOpenSellDialog}
+                                    onUpdate={() => setOpenSellDialog(false)}
+                                    disabled={
+                                      groupedStocks[selectedStockId as number]
+                                        ?.quantity === 0
+                                    }
+                                  />
+                                )}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium">
+                              {t("marketPrice")}
+                            </p>
+                            <p className="text-2xl font-bold mb-1">
+                              €
+                              {groupedStocks[
+                                selectedStockId as number
+                              ]?.marketPrice.toFixed(2)}
+                            </p>
+                            <p className="text-xs font-medium text-gray-600">
+                              {t("basePricePerShare")}
+                            </p>
+                            <p className="text-lg font-semibold text-gray-700">
+                              €
+                              {groupedStocks[selectedStockId as number]
+                                ?.quantity > 0
+                                ? groupedStocks[
+                                    selectedStockId as number
+                                  ]?.basePrice.toFixed(2)
+                                : "0.00"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <p className="text-sm font-medium text-gray-700 mb-1">
+                              {t("ownedQuantity")}
+                            </p>
+                            <p className="text-2xl font-bold text-gray-900">
+                              {
+                                groupedStocks[selectedStockId as number]
+                                  ?.quantity
+                              }
+                            </p>
+                          </div>
+
+                          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <p className="text-sm font-medium text-gray-700 mb-1">
+                              {t("remainingQuantity")}
+                            </p>
+                            <p className="text-2xl font-bold text-gray-900">
+                              {stocks.find((s) => s.id === selectedStockId)
+                                ?.remainingQuantity || 0}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium">{t("marketPrice")}</p>
-                      <p className="text-2xl font-bold mb-1">
-                        €
-                        {groupedStocks[
-                          selectedStockId as number
-                        ]?.marketPrice.toFixed(2)}
-                      </p>
-                      <p className="text-xs font-medium text-gray-600">
-                        {t("basePricePerShare")}
-                      </p>
-                      <p className="text-lg font-semibold text-gray-700">
-                        €
-                        {groupedStocks[selectedStockId as number]?.quantity > 0
-                          ? groupedStocks[
-                              selectedStockId as number
-                            ]?.basePrice.toFixed(2)
-                          : "0.00"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                    </TabsContent>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm font-medium text-gray-700 mb-1">
-                      {t("ownedQuantity")}
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {groupedStocks[selectedStockId as number]?.quantity}
-                    </p>
-                  </div>
+                    <TabsContent value="orders" className="mt-0 h-full">
+                      <div className="space-y-4">
+                        <div className="flex items-start justify-between pb-4 border-b">
+                          <div>
+                            <p className="text-3xl font-bold text-gray-900 mb-2">
+                              {groupedStocks[selectedStockId as number]?.name}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium">
+                              {t("marketPrice")}
+                            </p>
+                            <p className="text-2xl font-bold mb-1">
+                              €
+                              {groupedStocks[
+                                selectedStockId as number
+                              ]?.marketPrice.toFixed(2)}
+                            </p>
+                            <p className="text-xs font-medium text-gray-600">
+                              {t("basePricePerShare")}
+                            </p>
+                            <p className="text-lg font-semibold text-gray-700">
+                              €
+                              {groupedStocks[selectedStockId as number]
+                                ?.quantity > 0
+                                ? groupedStocks[
+                                    selectedStockId as number
+                                  ]?.basePrice.toFixed(2)
+                                : "0.00"}
+                            </p>
+                          </div>
+                        </div>
 
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm font-medium text-gray-700 mb-1">
-                      {t("remainingQuantity")}
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {stocks.find((s) => s.id === selectedStockId)
-                        ?.remainingQuantity || 0}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+                        {stockOrders
+                          .filter(
+                            (order) => order.stock?.id === selectedStockId
+                          )
+                          .filter((order) => order.status !== "completed")
+                          .filter(
+                            (order) =>
+                              orderFilter === "all" ||
+                              order.type === orderFilter
+                          ).length === 0 ? (
+                          <p className="text-center text-gray-500 py-8">
+                            {orderFilter === "all"
+                              ? t("noOrders")
+                              : orderFilter === "buy"
+                              ? t("noBuyOrders")
+                              : t("noSellOrders")}
+                          </p>
+                        ) : (
+                          stockOrders
+                            .filter(
+                              (order) => order.stock?.id === selectedStockId
+                            )
+                            .filter((order) => order.status !== "completed")
+                            .filter(
+                              (order) =>
+                                orderFilter === "all" ||
+                                order.type === orderFilter
+                            )
+                            .map((order) => (
+                              <StockOrderItem
+                                key={order.id}
+                                id={order.id!}
+                                type={order.type}
+                                status={order.status}
+                                amount={order.amount}
+                                stock={order.stock}
+                              />
+                            ))
+                        )}
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                );
+              })()}
           </div>
         </div>
       </div>

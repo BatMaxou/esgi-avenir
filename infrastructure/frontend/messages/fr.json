@@ -69,7 +69,15 @@
         "remainingQuantity": "Actions de banque restantes",
         "buyStock": "Acheter une action",
         "createBuyStock": "Creér une demande d'achat",
-        "createSellStock": "Creér une vente"
+        "createSellStock": "Creér une vente",
+        "stockOrders": "Demandes soumises",
+        "details": "Détails",
+        "all": "Toutes",
+        "buy": "Achats",
+        "sell": "Ventes",
+        "noOrders": "Aucune demande en cours pour cette action",
+        "noBuyOrders": "Aucune demande d'achat en cours",
+        "noSellOrders": "Aucune demande de vente en cours"
       }
     },
     "clients": {

@@ -69,7 +69,15 @@
         "remainingQuantity": "Remaining bank stock quantity",
         "buyStock": "Buy stock",
         "createBuyStock": "Create a buy stock order",
-        "createSellStock": "Create a sell stock order"
+        "createSellStock": "Create a sell stock order",
+        "stockOrders": "Stock orders",
+        "details": "Details",
+        "all": "All",
+        "buy": "Buy",
+        "sell": "Sell",
+        "noOrders": "No pending orders for this stock",
+        "noBuyOrders": "No pending buy orders",
+        "noSellOrders": "No pending sell orders"
       }
     },
     "clients": {
