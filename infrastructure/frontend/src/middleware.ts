@@ -7,5 +7,5 @@ const middlewares = [localeMiddleware, accessMiddleware];
 export default stackMiddlewares(middlewares);
 
 export const config = {
- matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|assets).*)'],
+ matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|assets|sitemap.xml|robots.txt).*)'],
 };
