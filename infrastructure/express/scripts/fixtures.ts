@@ -1,5 +1,6 @@
 import { PasswordHasher } from "../../adapters/bcrypt/services/PasswordHasher";
 import { MariadbConnection } from "../../adapters/mariadb/config/MariadbConnection";
+import { openConnection } from "../../adapters/mongodb/config/MongodbConnection";
 import { RepositoryResolver } from "../../adapters/services/RepositoryResolver";
 import {
   bankCode,
@@ -26,12 +27,19 @@ import { initModels } from "../../adapters/mariadb/initModels";
 
 const fixtures = async () => {
   try {
-    const connection = new MariadbConnection(databaseDsn).getConnection();
-    initModels(connection);
+    if (databaseSource === "mariadb") {
+      const connection = new MariadbConnection(databaseDsn).getConnection();
+      initModels(connection);
 
-    console.log("🗑️ Dropping database...");
-    await connection.drop();
-    await connection.sync();
+      console.log("🗑️ Dropping database...");
+      await connection.drop();
+      await connection.sync();
+    } else if (databaseSource === "mongodb") {
+      console.log("🗑️ Dropping MongoDB collections...");
+      const mongoConnection = await openConnection();
+      await mongoConnection.connection.db?.dropDatabase();
+      console.log("✅ MongoDB database dropped successfully.");
+    }
 
     const repositoryResolver = new RepositoryResolver(
       databaseSource,
