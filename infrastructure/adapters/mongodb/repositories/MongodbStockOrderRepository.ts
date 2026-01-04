@@ -14,24 +14,9 @@ import { UserModel } from "../models/UserModel";
 import { StockModel } from "../models/StockModel";
 import { AccountModel } from "../models/AccountModel";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbStockOrderRepository
-  implements StockOrderRepositoryInterface
-{
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbStockOrderRepository extends AbstractMongoRepository implements StockOrderRepositoryInterface {
   public async create(
     stockOrder: StockOrder
   ): Promise<

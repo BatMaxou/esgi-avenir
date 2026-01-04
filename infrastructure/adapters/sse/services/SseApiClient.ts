@@ -2,10 +2,8 @@ import { EventSourceMessage, fetchEventSource } from "@microsoft/fetch-event-sou
 
 import { SseApiClientInterface } from "../../../../application/services/sse/SseApiClientInterface";
 import { News } from "../../../../domain/entities/News";
-import { getCookie } from "../../../utils/frontend/cookies";
 import { ssePaths } from "../../../../application/services/sse/ssePaths";
 import { Notification } from "../../../../domain/entities/Notification";
-import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 import { SseRessourceEnum } from "../../../../application/services/sse/SseRessourceEnum";
 
 export interface SseNewsPayloadInterface {
@@ -17,10 +15,10 @@ export interface SseNotificationPayloadInterface {
 }
 
 export class SseApiClient implements SseApiClientInterface {
-  private token: string | null = null;
-
-  constructor(private baseUrl: string) {
-    this.token = getCookie("token");
+  constructor(
+    private readonly baseUrl: string,
+    private readonly token: string,
+  ) {
   }
 
   public async get(url: string, onMessage: (event: EventSourceMessage) => void): Promise<void> {

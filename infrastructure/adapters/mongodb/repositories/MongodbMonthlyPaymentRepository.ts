@@ -5,24 +5,9 @@ import { BankCreditNotFoundError } from "../../../../domain/errors/entities/bank
 import { MonthlyPaymentModel } from "../models/MonthlyPaymentModel";
 import { BankCreditModel } from "../models/BankCreditModel";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbMonthlyPaymentRepository
-  implements MonthlyPaymentRepositoryInterface
-{
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbMonthlyPaymentRepository extends AbstractMongoRepository implements MonthlyPaymentRepositoryInterface {
   public async create(
     monthlyPayment: MonthlyPayment
   ): Promise<MonthlyPayment | BankCreditNotFoundError | InvalidAmountError> {

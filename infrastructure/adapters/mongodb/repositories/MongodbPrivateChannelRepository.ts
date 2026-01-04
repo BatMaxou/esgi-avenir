@@ -5,18 +5,12 @@ import {
 import { PrivateChannel } from "../../../../domain/entities/PrivateChannel";
 import { ChannelNotFoundError } from "../../../../domain/errors/entities/channel/ChannelNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
-import { openConnection } from "../config/MongodbConnection";
 import { PrivateChannelModel } from "../models/PrivateChannelModel";
 import { UserModel } from "../models/UserModel";
 import { getNextSequence } from "../models/CounterModel";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbPrivateChannelRepository
-  implements PrivateChannelRepositoryInterface
-{
-  private async ensureConnection(): Promise<void> {
-    await openConnection();
-  }
-
+export class MongodbPrivateChannelRepository extends AbstractMongoRepository implements PrivateChannelRepositoryInterface {
   public async create(
     privateChannel: PrivateChannel
   ): Promise<PrivateChannel | UserNotFoundError> {

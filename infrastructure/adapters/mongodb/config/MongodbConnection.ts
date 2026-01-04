@@ -1,12 +1,11 @@
 import { Mongoose, connect } from "mongoose";
-import {
-  databaseUser,
-  databasePassword,
-  databaseName,
-  databaseDsn,
-} from "../../../express/utils/tools";
 
-export const openConnection = (): Promise<Mongoose> => {
+export const openConnection = (
+  databaseDsn: string | undefined,
+  databaseUser: string | undefined,
+  databasePassword: string | undefined,
+  databaseName: string | undefined
+): Promise<Mongoose> => {
   if (databaseDsn === undefined) {
     throw new Error("MONGO_URI is not defined");
   }

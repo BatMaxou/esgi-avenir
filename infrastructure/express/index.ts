@@ -18,6 +18,10 @@ import {
   mailerPort,
   mailerFrom,
   jwtSecret,
+  databaseUser,
+  databasePassword,
+  databaseName,
+  frontUrl,
 } from "./utils/tools";
 import { AccountRouter } from "./routes/AccountRouter";
 import { OperationRouter } from "./routes/OperationRouter";
@@ -54,7 +58,10 @@ const startServer = async () => {
 
   const repositoryResolver = new RepositoryResolver(
     databaseSource,
-    databaseDsn
+    databaseDsn,
+    databaseUser,
+    databasePassword,
+    databaseName,
   );
   const tokenManager = new TokenManager(jwtSecret);
   const mailer = new Mailer(mailerHost, mailerPort, mailerFrom);
@@ -65,6 +72,7 @@ const startServer = async () => {
   const channelIdentifierBuilder = new SocketIoChannelIdentifierBuilder();
   const websocketServer = new SocketIoServer(
     server,
+    frontUrl,
     channelIdentifierBuilder,
     tokenManager,
     repositoryResolver.getUserRepository(),

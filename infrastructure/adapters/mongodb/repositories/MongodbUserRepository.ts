@@ -8,22 +8,9 @@ import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserN
 import { UserModel } from "../models/UserModel";
 import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbUserRepository implements UserRepositoryInterface {
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbUserRepository extends AbstractMongoRepository implements UserRepositoryInterface {
   public async create(user: User): Promise<User | EmailExistsError> {
     try {
       await this.ensureConnection();

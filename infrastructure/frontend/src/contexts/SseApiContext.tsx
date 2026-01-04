@@ -1,10 +1,11 @@
 'use client';
 
-import { createContext, ReactNode, useContext } from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 
 import { apiUrl } from "../../utils/tools";
 import { SseApiClientInterface } from "../../../../application/services/sse/SseApiClientInterface";
 import { SseApiClient } from "../../../adapters/sse/services/SseApiClient";
+import { getCookie } from "../../../utils/frontend/cookies";
 
 type Props = {
   children: ReactNode;
@@ -12,12 +13,20 @@ type Props = {
 
 type SseApiClientContextType = {
   sseApiClient: SseApiClientInterface;
+  setSseToken: (token: string) => void;
 };
 
 export const SseApiClientContext = createContext<SseApiClientContextType | undefined>(undefined);
 
 export const SseApiClientProvider = ({ children }: Props) => {
-  return <SseApiClientContext.Provider value={{ sseApiClient: new SseApiClient(apiUrl) }}>
+  const [token, setSseToken] = useState<string>(getCookie('token') || '');
+  const [sseApiClient, setSseApiClient] = useState<SseApiClientInterface>(new SseApiClient(apiUrl, token));
+
+  useEffect(() => {
+    setSseApiClient(new SseApiClient(apiUrl, token));
+  }, [token]);
+
+  return <SseApiClientContext.Provider value={{ sseApiClient, setSseToken }}>
     {children}
   </SseApiClientContext.Provider>;
 }

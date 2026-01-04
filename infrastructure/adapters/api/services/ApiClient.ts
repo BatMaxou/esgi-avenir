@@ -53,7 +53,10 @@ export class ApiClient implements ApiClientInterface {
   public companyChannel: CompanyChannelResourceInterface;
   public notification: NotificationResourceInterface;
 
-  constructor(private baseUrl: string) {
+  constructor(
+    private readonly baseUrl: string,
+    private readonly onTokenChange: (token: string) => void)
+  {
     this.me = new MeResource(this);
     this.user = new UserResource(this);
     this.account = new AccountResource(this);
@@ -162,6 +165,7 @@ export class ApiClient implements ApiClientInterface {
         if (response.token) {
           const decodedTokenExp: number = JSON.parse(atob(response.token.split(".")[1]))?.exp ?? 0;
           setCookie("token", response.token, new Date(decodedTokenExp * 1000));
+          this.onTokenChange(response.token);
           this.token = response.token;
         }
 
@@ -200,6 +204,7 @@ export class ApiClient implements ApiClientInterface {
 
   public logout(): void {
     this.token = null;
+    this.onTokenChange('');
     eraseCookie("token");
   }
 }

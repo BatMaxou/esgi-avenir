@@ -4,22 +4,9 @@ import { SettingEnum } from "../../../../domain/enums/SettingEnum";
 import { SettingRepositoryInterface } from "../../../../application/repositories/SettingRepositoryInterface";
 import { SettingModel } from "../models/SettingModel";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbSettingRepository implements SettingRepositoryInterface {
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbSettingRepository extends AbstractMongoRepository implements SettingRepositoryInterface {
   public async upsert(
     setting: Setting
   ): Promise<Setting | SettingNotFoundError> {

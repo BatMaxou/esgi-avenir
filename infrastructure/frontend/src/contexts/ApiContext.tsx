@@ -5,6 +5,8 @@ import { createContext, ReactNode, useContext } from "react"
 import { ApiClientInterface } from "../../../../application/services/api/ApiClientInterface";
 import { ApiClient } from "../../../adapters/api/services/ApiClient";
 import { apiUrl } from "../../utils/tools";
+import { useWebsocketClient } from "./WebsocketContext";
+import { useSseApiClient } from "./SseApiContext";
 
 type Props = {
   children: ReactNode;
@@ -17,7 +19,13 @@ type ApiClientContextType = {
 export const ApiClientContext = createContext<ApiClientContextType | undefined>(undefined);
 
 export const ApiClientProvider = ({ children }: Props) => {
-  return <ApiClientContext.Provider value={{ apiClient: new ApiClient(apiUrl) }}>
+  const { setWebsocketToken } = useWebsocketClient();
+  const { setSseToken } = useSseApiClient();
+
+  return <ApiClientContext.Provider value={{ apiClient: new ApiClient(apiUrl, (token: string) => {
+    setWebsocketToken(token);
+    setSseToken(token);
+  }) }}>
     {children}
   </ApiClientContext.Provider>;
 }

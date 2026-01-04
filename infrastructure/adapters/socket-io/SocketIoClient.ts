@@ -6,12 +6,16 @@ import { WebsocketMessage } from "../../../domain/entities/Message";
 import { WebsocketRessourceEnum } from "../../../application/services/websocket/WebsocketRessourceEnum";
 
 export class SocketIoClient implements WebsocketClientInterface {
-  socket: typeof Socket;
+  socket: typeof Socket | null = null;
 
   constructor(
     apiUrl: string,
     token: string,
   ) {
+    if (!token) {
+      return;
+    }
+
     this.socket = io(apiUrl, {
       auth: {
         token: `Bearer ${token}`
@@ -22,12 +26,20 @@ export class SocketIoClient implements WebsocketClientInterface {
   }
 
   connect() {
+    if (!this.socket) {
+      return;
+    }
+
     this.socket.on("connect", () => {
       console.log("✅ WS Connected");
     });
   }
 
   join(ressource: WebsocketRessourceEnum, channelId: number) {
+    if (!this.socket) {
+      return;
+    }
+
     this.socket.emit(WebsocketRessourceEnum.JOIN, {
       ressource,
       channelId,
@@ -35,6 +47,10 @@ export class SocketIoClient implements WebsocketClientInterface {
   }
 
   onMessage(action: (message: WebsocketMessage) => void, ressource: WebsocketRessourceEnum, channelId: number) {
+    if (!this.socket) {
+      return;
+    }
+
     this.socket.on(ressource, (message: WebsocketMessage) => {
       if (message.channel?.id === channelId) {
         action(message);
@@ -43,6 +59,10 @@ export class SocketIoClient implements WebsocketClientInterface {
   }
 
   emitMessage(message: WebsocketMessage, ressource: WebsocketRessourceEnum) {
+    if (!this.socket) {
+      return;
+    }
+
     this.socket.emit(ressource, message);
   }
 }

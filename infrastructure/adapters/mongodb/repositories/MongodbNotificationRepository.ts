@@ -1,18 +1,12 @@
 import { NotificationRepositoryInterface } from "../../../../application/repositories/NotificationRepositoryInterface";
 import { Notification } from "../../../../domain/entities/Notification";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
-import { openConnection } from "../config/MongodbConnection";
 import { NotificationModel } from "../models/NotificationModel";
 import { UserModel } from "../models/UserModel";
 import { getNextSequence } from "../models/CounterModel";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbNotificationRepository
-  implements NotificationRepositoryInterface
-{
-  private async ensureConnection(): Promise<void> {
-    await openConnection();
-  }
-
+export class MongodbNotificationRepository extends AbstractMongoRepository implements NotificationRepositoryInterface {
   public async create(
     notification: Notification
   ): Promise<Notification | UserNotFoundError> {

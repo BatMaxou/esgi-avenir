@@ -11,22 +11,9 @@ import { UserAlreadyHaveSavingsAccountError } from "../../../../domain/errors/en
 import { AccountModel } from "../models/AccountModel";
 import { UserModel } from "../models/UserModel";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbAccountRepository implements AccountRepositoryInterface {
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbAccountRepository extends AbstractMongoRepository implements AccountRepositoryInterface {
   public async create(
     account: Account
   ): Promise<
