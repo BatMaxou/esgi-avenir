@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Banner } from "@/components/ui/atoms/banner";
 import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
 import { NotifierProvider } from "@/contexts/NotifierContext";
+import RequestAdvisorByMessageDialog from "@/components/ui/molecules/dialogs/request-advisor-by-message-dialog";
 
 type Props = {
   children: ReactNode;
@@ -94,8 +95,9 @@ export default function ProtectedLayout({ children }: Props) {
         <div className="min-h-screen overflow-y-hidden bg-white">
           <Header />
           <Banner title={pageTitle} />
-          <main className="container mx-auto px-4 py-8 h-[calc(100vh-224px)] overflow-y-auto">
+          <main className="relative container mx-auto px-4 py-8 h-[calc(100vh-224px)] overflow-y-auto">
             {children}
+            <RequestAdvisorByMessageDialog />
           </main>
         </div>
       </NotifierProvider>

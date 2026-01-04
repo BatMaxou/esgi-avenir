@@ -759,6 +759,17 @@
           "stockNotAvailable": "Stock not available",
           "insufficientFunds": "Insufficient funds in the selected account"
         }
+      },
+      "requestAdvisorByMessage": {
+        "title": "Request an advisor",
+        "description": "If you have a question, you can request to speak with an advisor directly through a private message.",
+        "request": "Request an advisor",
+        "titleDescription": "Here you can enter the subject of your request.",
+        "titlePlaceholder": "Subject of your request",
+        "messageDescription": "Please provide as much detail as possible about your request so that the advisor can assist you effectively.",
+        "messageSentConfirmation": "Your message has been successfully submitted. An advisor will take care of it shortly.",
+        "goToMessages": "Go to my messages",
+        "close": "Close"
       }
     }
   },

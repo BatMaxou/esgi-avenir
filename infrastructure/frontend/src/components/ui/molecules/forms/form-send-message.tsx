@@ -15,11 +15,29 @@ import {
 import { SendMessageInput } from "@/components/ui/molecules/inputs/send-message-input";
 import { useAuth } from "@/contexts/AuthContext";
 import { MessageContext } from "@/contexts/MessageContext";
+import { GetHydratedPrivateChannelResponseInterface } from "../../../../../../../application/services/api/resources/PrivateChannelResourceInterface";
+import { useApiClient } from "@/contexts/ApiContext";
+import { paths } from "../../../../../../../application/services/api/paths";
+import { showErrorToast } from "@/lib/toast";
 
-export function SendMessageForm() {
+export function SendMessageForm({
+  isAdvisorRequest = false,
+  requestTitle = "",
+  onMessageSent,
+}: {
+  isAdvisorRequest?: boolean;
+  requestTitle?: string;
+  onMessageSent?: (
+    message: string,
+    channel?: GetHydratedPrivateChannelResponseInterface
+  ) => void;
+}) {
   const { isLoading } = useAuth();
   const t = useTranslations("components.forms.sendMessage");
-  const { addMessage } = useContext(MessageContext);
+  const messageContext = useContext(MessageContext);
+  const { apiClient } = useApiClient();
+
+  const addMessage = messageContext?.addMessage;
 
   const formSchema = z.object({
     message: z.string().min(1),
@@ -32,7 +50,7 @@ export function SendMessageForm() {
     },
   });
 
-  const onSubmit = useCallback(
+  const onMessageSubmit = useCallback(
     (values: z.infer<typeof formSchema>) => {
       const message = values.message;
       addMessage(message);
@@ -41,21 +59,54 @@ export function SendMessageForm() {
     [addMessage, form]
   );
 
+  const onRequestAdvisorSubmit = useCallback(
+    async (values: z.infer<typeof formSchema>) => {
+      const message = values.message;
+
+      try {
+        const response =
+          await apiClient.post<GetHydratedPrivateChannelResponseInterface>(
+            paths.privateMessage.create,
+            {
+              title: requestTitle,
+              content: message,
+            }
+          );
+
+        if (response instanceof Error) {
+          showErrorToast(response.message);
+          return;
+        }
+
+        if (onMessageSent) {
+          onMessageSent(message, response);
+        }
+        form.reset();
+      } catch (error) {
+        console.error("Error in onRequestAdvisorSubmit:", error);
+        showErrorToast("Failed to send message");
+      }
+    },
+    [apiClient, form, onMessageSent, requestTitle]
+  );
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        form.handleSubmit(onSubmit)();
+        form.handleSubmit(onMessageSubmit)();
       }
     },
-    [form, onSubmit]
+    [form, onMessageSubmit]
   );
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(
+          isAdvisorRequest ? onRequestAdvisorSubmit : onMessageSubmit
+        )}
+        className="flex flex-col gap-4 w-full"
       >
         <FormField
           control={form.control}

@@ -10,10 +10,13 @@ import { CreatePrivateMessagePayloadInterface } from "../../../../application/se
 export class PrivateMessageController {
   public constructor(
     private readonly messageRepository: MessageRepositoryInterface,
-    private readonly privateChannelRepository: PrivateChannelRepositoryInterface,
+    private readonly privateChannelRepository: PrivateChannelRepositoryInterface
   ) {}
 
-  public async create(request: FastifyRequest<{Body: CreatePrivateMessagePayloadInterface}>, response: FastifyReply) {
+  public async create(
+    request: FastifyRequest<{ Body: CreatePrivateMessagePayloadInterface }>,
+    response: FastifyReply
+  ) {
     const maybeCommand = CreatePrivateMessageCommand.from(request.body);
     if (maybeCommand instanceof InvalidCreatePrivateMessageCommandError) {
       return response.status(400).send({
@@ -28,11 +31,14 @@ export class PrivateMessageController {
       });
     }
 
-    const createUsecase = new CreatePrivateChannelUsecase(this.privateChannelRepository, this.messageRepository);
+    const createUsecase = new CreatePrivateChannelUsecase(
+      this.privateChannelRepository,
+      this.messageRepository
+    );
     const maybePrivateMessage = await createUsecase.execute(
       maybeCommand.title,
       maybeCommand.content,
-      user,
+      user
     );
 
     if (maybePrivateMessage instanceof Error) {
@@ -41,9 +47,16 @@ export class PrivateMessageController {
       });
     }
 
-    response.status(201).send({
-      id: maybePrivateMessage.id,
-      content: maybePrivateMessage.content,
-    });
+    const channel = await this.privateChannelRepository.findById(
+      maybePrivateMessage.channelId
+    );
+
+    if (channel instanceof Error) {
+      return response.status(400).send({
+        error: channel.message,
+      });
+    }
+
+    response.status(201).send(channel);
   }
 }
