@@ -79,12 +79,12 @@ const RequestAdvisorByMessageDialog = () => {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <form>
         <DialogTrigger asChild>
-          <div className="absolute right-0 bottom-8 w-12 h-12 text-3xl rounded-full bg-primary-red border-2 border-primary-red hover:bg-white hover:text-primary-red cursor-pointer font-bold text-white flex items-center justify-center">
+          <div className="absolute left-0 bottom-8 w-12 h-12 text-3xl rounded-full bg-primary-red border-2 border-primary-red hover:bg-white hover:text-primary-red cursor-pointer font-bold text-white flex items-center justify-center">
             ?
           </div>
         </DialogTrigger>
         <DialogContent
-          className={`data-[state=open]:zoom-in-100! data-[state=open]:slide-in-from-bottom-20 data-[state=open]:duration-600 sm:top-auto sm:right-12 sm:bottom-20 sm:left-auto sm:m-6 sm:p-0 sm:translate-x-0 sm:translate-y-0 ${
+          className={`data-[state=open]:zoom-in-100! data-[state=open]:slide-in-from-bottom-20 data-[state=open]:duration-600 sm:top-auto sm:left-12 sm:bottom-20 sm:right-auto sm:m-6 sm:p-0 sm:translate-x-0 sm:translate-y-0 ${
             isMessageSent && channel
               ? "sm:max-w-[450px] sm:min-h-[400px] sm:max-h-[400px] sm:h-full sm:flex sm:flex-col"
               : "sm:max-w-[375px]"

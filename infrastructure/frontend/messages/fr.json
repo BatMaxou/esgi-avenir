@@ -30,7 +30,7 @@
     },
     "privateMessage": {
       "title": "Messages Privés",
-      "no-results": "Aucun message trouvé."
+      "no-results": "Envoyez un message pour commencer la conversation."
     },
     "accounts": {
       "title": "Mes comptes",
@@ -512,6 +512,15 @@
         "messageSentConfirmation": "Votre message a été soumis avec succès. Un conseiller le prendra bientôt en charge.",
         "goToMessages": "Aller aux messages",
         "close": "Fermer"
+      },
+      "createCompanyChannel": {
+        "title": "Nouveau canal d'entreprise",
+        "description": "Démarrez une nouvelle conversation avec votre équipe ou un département spécifique.",
+        "channelTitle": "Nom du canal",
+        "channelTitlePlaceholder": "Ex: Support technique",
+        "createChannel": "Créer le canal",
+        "creatingChannel": "Création du canal en cours...",
+        "channelTitleError": "Le nom du canal est requis."
       }
     },
     "items": {
@@ -773,7 +782,8 @@
   },
   "buttons": {
     "back": "Retour",
-    "backToHome": "Retour à l'accueil"
+    "backToHome": "Retour à l'accueil",
+    "cancel": "Annuler"
   },
   "auth": {
     "login": {

@@ -6,7 +6,11 @@ import { paths } from "../../../../application/services/api/paths";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { showErrorToast } from "@/lib/toast";
 import { GetHydratedPrivateChannelResponseInterface } from "../../../../application/services/api/resources/PrivateChannelResourceInterface";
-import { GetHydratedCompanyChannelResponseInterface } from "../../../../application/services/api/resources/CompanyChannelResourceInterface";
+import {
+  CreateCompanyChannelPayloadInterface,
+  GetCompanyChannelResponseInterface,
+  GetHydratedCompanyChannelResponseInterface,
+} from "../../../../application/services/api/resources/CompanyChannelResourceInterface";
 import { getCookie } from "../../../utils/frontend/cookies";
 
 type Props = {
@@ -38,6 +42,9 @@ type ChannelContextType = {
   getAllCompanyChannels: () => Promise<boolean>;
   getAllPrivateChannels: () => Promise<boolean>;
   getAllChannels: () => Promise<void>;
+  createCompanyChannel: (
+    data: CreateCompanyChannelPayloadInterface
+  ) => Promise<void>;
 };
 
 export const ChannelContext = createContext<ChannelContextType | undefined>(
@@ -220,6 +227,32 @@ export const ChannelProvider = ({ children }: Props) => {
     return;
   };
 
+  const createCompanyChannel = async (
+    data: CreateCompanyChannelPayloadInterface
+  ): Promise<void> => {
+    setIsChannelsLoading(true);
+
+    const token = getCookie("token");
+    if (!token) {
+      if (!token) {
+        setIsChannelsLoading(false);
+        return;
+      }
+    }
+
+    const response: GetCompanyChannelResponseInterface | ApiClientError =
+      await apiClient.companyChannel.create(data);
+
+    if (response instanceof ApiClientError) {
+      const errorResponse = response.message;
+      showErrorToast(errorResponse);
+    }
+
+    await getAllCompanyChannels();
+    setIsChannelsLoading(false);
+    return;
+  };
+
   return (
     <ChannelContext.Provider
       value={{
@@ -233,6 +266,7 @@ export const ChannelProvider = ({ children }: Props) => {
         getAllCompanyChannels,
         getAllPrivateChannels,
         getAllChannels,
+        createCompanyChannel,
       }}
     >
       {children}

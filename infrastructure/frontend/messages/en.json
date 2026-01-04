@@ -30,7 +30,7 @@
     },
     "privateMessage": {
       "title": "Private Messages",
-      "no-results": "No message found."
+      "no-results": "Send a message to start the conversation."
     },
     "accounts": {
       "title": "My accounts",
@@ -770,12 +770,22 @@
         "messageSentConfirmation": "Your message has been successfully submitted. An advisor will take care of it shortly.",
         "goToMessages": "Go to my messages",
         "close": "Close"
+      },
+      "createCompanyChannel": {
+        "title": "New company channel",
+        "description": "Start a new conversation with your team or a specific department.",
+        "channelTitle": "Channel title",
+        "channelTitlePlaceholder": "Ex: Technical support",
+        "createChannel": "Create channel",
+        "creatingChannel": "Creating channel...",
+        "channelTitleError": "Channel title is required"
       }
     }
   },
   "buttons": {
     "back": "Back",
-    "backToHome": "Back to home"
+    "backToHome": "Back to home",
+    "cancel": "Cancel"
   },
   "auth": {
     "login": {

@@ -47,12 +47,12 @@ export default function PrivateMessageThread({
 
   return (
     <div className="h-full shadow-md bg-white rounded-lg">
-      {staticMessages.length === 0 ? (
-        <div className="flex justify-center items-center h-full p-4">
-          <span>{t("no-results")}</span>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-6 h-full justify-between rounded-md shadow-sm pb-2">
+      <div className="flex flex-col gap-6 h-full justify-between rounded-md shadow-sm pb-2">
+        {staticMessages.length === 0 && liveMessages.length === 0 ? (
+          <div className="flex flex-col justify-center items-center gap-2 h-full overflow-y-auto p-4 pt-8">
+            <span className="text-center">{t("no-results")}</span>
+          </div>
+        ) : (
           <ul
             ref={ulRef}
             className="flex flex-col gap-2 h-full overflow-y-auto p-4 pt-8"
@@ -64,11 +64,11 @@ export default function PrivateMessageThread({
               <MessageItem key={message.id} message={message} user={user} />
             ))}
           </ul>
-          <div className="px-2">
-            <SendMessageForm />
-          </div>
+        )}
+        <div className="px-2">
+          <SendMessageForm />
         </div>
-      )}
+      </div>
     </div>
   );
 }
