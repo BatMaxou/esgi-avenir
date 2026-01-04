@@ -47,6 +47,7 @@ export default function ProtectedLayout({ children }: Props) {
     "/credits": t("credits"),
     "/credit": t("credit"),
     "/clients": t("clients"),
+    "/messages": t("messages"),
   };
 
   let pageTitle = pageTitles[pathWithoutLocale];
@@ -84,7 +85,8 @@ export default function ProtectedLayout({ children }: Props) {
       getAccounts();
       getBeneficiaries();
     }
-  }, [isAuthenticated, isLoading, pathname]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, isLoading]);
 
   return (
     <ProtectedRoute requiredRoles={[RoleEnum.USER]}>

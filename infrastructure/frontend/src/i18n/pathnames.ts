@@ -76,4 +76,8 @@ export const pathnames = {
     fr: "/actions",
     en: "/actions",
   },
+  "/messages": {
+    fr: "/messages",
+    en: "/messages",
+  },
 };
