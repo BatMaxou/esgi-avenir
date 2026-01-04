@@ -501,6 +501,17 @@
       "updateSetting": {
         "modify": "Modifier",
         "instruction": "Entrez la nouvelle valeur pour ce paramètre"
+      },
+      "requestAdvisorByMessage": {
+        "title": "Demander un conseiller",
+        "description": "Si vous avez une question, vous pouvez demander à parler directement avec un conseiller via un message privé.",
+        "request": "Demander un conseiller",
+        "titleDescription": "Ici, vous pouvez entrer le sujet de votre demande.",
+        "titlePlaceholder": "Sujet de votre demande",
+        "messageDescription": "Veuillez fournir autant de détails que possible sur votre demande afin que le conseiller puisse vous aider efficacement.",
+        "messageSentConfirmation": "Votre message a été soumis avec succès. Un conseiller le prendra bientôt en charge.",
+        "goToMessages": "Aller aux messages",
+        "close": "Fermer"
       }
     },
     "items": {
