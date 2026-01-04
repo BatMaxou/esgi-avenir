@@ -51,10 +51,6 @@ export default function PrivateMessageThread({
     scrollToBottom();
   }, [liveMessages, staticMessages, scrollToBottom]);
 
-  if ((!user && !isLoading) || isFoundChannel === false) {
-    console.log("not found");
-  }
-
   return (
     <div className="h-full shadow-md bg-white rounded-lg">
       {staticMessages.length === 0 ? (
