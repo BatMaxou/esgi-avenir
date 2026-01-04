@@ -11,7 +11,14 @@ import { TokenManager } from "../adapters/jwt/services/TokenManager";
 import { AuthRouter } from "./routes/AuthRouter";
 import { MeRouter } from "./routes/MeRouter";
 import { UserRouter } from "./routes/UserRouter";
-import { databaseSource, databaseDsn, mailerHost, mailerPort, mailerFrom, jwtSecret } from "./utils/tools";
+import {
+  databaseSource,
+  databaseDsn,
+  mailerHost,
+  mailerPort,
+  mailerFrom,
+  jwtSecret,
+} from "./utils/tools";
 import { AccountRouter } from "./routes/AccountRouter";
 import { OperationRouter } from "./routes/OperationRouter";
 import { Scheduler } from "../adapters/nodecron/services/Scheduler";
@@ -30,10 +37,10 @@ import { CompanyChannelRouter } from "./routes/CompanyChannelRouter";
 import { User } from "../../domain/entities/User";
 import { SseExpressResponseAssistant } from "./services/sse/SseExpressResponseAssistant";
 import { SseExpressServerClient } from "./services/sse/SseExpressServerClient";
-import { SocketIoServer } from "../adapters/socket-io/SocketIoServer"
+import { SocketIoServer } from "../adapters/socket-io/SocketIoServer";
 import { SocketIoChannelIdentifierBuilder } from "../adapters/socket-io/SocketIoChannelIdentifierBuilder";
 
-declare module 'express' {
+declare module "express" {
   interface Request {
     user?: User;
   }
@@ -45,7 +52,10 @@ const startServer = async () => {
   app.use(cors());
   const server = createServer(app);
 
-  const repositoryResolver = new RepositoryResolver(databaseSource, databaseDsn);
+  const repositoryResolver = new RepositoryResolver(
+    databaseSource,
+    databaseDsn
+  );
   const tokenManager = new TokenManager(jwtSecret);
   const mailer = new Mailer(mailerHost, mailerPort, mailerFrom);
   const passwordHasher = new PasswordHasher();
@@ -60,125 +70,95 @@ const startServer = async () => {
     repositoryResolver.getUserRepository(),
     repositoryResolver.getPrivateChannelRepository(),
     repositoryResolver.getCompanyChannelRepository(),
-    repositoryResolver.getMessageRepository(),
+    repositoryResolver.getMessageRepository()
   );
 
   const sseAssistant = new SseExpressResponseAssistant();
   const sseServerClient = new SseExpressServerClient(sseAssistant);
 
-  app.get('/', (_, res) => {
+  app.get("/", (_, res) => {
     res.send("Hello World!");
   });
 
-  (new AuthRouter()).register(
+  new AuthRouter().register(
     app,
     repositoryResolver,
     passwordHasher,
     uniqueIdGenerator,
     mailer,
-    tokenManager,
+    tokenManager
   );
 
-  (new MeRouter()).register(
-    app,
-    repositoryResolver,
-    tokenManager,
-  );
+  new MeRouter().register(app, repositoryResolver, tokenManager);
 
-  (new UserRouter()).register(
+  new UserRouter().register(
     app,
     repositoryResolver,
     mailer,
     passwordHasher,
     uniqueIdGenerator,
-    tokenManager,
+    tokenManager
   );
 
-  (new AccountRouter()).register(
+  new AccountRouter().register(app, repositoryResolver, mailer, tokenManager);
+
+  new OperationRouter().register(app, repositoryResolver, tokenManager);
+
+  new SettingRouter().register(app, repositoryResolver, mailer, tokenManager);
+
+  new StockRouter().register(app, repositoryResolver, tokenManager, mailer);
+
+  new StockOrderRouter().register(
     app,
     repositoryResolver,
     mailer,
-    tokenManager,
+    tokenManager
   );
 
-  (new OperationRouter()).register(
-    app,
-    repositoryResolver,
-    tokenManager,
-  );
+  new FinancialSecurityRouter().register(app, repositoryResolver, tokenManager);
 
-  (new SettingRouter()).register(
+  new BeneficiaryRouter().register(
     app,
     repositoryResolver,
     mailer,
-    tokenManager,
+    tokenManager
   );
 
-  (new StockRouter()).register(
-    app,
-    repositoryResolver,
-    tokenManager,
-    mailer,
-  );
-
-  (new StockOrderRouter()).register(
+  new BankCreditRouter().register(
     app,
     repositoryResolver,
     mailer,
-    tokenManager,
+    tokenManager
   );
 
-  (new FinancialSecurityRouter()).register(
+  new NewsRouter().register(
     app,
     repositoryResolver,
     tokenManager,
+    sseServerClient
   );
 
-  (new BeneficiaryRouter()).register(
-    app,
-    repositoryResolver,
-    mailer,
-    tokenManager,
-  );
-
-  (new BankCreditRouter()).register(
-    app,
-    repositoryResolver,
-    mailer,
-    tokenManager,
-  );
-
-  (new NewsRouter()).register(
+  new NotificationRouter().register(
     app,
     repositoryResolver,
     tokenManager,
-    sseServerClient,
+    sseServerClient
   );
 
-  (new NotificationRouter()).register(
+  new PrivateMessageRouter().register(app, repositoryResolver, tokenManager);
+
+  new PrivateChannelRouter().register(
     app,
     repositoryResolver,
     tokenManager,
-    sseServerClient,
+    websocketServer
   );
 
-  (new PrivateMessageRouter()).register(
+  new CompanyChannelRouter().register(
     app,
     repositoryResolver,
     tokenManager,
-  );
-
-  (new PrivateChannelRouter()).register(
-    app,
-    repositoryResolver,
-    tokenManager,
-    websocketServer,
-  );
-
-  (new CompanyChannelRouter()).register(
-    app,
-    repositoryResolver,
-    tokenManager,
+    websocketServer
   );
 
   new Calendar(repositoryResolver, scheduler);

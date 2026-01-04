@@ -16,7 +16,8 @@
       "accountDetails": "Mon compte",
       "clientArea": "Espace client",
       "investmentsOwned": "Mes actions possédées",
-      "investmentsStocks": "Actions disponibles"
+      "investmentsStocks": "Actions disponibles",
+      "messages": "Messages"
     }
   },
   "page": {
@@ -131,7 +132,34 @@
       "no-results": "Aucun message privé trouvé."
     }
   },
+  "messages": {
+    "title": "Mes messages",
+    "loading": "Chargement...",
+    "private_channels": "Messages privés",
+    "company_channels": "Messages d'entreprise",
+    "pending_channels": "Messages en attente d'attribution",
+    "all_conversations": "Toutes les conversations",
+    "private": "Privé",
+    "company": "Entreprise",
+    "pending": "En attente",
+    "no_channels": "Aucun message pour le moment",
+    "select_conversation": "Sélectionnez une conversation pour commencer",
+    "tabs": {
+      "all": "Tous",
+      "private": "Privés",
+      "company": "Entreprise",
+      "pending": "En attente"
+    },
+    "errors": {
+      "fetch_channels": "Erreur lors de la récupération des messages"
+    }
+  },
   "components": {
+    "organisms": {
+      "messageThread": {
+        "channel_not_found": "Conversation non trouvée"
+      }
+    },
     "cards": {
       "users": {
         "title": "Utilisateurs"
@@ -649,7 +677,7 @@
         "refill": "Recharger"
       },
       "sendMessage": {
-        "messageError": "Votre message est vide",
+        "placeholder": "Écrire un message...",
         "submit": "Envoyer"
       }
     },

@@ -16,7 +16,8 @@
       "accountDetails": "My account",
       "clientArea": "Client area",
       "investmentsOwned": "My owned stocks",
-      "investmentsStocks": "Stocks available"
+      "investmentsStocks": "Stocks available",
+      "messages": "Messages"
     }
   },
   "page": {
@@ -131,7 +132,34 @@
       "no-results": "No message found."
     }
   },
+  "messages": {
+    "title": "My Messages",
+    "loading": "Loading...",
+    "private_channels": "Private Messages",
+    "company_channels": "Company Messages",
+    "pending_channels": "Pending Messages",
+    "all_conversations": "All Conversations",
+    "private": "Private",
+    "company": "Company",
+    "pending": "Pending",
+    "no_channels": "No messages at the moment",
+    "select_conversation": "Select a conversation to start",
+    "tabs": {
+      "all": "All",
+      "private": "Private",
+      "company": "Company",
+      "pending": "Pending"
+    },
+    "errors": {
+      "fetch_channels": "Error fetching messages"
+    }
+  },
   "components": {
+    "organisms": {
+      "messageThread": {
+        "channel_not_found": "Channel not found"
+      }
+    },
     "cards": {
       "users": {
         "title": "Users"
@@ -415,7 +443,7 @@
         "refill": "Refill"
       },
       "sendMessage": {
-        "messageError": "Your message is empty",
+        "placeholder": "Write your message...",
         "submit": "Send"
       }
     },

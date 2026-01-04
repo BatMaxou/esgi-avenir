@@ -13,13 +13,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/atoms/dropdown-menu";
+import { Icon } from "@iconify/react";
 import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 import { LocaleSwitcher } from "../../atoms/locale-switcher";
+import { useRouter } from "@/i18n/navigation";
 
 export default function Header() {
   const t = useTranslations("components.partials.header");
   const { user, logout } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
 
   const isDirector = user?.roles.includes(RoleEnum.DIRECTOR);
   const isAdvisor = user?.roles.includes(RoleEnum.ADVISOR);
@@ -78,6 +81,13 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center space-x-4">
+            <Icon
+              icon="mynaui:chat-messages"
+              width="24"
+              height="24"
+              className="cursor-pointer"
+              onClick={() => router.push("/messages")}
+            />
             {user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -127,7 +137,6 @@ export default function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
-
             <LocaleSwitcher />
           </div>
         </div>
