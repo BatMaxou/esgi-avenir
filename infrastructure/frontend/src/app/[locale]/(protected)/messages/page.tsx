@@ -9,6 +9,7 @@ import { GetHydratedPrivateChannelResponseInterface } from "../../../../../../..
 import { useNavigation } from "@/contexts/NavigationContext";
 import { useChannel } from "@/contexts/ChannelContext";
 import { MessageThread } from "@/components/ui/organisms/MessageThread";
+import CreateCompanyChannelDialog from "@/components/ui/molecules/dialogs/create-company-channel-dialog";
 
 type ChannelWithType = {
   channel: GetHydratedPrivateChannelResponseInterface | CompanyChannel;
@@ -169,6 +170,10 @@ export default function MessagesPage() {
                 </button>
               ))}
           </div>
+        )}
+
+        {user && user.roles?.includes(RoleEnum.DIRECTOR) && (
+          <CreateCompanyChannelDialog />
         )}
 
         <div className="flex-1 overflow-y-auto">
