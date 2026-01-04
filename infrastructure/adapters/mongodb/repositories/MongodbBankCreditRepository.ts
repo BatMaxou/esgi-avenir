@@ -15,24 +15,9 @@ import { BankCreditModel } from "../models/BankCreditModel";
 import { UserModel } from "../models/UserModel";
 import { AccountModel } from "../models/AccountModel";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbBankCreditRepository
-  implements BankCreditRepositoryInterface
-{
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbBankCreditRepository extends AbstractMongoRepository implements BankCreditRepositoryInterface {
   public async create(
     bankCredit: BankCredit
   ): Promise<

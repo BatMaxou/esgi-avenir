@@ -6,22 +6,9 @@ import { Stock } from "../../../../domain/entities/Stock";
 import { StockNotFoundError } from "../../../../domain/errors/entities/stock/StockNotFoundError";
 import { StockModel } from "../models/StockModel";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbStockRepository implements StockRepositoryInterface {
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbStockRepository extends AbstractMongoRepository implements StockRepositoryInterface {
   public async create(stock: Stock): Promise<Stock> {
     try {
       await this.ensureConnection();

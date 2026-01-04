@@ -9,16 +9,19 @@ import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 import { PrivateChannelController } from "../controllers/PrivateChannelController";
 import { UpdatePrivateChannelPayloadInterface, WritePrivateMessagePayloadInterface } from "../../../../application/services/api/resources/PrivateChannelResourceInterface";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
+import { WebsocketServerInterface } from "../../../../application/services/websocket/WebsocketServerInterface";
 
 export class PrivateChannelRouter {
   public register(
     app: FastifyInstance,
     repositoryResolver: RepositoryResolverInterface,
     tokenManager: TokenManagerInterface,
+    websocketServer: WebsocketServerInterface,
   ) {
     const privateChannelController = new PrivateChannelController(
       repositoryResolver.getMessageRepository(),
       repositoryResolver.getPrivateChannelRepository(),
+      websocketServer,
     );
 
     app.post<{Params: RessourceParamsInterface, Body: WritePrivateMessagePayloadInterface}>(

@@ -7,24 +7,9 @@ import { FinancialSecurityModel } from "../models/FinancialSecurityModel";
 import { UserModel } from "../models/UserModel";
 import { StockModel } from "../models/StockModel";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbFinancialSecurityRepository
-  implements FinancialSecurityRepositoryInterface
-{
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbFinancialSecurityRepository extends AbstractMongoRepository implements FinancialSecurityRepositoryInterface {
   public async create(
     financialSecurity: FinancialSecurity
   ): Promise<FinancialSecurity | StockNotFoundError | UserNotFoundError> {

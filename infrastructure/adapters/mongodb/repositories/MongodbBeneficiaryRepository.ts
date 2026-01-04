@@ -10,24 +10,9 @@ import { BeneficiaryModel } from "../models/BeneficiaryModel";
 import { AccountModel } from "../models/AccountModel";
 import { UserModel } from "../models/UserModel";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbBeneficiaryRepository
-  implements BeneficiaryRepositoryInterface
-{
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbBeneficiaryRepository extends AbstractMongoRepository implements BeneficiaryRepositoryInterface {
   public async create(
     beneficiary: Beneficiary
   ): Promise<Beneficiary | UserNotFoundError | AccountNotFoundError> {

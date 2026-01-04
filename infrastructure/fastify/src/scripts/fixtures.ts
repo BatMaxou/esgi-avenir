@@ -6,6 +6,9 @@ import {
   branchCode,
   databaseDsn,
   databaseSource,
+  databaseUser,
+  databasePassword,
+  databaseName,
 } from "../utils/tools";
 import { UserFixtures } from "../../../../application/fixtures/UserFixtures";
 import { AccountFixtures } from "../../../../application/fixtures/AccountFixtures";
@@ -23,19 +26,30 @@ import { PrivateChannelFixtures } from "../../../../application/fixtures/Private
 import { MessageFixtures } from "../../../../application/fixtures/MessageFixtures";
 import { NotificationFixtures } from "../../../../application/fixtures/NotificationFixtures";
 import { initModels } from "../../../adapters/mariadb/initModels";
+import { openConnection } from "../../../adapters/mongodb/config/MongodbConnection";
 
 const fixtures = async () => {
   try {
-    const connection = new MariadbConnection(databaseDsn).getConnection();
-    initModels(connection);
+    if (databaseSource === "mysql") {
+      const connection = new MariadbConnection(databaseDsn).getConnection();
+      initModels(connection);
 
-    console.log("🗑️ Dropping database...");
-    await connection.drop();
-    await connection.sync();
+      console.log("🗑️ Dropping database...");
+      await connection.drop();
+      await connection.sync();
+    } else if (databaseSource === "mongodb") {
+      console.log("🗑️ Dropping MongoDB collections...");
+      const mongoConnection = await openConnection(databaseDsn, databaseUser, databasePassword, databaseName);
+      await mongoConnection.connection.db?.dropDatabase();
+      console.log("✅ MongoDB database dropped successfully.");
+    }
 
     const repositoryResolver = new RepositoryResolver(
       databaseSource,
-      databaseDsn
+      databaseDsn,
+      databaseUser,
+      databasePassword,
+      databaseName,
     );
     const passwordHasher = new PasswordHasher();
 

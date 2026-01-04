@@ -12,18 +12,18 @@ services:
       - ./infrastructure/express:/app/infrastructure/express
       - /app/node_modules
 
-  # fastify:
-  #   depends_on:
-  #     - mariadb
-  #     - mongo
-  #   build:
-  #     dockerfile: ./infrastructure/fastify/Dockerfile
-  #   volumes:
-  #     - ./domain:/app/domain
-  #     - ./application:/app/application
-  #     - ./infrastructure/adapters:/app/infrastructure/adapters
-  #     - ./infrastructure/fastify/:/app/infrastructure/fastify
-  #     - /app/node_modules
+  fastify:
+    depends_on:
+      - mariadb
+      - mongo
+    build:
+      dockerfile: ./infrastructure/fastify/Dockerfile
+    volumes:
+      - ./domain:/app/domain
+      - ./application:/app/application
+      - ./infrastructure/adapters:/app/infrastructure/adapters
+      - ./infrastructure/fastify/:/app/infrastructure/fastify
+      - /app/node_modules
 
   frontend:
     build:

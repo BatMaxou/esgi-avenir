@@ -18,7 +18,7 @@ export const MessageItem = ({
   return (
     <li
       className={`relative flex p-4 border rounded-lg shadow-sm w-fit max-w-[70%] ${
-        isMe ? "self-end bg-light-orange" : ""
+        isMe ? "self-end bg-light-orange" : "mt-4"
       }`}
     >
       {!isMe && (

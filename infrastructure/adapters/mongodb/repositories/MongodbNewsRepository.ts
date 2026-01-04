@@ -6,16 +6,12 @@ import { News } from "../../../../domain/entities/News";
 import { NewsNotFoundError } from "../../../../domain/errors/entities/news/NewsNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
 import { InvalidHtmlContentError } from "../../../../domain/errors/values/html-content/InvalidHtmlContentError";
-import { openConnection } from "../config/MongodbConnection";
 import { NewsModel } from "../models/NewsModel";
 import { UserModel } from "../models/UserModel";
 import { getNextSequence } from "../models/CounterModel";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbNewsRepository implements NewsRepositoryInterface {
-  private async ensureConnection(): Promise<void> {
-    await openConnection();
-  }
-
+export class MongodbNewsRepository extends AbstractMongoRepository implements NewsRepositoryInterface {
   public async create(
     news: News
   ): Promise<News | UserNotFoundError | InvalidHtmlContentError> {

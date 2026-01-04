@@ -6,7 +6,10 @@ import {
   bankCode,
   branchCode,
   databaseDsn,
+  databaseName,
+  databasePassword,
   databaseSource,
+  databaseUser,
 } from "../utils/tools";
 import { UserFixtures } from "../../../application/fixtures/UserFixtures";
 import { AccountFixtures } from "../../../application/fixtures/AccountFixtures";
@@ -27,7 +30,7 @@ import { initModels } from "../../adapters/mariadb/initModels";
 
 const fixtures = async () => {
   try {
-    if (databaseSource === "mariadb") {
+    if (databaseSource === "mysql") {
       const connection = new MariadbConnection(databaseDsn).getConnection();
       initModels(connection);
 
@@ -36,14 +39,17 @@ const fixtures = async () => {
       await connection.sync();
     } else if (databaseSource === "mongodb") {
       console.log("🗑️ Dropping MongoDB collections...");
-      const mongoConnection = await openConnection();
+      const mongoConnection = await openConnection(databaseDsn, databaseUser, databasePassword, databaseName);
       await mongoConnection.connection.db?.dropDatabase();
       console.log("✅ MongoDB database dropped successfully.");
     }
 
     const repositoryResolver = new RepositoryResolver(
       databaseSource,
-      databaseDsn
+      databaseDsn,
+      databaseUser,
+      databasePassword,
+      databaseName,
     );
     const passwordHasher = new PasswordHasher();
 

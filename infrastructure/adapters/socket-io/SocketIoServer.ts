@@ -27,6 +27,7 @@ export class SocketIoServer implements WebsocketServerInterface {
 
   public constructor(
     server: HttpServer,
+    private readonly origin: string = '*',
     private readonly channelIdentifierBuilder: WebsocketChannelIdentifierBuilderInterface,
     private readonly tokenManager: TokenManagerInterface,
     private readonly userRepository: UserRepositoryInterface,
@@ -36,7 +37,7 @@ export class SocketIoServer implements WebsocketServerInterface {
   ) {
     this.io = new Server(server, {
       cors: {
-        origin: 'http://localhost:3000',
+        origin,
       }
     });
 

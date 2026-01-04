@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useState } from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 
 import { apiUrl } from "../../utils/tools";
 import { SocketIoClient } from "../../../adapters/socket-io/SocketIoClient";
@@ -13,14 +13,20 @@ type Props = {
 
 type WebsocketClientContextType = {
   websocketClient: WebsocketClientInterface;
+  setWebsocketToken: (token: string) => void;
 };
 
 export const WebsocketClientContext = createContext<WebsocketClientContextType | undefined>(undefined);
 
 export const WebsocketClientProvider = ({ children }: Props) => {
-  const [websocketClient] = useState<WebsocketClientInterface>(new SocketIoClient(apiUrl, getCookie('token') || ''));
+  const [token, setWebsocketToken] = useState<string>(getCookie('token') || '');
+  const [websocketClient, setWebsocketClient] = useState<WebsocketClientInterface>(new SocketIoClient(apiUrl, token));
 
-  return <WebsocketClientContext.Provider value={{ websocketClient }}>
+  useEffect(() => {
+    setWebsocketClient(new SocketIoClient(apiUrl, token));
+  }, [token]);
+
+  return <WebsocketClientContext.Provider value={{ websocketClient, setWebsocketToken }}>
     {children}
   </WebsocketClientContext.Provider>;
 }

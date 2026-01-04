@@ -32,10 +32,10 @@ const raleway = Raleway({
 const Providers = ({ children }: { children: ReactNode }) => {
   return (
     <NavigationProvider>
-      <ApiClientProvider>
-        <AuthProvider>
-          <SseApiClientProvider>
-            <WebsocketClientProvider>
+      <SseApiClientProvider>
+        <WebsocketClientProvider>
+          <ApiClientProvider>
+            <AuthProvider>
               <AccountsProvider>
                 <OperationsProvider>
                   <BeneficiariesProvider>
@@ -55,10 +55,10 @@ const Providers = ({ children }: { children: ReactNode }) => {
                   </BeneficiariesProvider>
                 </OperationsProvider>
               </AccountsProvider>
-            </WebsocketClientProvider>
-          </SseApiClientProvider>
-        </AuthProvider>
-      </ApiClientProvider>
+            </AuthProvider>
+          </ApiClientProvider>
+        </WebsocketClientProvider>
+      </SseApiClientProvider>
     </NavigationProvider>
   );
 };

@@ -22,11 +22,13 @@ import { WriteCompanyMessageCommand } from "../../../../application/commands/com
 import { InvalidWriteCompanyMessageCommandError } from "../../../../application/errors/commands/company-channel/InvalidWriteCompanyMessageCommandError";
 import { CreateCompanyChannelPayloadInterface, UpdateCompanyChannelPayloadInterface, WriteCompanyMessagePayloadInterface } from "../../../../application/services/api/resources/CompanyChannelResourceInterface";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
+import { WebsocketServerInterface } from "../../../../application/services/websocket/WebsocketServerInterface";
 
 export class CompanyChannelController {
   public constructor(
     private readonly messageRepository: MessageRepositoryInterface,
     private readonly companyChannelRepository: CompanyChannelRepositoryInterface,
+    private readonly websocketServer: WebsocketServerInterface,
   ) {}
 
   public async create(request: FastifyRequest<{Body: CreateCompanyChannelPayloadInterface}>, response: FastifyReply) {
@@ -155,7 +157,8 @@ export class CompanyChannelController {
 
     const writeMessageUsecase = new WriteCompanyMessageUsecase(
       this.companyChannelRepository,
-      this.messageRepository
+      this.messageRepository,
+      this.websocketServer,
     );
     const maybeMessage = await writeMessageUsecase.execute(
       maybeCommand.content,

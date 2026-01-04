@@ -4,17 +4,11 @@ import {
 } from "../../../../application/repositories/CompanyChannelRepositoryInterface";
 import { CompanyChannel } from "../../../../domain/entities/CompanyChannel";
 import { ChannelNotFoundError } from "../../../../domain/errors/entities/channel/ChannelNotFoundError";
-import { openConnection } from "../config/MongodbConnection";
 import { CompanyChannelModel } from "../models/CompanyChannelModel";
 import { getNextSequence } from "../models/CounterModel";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbCompanyChannelRepository
-  implements CompanyChannelRepositoryInterface
-{
-  private async ensureConnection(): Promise<void> {
-    await openConnection();
-  }
-
+export class MongodbCompanyChannelRepository extends AbstractMongoRepository implements CompanyChannelRepositoryInterface {
   public async create(companyChannel: CompanyChannel): Promise<CompanyChannel> {
     await this.ensureConnection();
 

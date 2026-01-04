@@ -9,16 +9,19 @@ import { RoleEnum } from "../../../../domain/enums/RoleEnum";
 import { CompanyChannelController } from "../controllers/CompanyChannelController";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
 import { CreateCompanyChannelPayloadInterface, UpdateCompanyChannelPayloadInterface, WriteCompanyMessagePayloadInterface } from "../../../../application/services/api/resources/CompanyChannelResourceInterface";
+import { WebsocketServerInterface } from "../../../../application/services/websocket/WebsocketServerInterface";
 
 export class CompanyChannelRouter {
   public register(
     app: FastifyInstance,
     repositoryResolver: RepositoryResolverInterface,
     tokenManager: TokenManagerInterface,
+    websocketServer: WebsocketServerInterface,
   ) {
     const companyChannelController = new CompanyChannelController(
       repositoryResolver.getMessageRepository(),
       repositoryResolver.getCompanyChannelRepository(),
+      websocketServer,
     );
 
     app.post<{Body: CreateCompanyChannelPayloadInterface}>(

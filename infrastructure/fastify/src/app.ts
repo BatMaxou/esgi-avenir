@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import fastifyIO from 'fastify-socket.io';
+import cors from '@fastify/cors'
 
 import { RepositoryResolver } from "../../adapters/services/RepositoryResolver";
 import { Mailer } from "../../adapters/nodemailer/services/Mailer";
@@ -9,7 +10,18 @@ import { TokenManager } from "../../adapters/jwt/services/TokenManager";
 import { AuthRouter } from "./routes/AuthRouter";
 import { MeRouter } from "./routes/MeRouter";
 import { UserRouter } from "./routes/UserRouter";
-import { databaseSource, databaseDsn, mailerHost, mailerPort, mailerFrom, jwtSecret } from "./utils/tools";
+import {
+  databaseSource,
+  databaseDsn,
+  mailerHost,
+  mailerPort,
+  mailerFrom,
+  jwtSecret,
+  databaseUser,
+  databasePassword,
+  databaseName,
+  frontUrl
+} from "./utils/tools";
 import { AccountRouter } from "./routes/AccountRouter";
 import { OperationRouter } from "./routes/OperationRouter";
 import { Scheduler } from "../../adapters/nodecron/services/Scheduler";
@@ -42,9 +54,16 @@ const startServer = async () => {
     logger: true,
   });
 
-  app.register(fastifyIO);
+  app.register(cors, {
+    origin: '*',
+  });
+  app.register(fastifyIO, {
+    cors: {
+      origin: '*',
+    },
+  });
 
-  const repositoryResolver = new RepositoryResolver(databaseSource, databaseDsn);
+  const repositoryResolver = new RepositoryResolver(databaseSource, databaseDsn, databaseUser, databasePassword, databaseName);
   const tokenManager = new TokenManager(jwtSecret);
   const mailer = new Mailer(mailerHost, mailerPort, mailerFrom);
   const passwordHasher = new PasswordHasher();
@@ -54,6 +73,7 @@ const startServer = async () => {
   const channelIdentifierBuilder = new SocketIoChannelIdentifierBuilder();
   const websocketServer = new SocketIoServer(
     app.server,
+    frontUrl,
     channelIdentifierBuilder,
     tokenManager,
     repositoryResolver.getUserRepository(),
@@ -171,19 +191,29 @@ const startServer = async () => {
     app,
     repositoryResolver,
     tokenManager,
+    websocketServer,
   );
 
   (new CompanyChannelRouter()).register(
     app,
     repositoryResolver,
     tokenManager,
+    websocketServer,
   );
 
   new Calendar(repositoryResolver, scheduler);
 
-  app.listen({ port: 3000, host: '0.0.0.0' }, (_, address) => {
+  try {
+    const address = await app.listen({
+      port: 3000,
+      host: '0.0.0.0',
+    });
+
     app.log.info(`Server listening at ${address}`);
-  });
+  } catch (err) {
+    app.log.error(err);
+    process.exit(1);
+  }
 };
 
 startServer();

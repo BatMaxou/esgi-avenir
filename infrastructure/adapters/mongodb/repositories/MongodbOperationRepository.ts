@@ -4,24 +4,9 @@ import { OperationRepositoryInterface } from "../../../../application/repositori
 import { OperationModel } from "../models/OperationModel";
 import { AccountModel } from "../models/AccountModel";
 import { getNextSequence } from "../models/CounterModel";
-import { openConnection } from "../config/MongodbConnection";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbOperationRepository
-  implements OperationRepositoryInterface
-{
-  private initialized: boolean = false;
-
-  public constructor() {
-    this.ensureConnection();
-  }
-
-  private async ensureConnection(): Promise<void> {
-    if (!this.initialized) {
-      await openConnection();
-      this.initialized = true;
-    }
-  }
-
+export class MongodbOperationRepository extends AbstractMongoRepository implements OperationRepositoryInterface {
   public async create(
     operation: Operation
   ): Promise<Operation | AccountNotFoundError> {

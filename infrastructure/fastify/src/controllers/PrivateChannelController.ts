@@ -21,11 +21,13 @@ import { AttributePrivateChannelToParams } from "../../../../application/params/
 import { InvalidAttributePrivateChannelToParamsError } from "../../../../application/errors/params/private-channel/InvalidAttributePrivateChannelToParamsError";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
 import { UpdatePrivateChannelPayloadInterface, WritePrivateMessagePayloadInterface } from "../../../../application/services/api/resources/PrivateChannelResourceInterface";
+import { WebsocketServerInterface } from "../../../../application/services/websocket/WebsocketServerInterface";
 
 export class PrivateChannelController {
   public constructor(
     private readonly messageRepository: MessageRepositoryInterface,
     private readonly privateChannelRepository: PrivateChannelRepositoryInterface,
+    private readonly websocketServer: WebsocketServerInterface,
   ) {}
 
   public async list(request: FastifyRequest, response: FastifyReply) {
@@ -156,7 +158,8 @@ export class PrivateChannelController {
 
     const writeMessageUsecase = new WritePrivateMessageUsecase(
       this.privateChannelRepository,
-      this.messageRepository
+      this.messageRepository,
+      this.websocketServer,
     );
     const maybeMessage = await writeMessageUsecase.execute(
       maybeCommand.content,

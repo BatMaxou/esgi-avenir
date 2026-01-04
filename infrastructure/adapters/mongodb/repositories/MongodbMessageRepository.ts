@@ -2,19 +2,15 @@ import { MessageRepositoryInterface } from "../../../../application/repositories
 import { Message } from "../../../../domain/entities/Message";
 import { ChannelNotFoundError } from "../../../../domain/errors/entities/channel/ChannelNotFoundError";
 import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
-import { openConnection } from "../config/MongodbConnection";
 import { PrivateMessageModel } from "../models/PrivateMessageModel";
 import { CompanyMessageModel } from "../models/CompanyMessageModel";
 import { UserModel } from "../models/UserModel";
 import { PrivateChannelModel } from "../models/PrivateChannelModel";
 import { CompanyChannelModel } from "../models/CompanyChannelModel";
 import { getNextSequence } from "../models/CounterModel";
+import { AbstractMongoRepository } from "./AbstractMongoRepository";
 
-export class MongodbMessageRepository implements MessageRepositoryInterface {
-  private async ensureConnection(): Promise<void> {
-    await openConnection();
-  }
-
+export class MongodbMessageRepository extends AbstractMongoRepository implements MessageRepositoryInterface {
   public async createPrivate(
     message: Message
   ): Promise<Message | UserNotFoundError | ChannelNotFoundError> {

@@ -47,7 +47,10 @@ import { MongodbMessageRepository } from "../mongodb/repositories/MongodbMessage
 import { MongodbNotificationRepository } from "../mongodb/repositories/MongodbNotificationRepository";
 
 type RepositoryFactory<T extends RepositoryInterface> = (
-  databaseDsn: string
+  databaseDsn: string,
+  databaseUser: string | undefined,
+  databasePassword: string | undefined,
+  databaseName: string | undefined
 ) => T;
 
 const repositoryFactories: Record<
@@ -55,53 +58,38 @@ const repositoryFactories: Record<
   Record<string, RepositoryFactory<RepositoryInterface>>
 > = {
   mysql: {
-    UserRepository: (databaseDsn: string) =>
-      new MariadbUserRepository(databaseDsn),
-    AccountRepository: (databaseDsn: string) =>
-      new MariadbAccountRepository(databaseDsn),
-    OperationRepository: (databaseDsn: string) =>
-      new MariadbOperationRepository(databaseDsn),
-    SettingRepository: (databaseDsn: string) =>
-      new MariadbSettingRepository(databaseDsn),
-    StockRepository: (databaseDsn: string) =>
-      new MariadbStockRepository(databaseDsn),
-    StockOrderRepository: (databaseDsn: string) =>
-      new MariadbStockOrderRepository(databaseDsn),
-    FinancialSecurityRepository: (databaseDsn: string) =>
-      new MariadbFinancialSecurityRepository(databaseDsn),
-    BeneficiaryRepository: (databaseDsn: string) =>
-      new MariadbBeneficiaryRepository(databaseDsn),
-    BankCreditRepository: (databaseDsn: string) =>
-      new MariadbBankCreditRepository(databaseDsn),
-    MonthlyPaymentRepository: (databaseDsn: string) =>
-      new MariadbMonthlyPaymentRepository(databaseDsn),
-    NewsRepository: (databaseDsn: string) =>
-      new MariadbNewsRepository(databaseDsn),
-    CompanyChannelRepository: (databaseDsn: string) =>
-      new MariadbCompanyChannelRepository(databaseDsn),
-    PrivateChannelRepository: (databaseDsn: string) =>
-      new MariadbPrivateChannelRepository(databaseDsn),
-    MessageRepository: (databaseDsn: string) =>
-      new MariadbMessageRepository(databaseDsn),
-    NotificationRepository: (databaseDsn: string) =>
-      new MariadbNotificationRepository(databaseDsn),
+    UserRepository: (databaseDsn: string) => new MariadbUserRepository(databaseDsn),
+    AccountRepository: (databaseDsn: string) => new MariadbAccountRepository(databaseDsn),
+    OperationRepository: (databaseDsn: string) => new MariadbOperationRepository(databaseDsn),
+    SettingRepository: (databaseDsn: string) => new MariadbSettingRepository(databaseDsn),
+    StockRepository: (databaseDsn: string) => new MariadbStockRepository(databaseDsn),
+    StockOrderRepository: (databaseDsn: string) => new MariadbStockOrderRepository(databaseDsn),
+    FinancialSecurityRepository: (databaseDsn: string) => new MariadbFinancialSecurityRepository(databaseDsn),
+    BeneficiaryRepository: (databaseDsn: string) => new MariadbBeneficiaryRepository(databaseDsn),
+    BankCreditRepository: (databaseDsn: string) => new MariadbBankCreditRepository(databaseDsn),
+    MonthlyPaymentRepository: (databaseDsn: string) => new MariadbMonthlyPaymentRepository(databaseDsn),
+    NewsRepository: (databaseDsn: string) => new MariadbNewsRepository(databaseDsn),
+    CompanyChannelRepository: (databaseDsn: string) => new MariadbCompanyChannelRepository(databaseDsn),
+    PrivateChannelRepository: (databaseDsn: string) => new MariadbPrivateChannelRepository(databaseDsn),
+    MessageRepository: (databaseDsn: string) => new MariadbMessageRepository(databaseDsn),
+    NotificationRepository: (databaseDsn: string) => new MariadbNotificationRepository(databaseDsn),
   },
   mongodb: {
-    UserRepository: () => new MongodbUserRepository(),
-    AccountRepository: () => new MongodbAccountRepository(),
-    OperationRepository: () => new MongodbOperationRepository(),
-    SettingRepository: () => new MongodbSettingRepository(),
-    StockRepository: () => new MongodbStockRepository(),
-    StockOrderRepository: () => new MongodbStockOrderRepository(),
-    FinancialSecurityRepository: () => new MongodbFinancialSecurityRepository(),
-    BeneficiaryRepository: () => new MongodbBeneficiaryRepository(),
-    BankCreditRepository: () => new MongodbBankCreditRepository(),
-    MonthlyPaymentRepository: () => new MongodbMonthlyPaymentRepository(),
-    NewsRepository: () => new MongodbNewsRepository(),
-    CompanyChannelRepository: () => new MongodbCompanyChannelRepository(),
-    PrivateChannelRepository: () => new MongodbPrivateChannelRepository(),
-    MessageRepository: () => new MongodbMessageRepository(),
-    NotificationRepository: () => new MongodbNotificationRepository(),
+    UserRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbUserRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    AccountRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbAccountRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    OperationRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbOperationRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    SettingRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbSettingRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    StockRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbStockRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    StockOrderRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbStockOrderRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    FinancialSecurityRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbFinancialSecurityRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    BeneficiaryRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbBeneficiaryRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    BankCreditRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbBankCreditRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    MonthlyPaymentRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbMonthlyPaymentRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    NewsRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbNewsRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    CompanyChannelRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbCompanyChannelRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    PrivateChannelRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbPrivateChannelRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    MessageRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbMessageRepository(databaseDsn, databaseUser, databasePassword, databaseName),
+    NotificationRepository: (databaseDsn: string, databaseUser: string | undefined, databasePassword: string | undefined, databaseName: string | undefined) => new MongodbNotificationRepository(databaseDsn, databaseUser, databasePassword, databaseName),
   },
 };
 
@@ -110,7 +98,10 @@ export class RepositoryResolver implements RepositoryResolverInterface {
 
   public constructor(
     private readonly source: string,
-    private readonly databaseDsn: string
+    private readonly databaseDsn: string,
+    private readonly databaseUser: string | undefined,
+    private readonly databasePassword: string | undefined,
+    private readonly databaseName: string | undefined
   ) {
     if (!repositoryFactories[this.source]) {
       throw new Error(`Unsupported database source: ${this.source}`);
@@ -208,7 +199,7 @@ export class RepositoryResolver implements RepositoryResolverInterface {
       );
     }
 
-    const instance = factory(this.databaseDsn);
+    const instance = factory(this.databaseDsn, this.databaseUser, this.databasePassword, this.databaseName);
     this.instances.set(cacheKey, instance);
 
     return instance as T;
