@@ -114,11 +114,13 @@ export default function MessagesPage() {
     isChannelLoading,
   ]);
 
-  const filteredChannels = channels.filter((channel) => {
-    if (activeTab === "all") return true;
-    if (activeTab === "pending") return channel.isPending === true;
-    return channel.type === activeTab && !channel.isPending;
-  });
+  const filteredChannels = channels
+    .filter((channel) => {
+      if (activeTab === "all") return true;
+      if (activeTab === "pending") return channel.isPending === true;
+      return channel.type === activeTab;
+    })
+    .sort((a, b) => (b?.channel?.id ?? 0) - (a?.channel?.id ?? 0));
 
   const tabs: { key: TabType; label: string; show: boolean }[] = [
     { key: "all", label: t("tabs.all"), show: true },
@@ -244,6 +246,15 @@ export default function MessagesPage() {
                           </span>
                         </div>
                       )}
+                      {activeTab === "private" && (
+                        <div className="flex items-center gap-2 mt-1">
+                          {channelWithType.isPending && (
+                            <span className="px-2 py-0.5 bg-white text-primary-red border-primary-red border text-xs rounded-full">
+                              {t("pending")}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </button>
@@ -266,26 +277,27 @@ export default function MessagesPage() {
               <h2 className="text-xl font-semibold text-black">
                 {selectedChannel.channel.title}
               </h2>
-              {selectedChannel.isPending && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <FilledButton
-                      icon="icon-park-outline:tickets-checked"
-                      iconSize={48}
-                      disabled={isAssignmentLoading}
-                      loading={isAssignmentLoading}
-                      onClick={() => {
-                        handleAssignAdvisorToChannel(
-                          selectedChannel.channel.id
-                        );
-                      }}
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("assign_to_me")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
+              {selectedChannel.isPending &&
+                user?.roles.includes(RoleEnum.ADVISOR) && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <FilledButton
+                        icon="icon-park-outline:tickets-checked"
+                        iconSize={48}
+                        disabled={isAssignmentLoading}
+                        loading={isAssignmentLoading}
+                        onClick={() => {
+                          handleAssignAdvisorToChannel(
+                            selectedChannel.channel.id
+                          );
+                        }}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{t("assign_to_me")}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
             </div>
             <div className="flex-1 p-1 overflow-y-auto">
               <MessageThread
