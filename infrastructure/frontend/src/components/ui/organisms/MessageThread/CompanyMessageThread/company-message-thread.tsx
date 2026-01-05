@@ -20,7 +20,7 @@ export default function PrivateMessageThread({
   const [staticMessages, setStaticMessages] = useState<Message[]>([]);
   const { user } = useAuth();
   const { apiClient } = useApiClient();
-  const { liveMessages } = useContext(MessageContext);
+  const { liveMessages, writingUsers } = useContext(MessageContext);
   const { getCompanyChannelById } = useChannel();
   const t = useTranslations("page.privateMessage");
   const ulRef = useRef<HTMLUListElement>(null);
@@ -66,6 +66,11 @@ export default function PrivateMessageThread({
           </ul>
         )}
         <div className="px-2">
+          {writingUsers.length > 0 && (
+            <span className="text-sm text-gray-600">
+                {t('writing-users', { count: writingUsers.length, firstName: writingUsers[0].firstName, lastName: writingUsers[0].lastName })}
+            </span>
+          )}
           <SendMessageForm />
         </div>
       </div>

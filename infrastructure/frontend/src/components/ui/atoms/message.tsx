@@ -30,12 +30,12 @@ export const MessageItem = ({
     >
       {!isMe && (
         <span
-          className={`text-sm absolute top-0 -translate-y-full block w-max left-0 text-gray-600`}
+          className="flex items-center text-sm absolute top-0 -translate-y-full block w-max left-0 text-gray-600"
         >
           {message.user?.roles.includes(RoleEnum.DIRECTOR) && (
             <Icon
               icon="mdi:shield-star"
-              className="inline mr-1 text-red-primary"
+              className="inline mr-1 text-primary-red"
               width={16}
               height={16}
             />

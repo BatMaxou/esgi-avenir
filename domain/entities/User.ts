@@ -6,6 +6,8 @@ import { PasswordValue } from "../values/PasswordValue";
 import { HashedPasswordValue } from "../values/HashedPasswordValue";
 import { InvalidRolesError } from "../errors/entities/user/InvalidRolesError";
 
+export type WritingMessageUser = Pick<User, 'id' | 'firstName' | 'lastName'>;
+
 export class User {
   public id?: number;
   public roles: RoleEnum[];

@@ -4,8 +4,8 @@ import { UserNotFoundError } from '../../../domain/errors/entities/user/UserNotF
 import { ChannelNotFoundError } from '../../../domain/errors/entities/channel/ChannelNotFoundError';
 import { MessageRepositoryInterface } from '../../repositories/MessageRepositoryInterface';
 import { CompanyChannelRepositoryInterface } from '../../repositories/CompanyChannelRepositoryInterface';
-import { WebsocketRessourceEnum } from '../../services/websocket/WebsocketRessourceEnum';
 import { WebsocketServerInterface } from '../../services/websocket/WebsocketServerInterface';
+import { WebsocketRessourceEnum } from '../../../domain/enums/WebsocketRessourceEnum';
 
 export class WriteCompanyMessageUsecase {
   public constructor(
@@ -51,6 +51,7 @@ export class WriteCompanyMessageUsecase {
         id: maybeNewMessage.userId,
         firstName: maybeNewMessage.user?.firstName,
         lastName: maybeNewMessage.user?.lastName,
+        roles: maybeNewMessage.user?.roles || [],
       },
       channel: {
         id: channelId,

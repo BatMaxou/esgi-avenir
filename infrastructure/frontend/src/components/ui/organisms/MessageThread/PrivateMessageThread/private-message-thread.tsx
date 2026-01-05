@@ -18,14 +18,15 @@ export default function PrivateMessageThread({
 }: {
   channelId: number;
 }) {
+  const [isChannelFetched, setIsChannelFetched] = useState<boolean>(false);
   const [staticMessages, setStaticMessages] = useState<Message[]>([]);
   const [isChannelPending, setIsChannelPending] = useState<boolean | undefined>(
     undefined
   );
   const { user } = useAuth();
   const { apiClient } = useApiClient();
-  const { isAssignmentLoading } = useChannel();
-  const { liveMessages } = useContext(MessageContext);
+  const { isAssignmentLoading, isChannelLoading } = useChannel();
+  const { liveMessages, writingUsers } = useContext(MessageContext);
   const { getPrivateChannelById } = useChannel();
   const t = useTranslations("page.privateMessage");
   const ulRef = useRef<HTMLUListElement>(null);
@@ -37,15 +38,16 @@ export default function PrivateMessageThread({
   }, [ulRef]);
 
   useEffect(() => {
-    if (user && channelId) {
+    if (user && channelId && !isChannelLoading && (!isChannelFetched || isAssignmentLoading)) {
       getPrivateChannelById(channelId).then((response) => {
         if (!(response instanceof ApiClientError)) {
           setStaticMessages(response.messages?.reverse());
           setIsChannelPending(response.advisorId === undefined);
+          setIsChannelFetched(true);
         }
       });
     }
-  }, [apiClient, user, channelId, isAssignmentLoading]);
+  }, [apiClient, user, channelId, getPrivateChannelById, isAssignmentLoading, isChannelLoading, isChannelFetched]);
 
   useEffect(() => {
     scrollToBottom();
@@ -70,19 +72,24 @@ export default function PrivateMessageThread({
               <MessageItem key={message.id} message={message} user={user} />
             ))}
           </ul>
-          {isChannelPending ? (
-            <div className="px-2 text-center border-t p-2 pt-4">
+
+          {isChannelPending
+            ? <div className="px-2 text-center border-t p-2 pt-4">
               <span className="text-center text-gray-500">
                 {user && user.roles?.includes(RoleEnum.ADVISOR)
                   ? t("advisor-pending")
                   : t("client-pending")}
               </span>
             </div>
-          ) : (
-            <div className="px-2">
+            : <div className="px-2">
+              {writingUsers.length > 0 && (
+                <span className="text-sm text-gray-600">
+                    {t('writing-users', { count: writingUsers.length, firstName: writingUsers[0].firstName, lastName: writingUsers[0].lastName })}
+                </span>
+              )}
               <SendMessageForm />
             </div>
-          )}
+          }
         </div>
       )}
     </div>
