@@ -67,6 +67,7 @@ export const MessageProvider = ({ children, ressource, channelId }: Props) => {
           id: msg.userId,
           firstName: user.firstName,
           lastName: user.lastName,
+          roles: user.roles,
         },
         channel: {
           id: msg.channelId,

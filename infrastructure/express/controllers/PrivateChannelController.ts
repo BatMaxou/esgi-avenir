@@ -93,6 +93,7 @@ export class PrivateChannelController {
               id: message.user.id,
               firstName: message.user.firstName,
               lastName: message.user.lastName,
+              roles: message.user.roles,
             }
           : null,
       })),

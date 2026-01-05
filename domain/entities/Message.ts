@@ -10,6 +10,7 @@ export type WebsocketMessage = {
     id: number;
     firstName?: string;
     lastName?: string;
+    roles: string[];
   };
   channel: {
     id: number;
@@ -29,22 +30,24 @@ export class Message {
     channel,
     createdAt,
   }: {
-    id?: number,
-    content: string,
-    userId?: number,
-    user?: User,
-    channelId?: number,
-    channel?: ChannelInterface,
-    createdAt?: Date,
+    id?: number;
+    content: string;
+    userId?: number;
+    user?: User;
+    channelId?: number;
+    channel?: ChannelInterface;
+    createdAt?: Date;
   }): Message | UserNotFoundError | ChannelNotFoundError {
     const maybeUserId = userId ?? user?.id;
     if (!maybeUserId) {
-      return new UserNotFoundError('Message must have a valid userId or user.');
+      return new UserNotFoundError("Message must have a valid userId or user.");
     }
 
     const maybeChannelId = channelId ?? channel?.id;
     if (!maybeChannelId) {
-      return new ChannelNotFoundError('Message must have a valid channelId or channel.');
+      return new ChannelNotFoundError(
+        "Message must have a valid channelId or channel."
+      );
     }
 
     const message = new this(
@@ -53,7 +56,7 @@ export class Message {
       maybeChannelId,
       createdAt,
       user ?? undefined,
-      channel ?? undefined,
+      channel ?? undefined
     );
 
     if (id) {
@@ -69,7 +72,6 @@ export class Message {
     public channelId: number,
     public createdAt?: Date,
     public user?: User,
-    public channel?: ChannelInterface,
-  ) {
-  }
+    public channel?: ChannelInterface
+  ) {}
 }

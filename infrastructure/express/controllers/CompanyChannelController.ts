@@ -26,7 +26,7 @@ export class CompanyChannelController {
   public constructor(
     private readonly messageRepository: MessageRepositoryInterface,
     private readonly companyChannelRepository: CompanyChannelRepositoryInterface,
-    private readonly websocketServer: WebsocketServerInterface,
+    private readonly websocketServer: WebsocketServerInterface
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -38,7 +38,7 @@ export class CompanyChannelController {
     }
 
     const createUsecase = new CreateCompanyChannelUsecase(
-      this.companyChannelRepository,
+      this.companyChannelRepository
     );
     const maybeCompanyChannel = await createUsecase.execute(maybeCommand.title);
 
@@ -50,15 +50,17 @@ export class CompanyChannelController {
 
   public async list(request: Request, response: Response) {
     const getListUsecase = new GetCompanyChannelListUsecase(
-      this.companyChannelRepository,
+      this.companyChannelRepository
     );
 
     const companyChannels = await getListUsecase.execute();
 
-    response.status(200).json(companyChannels.map((companyChannel) => ({
-      id: companyChannel.id,
-      title: companyChannel.title,
-    })));
+    response.status(200).json(
+      companyChannels.map((companyChannel) => ({
+        id: companyChannel.id,
+        title: companyChannel.title,
+      }))
+    );
   }
 
   public async get(request: Request, response: Response) {
@@ -73,7 +75,9 @@ export class CompanyChannelController {
       this.companyChannelRepository,
       this.messageRepository
     );
-    const maybeCompanyChannel = await getCompanyChannelUsecase.execute(maybeParams.id);
+    const maybeCompanyChannel = await getCompanyChannelUsecase.execute(
+      maybeParams.id
+    );
     if (maybeCompanyChannel instanceof ChannelNotFoundError) {
       return response.status(404).json({
         error: maybeCompanyChannel.message,
@@ -87,11 +91,14 @@ export class CompanyChannelController {
         id: message.id,
         content: message.content,
         createdAt: message.createdAt,
-        user: message.user ? {
-          id: message.user.id,
-          firstName: message.user.firstName,
-          lastName: message.user.lastName,
-        } : null,
+        user: message.user
+          ? {
+              id: message.user.id,
+              firstName: message.user.firstName,
+              lastName: message.user.lastName,
+              roles: message.user.roles,
+            }
+          : null,
       })),
     });
   }
@@ -156,13 +163,13 @@ export class CompanyChannelController {
     const writeMessageUsecase = new WriteCompanyMessageUsecase(
       this.companyChannelRepository,
       this.messageRepository,
-      this.websocketServer,
+      this.websocketServer
     );
     const maybeMessage = await writeMessageUsecase.execute(
       maybeCommand.content,
       maybeParams.id,
-      user,
-    ); 
+      user
+    );
 
     if (maybeMessage instanceof Error) {
       return response.status(404).json({
@@ -176,4 +183,3 @@ export class CompanyChannelController {
     });
   }
 }
-

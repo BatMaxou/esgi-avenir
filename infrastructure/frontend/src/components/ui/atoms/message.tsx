@@ -5,6 +5,8 @@ import {
   WebsocketMessage,
 } from "../../../../../../domain/entities/Message";
 import { User } from "../../../../../../domain/entities/User";
+import { RoleEnum } from "../../../../../../domain/enums/RoleEnum";
+import { Icon } from "@iconify/react";
 
 export const MessageItem = ({
   message,
@@ -18,19 +20,36 @@ export const MessageItem = ({
   return (
     <li
       className={`relative flex p-4 border rounded-lg shadow-sm w-fit max-w-[70%] ${
-        isMe ? "self-end bg-light-orange" : "mt-4"
+        isMe
+          ? "self-end bg-light-orange"
+          : `mt-4 ${
+              message.user?.roles.includes(RoleEnum.DIRECTOR) &&
+              "bg-primary-red text-white!"
+            }`
       }`}
     >
       {!isMe && (
         <span
-          className={`text-sm absolute top-0 -translate-y-full block w-max ${
-            isMe ? "right-0 text-white" : "left-0 text-gray-600"
-          }`}
+          className={`text-sm absolute top-0 -translate-y-full block w-max left-0 text-gray-600`}
         >
+          {message.user?.roles.includes(RoleEnum.DIRECTOR) && (
+            <Icon
+              icon="mdi:shield-star"
+              className="inline mr-1 text-red-primary"
+              width={16}
+              height={16}
+            />
+          )}
           {`${message.user?.firstName} ${message.user?.lastName}`}
         </span>
       )}
-      <p className={`wrap-anywhere ${isMe ? "text-white" : "text-gray-600"}`}>
+      <p
+        className={`wrap-anywhere ${
+          isMe || message.user?.roles.includes(RoleEnum.DIRECTOR)
+            ? "text-white"
+            : "text-gray-600"
+        }`}
+      >
         {message.content}
       </p>
     </li>
