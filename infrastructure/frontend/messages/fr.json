@@ -30,7 +30,9 @@
     },
     "privateMessage": {
       "title": "Messages Privés",
-      "no-results": "Envoyez un message pour commencer la conversation."
+      "no-results": "Envoyez un message pour commencer la conversation.",
+      "advisor-pending": "Vous devez vous assigner à cette conversation pour répondre.",
+      "client-pending": "Vous devez attendre la prise en charge par un conseiller pour continuer la conversation."
     },
     "accounts": {
       "title": "Mes comptes",
@@ -130,28 +132,30 @@
     "privateMessages": {
       "title": "Messages privés",
       "no-results": "Aucun message privé trouvé."
-    }
-  },
-  "messages": {
-    "title": "Mes messages",
-    "loading": "Chargement...",
-    "private_channels": "Messages privés",
-    "company_channels": "Messages d'entreprise",
-    "pending_channels": "Messages en attente d'attribution",
-    "all_conversations": "Toutes les conversations",
-    "private": "Privé",
-    "company": "Entreprise",
-    "pending": "En attente",
-    "no_channels": "Aucun message pour le moment",
-    "select_conversation": "Sélectionnez une conversation pour commencer",
-    "tabs": {
-      "all": "Tous",
-      "private": "Privés",
-      "company": "Entreprise",
-      "pending": "En attente"
     },
-    "errors": {
-      "fetch_channels": "Erreur lors de la récupération des messages"
+    "messages": {
+      "title": "Mes messages",
+      "loading": "Chargement...",
+      "private_channels": "Messages privés",
+      "company_channels": "Messages d'entreprise",
+      "pending_channels": "Messages en attente d'attribution",
+      "all_conversations": "Toutes les conversations",
+      "private": "Privé",
+      "company": "Entreprise",
+      "pending": "En attente",
+      "no_channels": "Aucun message pour le moment",
+      "select_conversation": "Sélectionnez une conversation pour commencer",
+      "tabs": {
+        "all": "Tous",
+        "private": "Privés",
+        "company": "Entreprise",
+        "pending": "En attente"
+      },
+      "errors": {
+        "fetch_channels": "Erreur lors de la récupération des messages"
+      },
+      "assign_to_me": "Prendre en charge",
+      "channelNotFound": "Conversation non trouvée."
     }
   },
   "components": {
@@ -930,6 +934,9 @@
     "financialSecurities": {
       "mustBeConnectedToView": "Vous devez être connecté pour consulter vos investissements",
       "errorFetching": "Erreur lors de la récupération de vos investissements"
+    },
+    "channels": {
+      "channelNotFound": "Conversation introuvable."
     }
   }
 }

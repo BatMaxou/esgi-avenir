@@ -30,7 +30,9 @@
     },
     "privateMessage": {
       "title": "Private Messages",
-      "no-results": "Send a message to start the conversation."
+      "no-results": "Send a message to start the conversation.",
+      "advisor-pending": "You have to assign yourself to this conversation to reply.",
+      "client-pending": "You have to wait for an advisor to take charge to continue the conversation."
     },
     "accounts": {
       "title": "My accounts",
@@ -130,28 +132,30 @@
     "privateMessages": {
       "title": "Private Messages",
       "no-results": "No message found."
-    }
-  },
-  "messages": {
-    "title": "My Messages",
-    "loading": "Loading...",
-    "private_channels": "Private Messages",
-    "company_channels": "Company Messages",
-    "pending_channels": "Pending Messages",
-    "all_conversations": "All Conversations",
-    "private": "Private",
-    "company": "Company",
-    "pending": "Pending",
-    "no_channels": "No messages at the moment",
-    "select_conversation": "Select a conversation to start",
-    "tabs": {
-      "all": "All",
+    },
+    "messages": {
+      "title": "My Messages",
+      "loading": "Loading...",
+      "private_channels": "Private Messages",
+      "company_channels": "Company Messages",
+      "pending_channels": "Pending Messages",
+      "all_conversations": "All Conversations",
       "private": "Private",
       "company": "Company",
-      "pending": "Pending"
-    },
-    "errors": {
-      "fetch_channels": "Error fetching messages"
+      "pending": "Pending",
+      "no_channels": "No messages at the moment",
+      "select_conversation": "Select a conversation to start",
+      "tabs": {
+        "all": "All",
+        "private": "Private",
+        "company": "Company",
+        "pending": "Pending"
+      },
+      "errors": {
+        "fetch_channels": "Error fetching messages"
+      },
+      "assign_to_me": "Assign to me",
+      "channelNotFound": "Channel not found."
     }
   },
   "components": {
@@ -932,6 +936,9 @@
     "financialSecurities": {
       "mustBeConnectedToView": "You must be connected to view your investments",
       "errorFetching": "Error fetching your investments"
+    },
+    "channels": {
+      "channelNotFound": "Channel not found."
     }
   }
 }

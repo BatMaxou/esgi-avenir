@@ -20,14 +20,17 @@ import { InvalidWritePrivateMessageCommandError } from "../../../../application/
 import { AttributePrivateChannelToParams } from "../../../../application/params/private-channel/AttributePrivateChannelToParams";
 import { InvalidAttributePrivateChannelToParamsError } from "../../../../application/errors/params/private-channel/InvalidAttributePrivateChannelToParamsError";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
-import { UpdatePrivateChannelPayloadInterface, WritePrivateMessagePayloadInterface } from "../../../../application/services/api/resources/PrivateChannelResourceInterface";
+import {
+  UpdatePrivateChannelPayloadInterface,
+  WritePrivateMessagePayloadInterface,
+} from "../../../../application/services/api/resources/PrivateChannelResourceInterface";
 import { WebsocketServerInterface } from "../../../../application/services/websocket/WebsocketServerInterface";
 
 export class PrivateChannelController {
   public constructor(
     private readonly messageRepository: MessageRepositoryInterface,
     private readonly privateChannelRepository: PrivateChannelRepositoryInterface,
-    private readonly websocketServer: WebsocketServerInterface,
+    private readonly websocketServer: WebsocketServerInterface
   ) {}
 
   public async list(request: FastifyRequest, response: FastifyReply) {
@@ -39,18 +42,24 @@ export class PrivateChannelController {
     }
 
     const getListUsecase = new GetPrivateChannelListUsecase(
-      this.privateChannelRepository,
+      this.privateChannelRepository
     );
 
     const privateChannels = await getListUsecase.execute(user);
 
-    response.status(200).send(privateChannels.map((privateChannel) => ({
-      id: privateChannel.id,
-      title: privateChannel.title,
-    })));
+    response.status(200).send(
+      privateChannels.map((privateChannel) => ({
+        id: privateChannel.id,
+        title: privateChannel.title,
+        advisorId: privateChannel.advisorId,
+      }))
+    );
   }
 
-  public async get(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async get(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = GetPrivateChannelParams.from(request.params);
     if (maybeParams instanceof InvalidGetPrivateChannelParamsError) {
       return response.status(400).send({
@@ -69,7 +78,10 @@ export class PrivateChannelController {
       this.privateChannelRepository,
       this.messageRepository
     );
-    const maybePrivateChannel = await getPrivateChannelUsecase.execute(maybeParams.id, user);
+    const maybePrivateChannel = await getPrivateChannelUsecase.execute(
+      maybeParams.id,
+      user
+    );
     if (maybePrivateChannel instanceof ChannelNotFoundError) {
       return response.status(404).send({
         error: maybePrivateChannel.message,
@@ -79,20 +91,29 @@ export class PrivateChannelController {
     response.status(200).send({
       id: maybePrivateChannel.id,
       title: maybePrivateChannel.title,
+      advisorId: maybePrivateChannel.advisorId,
       messages: maybePrivateChannel.messages.map((message) => ({
         id: message.id,
         content: message.content,
         createdAt: message.createdAt,
-        user: message.user ? {
-          id: message.user.id,
-          firstName: message.user.firstName,
-          lastName: message.user.lastName,
-        } : null,
+        user: message.user
+          ? {
+              id: message.user.id,
+              firstName: message.user.firstName,
+              lastName: message.user.lastName,
+            }
+          : null,
       })),
     });
   }
 
-  public async update(request: FastifyRequest<{Params: RessourceParamsInterface, Body: UpdatePrivateChannelPayloadInterface}>, response: FastifyReply) {
+  public async update(
+    request: FastifyRequest<{
+      Params: RessourceParamsInterface;
+      Body: UpdatePrivateChannelPayloadInterface;
+    }>,
+    response: FastifyReply
+  ) {
     const maybeParams = UpdatePrivateChannelParams.from(request.params);
     if (maybeParams instanceof InvalidUpdatePrivateChannelParamsError) {
       return response.status(400).send({
@@ -117,10 +138,13 @@ export class PrivateChannelController {
     const updatePrivateChannelUsecase = new UpdatePrivateChannelUsecase(
       this.privateChannelRepository
     );
-    const maybePrivateChannel = await updatePrivateChannelUsecase.execute({
-      id: maybeParams.id,
-      title: maybeCommand.title,
-    }, user);
+    const maybePrivateChannel = await updatePrivateChannelUsecase.execute(
+      {
+        id: maybeParams.id,
+        title: maybeCommand.title,
+      },
+      user
+    );
 
     if (maybePrivateChannel instanceof Error) {
       return response.status(404).send({
@@ -134,7 +158,13 @@ export class PrivateChannelController {
     });
   }
 
-  public async writeMessage(request: FastifyRequest<{Params: RessourceParamsInterface, Body: WritePrivateMessagePayloadInterface}>, response: FastifyReply) {
+  public async writeMessage(
+    request: FastifyRequest<{
+      Params: RessourceParamsInterface;
+      Body: WritePrivateMessagePayloadInterface;
+    }>,
+    response: FastifyReply
+  ) {
     const maybeParams = WritePrivateMessageParams.from(request.params);
     if (maybeParams instanceof InvalidWritePrivateMessageParamsError) {
       return response.status(400).send({
@@ -159,13 +189,13 @@ export class PrivateChannelController {
     const writeMessageUsecase = new WritePrivateMessageUsecase(
       this.privateChannelRepository,
       this.messageRepository,
-      this.websocketServer,
+      this.websocketServer
     );
     const maybeMessage = await writeMessageUsecase.execute(
       maybeCommand.content,
       maybeParams.id,
-      user,
-    ); 
+      user
+    );
 
     if (maybeMessage instanceof Error) {
       return response.status(404).send({
@@ -179,7 +209,10 @@ export class PrivateChannelController {
     });
   }
 
-  public async attributeTo(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async attributeTo(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = AttributePrivateChannelToParams.from(request.params);
     if (maybeParams instanceof InvalidAttributePrivateChannelToParamsError) {
       return response.status(400).send({
@@ -197,10 +230,13 @@ export class PrivateChannelController {
     const updateUsecase = new UpdatePrivateChannelUsecase(
       this.privateChannelRepository
     );
-    const maybePrivateChannel = await updateUsecase.execute({
-      id: maybeParams.id,
-      advisorId: advisor.id,
-    }, advisor);
+    const maybePrivateChannel = await updateUsecase.execute(
+      {
+        id: maybeParams.id,
+        advisorId: advisor.id,
+      },
+      advisor
+    );
 
     if (maybePrivateChannel instanceof Error) {
       return response.status(404).send({
@@ -214,4 +250,3 @@ export class PrivateChannelController {
     });
   }
 }
-

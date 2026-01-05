@@ -1,5 +1,5 @@
 interface FilledButtonProps {
-  label: string;
+  label?: string;
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
