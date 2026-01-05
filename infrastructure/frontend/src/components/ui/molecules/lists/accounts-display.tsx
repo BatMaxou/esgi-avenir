@@ -174,7 +174,7 @@ const AccountList = ({
       ) : (
         <ul className="flex flex-col space-y-2">
           {accounts.map((account) => (
-            <>
+            <div key={account.id}>
               {account.id && (
                 <LoadingLink
                   href={
@@ -216,7 +216,7 @@ const AccountList = ({
                   </Item>
                 </LoadingLink>
               )}
-            </>
+            </div>
           ))}
         </ul>
       )}
