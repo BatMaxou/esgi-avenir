@@ -10,6 +10,13 @@ import { useNavigation } from "@/contexts/NavigationContext";
 import { useChannel } from "@/contexts/ChannelContext";
 import { MessageThread } from "@/components/ui/organisms/MessageThread";
 import CreateCompanyChannelDialog from "@/components/ui/molecules/dialogs/create-company-channel-dialog";
+import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
+import { showErrorToast } from "@/lib/toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/atoms/tooltip";
 
 type ChannelWithType = {
   channel: GetHydratedPrivateChannelResponseInterface | CompanyChannel;
@@ -20,18 +27,20 @@ type ChannelWithType = {
 type TabType = "all" | "private" | "company" | "pending";
 
 export default function MessagesPage() {
-  const t = useTranslations("messages");
+  const t = useTranslations("page.messages");
   const { user } = useAuth();
   const { endNavigation } = useNavigation();
   const {
     isChannelsLoading,
     isChannelLoading,
+    isAssignmentLoading,
     companyChannels,
     privateChannels,
     allChannels,
     getAllCompanyChannels,
     getAllPrivateChannels,
     getAllChannels,
+    assignAdvisorToChannel,
   } = useChannel();
 
   const [channels, setChannels] = useState<ChannelWithType[]>([]);
@@ -105,11 +114,13 @@ export default function MessagesPage() {
     isChannelLoading,
   ]);
 
-  const filteredChannels = channels.filter((channel) => {
-    if (activeTab === "all") return true;
-    if (activeTab === "pending") return channel.isPending === true;
-    return channel.type === activeTab && !channel.isPending;
-  });
+  const filteredChannels = channels
+    .filter((channel) => {
+      if (activeTab === "all") return true;
+      if (activeTab === "pending") return channel.isPending === true;
+      return channel.type === activeTab;
+    })
+    .sort((a, b) => (b?.channel?.id ?? 0) - (a?.channel?.id ?? 0));
 
   const tabs: { key: TabType; label: string; show: boolean }[] = [
     { key: "all", label: t("tabs.all"), show: true },
@@ -137,6 +148,20 @@ export default function MessagesPage() {
   ];
 
   const isAdvisor = user?.roles?.includes(RoleEnum.ADVISOR) || false;
+
+  const handleAssignAdvisorToChannel = async (
+    channelId: number | undefined
+  ) => {
+    if (!channelId) {
+      showErrorToast(t("channelNotFound"));
+      return;
+    }
+
+    await assignAdvisorToChannel(channelId);
+    await fetchChannels();
+    setSelectedChannel((prev) => (prev ? { ...prev, isPending: false } : null));
+    return;
+  };
 
   if (isLoading) {
     return (
@@ -221,6 +246,15 @@ export default function MessagesPage() {
                           </span>
                         </div>
                       )}
+                      {activeTab === "private" && (
+                        <div className="flex items-center gap-2 mt-1">
+                          {channelWithType.isPending && (
+                            <span className="px-2 py-0.5 bg-white text-primary-red border-primary-red border text-xs rounded-full">
+                              {t("pending")}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </button>
@@ -239,10 +273,31 @@ export default function MessagesPage() {
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-between justify-between h-full">
-            <div className="p-4 border-b border-gray-200 bg-white">
+            <div className="flex flex-row justify-between items-center p-4 border-b border-gray-200 bg-white">
               <h2 className="text-xl font-semibold text-black">
                 {selectedChannel.channel.title}
               </h2>
+              {selectedChannel.isPending &&
+                user?.roles.includes(RoleEnum.ADVISOR) && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <FilledButton
+                        icon="icon-park-outline:tickets-checked"
+                        iconSize={48}
+                        disabled={isAssignmentLoading}
+                        loading={isAssignmentLoading}
+                        onClick={() => {
+                          handleAssignAdvisorToChannel(
+                            selectedChannel.channel.id
+                          );
+                        }}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{t("assign_to_me")}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
             </div>
             <div className="flex-1 p-1 overflow-y-auto">
               <MessageThread

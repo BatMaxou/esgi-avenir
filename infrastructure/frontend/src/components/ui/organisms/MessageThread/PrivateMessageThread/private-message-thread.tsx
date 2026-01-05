@@ -11,18 +11,20 @@ import { ApiClientError } from "../../../../../../../../application/services/api
 import { SendMessageForm } from "@/components/ui/molecules/forms/form-send-message";
 import { MessageItem } from "@/components/ui/atoms/message";
 import { useChannel } from "@/contexts/ChannelContext";
+import { RoleEnum } from "../../../../../../../../domain/enums/RoleEnum";
 
 export default function PrivateMessageThread({
   channelId,
 }: {
   channelId: number;
 }) {
-  const [isFoundChannel, setIsChannel] = useState<boolean | undefined>(
+  const [staticMessages, setStaticMessages] = useState<Message[]>([]);
+  const [isChannelPending, setIsChannelPending] = useState<boolean | undefined>(
     undefined
   );
-  const [staticMessages, setStaticMessages] = useState<Message[]>([]);
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
   const { apiClient } = useApiClient();
+  const { isAssignmentLoading } = useChannel();
   const { liveMessages } = useContext(MessageContext);
   const { getPrivateChannelById } = useChannel();
   const t = useTranslations("page.privateMessage");
@@ -38,14 +40,12 @@ export default function PrivateMessageThread({
     if (user && channelId) {
       getPrivateChannelById(channelId).then((response) => {
         if (!(response instanceof ApiClientError)) {
-          setIsChannel(true);
           setStaticMessages(response.messages?.reverse());
-        } else {
-          setIsChannel(false);
+          setIsChannelPending(response.advisorId === undefined);
         }
       });
     }
-  }, [apiClient, user, channelId]);
+  }, [apiClient, user, channelId, isAssignmentLoading]);
 
   useEffect(() => {
     scrollToBottom();
@@ -70,9 +70,19 @@ export default function PrivateMessageThread({
               <MessageItem key={message.id} message={message} user={user} />
             ))}
           </ul>
-          <div className="px-2">
-            <SendMessageForm />
-          </div>
+          {isChannelPending ? (
+            <div className="px-2 text-center border-t p-2 pt-4">
+              <span className="text-center text-gray-500">
+                {user && user.roles?.includes(RoleEnum.ADVISOR)
+                  ? t("advisor-pending")
+                  : t("client-pending")}
+              </span>
+            </div>
+          ) : (
+            <div className="px-2">
+              <SendMessageForm />
+            </div>
+          )}
         </div>
       )}
     </div>

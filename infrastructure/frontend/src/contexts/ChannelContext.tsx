@@ -2,16 +2,20 @@
 
 import { createContext, ReactNode, useContext, useState } from "react";
 import { useApiClient } from "./ApiContext";
-import { paths } from "../../../../application/services/api/paths";
 import { ApiClientError } from "../../../../application/services/api/ApiClientError";
 import { showErrorToast } from "@/lib/toast";
-import { GetHydratedPrivateChannelResponseInterface } from "../../../../application/services/api/resources/PrivateChannelResourceInterface";
+import {
+  AttributePrivateChannelToResponseInterface,
+  GetHydratedPrivateChannelResponseInterface,
+  GetPrivateChannelResponseInterface,
+} from "../../../../application/services/api/resources/PrivateChannelResourceInterface";
 import {
   CreateCompanyChannelPayloadInterface,
   GetCompanyChannelResponseInterface,
   GetHydratedCompanyChannelResponseInterface,
 } from "../../../../application/services/api/resources/CompanyChannelResourceInterface";
 import { getCookie } from "../../../utils/frontend/cookies";
+import { useTranslations } from "next-intl";
 
 type Props = {
   children: ReactNode;
@@ -20,18 +24,19 @@ type Props = {
 type ChannelContextType = {
   isChannelLoading: boolean;
   isChannelsLoading: boolean;
+  isAssignmentLoading: boolean;
   companyChannels: {
-    channel: GetHydratedCompanyChannelResponseInterface;
+    channel: GetCompanyChannelResponseInterface;
     type: "company";
   }[];
   privateChannels: {
-    channel: GetHydratedPrivateChannelResponseInterface;
+    channel: GetPrivateChannelResponseInterface;
     type: "private";
     isPending?: boolean;
   }[];
   allChannels: (
-    | { channel: GetHydratedCompanyChannelResponseInterface; type: "company" }
-    | { channel: GetHydratedPrivateChannelResponseInterface; type: "private" }
+    | { channel: GetCompanyChannelResponseInterface; type: "company" }
+    | { channel: GetPrivateChannelResponseInterface; type: "private" }
   )[];
   getPrivateChannelById: (
     id: number
@@ -45,6 +50,7 @@ type ChannelContextType = {
   createCompanyChannel: (
     data: CreateCompanyChannelPayloadInterface
   ) => Promise<void>;
+  assignAdvisorToChannel: (channelId: number) => Promise<void>;
 };
 
 export const ChannelContext = createContext<ChannelContextType | undefined>(
@@ -53,23 +59,26 @@ export const ChannelContext = createContext<ChannelContextType | undefined>(
 
 export const ChannelProvider = ({ children }: Props) => {
   const { apiClient } = useApiClient();
+  const t = useTranslations("contexts.channels");
   const [isChannelLoading, setIsChannelLoading] = useState<boolean>(false);
   const [isChannelsLoading, setIsChannelsLoading] = useState<boolean>(false);
+  const [isAssignmentLoading, setIsAssignmentLoading] =
+    useState<boolean>(false);
   const [companyChannels, setCompanyChannels] = useState<
-    { channel: GetHydratedCompanyChannelResponseInterface; type: "company" }[]
+    { channel: GetCompanyChannelResponseInterface; type: "company" }[]
   >([]);
   const [privateChannels, setPrivateChannels] = useState<
     {
-      channel: GetHydratedPrivateChannelResponseInterface;
+      channel: GetPrivateChannelResponseInterface;
       type: "private";
       isPending?: boolean;
     }[]
   >([]);
   const [allChannels, setAllChannels] = useState<
     (
-      | { channel: GetHydratedCompanyChannelResponseInterface; type: "company" }
+      | { channel: GetCompanyChannelResponseInterface; type: "company" }
       | {
-          channel: GetHydratedPrivateChannelResponseInterface;
+          channel: GetPrivateChannelResponseInterface;
           type: "private";
           isPending?: boolean;
         }
@@ -88,10 +97,7 @@ export const ChannelProvider = ({ children }: Props) => {
         return new ApiClientError(401, "Unauthorized");
       }
     }
-    const response =
-      await apiClient.get<GetHydratedPrivateChannelResponseInterface>(
-        paths.privateChannel.detail(id)
-      );
+    const response = await apiClient.privateChannel.get(id);
 
     if (response instanceof ApiClientError) {
       const errorResponse = response.message;
@@ -115,10 +121,7 @@ export const ChannelProvider = ({ children }: Props) => {
       }
     }
 
-    const response =
-      await apiClient.get<GetHydratedCompanyChannelResponseInterface>(
-        paths.companyChannel.detail(id)
-      );
+    const response = await apiClient.companyChannel.get(id);
 
     if (response instanceof ApiClientError) {
       const errorResponse = response.message;
@@ -132,9 +135,7 @@ export const ChannelProvider = ({ children }: Props) => {
   const getAllCompanyChannels = async (): Promise<boolean> => {
     setIsChannelsLoading(true);
 
-    const response = await apiClient.get<
-      GetHydratedCompanyChannelResponseInterface[]
-    >(paths.companyChannel.list);
+    const response = await apiClient.companyChannel.getAll();
     if (response instanceof ApiClientError) {
       const errorResponse = response.message;
       showErrorToast(errorResponse);
@@ -159,9 +160,7 @@ export const ChannelProvider = ({ children }: Props) => {
   const getAllPrivateChannels = async (): Promise<boolean> => {
     setIsChannelsLoading(true);
 
-    const response = await apiClient.get<
-      GetHydratedPrivateChannelResponseInterface[]
-    >(paths.privateChannel.list);
+    const response = await apiClient.privateChannel.getAll();
     if (response instanceof ApiClientError) {
       const errorResponse = response.message;
       showErrorToast(errorResponse);
@@ -174,7 +173,7 @@ export const ChannelProvider = ({ children }: Props) => {
       ...response.map((channel) => ({
         channel,
         type: "private" as const,
-        isPending: channel.advisorId === null,
+        isPending: channel.advisorId === undefined,
       }))
     );
 
@@ -186,12 +185,8 @@ export const ChannelProvider = ({ children }: Props) => {
   const getAllChannels = async (): Promise<void> => {
     setIsChannelsLoading(true);
 
-    const companyResponse = await apiClient.get<
-      GetHydratedCompanyChannelResponseInterface[]
-    >(paths.companyChannel.list);
-    const privateResponse = await apiClient.get<
-      GetHydratedPrivateChannelResponseInterface[]
-    >(paths.privateChannel.list);
+    const companyResponse = await apiClient.companyChannel.getAll();
+    const privateResponse = await apiClient.privateChannel.getAll();
 
     const allChannelsResponse = [];
 
@@ -212,8 +207,9 @@ export const ChannelProvider = ({ children }: Props) => {
       const privateChannelsList = privateResponse.map((channel) => ({
         channel,
         type: "private" as const,
-        isPending: channel.advisorId === null,
+        isPending: channel.advisorId === undefined,
       }));
+
       setPrivateChannels(privateChannelsList);
       allChannelsResponse.push(...privateChannelsList);
     } else {
@@ -253,11 +249,41 @@ export const ChannelProvider = ({ children }: Props) => {
     return;
   };
 
+  const assignAdvisorToChannel = async (channelId: number) => {
+    setIsAssignmentLoading(true);
+    if (!channelId) {
+      showErrorToast(t("channelNotFound"));
+      return;
+    }
+
+    const token = getCookie("token");
+    if (!token) {
+      if (!token) {
+        setIsAssignmentLoading(false);
+        return;
+      }
+    }
+
+    const response:
+      | AttributePrivateChannelToResponseInterface
+      | ApiClientError = await apiClient.privateChannel.attributeTo(channelId);
+
+    if (response instanceof ApiClientError) {
+      const errorResponse = response.message;
+      showErrorToast(errorResponse);
+    }
+
+    await getAllPrivateChannels();
+    setIsAssignmentLoading(false);
+    return;
+  };
+
   return (
     <ChannelContext.Provider
       value={{
         isChannelLoading,
         isChannelsLoading,
+        isAssignmentLoading,
         companyChannels,
         privateChannels,
         allChannels,
@@ -267,6 +293,7 @@ export const ChannelProvider = ({ children }: Props) => {
         getAllPrivateChannels,
         getAllChannels,
         createCompanyChannel,
+        assignAdvisorToChannel,
       }}
     >
       {children}

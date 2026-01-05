@@ -25,7 +25,7 @@ export class PrivateChannelController {
   public constructor(
     private readonly messageRepository: MessageRepositoryInterface,
     private readonly privateChannelRepository: PrivateChannelRepositoryInterface,
-    private readonly websocketServer: WebsocketServerInterface,
+    private readonly websocketServer: WebsocketServerInterface
   ) {}
 
   public async list(request: Request, response: Response) {
@@ -37,15 +37,18 @@ export class PrivateChannelController {
     }
 
     const getListUsecase = new GetPrivateChannelListUsecase(
-      this.privateChannelRepository,
+      this.privateChannelRepository
     );
 
     const privateChannels = await getListUsecase.execute(user);
 
-    response.status(200).json(privateChannels.map((privateChannel) => ({
-      id: privateChannel.id,
-      title: privateChannel.title,
-    })));
+    response.status(200).json(
+      privateChannels.map((privateChannel) => ({
+        id: privateChannel.id,
+        title: privateChannel.title,
+        advisorId: privateChannel.advisorId,
+      }))
+    );
   }
 
   public async get(request: Request, response: Response) {
@@ -67,7 +70,10 @@ export class PrivateChannelController {
       this.privateChannelRepository,
       this.messageRepository
     );
-    const maybePrivateChannel = await getPrivateChannelUsecase.execute(maybeParams.id, user);
+    const maybePrivateChannel = await getPrivateChannelUsecase.execute(
+      maybeParams.id,
+      user
+    );
     if (maybePrivateChannel instanceof ChannelNotFoundError) {
       return response.status(404).json({
         error: maybePrivateChannel.message,
@@ -77,15 +83,18 @@ export class PrivateChannelController {
     response.status(200).json({
       id: maybePrivateChannel.id,
       title: maybePrivateChannel.title,
+      advisorId: maybePrivateChannel.advisorId,
       messages: maybePrivateChannel.messages.map((message) => ({
         id: message.id,
         content: message.content,
         createdAt: message.createdAt,
-        user: message.user ? {
-          id: message.user.id,
-          firstName: message.user.firstName,
-          lastName: message.user.lastName,
-        } : null,
+        user: message.user
+          ? {
+              id: message.user.id,
+              firstName: message.user.firstName,
+              lastName: message.user.lastName,
+            }
+          : null,
       })),
     });
   }
@@ -115,10 +124,13 @@ export class PrivateChannelController {
     const updatePrivateChannelUsecase = new UpdatePrivateChannelUsecase(
       this.privateChannelRepository
     );
-    const maybePrivateChannel = await updatePrivateChannelUsecase.execute({
-      id: maybeParams.id,
-      title: maybeCommand.title,
-    }, user);
+    const maybePrivateChannel = await updatePrivateChannelUsecase.execute(
+      {
+        id: maybeParams.id,
+        title: maybeCommand.title,
+      },
+      user
+    );
 
     if (maybePrivateChannel instanceof Error) {
       return response.status(404).json({
@@ -157,13 +169,13 @@ export class PrivateChannelController {
     const writeMessageUsecase = new WritePrivateMessageUsecase(
       this.privateChannelRepository,
       this.messageRepository,
-      this.websocketServer,
+      this.websocketServer
     );
     const maybeMessage = await writeMessageUsecase.execute(
       maybeCommand.content,
       maybeParams.id,
-      user,
-    ); 
+      user
+    );
 
     if (maybeMessage instanceof Error) {
       return response.status(404).json({
@@ -195,10 +207,13 @@ export class PrivateChannelController {
     const updateUsecase = new UpdatePrivateChannelUsecase(
       this.privateChannelRepository
     );
-    const maybePrivateChannel = await updateUsecase.execute({
-      id: maybeParams.id,
-      advisorId: advisor.id,
-    }, advisor);
+    const maybePrivateChannel = await updateUsecase.execute(
+      {
+        id: maybeParams.id,
+        advisorId: advisor.id,
+      },
+      advisor
+    );
 
     if (maybePrivateChannel instanceof Error) {
       return response.status(404).json({
@@ -212,4 +227,3 @@ export class PrivateChannelController {
     });
   }
 }
-
