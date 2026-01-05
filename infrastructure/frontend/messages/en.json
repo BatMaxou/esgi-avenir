@@ -32,7 +32,8 @@
       "title": "Private Messages",
       "no-results": "Send a message to start the conversation.",
       "advisor-pending": "You have to assign yourself to this conversation to reply.",
-      "client-pending": "You have to wait for an advisor to take charge to continue the conversation."
+      "client-pending": "You have to wait for an advisor to take charge to continue the conversation.",
+      "writing-users": "{count, plural, =0 {} =1 {{firstName} {lastName} is writing...} other {# are writing...}}"
     },
     "accounts": {
       "title": "My accounts",

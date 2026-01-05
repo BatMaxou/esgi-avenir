@@ -2,6 +2,7 @@ import { User } from "./User";
 import { UserNotFoundError } from "../errors/entities/user/UserNotFoundError";
 import { ChannelInterface } from "../entities/interfaces/ChannelInterface";
 import { ChannelNotFoundError } from "../errors/entities/channel/ChannelNotFoundError";
+import { RoleEnum } from "../enums/RoleEnum";
 
 export type WebsocketMessage = {
   id?: number;
@@ -10,7 +11,7 @@ export type WebsocketMessage = {
     id: number;
     firstName?: string;
     lastName?: string;
-    roles: string[];
+    roles: RoleEnum[];
   };
   channel: {
     id: number;

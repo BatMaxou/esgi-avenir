@@ -2,19 +2,22 @@ import { Server as HttpServer } from 'http';
 import { Server, Socket } from 'socket.io';
 
 import { WebsocketServerInterface } from "../../../application/services/websocket/WebsocketServerInterface";
-import { WebsocketRessourceEnum } from "../../../application/services/websocket/WebsocketRessourceEnum";
 import { WebsocketChannelIdentifierBuilderInterface } from "../../../application/services/websocket/WebsocketChannelIdentifierBuilderInterface";
 import { WebsocketMessage } from "../../../domain/entities/Message";
 import { TokenManagerInterface } from '../../../application/services/token/TokenManagerInterface';
 import { AuthMiddlewareUsecase } from '../../../application/usecases/middlewares/AuthMiddlewareUsecase';
 import { UserRepositoryInterface } from '../../../application/repositories/UserRepositoryInterface';
 import { UnauthorizedError } from '../../../application/errors/middlewares/UnauthorizedError';
-import { User } from '../../../domain/entities/User';
+import { User, WritingMessageUser } from '../../../domain/entities/User';
 import { WritePrivateMessageUsecase } from '../../../application/usecases/private-channel/WritePrivateMessageUsecase';
 import { PrivateChannelRepositoryInterface } from '../../../application/repositories/PrivateChannelRepositoryInterface';
 import { MessageRepositoryInterface } from '../../../application/repositories/MessageRepositoryInterface';
 import { WriteCompanyMessageUsecase } from '../../../application/usecases/company-channel/WriteCompanyMessageUsecase';
 import { CompanyChannelRepositoryInterface } from '../../../application/repositories/CompanyChannelRepositoryInterface';
+import { WritingMessageUsecase } from '../../../application/usecases/writing-message/WritingMessageUsecase';
+import { StopWritingMessageUsecase } from '../../../application/usecases/writing-message/StopWritingMessageUsecase';
+import { WebsocketEventEnum } from '../../../domain/enums/WebsocketEventEnum';
+import { WebsocketRessourceEnum } from '../../../domain/enums/WebsocketRessourceEnum';
 
 declare module 'socket.io' {
   interface Socket {
@@ -27,7 +30,7 @@ export class SocketIoServer implements WebsocketServerInterface {
 
   public constructor(
     server: HttpServer,
-    private readonly origin: string = '*',
+    origin: string = '*',
     private readonly channelIdentifierBuilder: WebsocketChannelIdentifierBuilderInterface,
     private readonly tokenManager: TokenManagerInterface,
     private readonly userRepository: UserRepositoryInterface,
@@ -45,15 +48,24 @@ export class SocketIoServer implements WebsocketServerInterface {
     this.initConnection();
   }
 
-  public emitMessage(message: WebsocketMessage, websocketRessource: WebsocketRessourceEnum, channelId: number) {
-    this.io.to(this.channelIdentifierBuilder.build(websocketRessource, channelId)).emit(websocketRessource, message);
+  public emitMessage(message: WebsocketMessage, ressource: WebsocketRessourceEnum, channelId: number) {
+    this.io.to(this.channelIdentifierBuilder.build(ressource, channelId)).emit(WebsocketEventEnum.MESSAGE, { ressource, message });
   }
 
-  public initConnection() {
+  public emitWritingMessage(user: WritingMessageUser, ressource: WebsocketRessourceEnum, channelId: number) {
+    this.io.to(this.channelIdentifierBuilder.build(ressource, channelId)).emit(WebsocketEventEnum.WRITING, { ressource, user, channelId });
+  }
+
+  public emitStopWritingMessage(user: WritingMessageUser, ressource: WebsocketRessourceEnum, channelId: number) {
+    this.io.to(this.channelIdentifierBuilder.build(ressource, channelId)).emit(WebsocketEventEnum.STOP_WRITING, { ressource, user, channelId });
+  }
+
+  private initConnection() {
     this.io.on('connection', (socket) => {
       this.initJoin(socket);
-      this.initPrivateChannelListener(socket);
-      this.initCompanyChannelListener(socket);
+      this.initMessageListener(socket);
+      this.initWritingMessageListener(socket);
+      this.initStopWritingMessageListener(socket);
 
       socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
@@ -62,31 +74,57 @@ export class SocketIoServer implements WebsocketServerInterface {
   }
 
   private initJoin(socket: Socket) {
-    socket.on(WebsocketRessourceEnum.JOIN, (data) => {
+    socket.on(WebsocketEventEnum.JOIN, (data: { ressource: WebsocketRessourceEnum, channelId: number }) => {
+      if (!socket.user) {
+        return;
+      }
+
       const { ressource, channelId } = data;
       socket.join(this.channelIdentifierBuilder.build(ressource, channelId));
     });
   }
   
-  private initPrivateChannelListener(socket: Socket) {
-    socket.on(WebsocketRessourceEnum.PRIVATE_MESSAGE, async (message: WebsocketMessage) => {
+  private initWritingMessageListener(socket: Socket) {
+    socket.on(WebsocketEventEnum.WRITING, async (data: { ressource: WebsocketRessourceEnum, channelId: number }) => {
       if (!socket.user) {
         return;
       }
-
-      const usecase = new WritePrivateMessageUsecase(this.privateChannelRepository, this.messageRepository, this) 
-      await usecase.execute(message.content, message.channel.id, socket.user);
+      
+      const { ressource, channelId } = data;
+      const usecase = new WritingMessageUsecase(this);
+      await usecase.execute(channelId, ressource, socket.user);
     });
   }
 
-  private initCompanyChannelListener(socket: Socket) {
-    socket.on(WebsocketRessourceEnum.COMPANY_MESSAGE, async (message: WebsocketMessage) => {
+  private initStopWritingMessageListener(socket: Socket) {
+    socket.on(WebsocketEventEnum.STOP_WRITING, async (data: { ressource: WebsocketRessourceEnum, channelId: number }) => {
       if (!socket.user) {
         return;
       }
 
-      const usecase = new WriteCompanyMessageUsecase(this.companyChannelRepository, this.messageRepository, this) 
-      await usecase.execute(message.content, message.channel.id, socket.user);
+      const { ressource, channelId } = data;
+      const usecase = new StopWritingMessageUsecase(this);
+      await usecase.execute(channelId, ressource, socket.user);
+    });
+  }
+  
+  private initMessageListener(socket: Socket) {
+    socket.on(WebsocketEventEnum.MESSAGE, async (data: { message: WebsocketMessage, ressource: WebsocketRessourceEnum }) => {
+      if (!socket.user) {
+        return;
+      }
+
+      const { message, ressource } = data;
+
+      if (ressource == WebsocketRessourceEnum.PRIVATE_MESSAGE) {
+        const usecase = new WritePrivateMessageUsecase(this.privateChannelRepository, this.messageRepository, this) 
+        await usecase.execute(message.content, message.channel.id, socket.user);
+      }
+
+      if (ressource == WebsocketRessourceEnum.COMPANY_MESSAGE) {
+        const usecase = new WriteCompanyMessageUsecase(this.companyChannelRepository, this.messageRepository, this) 
+        await usecase.execute(message.content, message.channel.id, socket.user);
+      }
     });
   }
 

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useCallback, useContext } from "react";
+import { ChangeEvent, useCallback, useContext } from "react";
 
 import {
   Form,
@@ -34,10 +34,8 @@ export function SendMessageForm({
 }) {
   const { isLoading } = useAuth();
   const t = useTranslations("components.forms.sendMessage");
-  const messageContext = useContext(MessageContext);
+  const { addMessage, writingMessage, stopWritingMessage } = useContext(MessageContext);
   const { apiClient } = useApiClient();
-
-  const addMessage = messageContext?.addMessage;
 
   const formSchema = z.object({
     message: z.string().min(1),
@@ -95,10 +93,23 @@ export function SendMessageForm({
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         form.handleSubmit(onMessageSubmit)();
+        stopWritingMessage();
       }
     },
-    [form, onMessageSubmit]
+    [form, onMessageSubmit, stopWritingMessage]
   );
+
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    form.setValue("message", e.target.value);
+
+    if (e.target.value === '') {
+      stopWritingMessage();
+
+      return;
+    }
+
+    writingMessage();
+  }, [form, stopWritingMessage, writingMessage]);
 
   return (
     <Form {...form}>
@@ -121,6 +132,7 @@ export function SendMessageForm({
                   placeholder={t("placeholder")}
                   isLoading={isLoading}
                   onKeyDown={handleKeyDown}
+                  onChange={handleChange}
                 />
               </FormControl>
             </FormItem>

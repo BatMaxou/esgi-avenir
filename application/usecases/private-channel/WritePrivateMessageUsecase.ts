@@ -5,7 +5,7 @@ import { ChannelNotFoundError } from '../../../domain/errors/entities/channel/Ch
 import { MessageRepositoryInterface } from '../../repositories/MessageRepositoryInterface';
 import { PrivateChannelRepositoryInterface } from '../../repositories/PrivateChannelRepositoryInterface';
 import { WebsocketServerInterface } from '../../services/websocket/WebsocketServerInterface';
-import { WebsocketRessourceEnum } from '../../services/websocket/WebsocketRessourceEnum';
+import { WebsocketRessourceEnum } from '../../../domain/enums/WebsocketRessourceEnum';
 
 export class WritePrivateMessageUsecase {
   public constructor(
@@ -55,6 +55,7 @@ export class WritePrivateMessageUsecase {
         id: maybeNewMessage.userId,
         firstName: maybeNewMessage.user?.firstName,
         lastName: maybeNewMessage.user?.lastName,
+        roles: maybeNewMessage.user?.roles || [],
       },
       channel: {
         id: channelId,

@@ -2,8 +2,8 @@ import { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import { MessageProvider } from "@/contexts/MessageContext";
-import { WebsocketRessourceEnum } from "../../../../../../../../application/services/websocket/WebsocketRessourceEnum";
 import { GetHydratedPrivateChannelResponseInterface } from "../../../../../../../../application/services/api/resources/PrivateChannelResourceInterface";
+import { WebsocketRessourceEnum } from "../../../../../../../../domain/enums/WebsocketRessourceEnum";
 
 type Props = {
   children: ReactNode;

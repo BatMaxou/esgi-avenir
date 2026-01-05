@@ -32,7 +32,8 @@
       "title": "Messages Privés",
       "no-results": "Envoyez un message pour commencer la conversation.",
       "advisor-pending": "Vous devez vous assigner à cette conversation pour répondre.",
-      "client-pending": "Vous devez attendre la prise en charge par un conseiller pour continuer la conversation."
+      "client-pending": "Vous devez attendre la prise en charge par un conseiller pour continuer la conversation.",
+      "writing-users": "{count, plural, =0 {} =1 {{firstName} {lastName} est en train d'écrire...} other {# sont en train d'écrire...}}"
     },
     "accounts": {
       "title": "Mes comptes",

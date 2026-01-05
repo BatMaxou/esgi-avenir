@@ -11,11 +11,12 @@ import {
 import { useAuth } from "./AuthContext";
 import { Message, WebsocketMessage } from "../../../../domain/entities/Message";
 import { useWebsocketClient } from "./WebsocketContext";
-import { WebsocketRessourceEnum } from "../../../../application/services/websocket/WebsocketRessourceEnum";
 import { showErrorToast } from "@/lib/toast";
 import { GetHydratedPrivateChannelResponseInterface } from "../../../../application/services/api/resources/PrivateChannelResourceInterface";
 import { useApiClient } from "./ApiContext";
 import { paths } from "../../../../application/services/api/paths";
+import { WritingMessageUser } from "../../../../domain/entities/User";
+import { WebsocketRessourceEnum } from "../../../../domain/enums/WebsocketRessourceEnum";
 
 type Props = {
   children: ReactNode;
@@ -25,21 +26,28 @@ type Props = {
 
 type MessageContextType = {
   liveMessages: WebsocketMessage[];
+  writingUsers: WritingMessageUser[];
   addMessage: (message: string) => void;
   requestAdvisorByMessage: (
     title: string,
     message: string
   ) => Promise<{ channel?: GetHydratedPrivateChannelResponseInterface }>;
+  writingMessage: () => void;
+  stopWritingMessage: () => void;
 };
 
 export const MessageContext = createContext<MessageContextType>({
   liveMessages: [],
+  writingUsers: [],
   addMessage: () => {},
   requestAdvisorByMessage: () => Promise.resolve({ channel: undefined }),
+  writingMessage: () => {},
+  stopWritingMessage: () => {},
 });
 
 export const MessageProvider = ({ children, ressource, channelId }: Props) => {
   const [liveMessages, setLiveMessages] = useState<WebsocketMessage[]>([]);
+  const [writingUsers, setWritingUsers] = useState<WritingMessageUser[]>([]);
   const { user } = useAuth();
   const { websocketClient } = useWebsocketClient();
   const { apiClient } = useApiClient();
@@ -75,7 +83,7 @@ export const MessageProvider = ({ children, ressource, channelId }: Props) => {
         },
       };
 
-      websocketClient.emitMessage(websocketMessage, ressource, channelId);
+      websocketClient.emitMessage(websocketMessage, ressource);
     },
     [websocketClient, user, ressource, channelId]
   );
@@ -113,6 +121,14 @@ export const MessageProvider = ({ children, ressource, channelId }: Props) => {
     [apiClient, user]
   );
 
+  const writingMessage = useCallback(() => {
+    websocketClient.emitWritingMessage(channelId, ressource);
+  }, [websocketClient, channelId, ressource]);
+
+  const stopWritingMessage = useCallback(() => {
+    websocketClient.emitStopWritingMessage(channelId, ressource);
+  }, [websocketClient, channelId, ressource]);
+
   useEffect(() => {
     if (!user || !user.id) {
       return;
@@ -134,11 +150,33 @@ export const MessageProvider = ({ children, ressource, channelId }: Props) => {
       ressource,
       channelId
     );
+    websocketClient.onWritingMessage((writingUser => {
+      setWritingUsers(prev => {
+        if (
+          writingUser.id === user?.id
+          || prev.find(prevUser => prevUser.id === writingUser.id)
+        ) {
+          return prev;
+        }
+
+        return [...prev, writingUser];
+      });
+    }), ressource, channelId);
+    websocketClient.onStopWritingMessage((user => {
+      setWritingUsers(prev => prev.filter(prevUser => prevUser.id !== user.id));
+    }), ressource, channelId);
   }, [websocketClient, user, ressource, channelId]);
 
   return (
     <MessageContext.Provider
-      value={{ liveMessages, addMessage, requestAdvisorByMessage }}
+      value={{
+        liveMessages,
+        writingUsers,
+        addMessage,
+        requestAdvisorByMessage,
+        writingMessage,
+        stopWritingMessage
+      }}
     >
       {children}
     </MessageContext.Provider>
