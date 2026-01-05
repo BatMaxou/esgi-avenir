@@ -20,7 +20,11 @@ import { WriteCompanyMessageParams } from "../../../../application/params/compan
 import { InvalidWriteCompanyMessageParamsError } from "../../../../application/errors/params/company-channel/InvalidWriteCompanyMessageParamsError";
 import { WriteCompanyMessageCommand } from "../../../../application/commands/company-channel/WriteCompanyMessageCommand";
 import { InvalidWriteCompanyMessageCommandError } from "../../../../application/errors/commands/company-channel/InvalidWriteCompanyMessageCommandError";
-import { CreateCompanyChannelPayloadInterface, UpdateCompanyChannelPayloadInterface, WriteCompanyMessagePayloadInterface } from "../../../../application/services/api/resources/CompanyChannelResourceInterface";
+import {
+  CreateCompanyChannelPayloadInterface,
+  UpdateCompanyChannelPayloadInterface,
+  WriteCompanyMessagePayloadInterface,
+} from "../../../../application/services/api/resources/CompanyChannelResourceInterface";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
 import { WebsocketServerInterface } from "../../../../application/services/websocket/WebsocketServerInterface";
 
@@ -28,10 +32,13 @@ export class CompanyChannelController {
   public constructor(
     private readonly messageRepository: MessageRepositoryInterface,
     private readonly companyChannelRepository: CompanyChannelRepositoryInterface,
-    private readonly websocketServer: WebsocketServerInterface,
+    private readonly websocketServer: WebsocketServerInterface
   ) {}
 
-  public async create(request: FastifyRequest<{Body: CreateCompanyChannelPayloadInterface}>, response: FastifyReply) {
+  public async create(
+    request: FastifyRequest<{ Body: CreateCompanyChannelPayloadInterface }>,
+    response: FastifyReply
+  ) {
     const maybeCommand = CreateCompanyChannelCommand.from(request.body);
     if (maybeCommand instanceof InvalidCreateCompanyChannelCommandError) {
       return response.status(400).send({
@@ -40,7 +47,7 @@ export class CompanyChannelController {
     }
 
     const createUsecase = new CreateCompanyChannelUsecase(
-      this.companyChannelRepository,
+      this.companyChannelRepository
     );
     const maybeCompanyChannel = await createUsecase.execute(maybeCommand.title);
 
@@ -52,18 +59,23 @@ export class CompanyChannelController {
 
   public async list(request: FastifyRequest, response: FastifyReply) {
     const getListUsecase = new GetCompanyChannelListUsecase(
-      this.companyChannelRepository,
+      this.companyChannelRepository
     );
 
     const companyChannels = await getListUsecase.execute();
 
-    response.status(200).send(companyChannels.map((companyChannel) => ({
-      id: companyChannel.id,
-      title: companyChannel.title,
-    })));
+    response.status(200).send(
+      companyChannels.map((companyChannel) => ({
+        id: companyChannel.id,
+        title: companyChannel.title,
+      }))
+    );
   }
 
-  public async get(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async get(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = GetCompanyChannelParams.from(request.params);
     if (maybeParams instanceof InvalidGetCompanyChannelParamsError) {
       return response.status(400).send({
@@ -75,7 +87,9 @@ export class CompanyChannelController {
       this.companyChannelRepository,
       this.messageRepository
     );
-    const maybeCompanyChannel = await getCompanyChannelUsecase.execute(maybeParams.id);
+    const maybeCompanyChannel = await getCompanyChannelUsecase.execute(
+      maybeParams.id
+    );
     if (maybeCompanyChannel instanceof ChannelNotFoundError) {
       return response.status(404).send({
         error: maybeCompanyChannel.message,
@@ -89,16 +103,25 @@ export class CompanyChannelController {
         id: message.id,
         content: message.content,
         createdAt: message.createdAt,
-        user: message.user ? {
-          id: message.user.id,
-          firstName: message.user.firstName,
-          lastName: message.user.lastName,
-        } : null,
+        user: message.user
+          ? {
+              id: message.user.id,
+              firstName: message.user.firstName,
+              lastName: message.user.lastName,
+              roles: message.user.roles,
+            }
+          : null,
       })),
     });
   }
 
-  public async update(request: FastifyRequest<{Params: RessourceParamsInterface, Body: UpdateCompanyChannelPayloadInterface}>, response: FastifyReply) {
+  public async update(
+    request: FastifyRequest<{
+      Params: RessourceParamsInterface;
+      Body: UpdateCompanyChannelPayloadInterface;
+    }>,
+    response: FastifyReply
+  ) {
     const maybeParams = UpdateCompanyChannelParams.from(request.params);
     if (maybeParams instanceof InvalidUpdateCompanyChannelParamsError) {
       return response.status(400).send({
@@ -133,7 +156,13 @@ export class CompanyChannelController {
     });
   }
 
-  public async writeMessage(request: FastifyRequest<{Params: RessourceParamsInterface, Body: WriteCompanyMessagePayloadInterface}>, response: FastifyReply) {
+  public async writeMessage(
+    request: FastifyRequest<{
+      Params: RessourceParamsInterface;
+      Body: WriteCompanyMessagePayloadInterface;
+    }>,
+    response: FastifyReply
+  ) {
     const maybeParams = WriteCompanyMessageParams.from(request.params);
     if (maybeParams instanceof InvalidWriteCompanyMessageParamsError) {
       return response.status(400).send({
@@ -158,13 +187,13 @@ export class CompanyChannelController {
     const writeMessageUsecase = new WriteCompanyMessageUsecase(
       this.companyChannelRepository,
       this.messageRepository,
-      this.websocketServer,
+      this.websocketServer
     );
     const maybeMessage = await writeMessageUsecase.execute(
       maybeCommand.content,
       maybeParams.id,
-      user,
-    ); 
+      user
+    );
 
     if (maybeMessage instanceof Error) {
       return response.status(404).send({
@@ -178,4 +207,3 @@ export class CompanyChannelController {
     });
   }
 }
-
