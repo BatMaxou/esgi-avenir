@@ -774,7 +774,8 @@
         "messageDescription": "Please provide as much detail as possible about your request so that the advisor can assist you effectively.",
         "messageSentConfirmation": "Your message has been successfully submitted. An advisor will take care of it shortly.",
         "goToMessages": "Go to my messages",
-        "close": "Close"
+        "close": "Close",
+        "request_an_advisor": "Request an advisor"
       },
       "createCompanyChannel": {
         "title": "New company channel",
@@ -784,6 +785,28 @@
         "createChannel": "Create channel",
         "creatingChannel": "Creating channel...",
         "channelTitleError": "Channel title is required"
+      },
+      "notification": {
+        "create": {
+          "title": "Send a notification",
+          "description": "Send a notification to a user or all users.",
+          "globalTab": "Global notification",
+          "privateTab": "Private notification",
+          "notificate": "Send a notification",
+          "content": "Content",
+          "contentPlaceholder": "Enter the notification content",
+          "contentError": "Content is required",
+          "user": "User",
+          "userPlaceholder": "Select a user",
+          "userError": "Please select a user",
+          "loading": "Loading...",
+          "noUsers": "No users available",
+          "cancel": "Cancel",
+          "create": "Create",
+          "successGlobal": "Global notification created successfully",
+          "successPrivate": "Private notification created successfully",
+          "error": "Error creating notification"
+        }
       }
     }
   },
@@ -874,6 +897,11 @@
       "mustBeConnectedToUnban": "You must be logged in to unban a user",
       "errorUnbanning": "Error unbanning user",
       "userUnbanned": "User unbanned successfully"
+    },
+    "notifications": {
+      "mustBeConnectedToCreate": "You must be logged in to create a notification",
+      "errorCreating": "Error creating notification",
+      "notificationCreated": "Notification created successfully"
     },
     "bankCredits": {
       "errorCreating": "Error creating bank credit"

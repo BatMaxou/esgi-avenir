@@ -19,6 +19,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { GetHydratedPrivateChannelResponseInterface } from "../../../../../../../application/services/api/resources/PrivateChannelResourceInterface";
 import { useChannel } from "@/contexts/ChannelContext";
 import { LoadingLink } from "../links/loading-link";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../atoms/tooltip";
 
 const RequestAdvisorByMessageDialog = () => {
   const t = useTranslations("components.dialogs.requestAdvisorByMessage");
@@ -79,12 +80,21 @@ const RequestAdvisorByMessageDialog = () => {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <form>
         <DialogTrigger asChild>
-          <div className="absolute left-0 bottom-8 w-12 h-12 text-3xl rounded-full bg-primary-red border-2 border-primary-red hover:bg-white hover:text-primary-red cursor-pointer font-bold text-white flex items-center justify-center">
-            ?
+          <div className="absolute right-6 bottom-8">
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="w-12 h-12 text-3xl rounded-full bg-primary-red border-2 border-primary-red hover:bg-white hover:text-primary-red cursor-pointer font-bold text-white flex items-center justify-center">
+                  ?
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                <p>{t("request_an_advisor")}</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </DialogTrigger>
         <DialogContent
-          className={`data-[state=open]:zoom-in-100! data-[state=open]:slide-in-from-bottom-20 data-[state=open]:duration-600 sm:top-auto sm:left-12 sm:bottom-20 sm:right-auto sm:m-6 sm:p-0 sm:translate-x-0 sm:translate-y-0 ${
+          className={`data-[state=open]:zoom-in-100! data-[state=open]:slide-in-from-bottom-20 data-[state=open]:duration-600 sm:top-auto sm:right-4 sm:bottom-20 sm:left-auto sm:m-6 sm:p-0 sm:translate-x-0 sm:translate-y-0 ${
             isMessageSent && channel
               ? "sm:max-w-[450px] sm:min-h-[400px] sm:max-h-[400px] sm:h-full sm:flex sm:flex-col"
               : "sm:max-w-[375px]"
@@ -112,6 +122,7 @@ const RequestAdvisorByMessageDialog = () => {
                         id: user.id!,
                         firstName: user.firstName,
                         lastName: user.lastName,
+                        roles: user.roles,
                       },
                       channel: {
                         id: 0,
