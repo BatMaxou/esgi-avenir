@@ -516,7 +516,8 @@
         "messageDescription": "Veuillez fournir autant de détails que possible sur votre demande afin que le conseiller puisse vous aider efficacement.",
         "messageSentConfirmation": "Votre message a été soumis avec succès. Un conseiller le prendra bientôt en charge.",
         "goToMessages": "Aller aux messages",
-        "close": "Fermer"
+        "close": "Fermer",
+        "request_an_advisor": "Demander un conseiller"
       },
       "createCompanyChannel": {
         "title": "Nouveau canal d'entreprise",
@@ -526,6 +527,28 @@
         "createChannel": "Créer le canal",
         "creatingChannel": "Création du canal en cours...",
         "channelTitleError": "Le nom du canal est requis."
+      },
+      "notification": {
+        "create": {
+          "title": "Envoyer une notification",
+          "description": "Envoyez une notification à un utilisateur ou à tous les utilisateurs.",
+          "globalTab": "Notification globale",
+          "privateTab": "Notification privée",
+          "notificate": "Envoyer une notification",
+          "content": "Contenu",
+          "contentPlaceholder": "Entrez le contenu de la notification",
+          "contentError": "Le contenu est requis",
+          "user": "Utilisateur",
+          "userPlaceholder": "Sélectionnez un utilisateur",
+          "userError": "Veuillez sélectionner un utilisateur",
+          "loading": "Chargement...",
+          "noUsers": "Aucun utilisateur disponible",
+          "cancel": "Annuler",
+          "create": "Créer",
+          "successGlobal": "Notification globale créée avec succès",
+          "successPrivate": "Notification privée créée avec succès",
+          "error": "Erreur lors de la création de la notification"
+        }
       }
     },
     "items": {
@@ -872,6 +895,11 @@
       "mustBeConnectedToUnban": "Vous devez être connecté pour débannir un utilisateur",
       "errorUnbanning": "Erreur lors du débannissement de l'utilisateur",
       "userUnbanned": "Utilisateur débanni avec succès"
+    },
+    "notifications": {
+      "mustBeConnectedToCreate": "Vous devez être connecté pour créer une notification",
+      "errorCreating": "Erreur lors de la création de la notification",
+      "notificationCreated": "Notification créée avec succès"
     },
     "bankCredits": {
       "errorCreating": "Erreur lors de la création du crédit bancaire"

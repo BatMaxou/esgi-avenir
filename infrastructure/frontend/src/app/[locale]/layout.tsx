@@ -23,6 +23,7 @@ import { StocksProvider } from "@/contexts/StocksContext";
 import { FinancialSecuritiesProvider } from "@/contexts/FinancialSecuritiesContext";
 import { WebsocketClientProvider } from "@/contexts/WebsocketContext";
 import { ChannelProvider } from "@/contexts/ChannelContext";
+import { NotificationsProvider } from "@/contexts/NotificationsContext";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -45,7 +46,11 @@ const Providers = ({ children }: { children: ReactNode }) => {
                           <StockOrdersProvider>
                             <FinancialSecuritiesProvider>
                               <StocksProvider>
-                                <ChannelProvider>{children}</ChannelProvider>
+                                <ChannelProvider>
+                                  <NotificationsProvider>
+                                    {children}
+                                  </NotificationsProvider>
+                                </ChannelProvider>
                               </StocksProvider>
                             </FinancialSecuritiesProvider>
                           </StockOrdersProvider>

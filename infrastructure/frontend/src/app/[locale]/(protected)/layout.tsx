@@ -12,6 +12,7 @@ import { Banner } from "@/components/ui/atoms/banner";
 import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
 import { NotifierProvider } from "@/contexts/NotifierContext";
 import RequestAdvisorByMessageDialog from "@/components/ui/molecules/dialogs/request-advisor-by-message-dialog";
+import { CreateNotificationDialog } from "@/components/ui/molecules/dialogs/create-notification-dialog";
 
 type Props = {
   children: ReactNode;
@@ -22,7 +23,7 @@ export default function ProtectedLayout({ children }: Props) {
   const pathname = usePathname();
   const { getAccounts } = useAccounts();
   const { getBeneficiaries } = useBeneficiaries();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   const pathWithoutLocale = pathname.replace(/^\/(en|fr)/, "") || "/home";
 
@@ -92,13 +93,20 @@ export default function ProtectedLayout({ children }: Props) {
   return (
     <ProtectedRoute requiredRoles={[RoleEnum.USER]}>
       <NotifierProvider>
-        <div className="min-h-screen overflow-y-hidden bg-white">
+        <div className="min-h-screen overflow-y-hidden bg-white relative">
           <Header />
           <Banner title={pageTitle} />
           <main className="relative container mx-auto px-4 py-8 h-[calc(100vh-224px)] overflow-y-auto">
             {children}
-            <RequestAdvisorByMessageDialog />
           </main>
+          {user && user.roles?.includes(RoleEnum.ADVISOR) && (
+            <CreateNotificationDialog />
+          )}
+          {user &&
+            !user.roles?.includes(RoleEnum.ADVISOR) &&
+            !user.roles?.includes(RoleEnum.DIRECTOR) && (
+              <RequestAdvisorByMessageDialog />
+            )}
         </div>
       </NotifierProvider>
     </ProtectedRoute>
