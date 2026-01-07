@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useNotifications } from "@/contexts/NotificationsContext";
-import { NotificationsTabs } from "@/components/ui/organisms/notifications-tabs";
+import { NotificationsTabs } from "@/components/ui/molecules/tabs/notifications-tabs";
 
 export default function NotificationsPage() {
   const { user, isLoading } = useAuth();
@@ -25,11 +25,9 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <NotificationsTabs
-        notifications={notifications}
-        isLoading={isNotificationsLoading}
-      />
-    </div>
+    <NotificationsTabs
+      notifications={notifications}
+      isLoading={isNotificationsLoading}
+    />
   );
 }

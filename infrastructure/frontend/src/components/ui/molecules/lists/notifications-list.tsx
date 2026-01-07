@@ -56,7 +56,7 @@ export function NotificationsList({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-y-scroll h-full">
       {notifications.map((notification) => (
         <div
           key={notification.id}
@@ -67,7 +67,7 @@ export function NotificationsList({
               className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
                 notification.type === "global"
                   ? "bg-blue-100 text-blue-600"
-                  : "bg-purple-100 text-purple-600"
+                  : "bg-red-100 text-red-600"
               }`}
             >
               <Icon
@@ -86,7 +86,7 @@ export function NotificationsList({
                   className={`inline-block px-2 py-1 rounded text-xs font-medium ${
                     notification.type === "global"
                       ? "bg-blue-100 text-blue-700"
-                      : "bg-purple-100 text-purple-700"
+                      : "bg-red-100 text-red-700"
                   }`}
                 >
                   {t(`type.${notification.type}`)}

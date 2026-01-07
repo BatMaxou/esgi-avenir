@@ -146,23 +146,25 @@ export default function Header() {
                           >
                             <li>
                               <ItemMedia>
-                                <Avatar className="size-8 bg-red-700 justify-center items-center ">
+                                <Avatar
+                                  className={`size-8 justify-center items-center ${
+                                    notification.type === "global"
+                                      ? "bg-blue-100"
+                                      : "bg-red-100"
+                                  }`}
+                                >
                                   {notification.type === "global" ? (
-                                    <>
-                                      <AvatarImage
-                                        src="/assets/images/global-notification-icon.svg"
-                                        className="w-6 h-6"
-                                      />
-                                      <AvatarFallback>global</AvatarFallback>
-                                    </>
+                                    <Icon
+                                      icon="entypo:megaphone"
+                                      width={24}
+                                      className="text-blue-600"
+                                    />
                                   ) : (
-                                    <>
-                                      <AvatarImage
-                                        src="/assets/images/private-notification-icon.svg"
-                                        className="w-6 h-6"
-                                      />
-                                      <AvatarFallback>private</AvatarFallback>
-                                    </>
+                                    <Icon
+                                      icon="iconamoon:notification-light"
+                                      width={24}
+                                      className="text-red-600"
+                                    />
                                   )}
                                 </Avatar>
                               </ItemMedia>
