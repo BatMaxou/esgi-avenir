@@ -787,7 +787,8 @@
         "notifications_title": "Notifications",
         "noNotifications": "Aucune notification",
         "andMore": "et {count} notifications de plus...",
-        "seeAllNotifications": "Voir toutes les notifications"
+        "seeAllNotifications": "Voir toutes les notifications",
+        "news": "Actualités"
       }
     },
     "dataTable": {

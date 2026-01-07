@@ -510,7 +510,8 @@
         "notifications_title": "Notifications",
         "noNotifications": "No notifications",
         "andMore": "and {count} more notifications...",
-        "seeAllNotifications": "See all notifications"
+        "seeAllNotifications": "See all notifications",
+        "news": "News"
       }
     },
     "dataTable": {
