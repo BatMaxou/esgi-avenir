@@ -4,10 +4,10 @@ services:
       - "8000:3000"
     command: sh -c "npm install && npm -w infrastructure/express run dev -- --host 0.0.0.0"
 
-  fastify:
-    ports:
-      - "8100:3000"
-    command: sh -c "npm install && npm -w infrastructure/fastify run dev"
+  # fastify:
+  #   ports:
+  #     - "8100:3000"
+  #   command: sh -c "npm install && npm -w infrastructure/fastify run dev"
 
   frontend:
     ports:
