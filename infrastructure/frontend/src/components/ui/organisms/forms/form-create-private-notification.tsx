@@ -43,11 +43,11 @@ export function FormCreatePrivateNotification({
     useNotifications();
 
   useEffect(() => {
-    if (!isUsersLoading && !users && !isUsersFetched) {
+    if (!isUsersLoading && !isUsersFetched) {
       getUsers();
       setIsUsersFetched(true);
     }
-  }, [isUsersLoading, users, getUsers, isUsersFetched]);
+  }, [isUsersLoading, getUsers, isUsersFetched]);
 
   const formSchema = z.object({
     content: z.string().min(1, {
