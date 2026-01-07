@@ -1,12 +1,19 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 import { useTranslations } from "next-intl";
+import { useNavigation } from "@/contexts/NavigationContext";
 
 export default function Error() {
   const t = useTranslations("errors.500");
   const tButton = useTranslations("buttons");
+  const { endNavigation } = useNavigation();
+
+  useEffect(() => {
+    endNavigation();
+  }, [endNavigation]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

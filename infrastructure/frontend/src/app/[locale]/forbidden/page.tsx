@@ -1,14 +1,21 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "@/i18n/navigation";
 import Image from "next/image";
 import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 import { useTranslations } from "next-intl";
+import { useNavigation } from "@/contexts/NavigationContext";
 
 export default function Forbidden() {
   const router = useRouter();
   const t = useTranslations("errors.403");
   const tButton = useTranslations("buttons");
+  const { endNavigation } = useNavigation();
+
+  useEffect(() => {
+    endNavigation();
+  }, [endNavigation]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

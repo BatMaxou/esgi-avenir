@@ -10,15 +10,20 @@
       "settings": "Bank settings",
       "actions": "Actions management",
       "news": "News",
+      "newsCreate": "Create news article",
+      "newsDetail": "News detail",
       "credits": "Credits management",
       "credit": "Credit",
+      "creditDetail": "Credit detail",
       "clients": "Client management",
+      "clientDetail": "Client detail",
       "accountDetails": "My account",
       "clientArea": "Client area",
       "investmentsOwned": "My owned stocks",
       "investmentsStocks": "Stocks available",
       "messages": "Messages",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "userDetail": "User detail"
     }
   },
   "page": {
@@ -27,7 +32,12 @@
     },
     "news": {
       "title": "Latest News",
-      "no-results": "No news found."
+      "no-results": "No news found.",
+      "addNews": "Add a news article",
+      "noDate": "Unknown date",
+      "detail": {
+        "notFound": "News article not found."
+      }
     },
     "notifications": {
       "title": "Notifications",
@@ -466,6 +476,16 @@
       "sendMessage": {
         "placeholder": "Write your message...",
         "submit": "Send"
+      },
+      "news": {
+        "formTitle": "Create a news article",
+        "titlePlaceholder": "Enter a title",
+        "titleError": "Title is required.",
+        "content": "Content",
+        "contentPlaceholder": "Enter content",
+        "contentError": "Content is required.",
+        "cancel": "Cancel",
+        "submit": "Create"
       }
     },
     "inputs": {
