@@ -80,10 +80,12 @@ export default async function RootLayout({
     notFound();
   }
 
+  const messages = (await import(`../../../messages/${locale}.json`)).default;
+
   return (
     <html lang={locale}>
       <body className={raleway.variable} suppressHydrationWarning={true}>
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages} locale={locale}>
           <Providers>
             <NavigationLoader>{children}</NavigationLoader>
           </Providers>
