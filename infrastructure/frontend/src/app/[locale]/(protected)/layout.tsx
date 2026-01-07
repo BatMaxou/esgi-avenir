@@ -50,6 +50,7 @@ export default function ProtectedLayout({ children }: Props) {
     "/credit": t("credit"),
     "/clients": t("clients"),
     "/messages": t("messages"),
+    "/notifications": t("notifications"),
   };
 
   let pageTitle = pageTitles[pathWithoutLocale];

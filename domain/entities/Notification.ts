@@ -3,6 +3,7 @@ import { UserNotFoundError } from "../errors/entities/user/UserNotFoundError";
 
 export class Notification {
   public id?: number;
+  public type: "global" | "private";
 
   public static from({
     id,
@@ -13,17 +14,19 @@ export class Notification {
     user,
     createdAt,
   }: {
-    id?: number,
-    content: string,
-    advisorId?: number,
-    advisor?: User,
-    userId?: number | null,
-    user?: User,
-    createdAt?: Date,
+    id?: number;
+    content: string;
+    advisorId?: number;
+    advisor?: User;
+    userId?: number | null;
+    user?: User;
+    createdAt?: Date;
   }): Notification | UserNotFoundError {
     const maybeAdvisorId = advisorId ?? advisor?.id;
     if (!maybeAdvisorId) {
-      return new UserNotFoundError('Notification must have a valid advisorId or advisor.');
+      return new UserNotFoundError(
+        "Notification must have a valid advisorId or advisor."
+      );
     }
 
     const maybeUserId = userId ?? user?.id;
@@ -34,7 +37,7 @@ export class Notification {
       maybeUserId,
       createdAt,
       advisor ?? undefined,
-      user ?? undefined,
+      user ?? undefined
     );
 
     if (id) {
@@ -50,7 +53,8 @@ export class Notification {
     public userId?: number | null,
     public createdAt?: Date,
     public advisor?: User,
-    public user?: User,
+    public user?: User
   ) {
+    this.type = userId ? "private" : "global";
   }
 }

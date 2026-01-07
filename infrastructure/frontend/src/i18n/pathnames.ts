@@ -80,4 +80,8 @@ export const pathnames = {
     fr: "/messages",
     en: "/messages",
   },
+  "/notifications": {
+    fr: "/notifications",
+    en: "/notifications",
+  },
 };
