@@ -11,7 +11,7 @@ import { SubscribeNotificationUsecase } from "../../../application/usecases/noti
 export class NotificationController {
   public constructor(
     private readonly notificationRepository: NotificationRepositoryInterface,
-    private readonly sseServerClient: SseExpressServerClient,
+    private readonly sseServerClient: SseExpressServerClient
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -31,12 +31,12 @@ export class NotificationController {
 
     const createUsecase = new CreateNotificationUsecase(
       this.notificationRepository,
-      this.sseServerClient,
+      this.sseServerClient
     );
     const maybeNotification = await createUsecase.execute(
       maybeCommand.content,
       advisor,
-      maybeCommand.userId,
+      maybeCommand.userId
     );
 
     if (maybeNotification instanceof Error) {
@@ -59,14 +59,20 @@ export class NotificationController {
       });
     }
 
-    const getListUsecase = new GetNotificationListUsecase(this.notificationRepository);
+    const getListUsecase = new GetNotificationListUsecase(
+      this.notificationRepository
+    );
     const notifications = await getListUsecase.execute(user);
 
-    response.status(200).json(notifications.map((notification) => ({
-      id: notification.id,
-      content: notification.content,
-      createdAt: notification.createdAt,
-    })));
+    response.status(200).json(
+      notifications.map((notification) => ({
+        id: notification.id,
+        content: notification.content,
+        createdAt: notification.createdAt,
+        userId: notification.userId,
+        type: notification.type,
+      }))
+    );
   }
 
   public subscribe(request: Request, response: Response) {
@@ -77,7 +83,9 @@ export class NotificationController {
       });
     }
 
-    const subscribeUsecase = new SubscribeNotificationUsecase(this.sseServerClient);
+    const subscribeUsecase = new SubscribeNotificationUsecase(
+      this.sseServerClient
+    );
     subscribeUsecase.execute(request, response, user);
   }
 }

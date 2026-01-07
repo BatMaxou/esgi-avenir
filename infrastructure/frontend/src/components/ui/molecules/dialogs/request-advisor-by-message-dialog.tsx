@@ -78,131 +78,129 @@ const RequestAdvisorByMessageDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <form>
-        <DialogTrigger asChild>
-          <div className="absolute right-6 bottom-8">
-            <Tooltip>
-              <TooltipTrigger>
-                <div className="w-12 h-12 text-3xl rounded-full bg-primary-red border-2 border-primary-red hover:bg-white hover:text-primary-red cursor-pointer font-bold text-white flex items-center justify-center">
-                  ?
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="left">
-                <p>{t("request_an_advisor")}</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </DialogTrigger>
-        <DialogContent
-          className={`data-[state=open]:zoom-in-100! data-[state=open]:slide-in-from-bottom-20 data-[state=open]:duration-600 sm:top-auto sm:right-4 sm:bottom-20 sm:left-auto sm:m-6 sm:p-0 sm:translate-x-0 sm:translate-y-0 ${
+      <DialogTrigger asChild>
+        <div className="absolute right-6 bottom-8">
+          <Tooltip>
+            <TooltipTrigger>
+              <div className="w-12 h-12 text-3xl rounded-full bg-primary-red border-2 border-primary-red hover:bg-white hover:text-primary-red cursor-pointer font-bold text-white flex items-center justify-center">
+                ?
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              <p>{t("request_an_advisor")}</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </DialogTrigger>
+      <DialogContent
+        className={`data-[state=open]:zoom-in-100! data-[state=open]:slide-in-from-bottom-20 data-[state=open]:duration-600 sm:top-auto sm:right-4 sm:bottom-20 sm:left-auto sm:m-6 sm:p-0 sm:translate-x-0 sm:translate-y-0 ${
+          isMessageSent && channel
+            ? "sm:max-w-[450px] sm:min-h-[400px] sm:max-h-[400px] sm:h-full sm:flex sm:flex-col"
+            : "sm:max-w-[375px]"
+        }`}
+      >
+        <DialogHeader>
+          <DialogTitle className="border-b p-4">
+            {showMessageForm && title ? title : t("title")}
+          </DialogTitle>
+        </DialogHeader>
+        <div
+          className={`flex flex-col  gap-4 px-8 ${
             isMessageSent && channel
-              ? "sm:max-w-[450px] sm:min-h-[400px] sm:max-h-[400px] sm:h-full sm:flex sm:flex-col"
-              : "sm:max-w-[375px]"
+              ? "pt-8 h-full justify-start items-center"
+              : "py-16 justify-center items-center"
           }`}
         >
-          <DialogHeader>
-            <DialogTitle className="border-b p-4">
-              {showMessageForm && title ? title : t("title")}
-            </DialogTitle>
-          </DialogHeader>
-          <div
-            className={`flex flex-col  gap-4 px-8 ${
-              isMessageSent && channel
-                ? "pt-8 h-full justify-start items-center"
-                : "py-16 justify-center items-center"
-            }`}
-          >
-            {isMessageSent && channel ? (
-              <>
-                <ul className="w-full flex flex-col gap-2">
-                  <MessageItem
-                    message={{
-                      content: sentMessage,
-                      user: {
-                        id: user.id!,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        roles: user.roles,
-                      },
-                      channel: {
-                        id: 0,
-                      },
-                    }}
-                    user={user}
-                  />
-                </ul>
-                <span className="text-center text-sm text-gray-600 mt-4">
-                  {t("messageSentConfirmation")}
-                </span>
-                {pathname.endsWith("/messages") ? (
+          {isMessageSent && channel ? (
+            <>
+              <ul className="w-full flex flex-col gap-2">
+                <MessageItem
+                  message={{
+                    content: sentMessage,
+                    user: {
+                      id: user.id!,
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                      roles: user.roles,
+                    },
+                    channel: {
+                      id: 0,
+                    },
+                  }}
+                  user={user}
+                />
+              </ul>
+              <span className="text-center text-sm text-gray-600 mt-4">
+                {t("messageSentConfirmation")}
+              </span>
+              {pathname.endsWith("/messages") ? (
+                <FilledButton
+                  className="w-fit mt-4"
+                  label={t("close")}
+                  onClick={handleGoToMessages}
+                />
+              ) : (
+                <LoadingLink href="/messages" className="mt-4">
                   <FilledButton
-                    className="w-fit mt-4"
-                    label={t("close")}
+                    className="w-fit"
+                    label={t("goToMessages")}
                     onClick={handleGoToMessages}
                   />
-                ) : (
-                  <LoadingLink href="/messages" className="mt-4">
-                    <FilledButton
-                      className="w-fit"
-                      label={t("goToMessages")}
-                      onClick={handleGoToMessages}
-                    />
-                  </LoadingLink>
-                )}
-              </>
-            ) : (
-              <>
-                <Image
-                  src={advisorRequestImage}
-                  alt="Advisor"
-                  width={100}
-                  height={100}
-                />
-                <span className="text-center">
-                  {showMessageForm
-                    ? t("messageDescription")
-                    : showTitleChannelForm
-                    ? t("titleDescription")
-                    : t("description")}
-                </span>
-                {!showMessageForm && !showTitleChannelForm && (
-                  <FilledButton
-                    type="button"
-                    className="w-full"
-                    label={t("request")}
-                    onClick={() => handleShowTitleForm()}
-                  />
-                )}
-              </>
-            )}
-          </div>
-
-          {showTitleChannelForm && !showMessageForm && (
-            <DialogFooter className="p-4 border-t">
-              <form onSubmit={handleTitleSubmit} className="w-full">
-                <InputEndIcon
-                  iconActive={title !== ""}
-                  submitDisabled={title === ""}
-                  placeholder={t("titlePlaceholder")}
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  name="title"
-                />
-              </form>
-            </DialogFooter>
-          )}
-
-          {showMessageForm && !isMessageSent && (
-            <DialogFooter className="p-4 border-t">
-              <SendMessageForm
-                isAdvisorRequest={true}
-                requestTitle={title}
-                onMessageSent={handleMessageSent}
+                </LoadingLink>
+              )}
+            </>
+          ) : (
+            <>
+              <Image
+                src={advisorRequestImage}
+                alt="Advisor"
+                width={100}
+                height={100}
               />
-            </DialogFooter>
+              <span className="text-center">
+                {showMessageForm
+                  ? t("messageDescription")
+                  : showTitleChannelForm
+                  ? t("titleDescription")
+                  : t("description")}
+              </span>
+              {!showMessageForm && !showTitleChannelForm && (
+                <FilledButton
+                  type="button"
+                  className="w-full"
+                  label={t("request")}
+                  onClick={() => handleShowTitleForm()}
+                />
+              )}
+            </>
           )}
-        </DialogContent>
-      </form>
+        </div>
+
+        {showTitleChannelForm && !showMessageForm && (
+          <DialogFooter className="p-4 border-t">
+            <form onSubmit={handleTitleSubmit} className="w-full">
+              <InputEndIcon
+                iconActive={title !== ""}
+                submitDisabled={title === ""}
+                placeholder={t("titlePlaceholder")}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                name="title"
+              />
+            </form>
+          </DialogFooter>
+        )}
+
+        {showMessageForm && !isMessageSent && (
+          <DialogFooter className="p-4 border-t">
+            <SendMessageForm
+              isAdvisorRequest={true}
+              requestTitle={title}
+              onMessageSent={handleMessageSent}
+            />
+          </DialogFooter>
+        )}
+      </DialogContent>
     </Dialog>
   );
 };

@@ -17,7 +17,8 @@
       "clientArea": "Client area",
       "investmentsOwned": "My owned stocks",
       "investmentsStocks": "Stocks available",
-      "messages": "Messages"
+      "messages": "Messages",
+      "notifications": "Notifications"
     }
   },
   "page": {
@@ -27,6 +28,21 @@
     "news": {
       "title": "Latest News",
       "no-results": "No news found."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "noResults": "No notifications found.",
+      "noDate": "No date",
+      "filters": {
+        "all": "All",
+        "global": "Global",
+        "private": "Private"
+      },
+      "type": {
+        "global": "Global",
+        "private": "Private"
+      },
+      "resultsInfo": "Showing {start} to {end} of {total} notifications"
     },
     "privateMessage": {
       "title": "Private Messages",
@@ -490,7 +506,11 @@
         "investments": "Investments",
         "myAccount": "My account",
         "profile": "Profile",
-        "logout": "Logout"
+        "logout": "Logout",
+        "notifications_title": "Notifications",
+        "noNotifications": "No notifications",
+        "andMore": "and {count} more notifications...",
+        "seeAllNotifications": "See all notifications"
       }
     },
     "dataTable": {

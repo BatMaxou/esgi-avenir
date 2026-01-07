@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
@@ -17,12 +18,23 @@ import { Icon } from "@iconify/react";
 import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 import { LocaleSwitcher } from "../../atoms/locale-switcher";
 import { useRouter } from "@/i18n/navigation";
+import { Item, ItemContent, ItemMedia } from "@/components/ui/atoms/item";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/atoms/avatar";
+import { Skeleton } from "../../atoms/skeleton";
+import { useNotifications } from "@/contexts/NotificationsContext";
 
 export default function Header() {
   const t = useTranslations("components.partials.header");
   const { user, logout } = useAuth();
+  const { isNotificationsLoading, notifications, getNotifications } =
+    useNotifications();
   const pathname = usePathname();
   const router = useRouter();
+  const [isFetchLoading, setIsFetchLoading] = useState(false);
 
   const isDirector = user?.roles.includes(RoleEnum.DIRECTOR);
   const isAdvisor = user?.roles.includes(RoleEnum.ADVISOR);
@@ -48,6 +60,18 @@ export default function Header() {
       ];
 
   const isActive = (path: string) => pathname === path;
+
+  const fetchNotifications = async () => {
+    if (!isFetchLoading) {
+      setIsFetchLoading(true);
+      await getNotifications();
+      setIsFetchLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   return (
     <header className="bg-white shadow-md border-b-4 border-red-600 sticky">
@@ -81,6 +105,102 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="h-10">
+                <Icon
+                  icon="iconamoon:notification-light"
+                  width="24"
+                  height="24"
+                  className="cursor-pointer"
+                  style={{ color: "#000" }}
+                  onClick={async () => {
+                    await fetchNotifications();
+                  }}
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="max-w-md min-w-md">
+                <>
+                  <div className="p-2 border-b border-gray-200">
+                    <p className="font-bold">{t("notifications_title")}</p>
+                  </div>
+                  <ul className="flex flex-col gap-2 py-2 max-h-80 overflow-y-auto">
+                    {isNotificationsLoading || isFetchLoading ? (
+                      <Item
+                        className="p-4 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
+                        asChild
+                      >
+                        <ItemMedia>
+                          <Skeleton className="bg-gray-200 rounded-full w-10 h-10" />
+                        </ItemMedia>
+                        <ItemContent>
+                          <Skeleton className="h-6 bg-gray-200 rounded w-20" />
+                        </ItemContent>
+                      </Item>
+                    ) : notifications.length > 0 ? (
+                      <>
+                        {notifications.slice(0, 4).map((notification) => (
+                          <Item
+                            className="p-2 border border-gray-100 bg-gray-50 rounded-lg shadow-md flex flex-row justify-between items-center"
+                            asChild
+                            key={notification.id}
+                          >
+                            <li>
+                              <ItemMedia>
+                                <Avatar className="size-8 bg-red-700 justify-center items-center ">
+                                  {notification.type === "global" ? (
+                                    <>
+                                      <AvatarImage
+                                        src="/assets/images/global-notification-icon.svg"
+                                        className="w-6 h-6"
+                                      />
+                                      <AvatarFallback>global</AvatarFallback>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <AvatarImage
+                                        src="/assets/images/private-notification-icon.svg"
+                                        className="w-6 h-6"
+                                      />
+                                      <AvatarFallback>private</AvatarFallback>
+                                    </>
+                                  )}
+                                </Avatar>
+                              </ItemMedia>
+                              <ItemContent>
+                                <p className="text-sm text-ellipsis overflow-hidden whitespace-nowrap">
+                                  {notification.content}
+                                </p>
+                              </ItemContent>
+                            </li>
+                          </Item>
+                        ))}
+                        {notifications.length > 4 && (
+                          <div className="text-center text-sm text-gray-600 font-semibold">
+                            {t("andMore", {
+                              count: notifications.length - 4,
+                            })}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="p-4">{t("noNotifications")}</div>
+                    )}
+                  </ul>
+                </>
+                {notifications.length > 0 && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="cursor-pointer text-center justify-center font-medium text-red-600 hover:text-red-700"
+                      onClick={() => router.push("/notifications")}
+                    >
+                      {t("seeAllNotifications")}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Icon
               icon="mynaui:chat-messages"
               width="24"

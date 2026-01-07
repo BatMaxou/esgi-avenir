@@ -12,10 +12,13 @@ import { CreateNotificationPayloadInterface } from "../../../../application/serv
 export class NotificationController {
   public constructor(
     private readonly notificationRepository: NotificationRepositoryInterface,
-    private readonly sseServerClient: SseFastifyServerClient,
+    private readonly sseServerClient: SseFastifyServerClient
   ) {}
 
-  public async create(request: FastifyRequest<{Body: CreateNotificationPayloadInterface}>, response: FastifyReply) {
+  public async create(
+    request: FastifyRequest<{ Body: CreateNotificationPayloadInterface }>,
+    response: FastifyReply
+  ) {
     const maybeCommand = CreateNotificationCommand.from(request.body);
     if (maybeCommand instanceof InvalidCreateNotificationCommandError) {
       return response.status(400).send({
@@ -32,12 +35,12 @@ export class NotificationController {
 
     const createUsecase = new CreateNotificationUsecase(
       this.notificationRepository,
-      this.sseServerClient,
+      this.sseServerClient
     );
     const maybeNotification = await createUsecase.execute(
       maybeCommand.content,
       advisor,
-      maybeCommand.userId,
+      maybeCommand.userId
     );
 
     if (maybeNotification instanceof Error) {
@@ -60,14 +63,20 @@ export class NotificationController {
       });
     }
 
-    const getListUsecase = new GetNotificationListUsecase(this.notificationRepository);
+    const getListUsecase = new GetNotificationListUsecase(
+      this.notificationRepository
+    );
     const notifications = await getListUsecase.execute(user);
 
-    response.status(200).send(notifications.map((notification) => ({
-      id: notification.id,
-      content: notification.content,
-      createdAt: notification.createdAt,
-    })));
+    response.status(200).send(
+      notifications.map((notification) => ({
+        id: notification.id,
+        content: notification.content,
+        createdAt: notification.createdAt,
+        userId: notification.userId,
+        type: notification.type,
+      }))
+    );
   }
 
   public subscribe(request: FastifyRequest, response: FastifyReply) {
@@ -78,7 +87,9 @@ export class NotificationController {
       });
     }
 
-    const subscribeUsecase = new SubscribeNotificationUsecase(this.sseServerClient);
+    const subscribeUsecase = new SubscribeNotificationUsecase(
+      this.sseServerClient
+    );
     subscribeUsecase.execute(request, response, user);
   }
 }
