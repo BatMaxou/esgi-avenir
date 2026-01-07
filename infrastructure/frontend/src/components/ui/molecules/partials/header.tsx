@@ -19,11 +19,7 @@ import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
 import { LocaleSwitcher } from "../../atoms/locale-switcher";
 import { useRouter } from "@/i18n/navigation";
 import { Item, ItemContent, ItemMedia } from "@/components/ui/atoms/item";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/atoms/avatar";
+import { Avatar } from "@/components/ui/atoms/avatar";
 import { Skeleton } from "../../atoms/skeleton";
 import { useNotifications } from "@/contexts/NotificationsContext";
 
@@ -41,22 +37,22 @@ export default function Header() {
 
   const navLinks = isDirector
     ? [
-        { href: "/home", label: t("home") },
         { href: "/users", label: t("users") },
         { href: "/settings", label: t("settings") },
         { href: "/actions", label: t("actions") },
+        { href: "/news", label: t("news") },
       ]
     : isAdvisor
     ? [
-        { href: "/home", label: t("home") },
         { href: "/credits", label: t("credits") },
         { href: "/clients", label: t("clients") },
+        { href: "/news", label: t("news") },
       ]
     : [
-        { href: "/home", label: t("home") },
         { href: "/accounts", label: t("accounts") },
         { href: "/transfers", label: t("transfers") },
         { href: "/investments", label: t("investments") },
+        { href: "/news", label: t("news") },
       ];
 
   const isActive = (path: string) => pathname === path;
