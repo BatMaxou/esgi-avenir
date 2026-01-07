@@ -14,5 +14,10 @@
     "infrastructure/express",
     "infrastructure/fastify",
     "infrastructure/frontend"
-  ]
+  ],
+  "dependencies": {
+    "@blocknote/core": "^0.45.0",
+    "@blocknote/react": "^0.45.0",
+    "@blocknote/shadcn": "^0.45.0"
+  }
 }

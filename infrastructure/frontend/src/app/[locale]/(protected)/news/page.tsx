@@ -9,20 +9,33 @@ import { NewsContext } from "@/contexts/NewsContext";
 import { useApiClient } from "@/contexts/ApiContext";
 import { News } from "../../../../../../../domain/entities/News";
 import { ApiClientError } from "../../../../../../../application/services/api/ApiClientError";
+import { useNavigation } from "@/contexts/NavigationContext";
+import { RoleEnum } from "../../../../../../../domain/enums/RoleEnum";
+import { LoadingLink } from "@/components/ui/molecules/links/loading-link";
+import { FilledButton } from "@/components/ui/molecules/buttons/filled-button";
+import { NewsList } from "@/components/ui/molecules/lists/news-list";
 
 export default function NewsPage() {
   const [news, setNews] = useState<News[]>([]);
+  const [isLoadingNews, setIsLoadingNews] = useState(true);
   const { user, isLoading } = useAuth();
   const { apiClient } = useApiClient();
   const { receivedNews } = useContext(NewsContext);
   const t = useTranslations("page.news");
+  const { endNavigation } = useNavigation();
+
+  useEffect(() => {
+    endNavigation();
+  }, []);
 
   useEffect(() => {
     if (user) {
+      setIsLoadingNews(true);
       apiClient.news.getAll().then((response) => {
         if (!(response instanceof ApiClientError)) {
           setNews(response);
         }
+        setIsLoadingNews(false);
       });
     }
   }, [apiClient, user]);
@@ -40,28 +53,19 @@ export default function NewsPage() {
     notFound();
   }
 
+  const isAdvisor = user?.roles.includes(RoleEnum.ADVISOR);
+
   return (
     <div>
-      {news.length === 0 ? (
-        <p>{t("no-results")}</p>
-      ) : (
-        <ul className="space-y-4">
-          {news.map((newsItem) => (
-            <li key={newsItem.id} className="p-4 border rounded-lg shadow-sm">
-              <h2 className="text-xl font-semibold">{newsItem.title}</h2>
-              <p
-                className="text-gray-600"
-                dangerouslySetInnerHTML={{ __html: newsItem.content.value }}
-              ></p>
-              {newsItem.createdAt && (
-                <span className="text-sm text-gray-400">
-                  {new Date(newsItem.createdAt).toLocaleString()}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
+      {isAdvisor && (
+        <div className="mb-6">
+          <LoadingLink href="/news/create">
+            <FilledButton label={t("addNews")} />
+          </LoadingLink>
+        </div>
       )}
+
+      <NewsList news={news} isLoading={isLoadingNews} />
     </div>
   );
 }

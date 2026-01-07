@@ -81,6 +81,41 @@ export default function ProtectedLayout({ children }: Props) {
   ) {
     pageTitle = t("investmentsStocks");
   }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/news/create") ||
+      pathWithoutLocale.startsWith("/actualites/creer"))
+  ) {
+    pageTitle = t("newsCreate");
+  }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/news/") ||
+      pathWithoutLocale.startsWith("/actualite/"))
+  ) {
+    pageTitle = t("newsDetail");
+  }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/clients/") ||
+      pathWithoutLocale.startsWith("/client/"))
+  ) {
+    pageTitle = t("clientDetail");
+  }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/credits/") ||
+      pathWithoutLocale.startsWith("/credit/"))
+  ) {
+    pageTitle = t("creditDetail");
+  }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/users/") ||
+      pathWithoutLocale.startsWith("/utilisateur/"))
+  ) {
+    pageTitle = t("userDetail");
+  }
   pageTitle = pageTitle || t("clientArea");
 
   useEffect(() => {

@@ -8,6 +8,14 @@ export const pathnames = {
     fr: "/actualites",
     en: "/news",
   },
+  "/news/[id]": {
+    fr: "/actualite/[id]",
+    en: "/news/[id]",
+  },
+  "/news/create": {
+    fr: "/actualites/creer",
+    en: "/news/create",
+  },
   "/accounts": {
     fr: "/comptes",
     en: "/accounts",

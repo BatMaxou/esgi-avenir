@@ -27,7 +27,7 @@ import { SubscribeNewsUsecase } from "../../../application/usecases/news/Subscri
 export class NewsController {
   public constructor(
     private readonly newsRepository: NewsRepositoryInterface,
-    private readonly sseServerClient: SseExpressServerClient,
+    private readonly sseServerClient: SseExpressServerClient
   ) {}
 
   public async create(request: Request, response: Response) {
@@ -45,11 +45,14 @@ export class NewsController {
       });
     }
 
-    const createUsecase = new CreateNewsUsecase(this.newsRepository, this.sseServerClient);
+    const createUsecase = new CreateNewsUsecase(
+      this.newsRepository,
+      this.sseServerClient
+    );
     const maybeNews = await createUsecase.execute(
       maybeCommand.title,
       maybeCommand.content,
-      author,
+      author
     );
 
     if (maybeNews instanceof Error) {
@@ -83,17 +86,19 @@ export class NewsController {
 
     response.status(200).json({
       id: maybeNews.id,
-      name: maybeNews.title,
+      title: maybeNews.title,
       content: maybeNews.content,
       authorId: maybeNews.authorId,
       createdAt: maybeNews.createdAt,
-      ...(maybeNews.author ? {
-        author: {
-          id: maybeNews.author.id,
-          firstName: maybeNews.author.firstName,
-          lastName: maybeNews.author.lastName,
-        }
-      } : {})
+      ...(maybeNews.author
+        ? {
+            author: {
+              id: maybeNews.author.id,
+              firstName: maybeNews.author.firstName,
+              lastName: maybeNews.author.lastName,
+            },
+          }
+        : {}),
     });
   }
 
@@ -106,22 +111,29 @@ export class NewsController {
     }
 
     const getListUsecase = new GetNewsListUsecase(this.newsRepository);
-    const newsList = await getListUsecase.execute(maybeQuery.term || '', maybeQuery.count || 16);
+    const newsList = await getListUsecase.execute(
+      maybeQuery.term || "",
+      maybeQuery.count || 16
+    );
 
-    response.status(200).json(newsList.map((news) => ({
-      id: news.id,
-      title: news.title,
-      content: news.content,
-      authorId: news.authorId,
-      createdAt: news.createdAt,
-      ...(news.author ? {
-        author: {
-          id: news.author.id,
-          firstName: news.author.firstName,
-          lastName: news.author.lastName,
-        }
-      } : {})
-    })));
+    response.status(200).json(
+      newsList.map((news) => ({
+        id: news.id,
+        title: news.title,
+        content: news.content,
+        authorId: news.authorId,
+        createdAt: news.createdAt,
+        ...(news.author
+          ? {
+              author: {
+                id: news.author.id,
+                firstName: news.author.firstName,
+                lastName: news.author.lastName,
+              },
+            }
+          : {}),
+      }))
+    );
   }
 
   public async update(request: Request, response: Response) {
@@ -146,24 +158,21 @@ export class NewsController {
       });
     }
 
-    const maybeContent = maybeCommand.content ? HtmlContentValue.from(maybeCommand.content) : undefined;
+    const maybeContent = maybeCommand.content
+      ? HtmlContentValue.from(maybeCommand.content)
+      : undefined;
     if (maybeContent instanceof InvalidHtmlContentError) {
       return response.status(400).json({
         error: maybeContent.message,
       });
     }
 
-    const updateNewsUsecase = new UpdateNewsUsecase(
-      this.newsRepository
-    );
-    const maybeNews = await updateNewsUsecase.execute(
-      author,
-      {
-        id: maybeParams.id,
-        title: maybeCommand.title,
-        content: maybeContent,
-      }
-    );
+    const updateNewsUsecase = new UpdateNewsUsecase(this.newsRepository);
+    const maybeNews = await updateNewsUsecase.execute(author, {
+      id: maybeParams.id,
+      title: maybeCommand.title,
+      content: maybeContent,
+    });
 
     if (maybeNews instanceof NewsNotFoundError) {
       return response.status(404).json({
@@ -199,9 +208,7 @@ export class NewsController {
       });
     }
 
-    const deleteNewsUsecase = new DeleteNewsUsecase(
-      this.newsRepository
-    );
+    const deleteNewsUsecase = new DeleteNewsUsecase(this.newsRepository);
     const maybeSuccess = await deleteNewsUsecase.execute(
       maybeParams.id,
       author

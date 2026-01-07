@@ -16,23 +16,32 @@ import { GetNewsListUsecase } from "../../../../application/usecases/news/GetNew
 import { GetNewsParams } from "../../../../application/params/news/GetNewsParams";
 import { InvalidGetNewsParamsError } from "../../../../application/errors/params/news/InvalidGetNewsParamsError";
 import { GetNewsUsecase } from "../../../../application/usecases/news/GetNewsUsecase";
-import { GetNewsListQuery, NewsSearchParams } from "../../../../application/queries/news/GetNewsListQuery";
+import {
+  GetNewsListQuery,
+  NewsSearchParams,
+} from "../../../../application/queries/news/GetNewsListQuery";
 import { UpdateNewsCommand } from "../../../../application/commands/news/UpdateNewsCommand";
 import { InvalidGetNewsListQueryError } from "../../../../application/errors/queries/news/InvalidGetNewsListQueryError";
 import { HtmlContentValue } from "../../../../domain/values/HtmlContentValue";
 import { InvalidHtmlContentError } from "../../../../domain/errors/values/html-content/InvalidHtmlContentError";
 import { SseFastifyServerClient } from "../services/sse/SseFastifyServerClient";
 import { SubscribeNewsUsecase } from "../../../../application/usecases/news/SubscribeNewsUsecase";
-import { CreateNewsPayloadInterface, UpdateNewsPayloadInterface } from "../../../../application/services/api/resources/NewsResourceInterface";
+import {
+  CreateNewsPayloadInterface,
+  UpdateNewsPayloadInterface,
+} from "../../../../application/services/api/resources/NewsResourceInterface";
 import { RessourceParamsInterface } from "../../../../application/params/RessourceParamsInterface";
 
 export class NewsController {
   public constructor(
     private readonly newsRepository: NewsRepositoryInterface,
-    private readonly sseServerClient: SseFastifyServerClient,
+    private readonly sseServerClient: SseFastifyServerClient
   ) {}
 
-  public async create(request: FastifyRequest<{Body: CreateNewsPayloadInterface}>, response: FastifyReply) {
+  public async create(
+    request: FastifyRequest<{ Body: CreateNewsPayloadInterface }>,
+    response: FastifyReply
+  ) {
     const maybeCommand = CreateNewsCommand.from(request.body);
     if (maybeCommand instanceof InvalidCreateNewsCommandError) {
       return response.status(400).send({
@@ -47,11 +56,14 @@ export class NewsController {
       });
     }
 
-    const createUsecase = new CreateNewsUsecase(this.newsRepository, this.sseServerClient);
+    const createUsecase = new CreateNewsUsecase(
+      this.newsRepository,
+      this.sseServerClient
+    );
     const maybeNews = await createUsecase.execute(
       maybeCommand.title,
       maybeCommand.content,
-      author,
+      author
     );
 
     if (maybeNews instanceof Error) {
@@ -67,7 +79,10 @@ export class NewsController {
     });
   }
 
-  public async get(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async get(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = GetNewsParams.from(request.params);
     if (maybeParams instanceof InvalidGetNewsParamsError) {
       return response.status(400).send({
@@ -85,21 +100,26 @@ export class NewsController {
 
     response.status(200).send({
       id: maybeNews.id,
-      name: maybeNews.title,
+      title: maybeNews.title,
       content: maybeNews.content,
       authorId: maybeNews.authorId,
       createdAt: maybeNews.createdAt,
-      ...(maybeNews.author ? {
-        author: {
-          id: maybeNews.author.id,
-          firstName: maybeNews.author.firstName,
-          lastName: maybeNews.author.lastName,
-        }
-      } : {})
+      ...(maybeNews.author
+        ? {
+            author: {
+              id: maybeNews.author.id,
+              firstName: maybeNews.author.firstName,
+              lastName: maybeNews.author.lastName,
+            },
+          }
+        : {}),
     });
   }
 
-  public async list(request: FastifyRequest<{Querystring: NewsSearchParams}>, response: FastifyReply) {
+  public async list(
+    request: FastifyRequest<{ Querystring: NewsSearchParams }>,
+    response: FastifyReply
+  ) {
     const maybeQuery = GetNewsListQuery.from(request.query);
     if (maybeQuery instanceof InvalidGetNewsListQueryError) {
       return response.status(400).send({
@@ -108,25 +128,38 @@ export class NewsController {
     }
 
     const getListUsecase = new GetNewsListUsecase(this.newsRepository);
-    const newsList = await getListUsecase.execute(maybeQuery.term || '', maybeQuery.count || 16);
+    const newsList = await getListUsecase.execute(
+      maybeQuery.term || "",
+      maybeQuery.count || 16
+    );
 
-    response.status(200).send(newsList.map((news) => ({
-      id: news.id,
-      title: news.title,
-      content: news.content,
-      authorId: news.authorId,
-      createdAt: news.createdAt,
-      ...(news.author ? {
-        author: {
-          id: news.author.id,
-          firstName: news.author.firstName,
-          lastName: news.author.lastName,
-        }
-      } : {})
-    })));
+    response.status(200).send(
+      newsList.map((news) => ({
+        id: news.id,
+        title: news.title,
+        content: news.content,
+        authorId: news.authorId,
+        createdAt: news.createdAt,
+        ...(news.author
+          ? {
+              author: {
+                id: news.author.id,
+                firstName: news.author.firstName,
+                lastName: news.author.lastName,
+              },
+            }
+          : {}),
+      }))
+    );
   }
 
-  public async update(request: FastifyRequest<{Params: RessourceParamsInterface, Body: UpdateNewsPayloadInterface}>, response: FastifyReply) {
+  public async update(
+    request: FastifyRequest<{
+      Params: RessourceParamsInterface;
+      Body: UpdateNewsPayloadInterface;
+    }>,
+    response: FastifyReply
+  ) {
     const maybeParams = UpdateNewsParams.from(request.params);
     if (maybeParams instanceof InvalidUpdateNewsParamsError) {
       return response.status(400).send({
@@ -148,24 +181,21 @@ export class NewsController {
       });
     }
 
-    const maybeContent = maybeCommand.content ? HtmlContentValue.from(maybeCommand.content) : undefined;
+    const maybeContent = maybeCommand.content
+      ? HtmlContentValue.from(maybeCommand.content)
+      : undefined;
     if (maybeContent instanceof InvalidHtmlContentError) {
       return response.status(400).send({
         error: maybeContent.message,
       });
     }
 
-    const updateNewsUsecase = new UpdateNewsUsecase(
-      this.newsRepository
-    );
-    const maybeNews = await updateNewsUsecase.execute(
-      author,
-      {
-        id: maybeParams.id,
-        title: maybeCommand.title,
-        content: maybeContent,
-      }
-    );
+    const updateNewsUsecase = new UpdateNewsUsecase(this.newsRepository);
+    const maybeNews = await updateNewsUsecase.execute(author, {
+      id: maybeParams.id,
+      title: maybeCommand.title,
+      content: maybeContent,
+    });
 
     if (maybeNews instanceof NewsNotFoundError) {
       return response.status(404).send({
@@ -186,7 +216,10 @@ export class NewsController {
     });
   }
 
-  public async delete(request: FastifyRequest<{Params: RessourceParamsInterface}>, response: FastifyReply) {
+  public async delete(
+    request: FastifyRequest<{ Params: RessourceParamsInterface }>,
+    response: FastifyReply
+  ) {
     const maybeParams = DeleteNewsParams.from(request.params);
     if (maybeParams instanceof InvalidDeleteNewsParamsError) {
       return response.status(400).send({
@@ -201,9 +234,7 @@ export class NewsController {
       });
     }
 
-    const deleteNewsUsecase = new DeleteNewsUsecase(
-      this.newsRepository
-    );
+    const deleteNewsUsecase = new DeleteNewsUsecase(this.newsRepository);
     const maybeSuccess = await deleteNewsUsecase.execute(
       maybeParams.id,
       author
