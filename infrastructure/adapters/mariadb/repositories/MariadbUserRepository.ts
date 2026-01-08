@@ -1,0 +1,195 @@
+import { UpdateUserPayload, UserRepositoryInterface } from "../../../../application/repositories/UserRepositoryInterface";
+import { User } from "../../../../domain/entities/User";
+import { EmailExistsError } from "../../../../domain/errors/entities/user/EmailExistsError";
+import { MariadbConnection } from "../../mariadb/config/MariadbConnection";
+import { UserNotFoundError } from "../../../../domain/errors/entities/user/UserNotFoundError";
+import { UserModel } from "../../mariadb/models/UserModel";
+import { RoleEnum } from "../../../../domain/enums/RoleEnum";
+
+export class MariadbUserRepository implements UserRepositoryInterface {
+  private userModel: UserModel;
+
+  public constructor(databaseDsn: string) {
+    this.userModel = new UserModel(new MariadbConnection(databaseDsn).getConnection());
+  }
+
+  public async create(user: User): Promise<User | EmailExistsError> {
+    try {
+      const createdUser = await this.userModel.model.create({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        password: user.password.value,
+        email: user.email.value,
+        roles: user.roles,
+        enabled: user.enabled,
+        confirmationToken: user.confirmationToken,
+        isDeleted: user.isDeleted,
+      });
+
+      const maybeUser = User.from(createdUser);
+      if (maybeUser instanceof Error) {
+        throw maybeUser;
+      }
+
+      return maybeUser;
+    } catch (error) {
+      if (error instanceof Error && error.name === 'SequelizeUniqueConstraintError') {
+        return new EmailExistsError('Given email already exists.');
+      }
+
+      return new EmailExistsError('Given email already exists.');
+    }
+  }
+
+  public async update(user: UpdateUserPayload): Promise<User | UserNotFoundError | EmailExistsError> {
+    try {
+      const { id, email, password, roles, ...toUpdate } = user;
+
+      if (roles && !roles.includes(RoleEnum.USER)) {
+        roles.push(RoleEnum.USER);
+      }
+
+      await this.userModel.model.update({
+        ...toUpdate,
+        ...(email ? { email: email.value } : {}),
+        ...(password ? { password: password.value } : {}),
+        ...(roles ? { roles } : {}),
+      }, {
+        where: { id },
+      });
+
+      return await this.findById(id);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'SequelizeUniqueConstraintError') {
+        return new EmailExistsError('Given email already exists.');
+      }
+
+      return new UserNotFoundError('User not found.');
+    }
+  }
+
+  public async find(email: string, password: string): Promise<User | UserNotFoundError> {
+    try {
+      const foundUser = await this.userModel.model.findOne({ where: { email, password } });
+      if (!foundUser) {
+        return new UserNotFoundError('User not found.');
+      }
+
+      const maybeUser = User.from(foundUser);
+      if (maybeUser instanceof Error) {
+        throw maybeUser;
+      }
+
+      return maybeUser;
+    } catch (error) {
+      return new UserNotFoundError('User not found.');
+    }
+  }
+
+  public async findAll(): Promise<User[]> {
+    try {
+      const foundUsers = await this.userModel.model.findAll();
+      const users: User[] = [];
+
+      foundUsers.forEach((foundUser) => {
+        const maybeUser = User.from(foundUser);
+        if (maybeUser instanceof Error) {
+          throw maybeUser;
+        }
+
+        users.push(maybeUser);
+      });
+
+      return users;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  public async findByEmail(email: string): Promise<User | UserNotFoundError> {
+    try {
+      const foundUser = await this.userModel.model.findOne({ where: { email } });
+      if (!foundUser) {
+        return new UserNotFoundError('User not found.');
+      }
+
+      const maybeUser = User.from(foundUser);
+      if (maybeUser instanceof Error) {
+        throw maybeUser;
+      }
+
+      return maybeUser;
+    } catch (error) {
+      return new UserNotFoundError('User not found.');
+    }
+  }
+
+  public async findById(id: number): Promise<User | UserNotFoundError> {
+    try {
+      const foundUser = await this.userModel.model.findByPk(id);
+      if (!foundUser) {
+        return new UserNotFoundError('User not found.');
+      }
+
+      const maybeUser = User.from(foundUser);
+      if (maybeUser instanceof Error) {
+        throw maybeUser;
+      }
+
+      return maybeUser;
+    } catch (error) {
+      return new UserNotFoundError('User not found.');
+    }
+  }
+
+  public async findByConfirmationToken(token: string): Promise<User | UserNotFoundError> {
+    try {
+      const foundUser = await this.userModel.model.findOne({ where: { confirmationToken: token } });
+      if (!foundUser) {
+        return new UserNotFoundError('Invalid token.');
+      }
+
+      const maybeUser = User.from(foundUser);
+      if (maybeUser instanceof Error) {
+        throw maybeUser;
+      }
+
+      return maybeUser;
+    } catch (error) {
+      return new UserNotFoundError('Invalid token.');
+    }
+  }
+
+  public async delete(id: number): Promise<boolean | UserNotFoundError> {
+    try {
+      const deletedCount = await this.userModel.model.destroy({ where: { id } });
+      if (deletedCount === 0) {
+        return new UserNotFoundError('User not found.');
+      }
+
+      return true;
+    } catch (error) {
+      return new UserNotFoundError('User not found.');
+    }
+  }
+
+  public async findByIds(ids: number[]): Promise<User[]> {
+    try {
+      const foundUsers = await this.userModel.model.findAll({ where: { id: ids } });
+      const users: User[] = [];
+
+      foundUsers.forEach((foundUser) => {
+        const maybeUser = User.from(foundUser);
+        if (maybeUser instanceof Error) {
+          throw maybeUser;
+        }
+
+        users.push(maybeUser);
+      });
+
+      return users;
+    } catch (error) {
+      return [];
+    }
+  }
+}

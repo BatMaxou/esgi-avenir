@@ -1,0 +1,35 @@
+import { Request, Response } from "express";
+import { UserRepositoryInterface } from "../../../application/repositories/UserRepositoryInterface";
+import { MeUsecase } from "../../../application/usecases/me/MeUsecase";
+import { UserNotFoundError } from "../../../domain/errors/entities/user/UserNotFoundError";
+
+export class MeController {
+  public constructor(
+    private readonly userRepository: UserRepositoryInterface
+  ) {}
+
+  public async me(request: Request, response: Response) {
+    if (!request.user || !request.user.id) {
+      return response.status(401).json({
+        error: "Unauthorized.",
+      });
+    }
+
+    const meUsecase = new MeUsecase(this.userRepository);
+    const maybeUser = await meUsecase.execute(request.user.id);
+
+    if (maybeUser instanceof UserNotFoundError) {
+      return response.status(404).json({
+        error: maybeUser.message,
+      });
+    }
+
+    response.status(200).json({
+      id: maybeUser.id,
+      email: maybeUser.email,
+      firstName: maybeUser.firstName,
+      lastName: maybeUser.lastName,
+      roles: maybeUser.roles,
+    });
+  }
+}

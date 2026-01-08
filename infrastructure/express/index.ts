@@ -1,22 +1,177 @@
 import express from "express";
-import dotenv from "dotenv";
+import bodyParser from "body-parser";
+import cors from "cors";
+import { createServer } from "http";
 
-dotenv.config();
-dotenv.config({ path: '.env.local', override: true })
+import { RepositoryResolver } from "../adapters/services/RepositoryResolver";
+import { Mailer } from "../adapters/nodemailer/services/Mailer";
+import { PasswordHasher } from "../adapters/bcrypt/services/PasswordHasher";
+import { UniqueIdGenerator } from "../adapters/uuid/services/UniqueIdGenerator";
+import { TokenManager } from "../adapters/jwt/services/TokenManager";
+import { AuthRouter } from "./routes/AuthRouter";
+import { MeRouter } from "./routes/MeRouter";
+import { UserRouter } from "./routes/UserRouter";
+import {
+  databaseSource,
+  databaseDsn,
+  mailerHost,
+  mailerPort,
+  mailerFrom,
+  jwtSecret,
+  databaseUser,
+  databasePassword,
+  databaseName,
+  frontUrl,
+} from "./utils/tools";
+import { AccountRouter } from "./routes/AccountRouter";
+import { OperationRouter } from "./routes/OperationRouter";
+import { Scheduler } from "../adapters/nodecron/services/Scheduler";
+import { Calendar } from "./calendar/Calendar";
+import { SettingRouter } from "./routes/SettingRouter";
+import { StockRouter } from "./routes/StockRouter";
+import { StockOrderRouter } from "./routes/StockOrderRouter";
+import { FinancialSecurityRouter } from "./routes/FinancialSecurityRouter";
+import { BeneficiaryRouter } from "./routes/BeneficiaryRouter";
+import { BankCreditRouter } from "./routes/BankCreditRouter";
+import { NewsRouter } from "./routes/NewsRouter";
+import { NotificationRouter } from "./routes/NotificationRouter";
+import { PrivateMessageRouter } from "./routes/PrivateMessageRouter";
+import { PrivateChannelRouter } from "./routes/PrivateChannelRouter";
+import { CompanyChannelRouter } from "./routes/CompanyChannelRouter";
+import { User } from "../../domain/entities/User";
+import { SseExpressResponseAssistant } from "./services/sse/SseExpressResponseAssistant";
+import { SseExpressServerClient } from "./services/sse/SseExpressServerClient";
+import { SocketIoServer } from "../adapters/socket-io/SocketIoServer";
+import { SocketIoChannelIdentifierBuilder } from "../adapters/socket-io/SocketIoChannelIdentifierBuilder";
+
+declare module "express" {
+  interface Request {
+    user?: User;
+  }
+}
 
 const startServer = async () => {
   const app = express();
+  app.use(bodyParser.json());
+  app.use(cors());
+  const server = createServer(app);
 
-  await bootstrap();
-  
-  app.get("/", (req, res) => {
+  const repositoryResolver = new RepositoryResolver(
+    databaseSource,
+    databaseDsn,
+    databaseUser,
+    databasePassword,
+    databaseName,
+  );
+  const tokenManager = new TokenManager(jwtSecret);
+  const mailer = new Mailer(mailerHost, mailerPort, mailerFrom);
+  const passwordHasher = new PasswordHasher();
+  const uniqueIdGenerator = new UniqueIdGenerator();
+  const scheduler = new Scheduler();
+
+  const channelIdentifierBuilder = new SocketIoChannelIdentifierBuilder();
+  const websocketServer = new SocketIoServer(
+    server,
+    frontUrl,
+    channelIdentifierBuilder,
+    tokenManager,
+    repositoryResolver.getUserRepository(),
+    repositoryResolver.getPrivateChannelRepository(),
+    repositoryResolver.getCompanyChannelRepository(),
+    repositoryResolver.getMessageRepository()
+  );
+
+  const sseAssistant = new SseExpressResponseAssistant();
+  const sseServerClient = new SseExpressServerClient(sseAssistant);
+
+  app.get("/", (_, res) => {
     res.send("Hello World!");
   });
 
-  app.listen(3000, () => console.log(`Listening on port 3000`));
-};
+  new AuthRouter().register(
+    app,
+    repositoryResolver,
+    passwordHasher,
+    uniqueIdGenerator,
+    mailer,
+    tokenManager
+  );
 
-const bootstrap = async () => {
+  new MeRouter().register(app, repositoryResolver, tokenManager);
+
+  new UserRouter().register(
+    app,
+    repositoryResolver,
+    mailer,
+    passwordHasher,
+    uniqueIdGenerator,
+    tokenManager
+  );
+
+  new AccountRouter().register(app, repositoryResolver, mailer, tokenManager);
+
+  new OperationRouter().register(app, repositoryResolver, tokenManager);
+
+  new SettingRouter().register(app, repositoryResolver, mailer, tokenManager);
+
+  new StockRouter().register(app, repositoryResolver, tokenManager, mailer);
+
+  new StockOrderRouter().register(
+    app,
+    repositoryResolver,
+    mailer,
+    tokenManager
+  );
+
+  new FinancialSecurityRouter().register(app, repositoryResolver, tokenManager);
+
+  new BeneficiaryRouter().register(
+    app,
+    repositoryResolver,
+    mailer,
+    tokenManager
+  );
+
+  new BankCreditRouter().register(
+    app,
+    repositoryResolver,
+    mailer,
+    tokenManager
+  );
+
+  new NewsRouter().register(
+    app,
+    repositoryResolver,
+    tokenManager,
+    sseServerClient
+  );
+
+  new NotificationRouter().register(
+    app,
+    repositoryResolver,
+    tokenManager,
+    sseServerClient
+  );
+
+  new PrivateMessageRouter().register(app, repositoryResolver, tokenManager);
+
+  new PrivateChannelRouter().register(
+    app,
+    repositoryResolver,
+    tokenManager,
+    websocketServer
+  );
+
+  new CompanyChannelRouter().register(
+    app,
+    repositoryResolver,
+    tokenManager,
+    websocketServer
+  );
+
+  new Calendar(repositoryResolver, scheduler);
+
+  server.listen(3000, () => console.log(`Listening on port 3000`));
 };
 
 startServer().catch(console.error);

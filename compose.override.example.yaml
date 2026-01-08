@@ -2,7 +2,30 @@ services:
   express:
     ports:
       - "8000:3000"
+    command: sh -c "npm install && npm -w infrastructure/express run dev -- --host 0.0.0.0"
+
+  # fastify:
+  #   ports:
+  #     - "8100:3000"
+  #   command: sh -c "npm install && npm -w infrastructure/fastify run dev"
 
   frontend:
     ports:
       - "3000:3000"
+    command: sh -c "npm install && npm -w infrastructure/frontend run dev"
+
+  mariadb:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: avenir
+
+  mongo:
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: avenir
+
+  mailbox:
+    ports:
+      - "8025:8025"
+

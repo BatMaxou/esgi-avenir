@@ -4,16 +4,19 @@
   "description": "Express infrastructure for ESGI Avenir project",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsx watch index.ts --host 0.0.0.0"
+    "start": "node build/infrastructure/express/index.js",
+    "dev": "tsx watch index.ts --host 0.0.0.0",
+    "sync": "npm run build && node build/infrastructure/express/scripts/sync.js",
+    "fixtures": "npm run build && node build/infrastructure/express/scripts/fixtures.js"
   },
   "dependencies": {
-    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.3",
     "tsx": "^4.7.0",

@@ -1,0 +1,150 @@
+"use client";
+
+import { ReactNode, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { RoleEnum } from "../../../../../../domain/enums/RoleEnum";
+import Header from "@/components/ui/molecules/partials/header";
+import { useAccounts } from "@/contexts/AccountsContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { Banner } from "@/components/ui/atoms/banner";
+import { useBeneficiaries } from "@/contexts/BeneficiariesContext";
+import { NotifierProvider } from "@/contexts/NotifierContext";
+import RequestAdvisorByMessageDialog from "@/components/ui/molecules/dialogs/request-advisor-by-message-dialog";
+import { CreateNotificationDialog } from "@/components/ui/molecules/dialogs/create-notification-dialog";
+
+type Props = {
+  children: ReactNode;
+};
+
+export default function ProtectedLayout({ children }: Props) {
+  const t = useTranslations("layout.protected");
+  const pathname = usePathname();
+  const { getAccounts } = useAccounts();
+  const { getBeneficiaries } = useBeneficiaries();
+  const { isAuthenticated, isLoading, user } = useAuth();
+
+  const pathWithoutLocale = pathname.replace(/^\/(en|fr)/, "") || "/home";
+
+  // Nommage des routes statiques et dynamiques
+  const pageTitles: Record<string, string> = {
+    "/home": t("home"),
+    "/accueil": t("home"),
+    "/accounts": t("accounts"),
+    "/comptes": t("accounts"),
+    "/transfers": t("transfers"),
+    "/virements": t("transfers"),
+    "/investments": t("investments"),
+    "/investissements": t("investments"),
+    "/profile": t("profile"),
+    "/profil": t("profile"),
+    "/users": t("users"),
+    "/utilisateurs": t("users"),
+    "/settings": t("settings"),
+    "/parametres": t("settings"),
+    "/actions": t("actions"),
+    "/news": t("news"),
+    "/actualites": t("news"),
+    "/credits": t("credits"),
+    "/credit": t("credit"),
+    "/clients": t("clients"),
+    "/messages": t("messages"),
+    "/notifications": t("notifications"),
+  };
+
+  let pageTitle = pageTitles[pathWithoutLocale];
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/accounts/details/") ||
+      pathWithoutLocale.startsWith("/comptes/details/"))
+  ) {
+    pageTitle = t("accountDetails");
+  }
+  if (!pageTitle && pathWithoutLocale.startsWith("/credit")) {
+    pageTitle = t("credit");
+  }
+  if (
+    (!pageTitle && pathWithoutLocale.startsWith("/investissement/possedes")) ||
+    pathWithoutLocale.startsWith("/investments/owned") ||
+    pathWithoutLocale.startsWith("/investissements/possedes")
+  ) {
+    pageTitle = t("investmentsOwned");
+  }
+  if (
+    (!pageTitle &&
+      pathWithoutLocale.startsWith(
+        "/investissement/entreprises-disponibles"
+      )) ||
+    pathWithoutLocale.startsWith("/investments/stocks") ||
+    pathWithoutLocale.startsWith("/investissements/entreprises-disponibles")
+  ) {
+    pageTitle = t("investmentsStocks");
+  }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/news/create") ||
+      pathWithoutLocale.startsWith("/actualites/creer"))
+  ) {
+    pageTitle = t("newsCreate");
+  }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/news/") ||
+      pathWithoutLocale.startsWith("/actualite/"))
+  ) {
+    pageTitle = t("newsDetail");
+  }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/clients/") ||
+      pathWithoutLocale.startsWith("/client/"))
+  ) {
+    pageTitle = t("clientDetail");
+  }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/credits/") ||
+      pathWithoutLocale.startsWith("/credit/"))
+  ) {
+    pageTitle = t("creditDetail");
+  }
+  if (
+    !pageTitle &&
+    (pathWithoutLocale.startsWith("/users/") ||
+      pathWithoutLocale.startsWith("/utilisateur/"))
+  ) {
+    pageTitle = t("userDetail");
+  }
+  pageTitle = pageTitle || t("clientArea");
+
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      getAccounts();
+      getBeneficiaries();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, isLoading]);
+
+  return (
+    <ProtectedRoute requiredRoles={[RoleEnum.USER]}>
+      <NotifierProvider>
+        <div className="min-h-screen overflow-y-hidden bg-white relative">
+          <Header />
+          <Banner title={pageTitle} />
+          <main className="relative container mx-auto px-4 py-8 h-[calc(100vh-224px)] overflow-y-auto">
+            {children}
+          </main>
+          {user && user.roles?.includes(RoleEnum.ADVISOR) && (
+            <CreateNotificationDialog />
+          )}
+          {user &&
+            !user.roles?.includes(RoleEnum.ADVISOR) &&
+            !user.roles?.includes(RoleEnum.DIRECTOR) && (
+              <RequestAdvisorByMessageDialog />
+            )}
+        </div>
+      </NotifierProvider>
+    </ProtectedRoute>
+  );
+}

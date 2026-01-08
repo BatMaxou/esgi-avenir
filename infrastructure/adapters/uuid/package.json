@@ -1,0 +1,11 @@
+{
+  "name": "@avenir/uuid",
+  "version": "1.0.0",
+  "description": "Uuid infrastructure for ESGI Avenir project",
+  "dependencies": {
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
+  }
+}

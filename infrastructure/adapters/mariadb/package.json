@@ -1,0 +1,10 @@
+{
+  "name": "@avenir/mariadb",
+  "version": "1.0.0",
+  "description": "Mariadb infrastructure for ESGI Avenir project",
+  "dependencies": {
+    "mariadb": "^3.4.5",
+    "mysql2": "^3.15.2",
+    "sequelize": "^6.37.7"
+  }
+}

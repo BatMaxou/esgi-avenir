@@ -1,0 +1,8 @@
+{
+  "name": "@avenir/domain",
+  "version": "1.0.0",
+  "description": "Domain of ESGI Avenir project",
+  "dependencies": {
+    "ibantools": "^4.5.1"
+  }
+}

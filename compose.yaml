@@ -1,24 +1,54 @@
 services:
   express:
+    depends_on:
+      - mariadb
+      - mongo
     build:
       dockerfile: ./infrastructure/express/Dockerfile
     volumes:
+      - ./domain:/app/domain
+      - ./application:/app/application
+      - ./infrastructure/adapters:/app/infrastructure/adapters
       - ./infrastructure/express:/app/infrastructure/express
       - /app/node_modules
-      - /app/infrastructure/express/node_modules
+
+  # fastify:
+  #   depends_on:
+  #     - mariadb
+  #     - mongo
+  #   build:
+  #     dockerfile: ./infrastructure/fastify/Dockerfile
+  #   volumes:
+  #     - ./domain:/app/domain
+  #     - ./application:/app/application
+  #     - ./infrastructure/adapters:/app/infrastructure/adapters
+  #     - ./infrastructure/fastify/:/app/infrastructure/fastify
+  #     - /app/node_modules
 
   frontend:
     build:
       dockerfile: ./infrastructure/frontend/Dockerfile
     volumes:
+      - ./domain:/app/domain
+      - ./application:/app/application
+      - ./infrastructure/adapters:/app/infrastructure/adapters
+      - ./infrastructure/utils/frontend:/app/infrastructure/utils/frontend
       - ./infrastructure/frontend:/app/infrastructure/frontend
       - /app/node_modules
-      - /app/infrastructure/frontend/node_modules
 
   mariadb:
     image: mariadb:12.0.2
     volumes:
       - mariadb_data:/var/lib/mysql
 
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongodb_data:/data/db
+
+  mailbox:
+    image: mailhog/mailhog
+
 volumes:
   mariadb_data:
+  mongodb_data:

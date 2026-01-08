@@ -1,0 +1,1014 @@
+{
+  "layout": {
+    "protected": {
+      "home": "Dashboard",
+      "accounts": "My accounts",
+      "transfers": "Transfers",
+      "investments": "My investments",
+      "profile": "My profile",
+      "users": "User management",
+      "settings": "Bank settings",
+      "actions": "Actions management",
+      "news": "News",
+      "newsCreate": "Create news article",
+      "newsDetail": "News detail",
+      "credits": "Credits management",
+      "credit": "Credit",
+      "creditDetail": "Credit detail",
+      "clients": "Client management",
+      "clientDetail": "Client detail",
+      "accountDetails": "My account",
+      "clientArea": "Client area",
+      "investmentsOwned": "My owned stocks",
+      "investmentsStocks": "Stocks available",
+      "messages": "Messages",
+      "notifications": "Notifications",
+      "userDetail": "User detail"
+    }
+  },
+  "page": {
+    "home": {
+      "loading": "Loading..."
+    },
+    "news": {
+      "title": "Latest News",
+      "no-results": "No news found.",
+      "addNews": "Add a news article",
+      "noDate": "Unknown date",
+      "detail": {
+        "notFound": "News article not found."
+      }
+    },
+    "notifications": {
+      "title": "Notifications",
+      "noResults": "No notifications found.",
+      "noDate": "No date",
+      "filters": {
+        "all": "All",
+        "global": "Global",
+        "private": "Private"
+      },
+      "type": {
+        "global": "Global",
+        "private": "Private"
+      },
+      "resultsInfo": "Showing {start} to {end} of {total} notifications"
+    },
+    "privateMessage": {
+      "title": "Private Messages",
+      "no-results": "Send a message to start the conversation.",
+      "advisor-pending": "You have to assign yourself to this conversation to reply.",
+      "client-pending": "You have to wait for an advisor to take charge to continue the conversation.",
+      "writing-users": "{count, plural, =0 {} =1 {{firstName} {lastName} is writing...} other {# are writing...}}"
+    },
+    "accounts": {
+      "title": "My accounts",
+      "createCurrent": "Create a checking account",
+      "createSavings": "Create a savings account",
+      "alreadyHasSavings": "You already have a savings account",
+      "details": {
+        "lastOperations": "Recent transactions",
+        "balance": "Balance",
+        "bankInformations": "Bank information",
+        "updateAccount": "Update my account",
+        "deleteAccount": "Delete my account"
+      }
+    },
+    "transfers": {
+      "title": "Transfers"
+    },
+    "investments": {
+      "title": "My investments",
+      "comingSoon": "Investments page to be implemented...",
+      "owned": {
+        "stocks": "owned stocks",
+        "noStockOrders": "No stock purchase or sale requests found.",
+        "sellStocks": "Sell stocks",
+        "purchaseValue": "Purchase value",
+        "currentMarketValue": "Current market value",
+        "unknownStock": "Unknown stock owner",
+        "companies": "Companies",
+        "transactionHistory": "Transaction History",
+        "stockOrderRequest": "Requested orders",
+        "selectCompanyDetails": "Select a company to see details",
+        "noStocks": "You do not own any stocks at the moment.",
+        "backToInvestments": "Back to investments"
+      },
+      "stocks": {
+        "stockDetails": "Stock details",
+        "companies": "Stocks",
+        "marketPrice": "Market price",
+        "basePricePerShare": "Unit base price",
+        "ownedQuantity": "Stocks owned",
+        "remainingQuantity": "Remaining bank stock quantity",
+        "buyStock": "Buy stock",
+        "createBuyStock": "Create a buy stock order",
+        "createSellStock": "Create a sell stock order",
+        "stockOrders": "Stock orders",
+        "details": "Details",
+        "all": "All",
+        "buy": "Buy",
+        "sell": "Sell",
+        "noOrders": "No pending orders for this stock",
+        "noBuyOrders": "No pending buy orders",
+        "noSellOrders": "No pending sell orders"
+      }
+    },
+    "clients": {
+      "title": "Clients",
+      "search": "Search a client",
+      "details": {
+        "accountsTitle": "Client Accounts",
+        "noAccount": "This client does not have an account yet."
+      }
+    },
+    "credits": {
+      "title": "Credits",
+      "search": "Search a credit",
+      "details": {
+        "title": "Credit Details",
+        "paymentsTitle": "Payment History"
+      }
+    },
+    "users": {
+      "title": "Users",
+      "search": "Search a user",
+      "details": {
+        "title": "User Details",
+        "edit": "Edit",
+        "ban": "Ban",
+        "unban": "Unban",
+        "delete": "Delete"
+      }
+    },
+    "actions": {
+      "title": "Actions"
+    },
+    "settings": {
+      "title": "Settings",
+      "savingsRate": "Savings Rate",
+      "savingsRateDescription": "Interest rate applied to savings accounts",
+      "purchaseFee": "Purchase Fee",
+      "purchaseFeeDescription": "Fees applied when purchasing stocks",
+      "saleFee": "Sale Fee",
+      "saleFeeDescription": "Fees applied when selling stocks"
+    },
+    "stocks": {
+      "search": "Search a stock"
+    },
+    "privateMessages": {
+      "title": "Private Messages",
+      "no-results": "No message found."
+    },
+    "messages": {
+      "title": "My Messages",
+      "loading": "Loading...",
+      "private_channels": "Private Messages",
+      "company_channels": "Company Messages",
+      "pending_channels": "Pending Messages",
+      "all_conversations": "All Conversations",
+      "private": "Private",
+      "company": "Company",
+      "pending": "Pending",
+      "no_channels": "No messages at the moment",
+      "select_conversation": "Select a conversation to start",
+      "tabs": {
+        "all": "All",
+        "private": "Private",
+        "company": "Company",
+        "pending": "Pending"
+      },
+      "errors": {
+        "fetch_channels": "Error fetching messages"
+      },
+      "assign_to_me": "Assign to me",
+      "channelNotFound": "Channel not found."
+    }
+  },
+  "components": {
+    "organisms": {
+      "messageThread": {
+        "channel_not_found": "Channel not found"
+      }
+    },
+    "cards": {
+      "users": {
+        "title": "Users"
+      },
+      "actions": {
+        "title": "Actions"
+      },
+      "savings": {
+        "title": "Settings",
+        "savingsRate": "Savings rate",
+        "buying": "Buying",
+        "selling": "Selling"
+      },
+      "bankCredit": {
+        "title": "View",
+        "subtitle": "credits"
+      },
+      "transfer": {
+        "title": "Transfer",
+        "subtitle": "money"
+      },
+      "investment": {
+        "title": "View your",
+        "subtitle": "investments"
+      },
+      "accountInformations": {
+        "accountName": "Account name",
+        "iban": "IBAN",
+        "owner": "Owner",
+        "savingsRate": "Savings rate"
+      },
+      "userInformations": {
+        "title": "Personal information",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "role": "Role"
+      },
+      "accounts": {
+        "title": "Client Accounts"
+      },
+      "bankCreditInformations": {
+        "title": "Credit information",
+        "amount": "Amount",
+        "interestRate": "Interest rate",
+        "insuranceRate": "Insurance rate",
+        "duration": "Duration",
+        "months": "months"
+      },
+      "marketStocks": {
+        "title": "Stock Market",
+        "seeAll": "Go to market",
+        "availableSoon": "Available soon",
+        "noStocks": "No stocks available on the market.",
+        "noAvailableStocks": "No stocks available for purchase at the moment.",
+        "price": "Price",
+        "available": "Available",
+        "value": "Value",
+        "buy": "Buy",
+        "showingLatest": "Showing the {count} most recent stocks"
+      },
+      "userStocks": {
+        "title": "My Stocks",
+        "seeAll": "See all my stocks",
+        "noStocks": "You don't own any stocks at the moment.",
+        "unknownStock": "Unknown Stock",
+        "stockName": "Stock",
+        "quantity": "Quantity",
+        "marketPrice": "Market price",
+        "currentMarketValue": "Current market value",
+        "currentPrice": "Current Price",
+        "totalValue": "Total Value",
+        "profitLoss": "Profit/Loss",
+        "totalPortfolio": "Total Portfolio Value"
+      },
+      "recentCompanies": {
+        "title": "Latest Available Companies",
+        "seeAll": "See all companies",
+        "noCompanies": "No companies available at the moment.",
+        "available": " stock(s) available for purchase"
+      },
+      "myCompanies": {
+        "title": "My Companies",
+        "seeAll": "See all my companies",
+        "noCompanies": "You haven't invested in any companies yet.",
+        "stock": "stock",
+        "stocks": "stocks"
+      }
+    },
+    "dashboards": {
+      "client": {
+        "myAccounts": "My Accounts",
+        "seeAllAccounts": "See all my accounts",
+        "transfers": "Transfers",
+        "investments": "Investments"
+      }
+    },
+    "badges": {
+      "role": {
+        "banned": "Banned",
+        "director": "Director",
+        "advisor": "Advisor",
+        "client": "Client",
+        "unknown": "Unknown"
+      },
+      "bankCredit": {
+        "repaid": "Repaid"
+      }
+    },
+    "items": {
+      "bankCreditOperation": {
+        "creditRepayment": "Credit repayment"
+      },
+      "operations": {
+        "deposit": "Deposit",
+        "withdrawal": "Withdrawal",
+        "incomingTransfer": "Incoming transfer",
+        "outgoingTransfer": "Outgoing transfer",
+        "savingsInterest": "Savings interest",
+        "bankFee": "Bank fee",
+        "transferToBank": "Transfer to bank",
+        "transferFromBank": "Transfer from bank"
+      },
+      "companyStocks": {
+        "stocks": "stocks"
+      },
+      "stockOrder": {
+        "requestedPrice": "Asked price",
+        "purchasedPrice": "Purchased price",
+        "soldPrice": "Sold price",
+        "viewOffers": "View offers",
+        "deleteStockOrder": "Delete order",
+        "type": {
+          "sell": "Sale",
+          "buy": "Purchase"
+        },
+        "status": {
+          "pending": "Pending",
+          "completed": "Completed",
+          "rejected": "Rejected"
+        }
+      },
+      "stockTransactionItem": {
+        "buy": "Buy",
+        "sell": "Sell"
+      }
+    },
+    "forms": {
+      "login": {
+        "email": "Email",
+        "emailError": "Email must be a valid address.",
+        "password": "Password",
+        "passwordError": "Password cannot be empty.",
+        "submit": "Sign in"
+      },
+      "register": {
+        "gender": "Gender",
+        "mr": "Mr.",
+        "mrs": "Mrs.",
+        "firstName": "First name",
+        "firstNameError": "Your first name is required.",
+        "lastName": "Last name",
+        "lastNameError": "Your last name is required.",
+        "email": "Email",
+        "emailError": "Email must be a valid email address.",
+        "password": "Password",
+        "passwordError": "Password must be at least 12 characters.",
+        "passwordConfirm": "Confirm password",
+        "passwordMismatch": "Passwords do not match.",
+        "streetNumber": "Street number",
+        "streetNumberError": "Street number is required.",
+        "street": "Street",
+        "streetError": "Street name is required.",
+        "postalCode": "Postal code",
+        "postalCodeError": "Postal code is required.",
+        "city": "City",
+        "cityError": "City is required.",
+        "country": "Country",
+        "countryError": "Country is required.",
+        "submit": "Open an account"
+      },
+      "account": {
+        "name": "Account name",
+        "placeholderCurrent": "Ex: Main account",
+        "placeholderSavings": "Ex: Savings book",
+        "cancel": "Cancel",
+        "create": "Create",
+        "creating": "Creating...",
+        "update": "Update",
+        "updating": "Updating..."
+      },
+      "beneficiary": {
+        "name": "Beneficiary name",
+        "namePlaceholder": "Ex: John Doe",
+        "iban": "IBAN",
+        "ibanPlaceholder": "Ex: FR76 1234 5678 9012 3456 7890 123",
+        "cancel": "Cancel",
+        "add": "Add",
+        "adding": "Adding...",
+        "update": "Update",
+        "updating": "Updating..."
+      },
+      "user": {
+        "firstName": "First name",
+        "firstNameError": "First name cannot be empty.",
+        "lastName": "Last name",
+        "lastNameError": "Last name cannot be empty.",
+        "email": "Email",
+        "emailError": "Email must be a valid address.",
+        "password": "Password",
+        "passwordError": "Password must contain at least 8 characters.",
+        "role": "Role",
+        "rolePlaceholder": "Select a role",
+        "roleClient": "Client",
+        "roleAdvisor": "Advisor",
+        "roleDirector": "Director",
+        "create": "Create user"
+      },
+      "updateBeneficiary": {
+        "name": "Beneficiary name",
+        "namePlaceholder": "Ex: John Doe",
+        "iban": "IBAN",
+        "ibanNotEditable": "IBAN cannot be modified",
+        "nameRequired": "Beneficiary name is required",
+        "idMissing": "Beneficiary ID missing",
+        "successUpdate": "Beneficiary updated successfully",
+        "errorUpdate": "Error updating beneficiary",
+        "notFound": "Beneficiary not found",
+        "successDelete": "Beneficiary deleted successfully",
+        "errorDelete": "Error deleting beneficiary",
+        "cancel": "Cancel",
+        "update": "Update",
+        "updating": "Updating...",
+        "delete": "Delete permanently"
+      },
+      "transfer": {
+        "successTitle": "Transfer successful!",
+        "successDescription": "Your transfer of",
+        "successDescriptionEnd": "has been completed successfully.",
+        "newTransfer": "New transfer",
+        "fromAccount": "From account",
+        "toAccount": "To account",
+        "nameOperation": "Name the operation",
+        "operationPlaceholder": "My transfer",
+        "transfer": "Transfer"
+      },
+      "bankCredit": {
+        "amount": "Amount (€)",
+        "amountPlaceholder": "Ex: 50000",
+        "amountError": "Amount must be a positive number",
+        "interestRate": "Interest rate (%)",
+        "interestRatePlaceholder": "Ex: 0.5",
+        "interestRateError": "Interest rate must be between 0 and 100",
+        "insuranceRate": "Insurance rate (%)",
+        "insuranceRatePlaceholder": "Ex: 0.1",
+        "insuranceRateError": "Insurance rate must be between 0 and 100",
+        "duration": "Duration (months)",
+        "durationPlaceholder": "Ex: 120",
+        "durationErrorInt": "Duration must be an integer",
+        "durationErrorPositive": "Duration must be a positive integer",
+        "cancel": "Cancel",
+        "create": "Create",
+        "creating": "Creating..."
+      },
+      "setting": {
+        "valueError": "Value must be a number with maximum 2 decimal places.",
+        "valueInvalid": "Value must be a valid number.",
+        "save": "Save"
+      },
+      "stock": {
+        "name": "Name",
+        "nameError": "Name is required",
+        "baseQuantity": "Base Quantity",
+        "baseQuantityError": "Quantity must be positive",
+        "basePrice": "Base Price",
+        "basePriceError": "Price must be positive",
+        "additionalQuantity": "Quantity to add",
+        "additionalQuantityError": "Quantity must be greater than 0",
+        "create": "Create",
+        "update": "Update",
+        "refill": "Refill"
+      },
+      "sendMessage": {
+        "placeholder": "Write your message...",
+        "submit": "Send"
+      },
+      "news": {
+        "formTitle": "Create a news article",
+        "titlePlaceholder": "Enter a title",
+        "titleError": "Title is required.",
+        "content": "Content",
+        "contentPlaceholder": "Enter content",
+        "contentError": "Content is required.",
+        "cancel": "Cancel",
+        "submit": "Create"
+      }
+    },
+    "inputs": {
+      "search": {
+        "placeholder": "Search...",
+        "searching": "Search",
+        "loading": "Loading..."
+      }
+    },
+    "lists": {
+      "accounts": {
+        "currentAccounts": "Current accounts",
+        "savingsAccounts": "Savings accounts",
+        "noCurrentAccount": "You don't have a current account yet.",
+        "noSavingsAccount": "You don't have a savings account yet.",
+        "addCurrentAccount": "Add current account",
+        "addSavingsAccount": "Add savings account",
+        "currentAccount": "Current account",
+        "savingsAccount": "Savings account"
+      },
+      "beneficiaries": {
+        "noBeneficiary": "No beneficiary found"
+      },
+      "bankCredit": {
+        "noPayment": "No payment has been made."
+      }
+    },
+    "partials": {
+      "header": {
+        "home": "Home",
+        "users": "Users",
+        "settings": "Settings",
+        "actions": "Actions",
+        "credits": "Credits",
+        "clients": "Clients",
+        "accounts": "Accounts",
+        "transfers": "Transfers",
+        "investments": "Investments",
+        "myAccount": "My account",
+        "profile": "Profile",
+        "logout": "Logout",
+        "notifications_title": "Notifications",
+        "noNotifications": "No notifications",
+        "andMore": "and {count} more notifications...",
+        "seeAllNotifications": "See all notifications",
+        "news": "News"
+      }
+    },
+    "dataTable": {
+      "noResults": "No results.",
+      "resultsDisplayed": "{count} results displayed",
+      "pageInfo": "Page {current} of {total}",
+      "users": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "role": "Role",
+        "consult": "View",
+        "edit": "Edit",
+        "ban": "Ban",
+        "unban": "Unban",
+        "delete": "Delete",
+        "userNotFound": "User not found"
+      },
+      "bankCredits": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "iban": "IBAN",
+        "loanAmount": "Loan amount",
+        "loanDuration": "Loan duration (months)",
+        "remaining": "Remaining balance",
+        "consult": "View"
+      },
+      "stocks": {
+        "name": "Name",
+        "baseQuantity": "Base Quantity",
+        "basePrice": "Base Price",
+        "balance": "Balance",
+        "remainingQuantity": "Remaining Quantity",
+        "consult": "View",
+        "edit": "Edit",
+        "refill": "Refill"
+      }
+    },
+    "dialogs": {
+      "transferFrom": {
+        "title": "From account",
+        "searchAccount": "Search for an account"
+      },
+      "transferTo": {
+        "title": "To account",
+        "myAccounts": "My accounts",
+        "myBeneficiaries": "My beneficiaries",
+        "searchAccount": "Search for an account",
+        "searchBeneficiary": "Search for a beneficiary",
+        "loadingAccounts": "Loading accounts...",
+        "loadingBeneficiaries": "Loading beneficiaries...",
+        "addBeneficiary": "Add a beneficiary"
+      },
+      "userBeneficiaries": {
+        "title": "My beneficiaries",
+        "addBeneficiary": "Add a beneficiary"
+      },
+      "checkMail": {
+        "title": "An email has been sent to you",
+        "instruction": "Please confirm your registration by clicking on the link in the email.",
+        "accountCreation": "A current account will be immediately created upon validation of your account.",
+        "close": "Close",
+        "understood": "I understand"
+      },
+      "createBankCredit": {
+        "grantCredit": "Grant a credit"
+      },
+      "updateSetting": {
+        "modify": "Modify",
+        "instruction": "Enter the new value for this setting"
+      },
+      "beneficiary": {
+        "add": {
+          "title": "Add a beneficiary"
+        },
+        "update": {
+          "title": "Update beneficiary"
+        },
+        "delete": {
+          "title": "Confirm deletion",
+          "description": "Are you sure you want to permanently delete the beneficiary",
+          "descriptionIrreversible": "This action is",
+          "irreversible": "irreversible",
+          "descriptionEnd": "and will delete all information associated with this beneficiary.",
+          "cancel": "Cancel",
+          "confirm": "Delete permanently"
+        }
+      },
+      "account": {
+        "add": {
+          "titleCurrent": "Create a checking account",
+          "titleSavings": "Create a savings account",
+          "descriptionCurrent": "Add a new checking account to your account list.",
+          "descriptionSavings": "Add a new savings account to your account list.",
+          "savingsRateLabel": "The current savings rate is:",
+          "loading": "Loading..."
+        },
+        "update": {
+          "title": "Update account",
+          "description": "Modify your account name."
+        },
+        "delete": {
+          "titleConfirm": "Confirm transfer and deletion",
+          "titleBalance": "Remaining balance on account",
+          "titleSure": "Are you absolutely sure?",
+          "descriptionTransfer": "You will transfer the entire balance (",
+          "descriptionToAccount": ") to the account",
+          "descriptionDeleteAccount": "and permanently delete the account",
+          "descriptionBalance": "There is",
+          "descriptionBalanceEnd": "remaining on this account.",
+          "descriptionTransferRequired": "You must transfer all funds to another account before you can delete it.",
+          "descriptionIrreversible": "This action is irreversible. This will permanently delete the account",
+          "transferFunds": "Transfer funds to another account",
+          "cancel": "Cancel",
+          "transferAndDelete": "Transfer and delete",
+          "processing": "Processing...",
+          "delete": "Delete",
+          "deleting": "Deleting..."
+        }
+      },
+      "user": {
+        "create": {
+          "title": "Create a new user",
+          "description": "Fill in the information below to create a new user.",
+          "button": "Add a user"
+        },
+        "update": {
+          "title": "Update user",
+          "description": "Modify the user information below.",
+          "firstName": "First name",
+          "lastName": "Last name",
+          "email": "Email",
+          "role": "Role",
+          "rolePlaceholder": "Select a role",
+          "roleClient": "Client",
+          "roleAdvisor": "Advisor",
+          "roleDirector": "Director",
+          "cancel": "Cancel",
+          "save": "Save"
+        },
+        "ban": {
+          "titleBan": "Ban user",
+          "titleUnban": "Unban user",
+          "descriptionBan": "Are you sure you want to ban",
+          "descriptionUnban": "Are you sure you want to unban",
+          "cancel": "Cancel",
+          "ban": "Ban",
+          "unban": "Unban"
+        },
+        "delete": {
+          "title": "Delete user",
+          "description": "Are you sure you want to delete",
+          "descriptionEnd": "? This action is irreversible.",
+          "cancel": "Cancel",
+          "delete": "Delete"
+        }
+      },
+      "stockOrder": {
+        "delete": {
+          "title": "Delete request",
+          "description": "Are you sure you want to delete your request for",
+          "descriptionAmount": "at the price of",
+          "warning": "This action is irreversible.",
+          "cancel": "Cancel",
+          "confirm": "Delete",
+          "deleting": "Deleting..."
+        },
+        "match": {
+          "title": "Matching offers",
+          "description": "Here are the available offers for",
+          "loading": "Loading offers...",
+          "noMatches": "No matching offers found",
+          "price": "Price",
+          "selectOffer": "Select this offer",
+          "confirmTitle": "Confirm transaction",
+          "confirmDescription": "Review transaction details before confirming",
+          "stockName": "Stock",
+          "transactionType": "Transaction type",
+          "purchaseFee": "Purchase fee",
+          "total": "Total",
+          "feeNotice": "A purchase fee of {fee}€ will be added to the stock price",
+          "back": "Back",
+          "confirm": "Confirm transaction",
+          "confirming": "Confirming...",
+          "type": {
+            "sell": "Sale",
+            "buy": "Purchase"
+          }
+        }
+      },
+      "stock": {
+        "create": {
+          "button": "Create stock",
+          "title": "Create new stock",
+          "description": "Fill in the information to create a new stock"
+        },
+        "update": {
+          "button": "Edit",
+          "title": "Update stock",
+          "description": "Modify the stock information"
+        },
+        "refill": {
+          "button": "Refill",
+          "title": "Refill stock",
+          "description": "Add units to the existing stock"
+        },
+        "sell": {
+          "sellStock": "Sell a stock",
+          "title": "Sell stocks",
+          "description": "Select a stock and set the sale price",
+          "selectStock": "Stock to sell",
+          "selectStockPlaceholder": "Select a stock",
+          "noStocksAvailable": "No stocks available for sale",
+          "stocks": "stock(s)",
+          "company": "Company",
+          "sellPrice": "Sale price",
+          "currentPriceInfo": "Current market price",
+          "feeAccount": "Account for fee deduction",
+          "selectAccount": "Select an account",
+          "loadingAccounts": "Loading accounts...",
+          "noAccountAvailable": "No account available",
+          "saleFee": "Sale fee",
+          "totalAmount": "Total amount received",
+          "saleFeeNotice": "A sale tax of {fee}€ will be deducted from the sale price",
+          "cancel": "Cancel",
+          "confirm": "Confirm sale",
+          "selling": "Selling..."
+        },
+        "buyBaseStock": {
+          "buyStock": "Buy a stock",
+          "title": "Buy stocks",
+          "description": "Select a stock and set the purchase price",
+          "selectStock": "Stock to buy",
+          "selectStockPlaceholder": "Select a stock",
+          "noStocksAvailable": "No stocks available for purchase",
+          "stocks": "stock(s)",
+          "company": "Company",
+          "buyPrice": "Purchase price",
+          "currentPriceInfo": "Current market price",
+          "paymentAccount": "Payment account",
+          "selectAccount": "Select an account",
+          "loadingAccounts": "Loading accounts...",
+          "noAccountAvailable": "No account available",
+          "purchaseFee": "Purchase fee",
+          "totalAmount": "Total amount to pay",
+          "purchaseFeeNotice": "A purchase tax of {fee}€ will be added to the purchase price",
+          "cancel": "Cancel",
+          "confirm": "Confirm purchase",
+          "buying": "Buying...",
+          "stockNotAvailable": "The stock was not found",
+          "insufficientFunds": "Insufficient funds in the selected account"
+        },
+        "buyStockOrder": {
+          "createBuyOrder": "Create buy order",
+          "title": "Create a stock buy order",
+          "description": "Set your desired purchase price for your order",
+          "company": "Company",
+          "buyPrice": "Desired purchase price",
+          "currentPriceInfo": "Current market price",
+          "paymentAccount": "Payment account",
+          "selectAccount": "Select an account",
+          "loadingAccounts": "Loading accounts...",
+          "noAccountAvailable": "No account available",
+          "purchaseFee": "Purchase fee",
+          "totalAmount": "Total amount to pay",
+          "purchaseFeeNotice": "A purchase tax of {fee}€ will be added to the purchase price during the transaction",
+          "cancel": "Cancel",
+          "confirm": "Create order",
+          "creating": "Creating...",
+          "stockNotAvailable": "Stock not available",
+          "insufficientFunds": "Insufficient funds in the selected account"
+        }
+      },
+      "requestAdvisorByMessage": {
+        "title": "Request an advisor",
+        "description": "If you have a question, you can request to speak with an advisor directly through a private message.",
+        "request": "Request an advisor",
+        "titleDescription": "Here you can enter the subject of your request.",
+        "titlePlaceholder": "Subject of your request",
+        "messageDescription": "Please provide as much detail as possible about your request so that the advisor can assist you effectively.",
+        "messageSentConfirmation": "Your message has been successfully submitted. An advisor will take care of it shortly.",
+        "goToMessages": "Go to my messages",
+        "close": "Close",
+        "request_an_advisor": "Request an advisor"
+      },
+      "createCompanyChannel": {
+        "title": "New company channel",
+        "description": "Start a new conversation with your team or a specific department.",
+        "channelTitle": "Channel title",
+        "channelTitlePlaceholder": "Ex: Technical support",
+        "createChannel": "Create channel",
+        "creatingChannel": "Creating channel...",
+        "channelTitleError": "Channel title is required"
+      },
+      "notification": {
+        "create": {
+          "title": "Send a notification",
+          "description": "Send a notification to a user or all users.",
+          "globalTab": "Global notification",
+          "privateTab": "Private notification",
+          "notificate": "Send a notification",
+          "content": "Content",
+          "contentPlaceholder": "Enter the notification content",
+          "contentError": "Content is required",
+          "user": "User",
+          "userPlaceholder": "Select a user",
+          "userError": "Please select a user",
+          "loading": "Loading...",
+          "noUsers": "No users available",
+          "cancel": "Cancel",
+          "create": "Create",
+          "successGlobal": "Global notification created successfully",
+          "successPrivate": "Private notification created successfully",
+          "error": "Error creating notification"
+        }
+      }
+    }
+  },
+  "buttons": {
+    "back": "Back",
+    "backToHome": "Back to home",
+    "cancel": "Cancel"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "switchToRegister": "I want to open an account!"
+    },
+    "register": {
+      "title": "Open an account",
+      "switchToLogin": "I already have an account!"
+    },
+    "confirm": {
+      "loading": "Confirming your registration...",
+      "success": {
+        "title": "Registration validated!",
+        "message": "You will be redirected to the login page in a few moments."
+      },
+      "error": {
+        "title": "Registration failed!",
+        "message": "Please contact an administrator if the error persists.",
+        "redirect": "You will be redirected to the login page in a few moments."
+      }
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Page not found",
+      "message": "The page you are looking for does not exist or has been moved."
+    },
+    "401": {
+      "title": "Access denied",
+      "message": "You do not have the necessary permissions to access this page."
+    },
+    "403": {
+      "title": "Access denied",
+      "message": "You do not have the necessary permissions to access this page."
+    },
+    "500": {
+      "title": "Server error",
+      "message": "An error occurred on our servers. Please try again later."
+    }
+  },
+  "contexts": {
+    "accounts": {
+      "userNotFound": "User not found",
+      "mustBeConnectedToCreate": "You must be logged in to create an account",
+      "errorCreating": "Error creating account",
+      "savingsAccountCreated": "Savings account created successfully",
+      "currentAccountCreated": "Current account created successfully",
+      "mustBeConnectedToUpdate": "You must be logged in to update an account",
+      "errorUpdating": "Error updating account",
+      "accountUpdated": "Account updated successfully",
+      "mustBeConnectedToDelete": "You must be logged in to delete an account",
+      "cannotDeleteLastCurrentWithFunds": "Cannot delete the only current account containing funds. Please empty the account first or create a new current account.",
+      "accountNotSoldable": "The account cannot be closed as it still contains funds.",
+      "errorDeleting": "Error deleting account",
+      "accountDeleted": "Account deleted successfully"
+    },
+    "auth": {
+      "unauthorized": "Invalid credentials",
+      "accountNotEnabled": "Your account is not yet activated.",
+      "invalidCredentials": "Invalid credentials",
+      "connectionError": "Connection error",
+      "emailAlreadyExists": "This email is already in use",
+      "registrationError": "Registration error",
+      "confirmationError": "Confirmation error",
+      "loggedOut": "Successfully logged out"
+    },
+    "users": {
+      "mustBeConnectedToCreate": "You must be logged in to create a user",
+      "errorCreating": "Error creating user",
+      "userCreated": "User created successfully",
+      "mustBeConnectedToUpdate": "You must be logged in to update a user",
+      "errorUpdating": "Error updating user",
+      "userUpdated": "User updated successfully",
+      "mustBeConnectedToDelete": "You must be logged in to delete a user",
+      "errorDeleting": "Error deleting user",
+      "userDeleted": "User deleted successfully",
+      "mustBeConnectedToBan": "You must be logged in to ban a user",
+      "errorBanning": "Error banning user",
+      "userBanned": "User banned successfully",
+      "mustBeConnectedToUnban": "You must be logged in to unban a user",
+      "errorUnbanning": "Error unbanning user",
+      "userUnbanned": "User unbanned successfully"
+    },
+    "notifications": {
+      "mustBeConnectedToCreate": "You must be logged in to create a notification",
+      "errorCreating": "Error creating notification",
+      "notificationCreated": "Notification created successfully"
+    },
+    "bankCredits": {
+      "errorCreating": "Error creating bank credit"
+    },
+    "settings": {
+      "errorUpdating": "Error updating setting.",
+      "savingsRateUpdated": "Savings rate updated successfully",
+      "purchaseFeeUpdated": "Purchase fee updated successfully",
+      "saleFeeUpdated": "Sale fee updated successfully"
+    },
+    "beneficiaries": {
+      "accountNotFound": "No associated account found.",
+      "errorUpdating": "Error updating beneficiary."
+    },
+    "operations": {
+      "mustBeConnectedToTransfer": "You must be logged in to make a transfer",
+      "insufficientFunds": "Insufficient funds to complete the transfer.",
+      "accountNotFound": "Account not found.",
+      "transferError": "Transfer error.",
+      "transferSuccess": "Transfer completed successfully."
+    },
+    "stockOrders": {
+      "mustBeConnectedToView": "You must be logged in to view orders",
+      "mustBeConnectedToCreate": "You must be logged in to create an order",
+      "mustBeConnectedToUpdate": "You must be logged in to update an order",
+      "mustBeConnectedToDelete": "You must be logged in to delete an order",
+      "errorFetching": "Error fetching order",
+      "errorCreating": "Error creating order",
+      "errorUpdating": "Error updating order",
+      "errorDeleting": "Error deleting order",
+      "orderCreated": "Order created successfully",
+      "orderUpdated": "Order updated successfully",
+      "orderDeleted": "Order deleted successfully",
+      "errors": {
+        "stockOrderNotFound": "Stock order not found.",
+        "stockMismatch": "Stock orders must be for the same stock.",
+        "invalidStatus": "Only pending stock orders can be accepted.",
+        "invalidType": "Stock orders must be of different types (one BUY, one SELL).",
+        "sellerNotFound": "Seller not found.",
+        "financialSecurityNotFound": "Financial security not found for the seller.",
+        "insufficientFundsBuyer": "Insufficient funds for buyer account.",
+        "insufficientFundsSeller": "Insufficient funds for seller account.",
+        "accountNotFound": "Account not found."
+      }
+    },
+    "stocks": {
+      "mustBeConnectedToView": "You must be logged in to view stocks",
+      "mustBeConnectedToCreate": "You must be logged in to create a stock",
+      "mustBeConnectedToUpdate": "You must be logged in to update a stock",
+      "mustBeConnectedToPurchase": "You must be logged in to purchase a stock",
+      "errorFetching": "Error fetching stocks",
+      "errorCreating": "Error creating stock",
+      "errorUpdating": "Error updating stock",
+      "errorRefilling": "Error refilling stock",
+      "errorPurchasing": "Error purchasing stock",
+      "stockCreated": "Stock created successfully",
+      "stockUpdated": "Stock updated successfully",
+      "stockRefilled": "Stock refilled successfully",
+      "stockPurchased": "Stock purchased successfully"
+    },
+    "financialSecurities": {
+      "mustBeConnectedToView": "You must be connected to view your investments",
+      "errorFetching": "Error fetching your investments"
+    },
+    "channels": {
+      "channelNotFound": "Channel not found."
+    }
+  }
+}
