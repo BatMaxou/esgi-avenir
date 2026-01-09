@@ -1,5 +1,10 @@
 # Avenir
 
+## Équipe
+
+- BATISTA Maxime (IW2)
+- COUVIDOU Guillaume (IW2)
+
 ## Installation
 
 Copier le fichier `compose.override.example.yaml` en `compose.override.yaml`.
