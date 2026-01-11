@@ -6,7 +6,7 @@ dotenv.config({ path: ".env.local", override: true });
 const generateDatabaseDsnOptions = (): string => {
   switch (databaseSource) {
     case "mongodb":
-      return `authSource=admin`;
+      return `?authSource=admin`;
     default:
       return "";
   }
@@ -18,7 +18,7 @@ export const databaseHost: string = process.env.DB_HOST || "";
 export const databaseName: string = process.env.DB_NAME || "";
 export const databasePort: string = process.env.DB_PORT || "";
 export const databaseSource: string = process.env.DB_SOURCE || "mysql";
-export const databaseDsn: string = `${databaseSource}://${databaseUser}:${databasePassword}@${databaseHost}:${databasePort}/${databaseName}?${generateDatabaseDsnOptions()}`;
+export const databaseDsn: string = `${databaseSource}://${databaseUser}:${databasePassword}@${databaseHost}:${databasePort}/${databaseName}${generateDatabaseDsnOptions()}`;
 export const jwtSecret: string = process.env.JWT_SECRET || "";
 export const mailerHost: string = process.env.MAILER_HOST || "";
 export const mailerPort: number = parseInt(
